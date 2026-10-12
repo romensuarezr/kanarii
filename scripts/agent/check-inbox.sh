@@ -1,9 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # check-inbox.sh — Detecta manifiestos pendientes en external-inbox/ e idea-inbox/
 # Uso: bash scripts/agent/check-inbox.sh
 # Salida: siempre exit 0 (no es bloqueante)
 
-EXTERNAL_DIR="external-inbox"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/cli-help.sh"
+for arg in "$@"; do
+  if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+    show_help "check-inbox.sh" \
+      "bash scripts/agent/check-inbox.sh" \
+      "Detecta manifiestos pendientes en docs/external-inbox/ e ideas en docs/idea-inbox/." \
+      "-h, --help               Muestra este mensaje de ayuda" \
+      "ejemplo: bash scripts/agent/check-inbox.sh"
+  fi
+done
+
+for cmd in find grep sort xargs; do
+  command -v "$cmd" >/dev/null 2>&1 || {
+    echo "❌ Error: Dependencia requerida '$cmd' no encontrada." >&2
+    echo "💡 Guía: Instálala mediante: apt-get install -y $cmd (Linux) o brew install $cmd (macOS)." >&2
+    exit 1
+  }
+done
+
+EXTERNAL_DIR="docs/external-inbox"
 IDEA_DIR="docs/idea-inbox"
 
 echo "=== INBOX STATUS ==="

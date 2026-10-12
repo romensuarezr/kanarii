@@ -3,7 +3,22 @@
 # audit-repo.sh - Audita y adapta repositorios con vida previa al estándar de Agent OS
 # Uso: bash scripts/agent/audit-repo.sh [--apply]
 
-PROJECT_ROOT="$(pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/cli-help.sh"
+for arg in "$@"; do
+  if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+    show_help "audit-repo.sh" \
+      "bash scripts/agent/audit-repo.sh [--apply]" \
+      "Audita y adapta repositorios con vida previa para alinearlos con el estándar de Agent OS." \
+      "--apply                  Aplica automáticamente las adaptaciones y correcciones propuestas" \
+      "-h, --help               Muestra este mensaje de ayuda" \
+      "ejemplo: bash scripts/agent/audit-repo.sh" \
+      "ejemplo: bash scripts/agent/audit-repo.sh --apply"
+  fi
+done
+
+PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+cd "$PROJECT_ROOT"
 AUDIT_FILE="docs/agent-os-audit.md"
 
 # Asegurar que existe la carpeta docs/
@@ -66,13 +81,7 @@ if [ "$1" == "--apply" ]; then
         exit 1
     fi
 
-    impl_mig_count=$(grep -E "\- \[[ x]\] Migrar y renombrar .* a docs/implemented.md" "$AUDIT_FILE" | wc -l)
-    if [ "$impl_mig_count" -gt 1 ]; then
-        echo "⚠️ AMBIGÜEDAD: Se encontraron $impl_mig_count candidatos para implemented:"
-        grep -E "\- \[[ x]\] Migrar y renombrar .* a docs/implemented.md" "$AUDIT_FILE" | sed -E 's/- \[[ x]\] Migrar y renombrar (.*) a docs\/implemented.md.*/   - \1/'
-        echo "Edita docs/agent-os-audit.md y deja solo el candidato correcto antes de ejecutar --apply."
-        exit 1
-    fi
+
 
     # Aplicar migraciones difusas (fuzzy matching)
     if [ "$roadmap_mig_count" -eq 1 ] && grep -q "\- \[ \] Migrar y renombrar .* a roadmap.md" "$AUDIT_FILE"; then
@@ -102,14 +111,7 @@ if [ "$1" == "--apply" ]; then
         fi
     fi
 
-    if [ "$impl_mig_count" -eq 1 ] && grep -q "\- \[ \] Migrar y renombrar .* a docs/implemented.md" "$AUDIT_FILE"; then
-        legacy_file=$(grep "\- \[ \] Migrar y renombrar .* a docs/implemented.md" "$AUDIT_FILE" | head -n 1 | sed -E 's/- \[ \] Migrar y renombrar (.*) a docs\/implemented.md.*/\1/')
-        if [ -f "$legacy_file" ]; then
-            git mv "$legacy_file" docs/implemented.md
-            echo "✅ Migrado y renombrado $legacy_file a docs/implemented.md"
-            applied_changes=$((applied_changes + 1))
-        fi
-    fi
+
 
     # 1. Renombrar archivos de casing incorrecto en la raíz
     if grep -q "\- \[ \] Renombrar ROADMAP.md a roadmap.md en la raíz" "$AUDIT_FILE"; then
@@ -142,20 +144,7 @@ if [ "$1" == "--apply" ]; then
             applied_changes=$((applied_changes + 1))
         fi
     fi
-    if grep -q "\- \[ \] Mover implemented.md de la raíz a docs/implemented.md" "$AUDIT_FILE"; then
-        if [ -f "implemented.md" ]; then
-            git mv implemented.md docs/implemented.md
-            echo "✅ Movido implemented.md de la raíz a docs/implemented.md"
-            applied_changes=$((applied_changes + 1))
-        fi
-    fi
-    if grep -q "\- \[ \] Mover IMPLEMENTED.md de la raíz a docs/implemented.md" "$AUDIT_FILE"; then
-        if [ -f "IMPLEMENTED.md" ]; then
-            git mv IMPLEMENTED.md docs/implemented.md
-            echo "✅ Movido IMPLEMENTED.md de la raíz a docs/implemented.md"
-            applied_changes=$((applied_changes + 1))
-        fi
-    fi
+
 
     if grep -q "\- \[ \] Renombrar docs/MVP-TRACKER.md a docs/mvp-tracker.md" "$AUDIT_FILE"; then
         if [ -f "docs/MVP-TRACKER.md" ]; then
@@ -164,13 +153,7 @@ if [ "$1" == "--apply" ]; then
             applied_changes=$((applied_changes + 1))
         fi
     fi
-    if grep -q "\- \[ \] Renombrar docs/IMPLEMENTED.md a docs/implemented.md" "$AUDIT_FILE"; then
-        if [ -f "docs/IMPLEMENTED.md" ]; then
-            git mv docs/IMPLEMENTED.md docs/implemented.md
-            echo "✅ Renombrado docs/IMPLEMENTED.md a docs/implemented.md"
-            applied_changes=$((applied_changes + 1))
-        fi
-    fi
+
 
     # 3. Mover external-inbox de la raíz a docs/external-inbox/
     if grep -q "\- \[ \] Mover external-inbox de la raíz a docs/external-inbox/" "$AUDIT_FILE"; then
@@ -253,7 +236,7 @@ if [ "$1" == "--apply" ]; then
                 if ! grep -q "TOTAL" "$tmp_tracker"; then
                     hist_line=$(grep -n "## Historial" "$tmp_tracker" | cut -d':' -f1)
                     if [ -n "$hist_line" ]; then
-                        sed -i "${hist_line}i | **TOTAL** | | **100** | | **0%** | | |\n" "$tmp_tracker"
+                        awk -v line="$hist_line" 'NR==line {print "| **TOTAL** | | **100** | | **0%** | | |\n"} {print}' "$tmp_tracker" > "${tmp_tracker}.tmp" && mv "${tmp_tracker}.tmp" "$tmp_tracker"
                     else
                         echo -e "\n| **TOTAL** | | **100** | | **0%** | | |\n" >> "$tmp_tracker"
                     fi
@@ -307,40 +290,7 @@ if [ "$1" == "--apply" ]; then
         applied_changes=$((applied_changes + 1))
     fi
 
-    # 5.5 Sincronizar con docs/implemented.md
-    if grep -q "\- \[ \] Actualizar docs/implemented.md con los hitos históricos" "$AUDIT_FILE"; then
-        implemented_file="docs/implemented.md"
-        if [ -f "$implemented_file" ]; then
-            echo "⚙️ Actualizando $implemented_file con hitos históricos..."
-            # Si no contiene una sección de Sprint 00, la añadimos
-            if ! grep -q "Sprint 00" "$implemented_file"; then
-                echo -e "\n## Sprint 00 (Histórico)" >> "$implemented_file"
-                echo "- [x] Sincronización inicial de commits históricos" >> "$implemented_file"
-                # Añadir los 5 commits más recientes como hitos
-                task_idx=1
-                in_sprint_section=false
-                while IFS= read -r line || [ -n "$line" ]; do
-                    if [[ "$line" == "## Sprint-00 sugerido" ]]; then
-                        in_sprint_section=true
-                        continue
-                    fi
-                    if $in_sprint_section; then
-                        if [[ "$line" == "## "* ]]; then
-                            break
-                        fi
-                        if [[ "$line" == "- [x] Commit "* ]] && [ "$task_idx" -le 5 ]; then
-                            commit_msg=$(echo "$line" | sed -E 's/- \[x\] Commit `[0-9a-f]+` \([0-9-]+\): //')
-                            echo "- [x] $commit_msg" >> "$implemented_file"
-                            task_idx=$((task_idx + 1))
-                        fi
-                    fi
-                done < "$AUDIT_FILE"
-                echo "✅ $implemented_file actualizado con hitos del Sprint 00."
-                git add "$implemented_file"
-                applied_changes=$((applied_changes + 1))
-            fi
-        fi
-    fi
+
 
     # 6. Actualizar roadmap.md con secciones requeridas
     if grep -q "\- \[ \] Añadir secciones requeridas a roadmap.md" "$AUDIT_FILE"; then
@@ -349,11 +299,15 @@ if [ "$1" == "--apply" ]; then
         
         if [ -f "$roadmap_file" ]; then
             echo "⚙️ Añadiendo secciones requeridas a $roadmap_file..."
-            for sec in "## En progreso" "## Completado" "## Backlog"; do
-                if ! grep -q "$sec" "$roadmap_file"; then
-                    echo -e "\n$sec\n- [ ] Tareas iniciales por categorizar" >> "$roadmap_file"
-                fi
-            done
+            if ! grep -qiE "^##[[:space:]]+(En curso|En progreso)" "$roadmap_file"; then
+                echo -e "\n## En curso\n- [ ] Tareas iniciales por categorizar" >> "$roadmap_file"
+            fi
+            if ! grep -qiE "^##[[:space:]]+(Completado|Completado recientemente)" "$roadmap_file"; then
+                echo -e "\n## Completado\n- (Sin tareas completadas aún)" >> "$roadmap_file"
+            fi
+            if ! grep -qiE "^##[[:space:]]+(Próximo|Backlog)" "$roadmap_file"; then
+                echo -e "\n## Próximo\n- [ ] Backlog inicial" >> "$roadmap_file"
+            fi
             echo "✅ roadmap.md actualizado con secciones estándar."
             applied_changes=$((applied_changes + 1))
         fi
@@ -387,9 +341,88 @@ fi
 # ==========================================
 echo "🔍 Iniciando auditoría de estructura en $PROJECT_ROOT..."
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$SCRIPT_DIR/lib/date-utils.sh" ]; then
+    source "$SCRIPT_DIR/lib/date-utils.sh"
+fi
+
+if [ -f "$SCRIPT_DIR/lib/detect-stack.sh" ]; then
+    source "$SCRIPT_DIR/lib/detect-stack.sh"
+    detect_stack "$PROJECT_ROOT"
+    echo "ℹ️  Stack tecnológico detectado: $AGENT_OS_STACK"
+    if [ "$AGENT_OS_STACK" == "unknown" ]; then
+        echo "💡 $STACK_GUIDE"
+    fi
+fi
+
+# ------------------------------------------
+# Detección de CI/CD e Infraestructura (IaC)
+# ------------------------------------------
+detected_cicd=()
+if [ -d ".github/workflows" ]; then
+    if [ -n "$(find .github/workflows -maxdepth 1 -type f \( -name "*.yml" -o -name "*.yaml" \) 2>/dev/null | head -n 1)" ]; then
+        detected_cicd+=("GitHub Actions (.github/workflows/)")
+    else
+        detected_cicd+=("GitHub Actions (.github/workflows/ [vacío])")
+    fi
+fi
+if [ -f ".gitlab-ci.yml" ]; then
+    detected_cicd+=("GitLab CI (.gitlab-ci.yml)")
+fi
+if [ -f "Jenkinsfile" ] || compgen -G "Jenkinsfile*" >/dev/null 2>&1; then
+    detected_cicd+=("Jenkins (Jenkinsfile)")
+fi
+
+cicd_summary=""
+for item in "${detected_cicd[@]}"; do
+    if [ -z "$cicd_summary" ]; then
+        cicd_summary="$item"
+    else
+        cicd_summary="$cicd_summary, $item"
+    fi
+done
+if [ -z "$cicd_summary" ]; then
+    cicd_summary="ninguno detectado"
+    echo "ℹ️  CI/CD: ninguno detectado"
+else
+    echo "ℹ️  CI/CD detectado: $cicd_summary"
+fi
+
+detected_iac=()
+tf_files=$(find . -maxdepth 2 -type f -name "*.tf" ! -path "./.*/*" 2>/dev/null | head -n 3)
+if [ -n "$tf_files" ] || [ -d "terraform" ]; then
+    detected_iac+=("Terraform (*.tf)")
+fi
+
+compose_files=$(find . -maxdepth 2 -type f \( -name "docker-compose*.yml" -o -name "docker-compose*.yaml" -o -name "compose*.yml" -o -name "compose*.yaml" \) ! -path "./.*/*" 2>/dev/null | head -n 3)
+if [ -n "$compose_files" ]; then
+    detected_iac+=("Docker Compose (compose)")
+fi
+
+iac_summary=""
+for item in "${detected_iac[@]}"; do
+    if [ -z "$iac_summary" ]; then
+        iac_summary="$item"
+    else
+        iac_summary="$iac_summary, $item"
+    fi
+done
+if [ -z "$iac_summary" ]; then
+    iac_summary="ninguno detectado"
+    echo "ℹ️  IaC: ninguno detectado"
+else
+    echo "ℹ️  IaC detectado: $iac_summary"
+fi
+
+
 incompatibilidades=""
 propuestas=""
 sprint_sugerido=""
+
+if [ "${AGENT_OS_STACK:-}" == "unknown" ]; then
+    incompatibilidades+="- ⚠️ Stack tecnológico no detectado automáticamente ('unknown').\n"
+    propuestas+="- [ ] Declarar stack en .agents/context/stack.env con AGENT_OS_STACK=<stack> (soportados: python, typescript, javascript, go, rust, java, php, ruby, dotnet, bun, static)\n"
+fi
 
 # 1. Comprobar existencia y casing de archivos clave en la raíz (con fuzzy matching seguro)
 # Para roadmap.md
@@ -472,37 +505,7 @@ else
     fi
 fi
 
-# Para implemented.md
-impl_exists_root=$(find . -maxdepth 1 -iname "implemented.md" 2>/dev/null | head -n 1 | sed 's|^\./||')
-impl_exists_docs=""
-[ -d "docs" ] && impl_exists_docs=$(find docs -maxdepth 1 -iname "implemented.md" 2>/dev/null | head -n 1)
 
-if [ -z "$impl_exists_root" ] && [ -z "$impl_exists_docs" ]; then
-    impl_cands=$( (find . -maxdepth 1 -type f \( -iname "*implement*" -o -iname "*hito*" -o -iname "*milestone*" \) 2>/dev/null; [ -d "docs" ] && find docs -maxdepth 1 -type f \( -iname "*implement*" -o -iname "*hito*" -o -iname "*milestone*" \) 2>/dev/null) | grep -v "agent-os-audit" | sed 's|^\./||' )
-    cand_count=$(echo "$impl_cands" | grep -c . || true)
-    if [ "$cand_count" -eq 1 ]; then
-        cand=$(echo "$impl_cands" | head -n 1)
-        incompatibilidades+="- ⚠️ Archivo candidato a ser el registro de hitos detectado con nombre no estándar: \`$cand\` (se sugiere mover y renombrar a \`docs/implemented.md\`)\n"
-        propuestas+="- [ ] Migrar y renombrar $cand a docs/implemented.md\n"
-    elif [ "$cand_count" -gt 1 ]; then
-        cand_list=$(echo "$impl_cands" | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g')
-        incompatibilidades+="- ⚠️ AMBIGÜEDAD: Se encontraron múltiples candidatos para implemented.md: $cand_list. Edita docs/agent-os-audit.md dejando solo el candidato correcto antes de ejecutar --apply.\n"
-        while IFS= read -r cand || [ -n "$cand" ]; do
-            propuestas+="- [ ] Migrar y renombrar $cand a docs/implemented.md\n"
-        done <<< "$impl_cands"
-    fi
-else
-    if [ -n "$impl_exists_root" ]; then
-        incompatibilidades+="- ⚠️ Archivo \`$impl_exists_root\` en la raíz (debería estar en \`docs/implemented.md\`)\n"
-        propuestas+="- [ ] Mover $impl_exists_root de la raíz a docs/implemented.md\n"
-    elif [ -n "$impl_exists_docs" ]; then
-        filename=$(basename "$impl_exists_docs")
-        if [ "$filename" != "implemented.md" ]; then
-            incompatibilidades+="- ⚠️ Archivo en docs/ con casing incorrecto: \`$impl_exists_docs\` (debería ser \`docs/implemented.md\`)\n"
-            propuestas+="- [ ] Renombrar $impl_exists_docs a docs/implemented.md\n"
-        fi
-    fi
-fi
 
 # 3. Comprobar ubicación de external-inbox
 if [ -d "external-inbox" ] || [ -f "external-inbox" ]; then
@@ -546,11 +549,16 @@ fi
 
 if [ -n "$roadmap_file" ]; then
     missing_sections=""
-    for sec in "## En progreso" "## Completado" "## Backlog"; do
-        if ! grep -q "$sec" "$roadmap_file"; then
-            missing_sections+="\`$sec\`, "
-        fi
-    done
+    if ! grep -qiE "^##[[:space:]]+(En curso|En progreso)" "$roadmap_file"; then
+        missing_sections+="\`## En curso\` (o \`## En progreso\`), "
+    fi
+    if ! grep -qiE "^##[[:space:]]+(Completado|Completado recientemente)" "$roadmap_file"; then
+        missing_sections+="\`## Completado\` (o \`## Completado recientemente\`), "
+    fi
+    if ! grep -qiE "^##[[:space:]]+(Próximo|Backlog)" "$roadmap_file"; then
+        missing_sections+="\`## Próximo\` (o \`## Backlog\`), "
+    fi
+
     if [ -n "$missing_sections" ]; then
         incompatibilidades+="- ⚠️ Faltan secciones requeridas en \`$roadmap_file\`: ${missing_sections%, }\n"
         propuestas+="- [ ] Añadir secciones requeridas a roadmap.md\n"
@@ -568,8 +576,8 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     while IFS='|' read -r date hash subject || [ -n "$date" ]; do
         [ -z "$date" ] && continue
         
-        week_num=$(date -d "$date" +%Y-W%V 2>/dev/null)
-        [ -z "$week_num" ] && continue
+        week_num=$(portable_week_num "$date")
+        [ -z "$week_num" ] || [ "$week_num" == "unknown" ] && continue
         
         if [ "$week_num" != "$current_week" ]; then
             current_week="$week_num"
@@ -584,7 +592,7 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     
     if [ -n "$sprint_sugerido" ]; then
         propuestas+="- [ ] Crear docs/sprints/_archived/sprint-00-historical.md con los commits agrupados por semana\n"
-        propuestas+="- [ ] Actualizar docs/implemented.md con los hitos históricos identificados en el Sprint 00\n"
+        propuestas+="- [ ] Actualizar CHANGELOG.md con los hitos históricos identificados en el Sprint 00\n"
     fi
 else
     incompatibilidades+="- ⚠️ El directorio no es un repositorio Git válido.\n"
@@ -596,6 +604,17 @@ fi
 {
     echo "# Informe de Auditoría y Adaptación de Agent OS"
     echo -e "\nFecha: $(date '+%Y-%m-%d %H:%M:%S')"
+    echo -e "\n## Stack Tecnológico\n"
+    echo "- **Stack detectado**: \`${AGENT_OS_STACK:-unknown}\`"
+    if [ "${AGENT_OS_STACK:-unknown}" == "unknown" ]; then
+        echo -e "- ⚠️ **Aviso**: Stack no reconocido automáticamente por marcadores de compilación o empaquetado."
+        echo -e "- **Guía**: Puedes declarar el stack creando \`.agents/context/stack.env\` con \`AGENT_OS_STACK=<stack>\` (valores soportados: python, typescript, javascript, go, rust, java, php, ruby, dotnet, bun, static)."
+    fi
+
+    echo -e "\n## CI/CD e Infraestructura (IaC)\n"
+    echo "- **CI/CD**: $cicd_summary"
+    echo "- **IaC**: $iac_summary"
+
     echo -e "\n## Incompatibilidades\n"
     if [ -n "$incompatibilidades" ]; then
         echo -e "$incompatibilidades"

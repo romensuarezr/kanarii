@@ -4,7 +4,7 @@ description: Ritual de inicio de semana. Lee el roadmap, vacía el idea-inbox, g
 
 # sprint-planning
 
-> Duración estimada: 15 min. Ejecutar los lunes antes de abrir cualquier sesión de desarrollo.
+> Duración estimada: 15 min. Ejecutar los lunes antes de abrir cualquier sesión de desarrollo en {{PROJECT_NAME}}.
 
 ## Objetivo
 
@@ -17,9 +17,9 @@ description: Ritual de inicio de semana. Lee el roadmap, vacía el idea-inbox, g
 - `ROADMAP.md`
 - `docs/sprints/`
 - `docs/idea-inbox/`
-- `external-inbox/`
+- `docs/external-inbox/`
 - `docs/MVP-TRACKER.md`
-- `docs/IMPLEMENTED.md`
+- `CHANGELOG.md`
 
 ## Prerrequisitos
 - `ROADMAP.md` en la raíz del proyecto (mayúsculas exactas).
@@ -31,8 +31,6 @@ description: Ritual de inicio de semana. Lee el roadmap, vacía el idea-inbox, g
 
 ### 1. Detección de sesión colgada y archivado de sprints completados
 
-Antes de cualquier otra acción, ejecutar en secuencia:
-
 ```bash
 bash scripts/agent/check-session.sh
 bash scripts/agent/close-sprint.sh --auto
@@ -41,98 +39,130 @@ bash scripts/agent/close-sprint.sh --auto
 - Si `check-session.sh` devuelve un JSON → hay una sesión anterior sin cerrar. Ejecutar el **Modo Rescate** de `/session-start` antes de continuar.
 - `close-sprint.sh --auto` detecta y archiva en `docs/sprints/_archived/` cualquier sprint cuyo estado sea `✅ Completado`. Si no hay ninguno, continúa sin error.
 
-### 2. Lectura de estado (con script — no navegación manual)
+### 1b. Verificación de actualización del core (offline)
 
-Ejecutar:
+1. Comprobar si existe `.agents/context/last-sync.md`.
+2. Si **NO existe** o la fecha es de hace **más de 7 días**: recomendar al usuario ejecutar:
+   ```bash
+   bash scripts/agent/sync.sh .
+   ```
+
+### 2. Lectura de estado
+
 ```bash
 bash scripts/agent/check-sprint.sh
 ```
 
-**Usar exclusivamente el output de este script como fuente de verdad.** No ejecutar `find`, `ls` ni leer sprint files manualmente para localizar el roadmap o el estado del sprint. El script ya resuelve rutas, conteo de tareas y advertencias.
+**Usar exclusivamente el output de este script como fuente de verdad.** No ejecutar `find`, `ls` ni leer sprint files manualmente.
 
-- Si el script devuelve `❌ CRÍTICO` en ROADMAP → detenerse. Informar al usuario y no continuar.
-- **Si hay alerta "SPRINT COMPLETADO SIN MARCAR"** → actualizar el estado del sprint anterior a `✅ Completado` antes de continuar. Esto es obligatorio.
-- Si hay entradas en `SPILLOVER` → ir al paso 2b.
-- Si el sistema está limpio → ir directamente al paso 3.
+- `❌ CRÍTICO` en ROADMAP → detenerse e informar al usuario.
+- **Alerta "SPRINT COMPLETADO SIN MARCAR"** → actualizar estado del sprint anterior a `✅ Completado` antes de continuar. Obligatorio.
+- Entradas en `SPILLOVER` → ir al paso 2b.
+- Sistema limpio → ir directamente al paso 3.
 
-Leer `ROADMAP.md` completo tras ejecutar el script (la ruta exacta la da el script).
+Leer `ROADMAP.md` completo tras ejecutar el script.
 
-### 2b. Decisión sobre tareas incompletas
+### 2b. Decisión sobre tareas incompletas (solo si hay sin ✅)
 
-> Este paso se ejecuta solo si el sprint anterior tiene tareas sin ✅.
-> No arrastrar por inercia — cada tarea incompleta requiere una decisión explícita.
+> No arrastrar por inercia — decisión explícita por cada una.
 
-Para cada tarea sin ✅ del sprint anterior, estimar el porcentaje completado y aplicar esta regla:
+**Tabla maestra de decisión** (aplica tanto a spillover como a inventory check en 2c):
 
-| Avance estimado | Destino | Acción |
+| Avance | En spillover (2b) | En inventory check (2c) |
 |---|---|---|
-| **> 70%** | Arrastra al sprint nuevo | Añadir como primera tarea, tamaño S, con nota `↩ continuación sprint anterior` |
-| **< 30%** | Vuelve al roadmap | Marcar como ⬜ Pendiente en `ROADMAP.md`; no entra al sprint nuevo |
-| **30–70%** | Decisión del usuario | Preguntar: ¿arrastra o vuelve al roadmap? Esperar respuesta antes de continuar |
+| **>70%** | Arrastra al sprint nuevo como S con nota `↩ continuación sprint anterior` | Marcar `✅ Hecho` en roadmap; no entra al sprint |
+| **30–70%** | Preguntar al usuario: ¿arrastra o vuelve al roadmap? | Preguntar al usuario si refinar la tarea para lo que falta |
+| **<30%** | Vuelve al roadmap como ⬜ Pendiente | Proceder normalmente |
 
 Al cerrar el sprint anterior:
 - Cambiar su estado de `🟡 En curso` a `🔴 Cerrado con pendientes`.
-- Añadir una línea en `## Notas de planning` del sprint anterior explicando qué quedó sin hacer y por qué.
+- Añadir una línea en `## Notas de planning` explicando qué quedó sin hacer y por qué.
 
-**El agente presenta la propuesta de decisión al usuario y espera confirmación antes de escribir nada.**
+**El agente presenta la propuesta al usuario y espera confirmación antes de escribir nada.**
 
 ### 2c. Verificación de código — firewall anti-duplicación
 
-> Este paso se ejecuta siempre que haya tareas con estado ⬜ Pendiente o ⏸ Pausada,
-> tanto del sprint anterior como del roadmap candidatas al nuevo sprint.
-> **Su objetivo: evitar que llegue al sprint trabajo que ya está hecho.**
-> Es el firewall principal antes de que una tarea entre al sprint.
+> Ejecutar siempre que haya tareas `⬜ Pendiente` o `⏸ Pausada` candidatas al nuevo sprint.
+> **Objetivo: evitar que llegue al sprint trabajo que ya está hecho.**
 
 **Paso previo obligatorio — leer el registro de features:**
 
-Antes de ejecutar `inventory-check.sh`, leer `docs/IMPLEMENTED.md`.  
-Si la feature candidata ya aparece en ese archivo → **no entra al sprint, se marca directamente como `✅ Hecho` en el roadmap**. No hace falta ejecutar inventory-check para esa tarea.
+Antes de ejecutar `inventory-check.sh`, leer `CHANGELOG.md`.
+Si la feature candidata ya aparece → **no entra al sprint, marcar `✅ Hecho` en roadmap directamente**.
 
-Para cada tarea candidata que NO aparezca en `docs/IMPLEMENTED.md`:
+Para cada tarea candidata que NO aparezca en `CHANGELOG.md`:
 
 1. **Ejecutar inventory check:**
    ```bash
    bash scripts/agent/inventory-check.sh "keywords de la tarea"
    ```
-   Extraer 2-4 keywords de la descripción (ej: `"timeline propuesta respuesta modal"`).
 
-2. **Leer los archivos marcados con ⚠️** que devuelva el script (máx. 3-5).
-   - Si existe task file en `.agents/tasks/` o `_archived/`, leer sus criterios de done.
-   - Comparar qué funcionalidad ya está cubierta vs. qué describe la tarea.
+2. **Leer los archivos marcados con ⚠️** (máx. 3–5). Comparar con criterios de done del task file si existe.
 
-3. **Clasificar:**
+3. **Clasificar usando la tabla maestra del paso 2b** (columna “En inventory check”).
 
-| Resultado | Acción |
-|---|---|
-| ✅ en `docs/IMPLEMENTED.md` | Marcar `✅ Hecho` en roadmap; no entra al sprint. |
-| ✅ >70% ya implementado (inventory) | Marcar `✅ Hecho` en el sprint anterior; no arrastrar. Informar al usuario con evidencia de archivo. |
-| ⚠️ 30–70% implementado | Preguntar al usuario si refinar la tarea para lo que falta |
-| ⬜ <30% o sin implementar | Proceder normalmente |
+4. **Presentar tabla al usuario** con: tarea, fuente, archivos encontrados, % estimado, acción propuesta.
 
-4. **Presentar tabla al usuario** con: tarea, fuente de verificación (IMPLEMENTED.md o inventory), archivos encontrados, % estimado, acción propuesta.
+5. **Esperar confirmación antes de continuar al paso 3.**
 
-5. **Esperar confirmación del usuario antes de continuar al paso 3.**
+> 💡 **Optimización de tokens:** El agente solo lee los archivos que devuelve el inventory check, no navega `src/` manualmente.
 
-> ⚠️ Especialmente importante cuando hay commits recientes sin task file asociado.
-> El script `check-sprint.sh` incluye los últimos 10 commits — úsalos como punto de partida.
+### 2d. Salvaguarda de prospección determinista OSS (Pre-Code Scouting)
 
-> 💡 **Optimización de tokens:** El agente solo lee los archivos que devuelve el inventory check,
-> no navega `src/` manualmente. El script ya filtra por relevancia.
+> **Objetivo: Evitar crear código, herramientas o librerías desde cero si ya existen alternativas maduras de código abierto (OSS-First).**
+> **Coste de tokens: 0 tokens de inferencia (ejecución determinista de script CLI).**
+
+Para cada tarea candidata al nuevo sprint que plantee nuevas funcionalidades, herramientas, conectores o módulos técnicos:
+
+1. **Ejecutar scouting determinista:**
+   ```bash
+   bash scripts/agent/scout.sh "keywords de la tarea o módulo"
+   ```
+   *El script consulta de forma combinada GitHub (≥500⭐), npm y PyPI, filtrando licencias permisivas (MIT, Apache 2.0).*
+
+2. **Compilar el Digest de Prospección OSS:**
+   - Si se detectan librerías o repositorios consolidados (ej. SDKs oficiales, servidores MCP, herramientas CLI):
+     - Evaluar si la tarea debe orientarse a **integrar la solución existente** en lugar de programar desde cero.
+     - Registrar en la propuesta de sprint: Nombre del paquete/repo, estrellas, licencia y recomendación técnica.
+   - Si no se detectan candidatos viables o la necesidad es exclusivamente de lógica de negocio propia:
+     - Marcar como `Desarrollo a medida justificado (0 alternativas OSS viables)`.
+
+3. **Presentar tabla de opciones OSS al usuario** como parte del informe del paso 7 para que decida antes de redactar los task files:
+
+| Tarea Candidata | Alternativa OSS Detectada | Popularidad / Licencia | Recomendación del Agente | Decisión Usuario |
+|---|---|---|---|---|
+| T-XXX [nombre] | [repo o paquete] | ★ [stars] / [licencia] | Adoptar / Crear a medida | [Esperando] |
+
+### 2e. Persistencia de descubrimientos Scout en el research
+
+Tras la decisión del usuario sobre la tabla del paso 7 (adoptar / desarrollo a medida), escribir en `docs/sprints/sprint-{{SPRINT_SIGUIENTE}}-research.md` —crearlo si no existe, con la cabecera estándar del 6b— la sección:
+
+```markdown
+## Descubrimientos Scout (por tarea)
+
+### T-XXX — [nombre de la tarea]
+- **Alternativa detectada:** [paquete/repo, ★, licencia, versión o commit]
+- **Recomendación del agente:** adoptar / desarrollo a medida
+- **Decisión del usuario:** [adoptar | desarrollo a medida justificado — motivo en 1 línea]
+- **Notas de integración:** [cómo usarla en la tarea, o N/A]
+```
+
+Una subsección por cada tarea candidata evaluada en 2d, incluidas las marcadas "desarrollo a medida justificado".
+
+---
 
 ### 3. Vaciado de inboxes priorizando MVP
-Todo lo que se gestione en los inboxes ha de ser primero clasificado como MVP o post-MVP antes de introducirlo en el ROADMAP.md.
 
-Ejecutar:
+Todo lo gestionado en los inboxes debe clasificarse como MVP o post-MVP antes de introducirlo en `ROADMAP.md`.
+
 ```bash
 bash scripts/agent/check-inbox.sh
 ```
 
-El script reporta rutas exactas de manifiestos en `external-inbox/` y archivos en `docs/idea-inbox/`.
-
-#### 3a. external-inbox (si hay entradas)
-Para cada manifiesto listado, leer los campos Origen, ¿Qué hace?, Archivos que toca, Prioridad y Precauciones. Luego:
+#### 3a. docs/external-inbox (si hay entradas)
+Para cada manifiesto listado, leer Origen, ¿Qué hace?, Archivos que toca, Prioridad y Precauciones. Luego:
 1. Buscar en `src/` los archivos del campo "Archivos que toca" — ¿ya implementado?
-2. Cruzar contra `ROADMAP.md` — ¿existe tarea que lo cubra? ¿invalida alguna?
+2. Cruzar contra `ROADMAP.md` — ¿existe tarea que lo cubra? ¿Invalida alguna?
 3. Clasificar:
 
 | Resultado | Acción en roadmap |
@@ -143,7 +173,7 @@ Para cada manifiesto listado, leer los campos Origen, ¿Qué hace?, Archivos que
 | Nuevo, prioridad Media/Baja | Añadir al backlog |
 | Invalida tarea planificada | Marcar `⚠️ Revisar`, preguntar al usuario |
 
-> Los archivos de `external-inbox/` no se mueven ni borran hasta que el usuario lo apruebe.
+> Los archivos de `docs/external-inbox/` no se mueven ni borran hasta que el usuario lo apruebe.
 
 #### 3b. idea-inbox (si hay entradas)
 
@@ -151,30 +181,26 @@ Para cada manifiesto listado, leer los campos Origen, ¿Qué hace?, Archivos que
    ```bash
    bash scripts/agent/inventory-check.sh "keywords de la idea"
    ```
-   Si el script devuelve archivos con ⚠️ (>3 KB existentes):
-   - La idea **no puede clasificarse como "nueva tarea de implementación"**.
-   - Clasificar como `⚠️ Parcialmente implementada` y preguntar al usuario qué falta realmente.
+   Si devuelve archivos con ⚠️ (>3 KB existentes): clasificar como `⚠️ Parcialmente implementada` y preguntar qué falta.
 
 2. Clasificar cada idea en:
-   - **roadmap** → añadir al ítem correspondiente en `ROADMAP.md` o crear ítem nuevo.
-   - **backlog** → anotar en sección `## Backlog` del roadmap.
-   - **descartar** → registrar como descartada con motivo en una línea.
+   - **roadmap** → añadir al ítem correspondiente o crear ítem nuevo.
+   - **backlog** → anotar en `## Backlog` del roadmap.
+   - **descartar** → registrar como descartada con motivo.
 
 #### Confirmación y escritura (una sola ronda)
-Presentar al usuario una tabla consolidada con todas las entradas de ambos inboxes y las acciones propuestas.
-
-**Esperar confirmación antes de escribir o archivar nada.**
+Presentar tabla consolidada con todas las entradas y acciones propuestas. **Esperar confirmación antes de escribir o archivar nada.**
 
 Una vez confirmado:
-- Aplicar todos los cambios en `ROADMAP.md`.
-- Archivar archivos procesados de `docs/idea-inbox/` en `docs/idea-inbox/_archived/`.
-- Archivar archivos procesados de `external-inbox/` en `external-inbox/_archived/`.
+- Aplicar cambios en `ROADMAP.md`.
+- Archivar procesados de `docs/idea-inbox/` en `docs/idea-inbox/_archived/`.
+- Archivar procesados de `docs/external-inbox/` en `docs/external-inbox/_archived/`.
 
 ### 4. Generación del sprint file
-Crear `docs/sprints/sprint-XX.md` (incrementar número respecto al último existente — usar el valor `SPRINT_SIGUIENTE` del script) con esta estructura:
+Crear `docs/sprints/sprint-{{SPRINT_SIGUIENTE}}.md` con esta estructura:
 
 ```markdown
-# Sprint XX — [fecha lunes] → [fecha viernes]
+# Sprint {{SPRINT_SIGUIENTE}} — [fecha lunes] → [fecha viernes]
 
 ## Estado
 🟡 En curso
@@ -190,34 +216,27 @@ Crear `docs/sprints/sprint-XX.md` (incrementar número respecto al último exist
 
 ### 4b. Actualización del MVP Tracker
 
-> Este paso se ejecuta siempre, justo después de generar el sprint file.
-> Su objetivo: mantener el progreso hacia MVP sincronizado con el estado real del producto.
-
-Ejecutar:
 ```bash
 bash scripts/agent/update-mvp-tracker.sh
 ```
 
-El script recalcula el **% global** leyendo los valores de `% cap.` de la tabla en `docs/MVP-TRACKER.md` y actualiza la fila `TOTAL` y el historial automáticamente.
+El script recalcula el **% global** leyendo los valores de `% cap.` de `docs/MVP-TRACKER.md`.
 
-**A continuación, revisar manualmente si alguna capacidad requiere actualizar su `% cap.`:**
-
-- Leer `docs/IMPLEMENTED.md` y el sprint recién cerrado.
-- Para cada capacidad (C1–C6), evaluar si el trabajo completado desde el último planning mueve el % de esa capacidad.
-- Actualizar los valores en la tabla de `docs/MVP-TRACKER.md` si procede.
-- Ejecutar de nuevo `update-mvp-tracker.sh` para recalcular el total con los valores actualizados.
-- Añadir una fila en la tabla `## Historial de actualizaciones` con fecha, sprint y % global resultante.
+Revisar manualmente si alguna capacidad requiere actualizar su `% cap.`:
+- Leer `CHANGELOG.md` y el sprint recién cerrado.
+- Actualizar valores en la tabla si el trabajo completado mueve el %.
+- Ejecutar de nuevo `update-mvp-tracker.sh` para recalcular.
+- Añadir fila en `## Historial de actualizaciones` con fecha, sprint y % global.
 
 ### 5. Generación del prompt para Perplexity
 
-Antes de redactar el prompt, usar como fuente primaria el digest generado por `inventory-check.sh` si la señal de complejidad fue ≥2 (el script lo genera automáticamente). Si la señal fue baja, leer directamente los archivos más relevantes del código relacionado con la tarea principal (máx. 3 archivos).
-Objetivo: identificar qué ya está implementado o parcialmente resuelto para no investigar desde cero. El resultado de esta lectura alimenta la sección `SITUACIÓN ACTUAL` del prompt.
+Antes de redactar, usar como fuente primaria el digest de `inventory-check.sh` si la señal de complejidad fue ≥2. Si fue baja, leer directamente los archivos más relevantes del código relacionado (máx. 3 archivos).
 
-Producir un bloque de texto listo para pegar en Perplexity con este formato:
+Producir un bloque listo para pegar en Perplexity:
 
 ```
-CONTEXTO: Estoy desarrollando [descripción de Kanarii en 2 líneas].
-STACK: React 18 + TypeScript + Firebase (Firestore, Auth). Vite.
+CONTEXTO: Estoy desarrollando [descripción de {{PROJECT_NAME}} en 2 líneas].
+STACK: [Describe el stack tecnológico principal].
 SITUACIÓN ACTUAL: [qué ya existe en el código relacionado con la tarea:
 helpers implementados, patrones ya en uso, deuda técnica conocida].
 TAREA DE ESTA SEMANA: [descripción de la tarea principal del sprint]
@@ -231,28 +250,26 @@ de código, decisión de arquitectura, etc.]
 Mostrar al usuario el siguiente mensaje y **no continuar hasta recibir respuesta**:
 
 ```
-✅ Sprint XX listo. Prompt de Perplexity generado.
+✅ Sprint {{SPRINT_SIGUIENTE}} listo. Prompt de Perplexity generado.
 
 👉 Próximos pasos:
    1. Copia el prompt del paso anterior y pégalo en Perplexity.
    2. Cuando tengas los hallazgos, vuelve con la investigación, cambia el selector de modelo a Gemini Flash y ejecuta /session-start
-      pegando los hallazgos — el agente los guardará en docs/sprints/sprint-XX-research.md
+      pegando los hallazgos — el agente los guardará en docs/sprints/sprint-{{SPRINT_SIGUIENTE}}-research.md
       y los integrará en el task file antes de empezar a codear.
 
 ⏸ Este workflow queda en pausa. Hasta luego.
 ```
 
-> **Nota para el agente:** No ejecutes `/session-start` automáticamente. El usuario necesita hacer la investigación en Perplexity antes de continuar. El handoff es intencional.
+> **Nota para el agente:** No ejecutes `/session-start` automáticamente. El usuario necesita hacer la investigación en Perplexity antes de continuar.
 
 ### 6b. Recepción de hallazgos de Perplexity (cuando el usuario vuelve)
 
-> Este paso se ejecuta cuando el usuario regresa con los hallazgos de Perplexity, antes de lanzar `/session-start`.
-
 1. Recibir el output de Perplexity del usuario.
-2. Crear `docs/sprints/sprint-XX-research.md` con este formato:
+2. Si `docs/sprints/sprint-{{SPRINT_SIGUIENTE}}-research.md` ya existe (creado por el paso 2e), **NO sobrescribirlo**: añadir las secciones de Perplexity (`## Hallazgos clave`, `## Decisiones tomadas`, `## Descartado`) sin tocar `## Descubrimientos Scout (por tarea)`. Si no existe, crearlo con esta estructura:
 
 ```markdown
-# Research Sprint XX
+# Research Sprint {{SPRINT_SIGUIENTE}}
 > Fuente: Perplexity — [fecha]
 > Tarea principal: [descripción de la tarea del sprint]
 
@@ -269,40 +286,48 @@ Mostrar al usuario el siguiente mensaje y **no continuar hasta recibir respuesta
 [Opciones exploradas y descartadas con motivo]
 ```
 
-3. Confirmar al usuario: `"💾 Investigación guardada en docs/sprints/sprint-XX-research.md. Listo para /session-start."`
+2b. **Detección de repos de referencia**
+Si el research incluye URLs de repositorios GitHub:
+- Extraer cada URL y subcarpeta relevante si el usuario la especificó.
+- Invocar la skill `buscar-codigo-en-github` pasando esas URLs y la pregunta de investigación.
+- El resultado enriquece el research.md añadiendo una sección `## Patrones de repos analizados`.
+- Listar los repos detectados e indicar los hallazgos analizados.
+
+3. Confirmar: `"💾 Investigación guardada en docs/sprints/sprint-{{SPRINT_SIGUIENTE}}-research.md. Listo para /session-start."`
 
 ### 7. Entrega (resumen previo a la pausa)
-Justo antes del mensaje de pausa del paso 6, mostrar al usuario:
+
+Justo antes del mensaje de pausa del paso 6:
 1. Resumen del estado del roadmap (3 líneas máximo).
 2. Decisiones tomadas sobre tareas incompletas del sprint anterior (si las hubo).
 3. Resultado de la verificación de código del paso 2c (tabla con evidencias).
-4. Las tareas del sprint seleccionadas con su tamaño.
-5. **Progreso MVP actualizado** — mostrar en este formato exacto:
+4. **Resultado de la prospección determinista OSS del paso 2d** (tabla con alternativas detectadas por `scout.sh` y recomendación de adopción vs construcción).
+5. Las tareas del sprint seleccionadas con su tamaño.
+6. **Progreso MVP actualizado:**
    ```
    📊 Progreso MVP: XX%
-      C1 Acceso y membresía        ██████████ 100%
-      C2 Perfiles, fichas, tríada  ██████████ 100%
-      C3 Gobernanza S3             ████████░░  80%
-      C4 Marketplace               ███████░░░  70%
-      C5 Onboarding                ██████████ 100%
-      C6 Robustez base             ████████░░  75%
+      Capacidad 1                  ██████████ 100%
+      Capacidad 2                  ████████░░  80%
+      ...
    ```
-   Donde cada barra tiene 10 bloques (█ lleno, ░ vacío) proporcionales al % de la capacidad.
-   Si alguna capacidad bajó desde el planning anterior, añadir ⚠️ junto a esa línea.
-6. El prompt para Perplexity listo para copiar.
-7. Ruta del sprint file creado: `docs/sprints/sprint-XX.md`.
+7. El prompt para Perplexity listo para copiar.
+8. Ruta del sprint file creado.
 
 ## Reglas
 
 ### Selección de Tareas
 - **3 a 5 tareas** por sprint.
 - Equilibrio de tamaños: no más de 1 tarea L por sprint.
-- Prioridad: tareas arrastradas del sprint anterior primero, luego ítems bloqueantes, luego por orden del roadmap.
+- Prioridad: tareas arrastradas primero, luego bloqueantes, luego por orden del roadmap.
 - Tamaños: **S** = < 1h, **M** = 1-3h, **L** = 3h+.
-- **Solo entran tareas verificadas como no implementadas** (resultado del paso 2c — ni en `docs/IMPLEMENTED.md` ni en inventory check).
+- **Solo entran tareas verificadas como no implementadas** (resultado del paso 2c).
+
+### Salvaguarda de Prospección Determinista (scout-first)
+- **Obligatorio para tareas técnicas y nuevas herramientas**: Toda tarea candidata que introduzca conectores, integraciones, agentes, scrapers o utilidades debe evaluarse previamente con `scout.sh`.
+- Si existe una alternativa consolidada (≥500⭐, licencia permisiva MIT/Apache), la recomendación por defecto es la integración/adopción frente al desarrollo a medida.
+- **Coste cero**: El agente solo consume el digest estructurado producido por el script CLI, garantizando 0 tokens en la fase de búsqueda.
 
 ### Escala de Progreso del MVP
-Para la actualización manual de las capacidades C1–C6 en `docs/MVP-TRACKER.md`, aplicar esta escala:
 - **0%**: Sin implementación.
 - **25%**: Base iniciada, flujo principal no funcional.
 - **50%**: Flujo principal funcional, casos edge pendientes.
@@ -310,6 +335,6 @@ Para la actualización manual de las capacidades C1–C6 en `docs/MVP-TRACKER.md
 - **100%**: Todos los criterios "Done para MVP" cumplidos y validados.
 
 ### Guardias de Flujo y Verificación
-- **Limpieza previa**: Es obligatorio ejecutar `check-session.sh` y resolver sesiones colgadas antes de iniciar la planificación.
-- **Auditoría de completado**: Si `check-sprint.sh` alerta de un "sprint completado sin marcar", es obligatorio actualizar el estado del sprint anterior a `✅ Completado` antes de generar el nuevo sprint.
-- **Restricción de lectura**: El agente solo leerá los archivos devueltos por el script de `inventory-check.sh`. Está prohibido navegar o realizar búsquedas manuales sobre el directorio de código fuente `src/` para evitar consumos de tokens y asegurar la neutralidad.
+- **Limpieza previa**: Obligatorio ejecutar `check-session.sh` y resolver sesiones colgadas antes de iniciar.
+- **Auditoría de completado**: Si `check-sprint.sh` alerta de un "sprint completado sin marcar", actualizar estado antes de generar el nuevo sprint.
+- **Restricción de lectura**: Solo leer archivos devueltos por `inventory-check.sh`. Prohibido navegar `src/` manualmente.

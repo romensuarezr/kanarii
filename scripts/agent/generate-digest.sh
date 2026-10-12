@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # generate-digest.sh — Genera un digest LLM-friendly de una subcarpeta del repo
 # Uso: bash scripts/agent/generate-digest.sh --filter <subpath>
 # Ejemplo: bash scripts/agent/generate-digest.sh --filter src/components/propuestas
@@ -13,6 +13,27 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/cli-help.sh"
+for arg in "$@"; do
+  if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+    show_help "generate-digest.sh" \
+      "bash scripts/agent/generate-digest.sh [--filter <subpath>]" \
+      "Genera un digest LLM-friendly de una subcarpeta o módulo del repositorio para contextualizar agentes con coste 0." \
+      "--filter <subpath>       Ruta relativa a inspeccionar (ej: src/components/propuestas)" \
+      "-h, --help               Muestra este mensaje de ayuda" \
+      "ejemplo: bash scripts/agent/generate-digest.sh --filter src/components"
+  fi
+done
+
+for cmd in git awk sed tr cut wc; do
+  command -v "$cmd" >/dev/null 2>&1 || {
+    echo "❌ Error: Dependencia requerida '$cmd' no encontrada." >&2
+    echo "💡 Guía: Instálala mediante: apt-get install -y $cmd (Linux) o brew install $cmd (macOS)." >&2
+    exit 1
+  }
+done
+
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 OUT_DIR="$ROOT/docs/llm-context"
 
@@ -20,9 +41,20 @@ OUT_DIR="$ROOT/docs/llm-context"
 source "$(dirname "$0")/lib/detect-stack.sh"
 detect_stack "$ROOT"
 
-FILTER="${SRC_DIR#$ROOT/}"
-# Quitar barras al inicio si quedan
-FILTER="${FILTER#/}"
+if [[ "$AGENT_OS_STACK" == "unknown" ]]; then
+  echo "ℹ️  Aviso: Stack detectado como 'unknown'. Usando filtros agnósticos por defecto."
+  if [[ -n "${STACK_GUIDE:-}" ]]; then
+    echo "💡 $STACK_GUIDE"
+  fi
+fi
+
+if [[ "$SRC_DIR" == "$ROOT" || "$SRC_DIR" == "$ROOT/" || -z "$SRC_DIR" ]]; then
+  FILTER="."
+else
+  FILTER="${SRC_DIR#$ROOT/}"
+  FILTER="${FILTER#/}"
+  [[ -z "$FILTER" ]] && FILTER="."
+fi
 
 EXCLUDE_PATTERNS=("${DIGEST_EXCLUDE[@]}")
 
@@ -94,7 +126,14 @@ if echo "$REMOTE_URL" | grep -q "github.com"; then
 fi
 
 # ── Fallback local: árbol + contenido filtrado ───────────────────────────────
-TARGET_PATH="$ROOT/$FILTER"
+if [[ "$FILTER" == "." || "$FILTER" == "./" ]]; then
+  TARGET_PATH="$ROOT"
+elif [[ "$FILTER" = /* ]]; then
+  TARGET_PATH="$FILTER"
+else
+  TARGET_PATH="$ROOT/$FILTER"
+fi
+
 if [ ! -d "$TARGET_PATH" ] && [ ! -f "$TARGET_PATH" ]; then
   echo "❌ Directorio o archivo no encontrado: $TARGET_PATH"
   exit 1
@@ -103,9 +142,15 @@ fi
 echo "⚙️  Generando digest local de $FILTER..."
 
 # Construir expresión de exclusión para find
-FIND_EXCLUDES=()
+FIND_EXCLUDES=("!" "-path" "$OUT_DIR/*" "!" "-path" "*/.git/*" "!" "-path" "*/.git")
 for pat in "${EXCLUDE_PATTERNS[@]}"; do
-  FIND_EXCLUDES+=("!" "-name" "$pat")
+  if [[ "$pat" == *"/"* ]]; then
+    clean_pat="${pat#/}"
+    clean_pat="${clean_pat%/}"
+    FIND_EXCLUDES+=("!" "-path" "*/$clean_pat/*" "!" "-path" "*/$clean_pat")
+  else
+    FIND_EXCLUDES+=("!" "-name" "$pat")
+  fi
 done
 
 {

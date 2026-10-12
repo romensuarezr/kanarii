@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # inventory-check.sh — Verifica código existente antes de crear task file o planificar sprint
 # Uso: bash scripts/agent/inventory-check.sh "palabras clave separadas por espacio"
 # Ejemplo: bash scripts/agent/inventory-check.sh "timeline propuesta respuesta modal"
@@ -13,6 +13,27 @@
 # El test -f en session-start sigue siendo el firewall determinista final.
 
 set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/cli-help.sh"
+for arg in "$@"; do
+  if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+    show_help "inventory-check.sh" \
+      "bash scripts/agent/inventory-check.sh \"<keywords>\"" \
+      "Firewall anti-duplicación: verifica si existen componentes, funciones o código similar antes de redactar una tarea o plan." \
+      "\"<keywords>\"            Palabras clave separadas por espacio que definen la funcionalidad" \
+      "-h, --help               Muestra este mensaje de ayuda" \
+      "ejemplo: bash scripts/agent/inventory-check.sh \"timeline propuesta respuesta modal\""
+  fi
+done
+
+for cmd in git find grep wc awk head; do
+  command -v "$cmd" >/dev/null 2>&1 || {
+    echo "❌ Error: Dependencia requerida '$cmd' no encontrada." >&2
+    echo "💡 Guía: Instálala mediante: apt-get install -y $cmd (Linux) o brew install $cmd (macOS)." >&2
+    exit 1
+  }
+done
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 KEYWORDS="$*"

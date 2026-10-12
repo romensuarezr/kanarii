@@ -1,9 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # check-sprint.sh — Contexto determinista para /sprint-planning
 # Uso: bash scripts/agent/check-sprint.sh
 # Devuelve: ruta ROADMAP, estado sprint anterior, spillover, inbox, git log, system check.
 
 set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/cli-help.sh"
+for arg in "$@"; do
+  if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+    show_help "check-sprint.sh" \
+      "bash scripts/agent/check-sprint.sh" \
+      "Recopila el contexto determinista para la planificación del sprint: roadmap, tareas activas, spillover, ideas y git log reciente." \
+      "-h, --help               Muestra este mensaje de ayuda" \
+      "ejemplo: bash scripts/agent/check-sprint.sh"
+  fi
+done
+
+for cmd in git grep head tail wc; do
+  command -v "$cmd" >/dev/null 2>&1 || {
+    echo "❌ Error: Dependencia requerida '$cmd' no encontrada." >&2
+    echo "💡 Guía: Instálala mediante: apt-get install -y $cmd (Linux) o brew install $cmd (macOS)." >&2
+    exit 1
+  }
+done
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 SPRINTS_DIR="$ROOT/docs/sprints"
@@ -18,16 +38,18 @@ fi
 echo "=== SPRINT CONTEXT ==="
 
 if [ -n "$ROADMAP_PATH" ]; then
-  PENDING_GLOBAL=$(grep -c "^- \\[ \\]" "$ROADMAP_PATH" 2>/dev/null || echo "0")
+  PENDING_GLOBAL=$(grep -c "^- \\[ \\]" "$ROADMAP_PATH" 2>/dev/null || true)
   echo "ROADMAP: $ROADMAP_PATH (✅ Detectado — $PENDING_GLOBAL tareas pendientes)"
 else
-  echo "ROADMAP: ❌ CRÍTICO — NO ENCONTRADO (debe ser roadmap.md o ROADMAP.md)"
-  echo "ACTION_REQUIRED: Crea roadmap.md en la raíz antes de continuar."
+  RED='\033[0;31m'
+  NC='\033[0m'
+  echo -e "${RED}ROADMAP: ❌ CRÍTICO — NO ENCONTRADO (debe ser roadmap.md o ROADMAP.md)${NC}"
+  echo -e "${RED}Guía: Crea un archivo roadmap.md o ROADMAP.md en la raíz del proyecto para definir la dirección del backlog antes de continuar.${NC}"
   exit 1
 fi
 
 # 2. Sprint más reciente (excluye research y _archived)
-LAST_SPRINT=$(find "$SPRINTS_DIR" -name "sprint-[0-9][0-9].md" \
+LAST_SPRINT=$(find "$SPRINTS_DIR" -name "sprint-[0-9][0-9]*.md" \
   | grep -v -E "research|_archived" | sort -V | tail -1 || true)
 
 if [ -z "$LAST_SPRINT" ]; then
@@ -36,15 +58,15 @@ if [ -z "$LAST_SPRINT" ]; then
   echo "SPRINT_MODE: INICIALIZACIÓN"
 else
   SPRINT_NAME=$(basename "$LAST_SPRINT" .md)
-  SPRINT_NUM=$(echo "$SPRINT_NAME" | grep -oE '[0-9]+$')
+  SPRINT_NUM=$(echo "$SPRINT_NAME" | grep -oE '[0-9]+' | head -1)
   NEXT_NUM=$(printf "%02d" $((10#$SPRINT_NUM + 1)))
 
   echo "SPRINT_ACTUAL: $LAST_SPRINT"
   echo "SPRINT_SIGUIENTE: sprint-$NEXT_NUM"
 
   # Conteo real de tareas completadas vs total
-  TOTAL=$(grep -c "^| T-" "$LAST_SPRINT" 2>/dev/null || echo "0")
-  DONE=$(grep "^| T-" "$LAST_SPRINT" 2>/dev/null | grep -cE "✅|🟢 Completada" || echo "0")
+  TOTAL=$(grep -cE "^\| T-|^-[[:space:]]*\[[ x/]\]" "$LAST_SPRINT" 2>/dev/null || true)
+  DONE=$(grep -E "^\| T-|^-[[:space:]]*\[[ x/]\]" "$LAST_SPRINT" 2>/dev/null | grep -cE "✅|🟢 Completada|\[x\]" || true)
   if [ "$DONE" -eq "$TOTAL" ] && [ "$TOTAL" -gt 0 ]; then
     echo "SPRINT_ESTADO: COMPLETADO ($DONE/$TOTAL ✅)"
   elif [ "$DONE" -gt 0 ]; then
@@ -56,13 +78,15 @@ else
   # 3. Spillover — tareas no completadas
   echo ""
   echo "=== SPILLOVER (tareas no completadas) ==="
-  PENDIENTES=$(grep "^| T-" "$LAST_SPRINT" 2>/dev/null \
-    | grep -vE "✅|🟢 Completada" || true)
+  PENDIENTES=$(grep -E "^\| T-|^-[[:space:]]*\[[ /]\]" "$LAST_SPRINT" 2>/dev/null \
+    | grep -vE "✅|🟢 Completada|\[x\]" || true)
   if [ -z "$PENDIENTES" ]; then
     echo "(Ninguna — sprint anterior limpio ✅)"
   else
     echo "$PENDIENTES"
-    echo "⚠️  INSTRUCCIÓN: Decide si arrastrar al nuevo sprint o devolver al backlog."
+    YELLOW='\033[0;33m'
+    NC='\033[0m'
+    echo -e "${YELLOW}⚠️  INSTRUCCIÓN: Decide si arrastrar al nuevo sprint o devolver al backlog.${NC}"
   fi
 fi
 
@@ -95,16 +119,19 @@ echo "=== SYSTEM CHECK ==="
 LOCK="$ROOT/.agent-session.lock"
 WARNINGS=0
 
+YELLOW='\033[0;33m'
+NC='\033[0m'
+
 if [ -f "$LOCK" ]; then
   if grep -q '"status"[[:space:]]*:[[:space:]]*"active"' "$LOCK" 2>/dev/null; then
-    echo "⚠️  ALERTA: Sesión activa en .agent-session.lock — ejecuta check-session.sh primero"
+    echo -e "${YELLOW}⚠️  ALERTA: Sesión activa en .agent-session.lock — ejecuta check-session.sh primero${NC}"
     WARNINGS=$((WARNINGS + 1))
   fi
 fi
 
 UNSTAGED=$(git -C "$ROOT" diff --name-only 2>/dev/null | grep '^src/' | head -3 || true)
 if [ -n "$UNSTAGED" ]; then
-  echo "⚠️  GIT: Cambios sin commitear en src/:"
+  echo -e "${YELLOW}⚠️  GIT: Cambios sin commitear en src/:${NC}"
   echo "$UNSTAGED" | sed 's/^/   /'
   WARNINGS=$((WARNINGS + 1))
 fi

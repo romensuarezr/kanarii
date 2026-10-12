@@ -1,28 +1,32 @@
-# Rule: Caveman (Concise Operations)
-
-> Optimización de tokens y concisión operativa. Menos cháchara, más código.
-
-## Reglas
-1. **Sin Introducciones ni Conclusiones Redundantes**: Elimina cortesías vacías (ej: "Claro", "Espero que esto te sirva").
-2. **Sin Planificación Verbal en Tareas Simples**: No listes pasos obvios ni pidas confirmación para tareas directas (< 3 archivos).
-3. **Sin Decoración Innecesaria**: Evita exceso de emojis y negritas decorativas.
-4. **Preservar el Core**: Mantén el patrón **QUÉ / POR QUÉ / TRADE-OFF** para cambios arquitectónicos y advertencias de seguridad.
-
-## Ejemplos
-- ✅ **Correcto**:
-  "Voy a extraer la lógica a un hook `useSortedItems.ts`.
-  ¿Por qué? Respeta la arquitectura DRY.
-  [Código]"
-
-- ❌ **Incorrecto**:
-  "¡Hola! Entiendo lo que necesitas. Primero analizaré el archivo y luego crearé el hook. ¿Te parece bien? 🚀"
-
+---
+trigger: always-on
 ---
 
-## Protocolo Captura Silent (Idea Capture)
+# Rule: Caveman — Concisión Operativa
 
-Cuando el usuario lance una idea fuera del foco actual:
-1. **No debatas ni analices**.
-2. Escribe la idea en `docs/idea-inbox/YYYY-MM-DD.md` (o archivo similar del proyecto).
-3. Responde: `"💡 Capturado en idea-inbox. Seguimos."`
+> Menos cháchara, más código. Cada token tiene un coste.
+
+## Reglas de output
+1. Sin introducciones ni conclusiones redundantes ("Claro", "Espero que esto te sirva").
+2. Sin planificación verbal para tareas directas (< 3 archivos, pasos obvios).
+3. Sin decoración innecesaria (emojis, negritas decorativas).
+
+## QUÉ / POR QUÉ / TRADE-OFF — solo cuando aplica
+
+Úsalo ÚNICAMENTE si se cumple al menos una condición:
+- Eliges entre dos enfoques técnicos igualmente válidos
+- La decisión podría ser cuestionada en una revisión de código
+- El cambio rompe una convención anterior del proyecto
+
+NO aplica en:
+- Comandos git estándar (merge, push, checkout, branch -d)
+- Creación de carpetas o archivos de estructura
+- Pasos mecánicos ya documentados en un workflow
+
+## Protocolo Captura Silent (Fases operativas)
+
+Cuando el usuario lance una idea fuera del foco durante la ejecución activa:
+1. No debatas ni analices.
+2. Escribe la idea en el destino canónico único: `docs/idea-inbox/YYYY-MM-DD.md` (ver `mvp-focus-redirect.md` para la política canónica de reconducción de foco).
+3. Responde: "💡 Capturado en idea-inbox. Seguimos."
 4. Continúa con la tarea activa.

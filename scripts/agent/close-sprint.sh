@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # close-sprint.sh — Archiva un sprint completado en docs/sprints/_archived/
 # Uso: bash scripts/agent/close-sprint.sh sprint-07
 #
@@ -12,15 +12,43 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/cli-help.sh"
+for arg in "$@"; do
+  if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+    show_help "close-sprint.sh" \
+      "bash scripts/agent/close-sprint.sh <nombre-sprint|--auto>" \
+      "Archiva un sprint completado en docs/sprints/_archived/ y sus tareas asociadas, verificando guardias de finalización." \
+      "<nombre-sprint>          Nombre o archivo del sprint a archivar (ej: sprint-11 o docs/sprints/sprint-11-core.md)" \
+      "--auto                   Busca y archiva automáticamente los sprints marcados como completados" \
+      "-h, --help               Muestra este mensaje de ayuda" \
+      "ejemplo: bash scripts/agent/close-sprint.sh sprint-11" \
+      "ejemplo: bash scripts/agent/close-sprint.sh --auto"
+  fi
+done
+
+# Pre-flight: verificación determinista de dependencias
+for cmd in git grep mkdir basename wc; do
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "❌ ERROR: Dependencia requerida no encontrada: $cmd" >&2
+    echo "Guía: Instala $cmd en tu sistema antes de continuar." >&2
+    exit 1
+  fi
+done
+
 ROOT="$(git rev-parse --show-toplevel)"
 SPRINTS_DIR="$ROOT/docs/sprints"
 ARCHIVE_DIR="$ROOT/docs/sprints/_archived"
 CHANGELOG="$ROOT/CHANGELOG.md"
+[ -f "$CHANGELOG" ] || CHANGELOG="$ROOT/changelog.md"
+
 
 # --- Validar argumento ---
 if [ -z "${1:-}" ]; then
-  echo "❌ Uso: bash scripts/agent/close-sprint.sh <nombre-sprint> o --auto"
-  echo "   Ejemplo: bash scripts/agent/close-sprint.sh sprint-07"
+  RED='\033[0;31m'
+  NC='\033[0m'
+  echo -e "${RED}❌ ERROR: Uso incorrecto: bash scripts/agent/close-sprint.sh <nombre-sprint> o --auto${NC}"
+  echo -e "${RED}Guía: Proporciona el identificador del sprint (ej: sprint-02) o usa --auto para detectar sprints marcados como completados.${NC}"
   exit 1
 fi
 
@@ -49,27 +77,34 @@ SPRINT_NAME="$1"
 SPRINT_FILE="$SPRINTS_DIR/${SPRINT_NAME}.md"
 
 if [ ! -f "$SPRINT_FILE" ]; then
-  echo "❌ No encontrado: $SPRINT_FILE"
-  echo "   Verifica que el archivo existe y no fue archivado ya."
+  RED='\033[0;31m'
+  NC='\033[0m'
+  echo -e "${RED}❌ ERROR: No encontrado: $SPRINT_FILE${NC}"
+  echo -e "${RED}Guía: Asegúrate de que el nombre del sprint es correcto y que el archivo .md correspondiente está en docs/sprints/.${NC}"
   exit 1
 fi
 
 # --- Verificar que el sprint está completado antes de archivar ---
-TOTAL=$(grep -c "^| T-" "$SPRINT_FILE" 2>/dev/null || echo "0")
-DONE=$(grep "^| T-" "$SPRINT_FILE" 2>/dev/null | grep -cE "✅|🟢 Completada" || echo "0")
+TOTAL=$(grep -E "^\| T-|^-[[:space:]]*\[[ x/]\]" "$SPRINT_FILE" 2>/dev/null | wc -l || echo "0")
+DONE=$(grep -E "^\| T-|^-[[:space:]]*\[[ x/]\]" "$SPRINT_FILE" 2>/dev/null | grep -E "✅|🟢 Completada|\[x\]" 2>/dev/null | wc -l || echo "0")
 
 if [ "$TOTAL" -eq 0 ]; then
-  echo "⚠️  No se encontraron tareas (filas | T-XXX |) en $SPRINT_NAME."
-  echo "   Verifica el formato del archivo antes de archivar."
+  YELLOW='\033[0;33m'
+  NC='\033[0m'
+  echo -e "${YELLOW}⚠️  WARNING: No se encontraron tareas (filas | T-XXX | o items - [ ] T-XXX) en $SPRINT_NAME.${NC}"
+  echo -e "${YELLOW}Guía: Verifica que las tareas estén formateadas en tablas o listas en el archivo del sprint.${NC}"
   exit 1
 fi
 
 if [ "$DONE" -lt "$TOTAL" ]; then
-  echo "⚠️  Sprint incompleto: $DONE/$TOTAL tareas completadas."
-  echo "   Solo archiva sprints donde TODAS las tareas estén en ✅ o 🟢 Completada."
-  echo "   Si quieres forzar el archivado, usa: FORCE=1 bash scripts/agent/close-sprint.sh $SPRINT_NAME"
-  [ "${FORCE:-0}" != "1" ] && exit 1
-  echo "   ⚠️  FORCE=1 activo — archivando de todas formas."
+  YELLOW='\033[0;33m'
+  NC='\033[0m'
+  echo -e "${YELLOW}⚠️  WARNING: Sprint incompleto: $DONE/$TOTAL tareas completadas.${NC}"
+  echo -e "${YELLOW}Guía: Asegúrate de completar todas las tareas pendientes del sprint. Si deseas archivar de todas formas, ejecuta: FORCE=1 bash scripts/agent/close-sprint.sh $SPRINT_NAME${NC}"
+  if [ "${FORCE:-0}" != "1" ]; then
+    exit 1
+  fi
+  echo -e "${YELLOW}   ⚠️  FORCE=1 activo — archivando de todas formas.${NC}"
 fi
 
 # --- Detectar versión sugerida en CHANGELOG (para el mensaje de commit) ---

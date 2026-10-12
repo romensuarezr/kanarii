@@ -1,13 +1,39 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # contribute.sh - Promoción inversa: de proyecto local a Agent OS
 # Uso: ./scripts/agent/contribute.sh /ruta/proyecto nombre-archivo.md [--workflow|--skill]
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/cli-help.sh"
+for arg in "$@"; do
+  if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+    show_help "contribute.sh" \
+      "bash scripts/agent/contribute.sh <ruta-proyecto> <nombre-archivo> [--workflow|--skill]" \
+      "Promoción inversa: empaqueta mejoras desarrolladas en proyectos satélites hacia el core de Agent OS." \
+      "<ruta-proyecto>          Ruta al proyecto satélite de origen" \
+      "<nombre-archivo>         Nombre del archivo a promover (ej: mi-workflow.md)" \
+      "--workflow               Indica que el recurso es un workflow" \
+      "--skill                  Indica que el recurso es una skill" \
+      "-h, --help               Muestra este mensaje de ayuda" \
+      "ejemplo: bash scripts/agent/contribute.sh ~/proyectos/kanarii sync-rules.md --workflow"
+  fi
+done
+
+for cmd in git cp; do
+  command -v "$cmd" >/dev/null 2>&1 || {
+    echo "❌ Error: Dependencia requerida '$cmd' no encontrada." >&2
+    echo "💡 Guía: Instálala mediante: apt-get install -y $cmd (Linux) o brew install $cmd (macOS)." >&2
+    exit 1
+  }
+done
 
 PROJECT_PATH=$1
 FILE_NAME=$2
 TYPE=$3
 
-AGENT_OS_PATH="/home/romen/Proyectos/agent-os"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DEFAULT_CORE="$(cd "$SCRIPT_DIR/../.." && pwd)"
+AGENT_OS_PATH="${AGENT_OS_PATH:-$DEFAULT_CORE}"
 
 if [ -z "$PROJECT_PATH" ] || [ -z "$FILE_NAME" ]; then
     echo "❌ Error: Faltan argumentos."
@@ -33,17 +59,17 @@ case $TYPE in
         ;;
 esac
 
-if [ ! -f "$SRC_DIR/$FILE_NAME" ]; then
-    echo "❌ Error: El archivo no existe en el proyecto: $SRC_DIR/$FILE_NAME"
+if [ ! -e "$SRC_DIR/$FILE_NAME" ]; then
+    echo "❌ Error: El archivo o directorio no existe en el proyecto: $SRC_DIR/$FILE_NAME"
     exit 1
 fi
 
 mkdir -p "$DEST_DIR"
-cp "$SRC_DIR/$FILE_NAME" "$DEST_DIR/"
+cp -r "$SRC_DIR/$FILE_NAME" "$DEST_DIR/"
 
 echo "🚀 Promoviendo $FILE_NAME desde $PROJECT_PATH..."
 
-cd "$AGENT_OS_PATH"
+cd "$AGENT_OS_PATH" || exit 1
 git add .
 git commit -m "feat: promote $FILE_NAME ($TYPE_NAME) from $(basename "$PROJECT_PATH")"
 
