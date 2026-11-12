@@ -1,28 +1,49 @@
 ---
-description: Ritual de inicio de semana. Lee el roadmap, vacía el idea-inbox, genera el sprint file semanal y produce el prompt listo para investigación en Perplexity.
+description: Workflow ejecutable de planificación de sprint. Si este archivo es invocado o referenciado, el agente DEBE asumir de inmediato el rol de planificador y ejecutar secuencialmente los pasos 1 al 7 en orden estricto sin pausas pasivas.
 ---
 
 # sprint-planning
 
-> Duración estimada: 15 min. Ejecutar los lunes antes de abrir cualquier sesión de desarrollo en {{PROJECT_NAME}}.
+> ⚡ **DIRECTIVA DE EJECUCIÓN INMEDIATA (AGNOSTIC RUNTIME)**:
+> Si el usuario menciona este archivo (ej. `@[.agents/workflows/sprint-planning.md]`) o lanza el comando `/sprint-planning`,
+> el agente **debe comenzar a ejecutar de inmediato el protocolo en orden estricto (Paso 1 → 7)**.
+> **PROHIBIDO** responder preguntando «¿qué deseas hacer con este archivo?» o quedarse esperando instrucciones. La invocación ES la orden de ejecución.
+
+> Duración estimada: 15 min. Ejecutar los lunes antes de abrir cualquier sesión de desarrollo en [PROJECT_NAME] (donde [PROJECT_NAME] es el proyecto actual y [SPRINT_SIGUIENTE] es el número del sprint entrante derivado de check-sprint.sh).
 
 ## Objetivo
 
 - Analizar el roadmap del proyecto, vaciar los inboxes priorizando MVP y preparar las tareas del nuevo sprint.
-- Sincronizar el progreso real del producto en `docs/MVP-TRACKER.md`.
-- Generar el prompt de investigación técnica para Perplexity.
+- Sincronizar el progreso real del producto en `docs/MVP-TRACKER.md` (satélites).
+- Generar el prompt de investigación técnica para Perplexity o ejecutar SearXNG de forma autónoma.
+
+### Regla de Oro de Gobernanza: El agente propone, el usuario solo confirma
+1. El agente **NUNCA** formula preguntas abiertas de definición al usuario («¿qué tareas quieres hacer?», «elige entre estas opciones»).
+2. El agente es el responsable de analizar el estado del proyecto, cosechar las fuentes (spillover, inboxes, backlog del roadmap) y formular en el Paso 7 una **propuesta estructurada y cerrada de 3 a 5 tareas** (IDs, títulos, tamaños S/M/L y justificación técnica).
+3. Si el roadmap no tiene tareas desglosadas con ID para el sprint entrante, el agente toma el siguiente tema prioritario del roadmap y lo descompone de forma autónoma en 3–5 tareas atómicas (S/M/L).
+4. La única interacción requerida del operador humano es emitir su veredicto en el Paso 7: `APROBADO` (autorización macro para régimen Desatendido) o enmiendas concretas («quita T-X y mete Y»).
+
+## Arquetipo de Repositorio (Core vs. Satélite)
+- **Si el proyecto es el Core de agent-os**:
+  - No existe ni se busca `docs/MVP-TRACKER.md` (omitir Paso 4b).
+  - El producto son los scripts en `scripts/agent/`, workflows y skills.
+  - Las categorías canónicas de tareas son: `Universalización`, `Bug del sistema`, `Nueva herramienta`, `DX`, `Documentación`, `Gobernanza`.
+  - La fuente principal de backlog es `roadmap.md` y `docs/idea-inbox/`.
+- **Si el proyecto es un Satélite (aplicación de usuario)**:
+  - Aplica `docs/MVP-TRACKER.md` para medir % funcional del producto.
+  - Las tareas responden a features, UI, APIs y casos de uso del producto.
 
 ## Archivos y rutas a revisar
 
-- `ROADMAP.md`
+- `roadmap.md`
 - `docs/sprints/`
 - `docs/idea-inbox/`
 - `docs/external-inbox/`
-- `docs/MVP-TRACKER.md`
-- `CHANGELOG.md`
+- `docs/MVP-TRACKER.md` (solo si el proyecto es satélite; el core no lo tiene)
+- `changelog.md`
 
 ## Prerrequisitos
-- `ROADMAP.md` en la raíz del proyecto (mayúsculas exactas).
+- `roadmap.md` en la raíz del proyecto. **La convención del core es minúsculas**: `audit-repo.sh` migra de forma proactiva los `ROADMAP.md` a `roadmap.md`, así que el requisito en mayúsculas estaba desalineado con el estándar que el propio core impone.
 - Antigravity en modelo **Flash** (es lectura y planificación, no código).
 
 ---
@@ -39,13 +60,32 @@ bash scripts/agent/close-sprint.sh --auto
 - Si `check-session.sh` devuelve un JSON → hay una sesión anterior sin cerrar. Ejecutar el **Modo Rescate** de `/session-start` antes de continuar.
 - `close-sprint.sh --auto` detecta y archiva en `docs/sprints/_archived/` cualquier sprint cuyo estado sea `✅ Completado`. Si no hay ninguno, continúa sin error.
 
-### 1b. Verificación de actualización del core (offline)
+### 1b. Auditoría y Plan de Impacto de Actualización del Core (solo proyectos satélite)
 
-1. Comprobar si existe `.agents/context/last-sync.md`.
-2. Si **NO existe** o la fecha es de hace **más de 7 días**: recomendar al usuario ejecutar:
-   ```bash
-   bash scripts/agent/sync.sh .
-   ```
+- **Si el proyecto es el Core** (`check-sprint.sh` reporta `TIPO_PROYECTO: CORE` o existe `tests/validate-control-plane.sh`): **OMITIR este paso por completo** (el núcleo de agent-os nunca se sincroniza con `sync.sh`).
+- **Si el proyecto es un Satélite (hijo)**:
+  1. Si `check-session.sh` reporta `CORE_UPDATE_AVAILABLE: true` o `last-sync.md` supera los 7 días:
+     Ejecutar la simulación determinista sin escrituras en disco:
+     ```bash
+     bash scripts/agent/sync.sh --dry-run .
+     ```
+  2. Extraer las novedades de `changelog.md` del core frente a la versión local registrada en `.agents/context/last-sync.md` o `.agents/context/agent-os-changelog.md`.
+  3. Formular el **Plan de Impacto de Actualización de Agent OS**:
+     - **Versiones**: Core upstream (`vX.Y.Z`) vs Satélite local (`vA.B.C`).
+     - **Novedades**: 3 a 5 puntos clave de la nueva versión (nuevas skills, scripts, reglas o correcciones).
+     - **Activos vivos impactados**: Archivos nuevos (+), modificados (~) y deprecados a limpiar con `--cleanup` (-) según el resumen de `sync.sh --dry-run`.
+     - **Impacto operativo**: Cómo beneficia al flujo de trabajo del satélite y qué ventajas o cambios operativos introduce.
+  4. La decisión de aplicar la actualización se integra como compuerta explícita en la ventana de decisión macro del **Paso 7**: si el usuario aprueba la actualización junto al sprint, el agente ejecuta `bash scripts/agent/sync.sh .` antes de arrancar la primera tarea del sprint.
+
+### 1c. Sonda determinista de automejora del tooling ($0 tokens)
+
+Ejecutar la sonda determinista de actualización de herramientas de la flota:
+```bash
+bash scripts/agent/check-tooling-updates.sh --generate-inbox
+```
+- Inspecciona los registros oficiales (npm, GitHub, PyPI) de herramientas de la flota (OpenCode, Hermes, Orca, Infisical, Glances) a coste $0 de tokens de inferencia.
+- Si detecta versiones upstream nuevas, genera automáticamente un borrador estructurado en `docs/idea-inbox/YYYY-MM-DD-<tool>-v<version>.md` con el estado `💡 REGISTRADA, NO APROBADA`.
+- **Cero auto-ejecución**: no muta ni actualiza paquetes en caliente. La propuesta se clasifica en el Paso 3 y se somete a veredicto soberano del operador en el Paso 7.
 
 ### 2. Lectura de estado
 
@@ -55,105 +95,36 @@ bash scripts/agent/check-sprint.sh
 
 **Usar exclusivamente el output de este script como fuente de verdad.** No ejecutar `find`, `ls` ni leer sprint files manualmente.
 
+- Capturar `SPRINT_SIGUIENTE` y la clave determinista `TAREA_SIGUIENTE_ID` (ej. `T-192`).
 - `❌ CRÍTICO` en ROADMAP → detenerse e informar al usuario.
 - **Alerta "SPRINT COMPLETADO SIN MARCAR"** → actualizar estado del sprint anterior a `✅ Completado` antes de continuar. Obligatorio.
 - Entradas en `SPILLOVER` → ir al paso 2b.
 - Sistema limpio → ir directamente al paso 3.
 
-Leer `ROADMAP.md` completo tras ejecutar el script.
+Leer `roadmap.md` completo tras ejecutar el script.
 
-### 2b. Decisión sobre tareas incompletas (solo si hay sin ✅)
+### 2b. Evaluación de spillover (tareas incompletas)
 
-> No arrastrar por inercia — decisión explícita por cada una.
+> No arrastrar por inercia — decisión técnica por cada una.
 
-**Tabla maestra de decisión** (aplica tanto a spillover como a inventory check en 2c):
+**Tabla maestra de decisión** (aplica tanto a spillover como a inventory check en 3c):
 
-| Avance | En spillover (2b) | En inventory check (2c) |
+| Avance | En spillover (2b) | En inventory check (3c) |
 |---|---|---|
-| **>70%** | Arrastra al sprint nuevo como S con nota `↩ continuación sprint anterior` | Marcar `✅ Hecho` en roadmap; no entra al sprint |
-| **30–70%** | Preguntar al usuario: ¿arrastra o vuelve al roadmap? | Preguntar al usuario si refinar la tarea para lo que falta |
-| **<30%** | Vuelve al roadmap como ⬜ Pendiente | Proceder normalmente |
+| **>70%** | Proponer arrastrar al sprint nuevo como S con nota `↩ continuación sprint anterior` | Marcar `✅ Hecho` en roadmap; no entra al sprint |
+| **30–70%** | Proponer arrastrar refinada o devolver al roadmap según criticidad | Proponer refinar la tarea para lo que falta |
+| **<30%** | Proponer devolver al roadmap como ⬜ Pendiente | Proceder normalmente |
 
 Al cerrar el sprint anterior:
-- Cambiar su estado de `🟡 En curso` a `🔴 Cerrado con pendientes`.
+- Si quedan tareas incompletas: cambiar su estado de `🟡 En curso` a `🔴 Cerrado con pendientes`.
 - Añadir una línea en `## Notas de planning` explicando qué quedó sin hacer y por qué.
-
-**El agente presenta la propuesta al usuario y espera confirmación antes de escribir nada.**
-
-### 2c. Verificación de código — firewall anti-duplicación
-
-> Ejecutar siempre que haya tareas `⬜ Pendiente` o `⏸ Pausada` candidatas al nuevo sprint.
-> **Objetivo: evitar que llegue al sprint trabajo que ya está hecho.**
-
-**Paso previo obligatorio — leer el registro de features:**
-
-Antes de ejecutar `inventory-check.sh`, leer `CHANGELOG.md`.
-Si la feature candidata ya aparece → **no entra al sprint, marcar `✅ Hecho` en roadmap directamente**.
-
-Para cada tarea candidata que NO aparezca en `CHANGELOG.md`:
-
-1. **Ejecutar inventory check:**
-   ```bash
-   bash scripts/agent/inventory-check.sh "keywords de la tarea"
-   ```
-
-2. **Leer los archivos marcados con ⚠️** (máx. 3–5). Comparar con criterios de done del task file si existe.
-
-3. **Clasificar usando la tabla maestra del paso 2b** (columna “En inventory check”).
-
-4. **Presentar tabla al usuario** con: tarea, fuente, archivos encontrados, % estimado, acción propuesta.
-
-5. **Esperar confirmación antes de continuar al paso 3.**
-
-> 💡 **Optimización de tokens:** El agente solo lee los archivos que devuelve el inventory check, no navega `src/` manualmente.
-
-### 2d. Salvaguarda de prospección determinista OSS (Pre-Code Scouting)
-
-> **Objetivo: Evitar crear código, herramientas o librerías desde cero si ya existen alternativas maduras de código abierto (OSS-First).**
-> **Coste de tokens: 0 tokens de inferencia (ejecución determinista de script CLI).**
-
-Para cada tarea candidata al nuevo sprint que plantee nuevas funcionalidades, herramientas, conectores o módulos técnicos:
-
-1. **Ejecutar scouting determinista:**
-   ```bash
-   bash scripts/agent/scout.sh "keywords de la tarea o módulo"
-   ```
-   *El script consulta de forma combinada GitHub (≥500⭐), npm y PyPI, filtrando licencias permisivas (MIT, Apache 2.0).*
-
-2. **Compilar el Digest de Prospección OSS:**
-   - Si se detectan librerías o repositorios consolidados (ej. SDKs oficiales, servidores MCP, herramientas CLI):
-     - Evaluar si la tarea debe orientarse a **integrar la solución existente** en lugar de programar desde cero.
-     - Registrar en la propuesta de sprint: Nombre del paquete/repo, estrellas, licencia y recomendación técnica.
-   - Si no se detectan candidatos viables o la necesidad es exclusivamente de lógica de negocio propia:
-     - Marcar como `Desarrollo a medida justificado (0 alternativas OSS viables)`.
-
-3. **Presentar tabla de opciones OSS al usuario** como parte del informe del paso 7 para que decida antes de redactar los task files:
-
-| Tarea Candidata | Alternativa OSS Detectada | Popularidad / Licencia | Recomendación del Agente | Decisión Usuario |
-|---|---|---|---|---|
-| T-XXX [nombre] | [repo o paquete] | ★ [stars] / [licencia] | Adoptar / Crear a medida | [Esperando] |
-
-### 2e. Persistencia de descubrimientos Scout en el research
-
-Tras la decisión del usuario sobre la tabla del paso 7 (adoptar / desarrollo a medida), escribir en `docs/sprints/sprint-{{SPRINT_SIGUIENTE}}-research.md` —crearlo si no existe, con la cabecera estándar del 6b— la sección:
-
-```markdown
-## Descubrimientos Scout (por tarea)
-
-### T-XXX — [nombre de la tarea]
-- **Alternativa detectada:** [paquete/repo, ★, licencia, versión o commit]
-- **Recomendación del agente:** adoptar / desarrollo a medida
-- **Decisión del usuario:** [adoptar | desarrollo a medida justificado — motivo en 1 línea]
-- **Notas de integración:** [cómo usarla en la tarea, o N/A]
-```
-
-Una subsección por cada tarea candidata evaluada en 2d, incluidas las marcadas "desarrollo a medida justificado".
+- Las tareas seleccionadas para arrastrar se incorporan como candidatas prioritarias en el Paso 3c.
 
 ---
 
-### 3. Vaciado de inboxes priorizando MVP
+### 3. Vaciado y clasificación de inboxes
 
-Todo lo gestionado en los inboxes debe clasificarse como MVP o post-MVP antes de introducirlo en `ROADMAP.md`.
+Todo lo gestionado en los inboxes debe clasificarse como MVP o post-MVP antes de sintetizar las candidatas del sprint.
 
 ```bash
 bash scripts/agent/check-inbox.sh
@@ -161,60 +132,120 @@ bash scripts/agent/check-inbox.sh
 
 #### 3a. docs/external-inbox (si hay entradas)
 Para cada manifiesto listado, leer Origen, ¿Qué hace?, Archivos que toca, Prioridad y Precauciones. Luego:
-1. Buscar en `src/` los archivos del campo "Archivos que toca" — ¿ya implementado?
-2. Cruzar contra `ROADMAP.md` — ¿existe tarea que lo cubra? ¿Invalida alguna?
+1. Buscar en `src/` o `scripts/` los archivos del campo "Archivos que toca" — ¿ya implementado?
+2. Cruzar contra `roadmap.md` — ¿existe tarea que lo cubra? ¿Invalida alguna?
 3. Clasificar:
 
-| Resultado | Acción en roadmap |
+| Resultado | Acción propuesta |
 |---|---|
 | Ya implementado | Marcar `✅ Hecho`, no planificar |
 | Cubre tarea existente | Enriquecer descripción con contexto del manifiesto |
-| Nuevo, prioridad Alta | Añadir como tarea bloqueante |
+| Nuevo, prioridad Alta | Incorporar a candidatas prioritarias del sprint (Paso 3c) |
 | Nuevo, prioridad Media/Baja | Añadir al backlog |
-| Invalida tarea planificada | Marcar `⚠️ Revisar`, preguntar al usuario |
+| Invalida tarea planificada | Marcar `⚠️ Revisar` en propuesta |
 
-> Los archivos de `docs/external-inbox/` no se mueven ni borran hasta que el usuario lo apruebe.
+> Los archivos de `docs/external-inbox/` no se mueven ni borran hasta la aprobación en el Paso 7.
 
 #### 3b. idea-inbox (si hay entradas)
-
-1. **Ejecutar inventory check ANTES de clasificar:**
-   ```bash
-   bash scripts/agent/inventory-check.sh "keywords de la idea"
-   ```
-   Si devuelve archivos con ⚠️ (>3 KB existentes): clasificar como `⚠️ Parcialmente implementada` y preguntar qué falta.
-
-2. Clasificar cada idea en:
-   - **roadmap** → añadir al ítem correspondiente o crear ítem nuevo.
+1. Analizar las propuestas existentes en `docs/idea-inbox/`, incluyendo las recién capturadas por la sonda del Paso 1c (`check-tooling-updates.sh --generate-inbox`).
+2. Evaluar pertinencia e impacto frente al hito actual del proyecto.
+3. Clasificar cada idea en:
+   - **candidata a sprint** → pasa a la cosecha del Paso 3c (proponer al operador formalizar como tarea técnica).
    - **backlog** → anotar en `## Backlog` del roadmap.
-   - **descartar** → registrar como descartada con motivo.
+   - **descartar** → registrar motivo en el informe del Paso 7.
 
-#### Confirmación y escritura (una sola ronda)
-Presentar tabla consolidada con todas las entradas y acciones propuestas. **Esperar confirmación antes de escribir o archivar nada.**
+---
 
-Una vez confirmado:
-- Aplicar cambios en `ROADMAP.md`.
+### 3c. Cosecha y Síntesis Determinista de Tareas Candidatas
+
+> **Objetivo**: Formular autónomamente una propuesta cerrada de 3 a 5 tareas (S/M/L) listas para instanciación, aplicando salvaguardas anti-duplicación y prospección OSS antes de la investigación técnica.
+
+#### 1. Algoritmo de Selección de Candidatas
+El agente selecciona entre 3 y 5 tareas respetando este orden de prelación:
+1. **Prioridad 1**: Tareas de spillover aprobadas para arrastre (del Paso 2b).
+2. **Prioridad 2**: Manifiestos de alta prioridad de inboxes (Paso 3a/3b).
+3. **Prioridad 3**: Siguiente hito o temas del `roadmap.md` (`## Próximo`).
+   - *Desglose autónomo*: Si el roadmap no tiene tareas desglosadas con ID, el agente toma el siguiente tema prioritario del roadmap y lo descompone autónomamente en tareas atómicas con tamaño S, M o L.
+4. **Numeración determinista de IDs (Invariante)**:
+   Los IDs de las 3 a 5 tareas propuestas **DEBEN** asignarse en estricto orden correlativo comenzando por el valor `TAREA_SIGUIENTE_ID` reportado por `check-sprint.sh` (ej. si reporta `T-192`, se asignan `T-192`, `T-193`, `T-194`, etc.). Queda estrictamente prohibido alterar, redondear o saltar números.
+
+#### 2. Firewall Anti-Duplicación (Inventory Check)
+Para cada candidata seleccionada que plantee nueva lógica o scripts:
+1. Comprobar `changelog.md`. Si la funcionalidad ya aparece → descartar de la propuesta y marcar `✅ Hecho`.
+2. Ejecutar:
+   ```bash
+   bash scripts/agent/inventory-check.sh "keywords de la tarea"
+   ```
+   Leer los archivos marcados con ⚠️ (máx. 3–5). Si la lógica ya existe, ajustar o descartar la tarea.
+
+#### 3. Salvaguarda de Prospección Determinista OSS (Scout-First)
+Para cada candidata técnica o de nuevas herramientas:
+1. Ejecutar prospección a coste $0:
+   ```bash
+   bash scripts/agent/scout.sh "keywords de la tarea o módulo"
+   ```
+2. Si detecta librerías maduras (≥500⭐, licencias permisivas MIT/Apache), recomendar su integración en vez de desarrollo a medida.
+3. **Persistencia obligatoria en research (Gate Scout-First, T-129)**:
+   Escribir o inicializar `docs/sprints/sprint-[SPRINT_SIGUIENTE]-research.md` con la sección `## Descubrimientos Scout (por tarea)`, incluyendo una subsección `### T-XXX` para cada tarea planificada (declarando alternativa o `Desarrollo a medida justificado`).
+
+#### 4. Salida del Paso 3c
+Tabla consolidada de las 3–5 tareas candidatas definitivas con sus dependencias preliminares y tamaños.
+- Aplicar cambios en `roadmap.md`.
 - Archivar procesados de `docs/idea-inbox/` en `docs/idea-inbox/_archived/`.
 - Archivar procesados de `docs/external-inbox/` en `docs/external-inbox/_archived/`.
 
 ### 4. Generación del sprint file
-Crear `docs/sprints/sprint-{{SPRINT_SIGUIENTE}}.md` con esta estructura:
+Crear `docs/sprints/sprint-[SPRINT_SIGUIENTE].md` con esta estructura:
 
 ```markdown
-# Sprint {{SPRINT_SIGUIENTE}} — [fecha lunes] → [fecha viernes]
+# Sprint [SPRINT_SIGUIENTE] — [fecha lunes] → [fecha viernes]
 
 ## Estado
 🟡 En curso
 
 ## Tareas
-| ID | Descripción | Tamaño | Estado | Task file |
-|---|---|---|---|---|
-| T-001 | [descripción] | S/M/L | ⬜ Pendiente | — |
+| ID | Descripción | Tamaño | Estado | Dependencias | Task file |
+|---|---|---|---|---|---|
+| T-001 | [descripción] | S/M/L | ⬜ Pendiente | — | — |
+
+## Régimen Operativo del Sprint
+> Se sella en la primera sesión de /session-start tras consulta proactiva única al operador.
+- **Régimen**: [PENDIENTE_ARRANQUE — Desatendida | Tarea a tarea (Clásico)]
+- **Orden de Carriles (DAG de dependencias)**:
+  - Carril 1: [T-001 → ...]
+- **Sellado en**: [PENDIENTE]
 
 ## Notas de planning
-[Observaciones del sprint anterior, dependencias, riesgos]
+[Observaciones del sprint anterior, dependencias, riesgos, decisiones macro aprobadas]
 ```
 
+### 4a. Formalización y Sellado de Diseño Macro por Tarea (Nivel Macro de Gobernanza)
+
+El sprint planning es el ritual **exclusivo y vinculante** donde el usuario humano evalúa y aprueba el diseño arquitectónico, límites de interfaces y alcance de cada tarea.
+Para cada tarea incorporada a la tabla del sprint:
+1. **Artefacto de aprobación de diseño**: Toda tarea debe instanciarse con la sección canónica `## Diseño macro aprobado en planning` rellenada en su task file (`.agents/tasks/task-XXX.md`):
+   - `Sprint / Fecha`: referencia temporal y sprint al que pertenece.
+   - `Diseño y arquitectura aprobados por`: `[Humano / Relé]`.
+   - `Decisiones e interfaces selladas`: descripción concreta de interfaces pactadas, contratos de tipos, dependencias admitidas y guardarraíles técnicos acordados.
+   - `Veredicto de diseño macro`: `[APROBADO_EN_PLANNING]`.
+2. **Modelado de dependencias y carriles de ejecución (DAG y Cajas de Archivos)**:
+   En la tabla de tareas, la columna `Dependencias` explicita las precondiciones técnicas (IDs de tareas precedentes obligatorias o `—` si es independiente).
+   A partir de la tabla y del análisis de archivos a tocar, se deriva el grafo acíclico dirigido (DAG) y se proyecta la distribución en carriles en la sección `## Régimen Operativo del Sprint`:
+   - **Criterio de Cajas de Archivos Disjuntas**: El agente compara la caja de archivos (`Caja de archivos`) proyectada para cada tarea candidata.
+   - **Carril Único (Secuencial)**: Si dos o más tareas comparten archivos a modificar o una depende de la salida de otra, **deben** agruparse en el mismo carril en orden de precedencia (ej. `Carril 1: T-172 → T-173 → T-174`).
+   - **Carriles Múltiples (Paralelizables)**: Si dos o más tareas no tienen dependencias entre sí Y sus cajas de archivos son estrictamente disjuntas ($\text{Files}(T_A) \cap \text{Files}(T_B) = \emptyset$), **deben** modelarse en carriles paralelos separados (ej. `Carril 1: [T-172 → T-173]`, `Carril 2: [T-175]`, `Carril 3: [T-176]`).
+   - **Prerrequisito de Inferencia y Concurrencia**:
+     - La infraestructura de Git Worktrees (`worktree-dispatch.sh` y `worktree-merge.sh`) y el aislamiento POSIX son 100% seguros y soportan concurrencia real sin riesgo de colisión.
+     - Si el entorno cuenta con inferencia desacoplada (APIs en la nube, subagentes o múltiples nodos de flota), los carriles pueden despacharse concurrentemente.
+     - Si la flota depende de una pasarela monohilo local saturable (la causa física del veredicto NO-GO en el piloto del Sprint 25), la ejecución física de las deliberaciones debe serializarse para evitar timeouts de pasarela. En sesiones interactivas CLI monohilo, el agente consume los carriles ordenadamente respetando los hitos de merge.
+3. **Reflejo en notas de planning**: Las decisiones arquitectónicas transversales del conjunto de tareas se resumen en `## Notas de planning` del sprint file.
+4. **Invariante de desacoplamiento y handoff al arranque del sprint**: Una vez aprobado el sprint, el diseño macro de las tareas queda sellado. El planning prepara la propuesta de orden de carriles, dejando el régimen en `[PENDIENTE_ARRANQUE]`. Al arrancar el sprint en la primera sesión de `/session-start`, el flujo formula una **consulta proactiva única** al operador para sellar (1) el régimen operativo (`A) Desatendida` vs. `B) Tarea a tarea (Clásico)`) y (2) el camino de carriles. Si se sella el régimen **Desatendido** (anteriormente conocido por su alias histórico «Opción D»), el diseño macro actúa como la **única autorización habilitante** para que el agente encadene autónomamente las tareas en camino limpio sin volver al usuario entre ellas. En la posterior ejecución por tarea, el Revisor Ejecutor opera como compuerta técnica determinista (Nivel Micro) mediante `deliberate-plan.sh` y no reabre diseño; si se alcanzan las 5 condiciones del camino limpio (`CONSENSO`), la tarea se ejecuta, integra y cierra de forma 100% desatendida. Ante cualquier discrepancia técnica frente a esta sección, fallo en la verificación del relé de la tarea cerrada o veredicto no consensual, el sistema aborta de inmediato a fail-closed (`ESCALADO_A_HUMANO`) suspendiendo la autonomía y devolviendo el control al operador humano en el chat.
+
 ### 4b. Actualización del MVP Tracker
+
+> Condicional: solo si el proyecto tiene `docs/MVP-TRACKER.md`. Si no existe (el core),
+> omitir este paso — `update-mvp-tracker.sh` falla sin tracker (`exit 1`) y el core se
+> versiona con `changelog.md`.
 
 ```bash
 bash scripts/agent/update-mvp-tracker.sh
@@ -223,53 +254,83 @@ bash scripts/agent/update-mvp-tracker.sh
 El script recalcula el **% global** leyendo los valores de `% cap.` de `docs/MVP-TRACKER.md`.
 
 Revisar manualmente si alguna capacidad requiere actualizar su `% cap.`:
-- Leer `CHANGELOG.md` y el sprint recién cerrado.
+- Leer `changelog.md` y el sprint recién cerrado.
 - Actualizar valores en la tabla si el trabajo completado mueve el %.
 - Ejecutar de nuevo `update-mvp-tracker.sh` para recalcular.
 - Añadir fila en `## Historial de actualizaciones` con fecha, sprint y % global.
 
-### 5. Generación del prompt para Perplexity
+### 5. Investigación técnica: bifurcación autónoma (SearXNG) / asistida (Perplexity)
 
-Antes de redactar, usar como fuente primaria el digest de `inventory-check.sh` si la señal de complejidad fue ≥2. Si fue baja, leer directamente los archivos más relevantes del código relacionado (máx. 3 archivos).
+> Protocolo unificado de investigación técnica profunda. Si SearXNG está disponible en la flota,
+> ejecuta la investigación de forma 100% desatendida; si no, activa el fallback asistido con Perplexity.
+> **Regla de oro: El fallback nunca es silencioso. Si se recurre a Perplexity, se declara explícitamente el motivo.**
 
-Producir un bloque listo para pegar en Perplexity:
+1. **Comprobar disponibilidad de SearXNG:**
+   ```bash
+   bash scripts/agent/lib/searxng-client.sh --check
+   ```
+   Capturar el código de salida y la salida de diagnóstico (`exit 0` = activo; `exit 2` o error = inactivo/degradado).
 
-```
-CONTEXTO: Estoy desarrollando [descripción de {{PROJECT_NAME}} en 2 líneas].
-STACK: [Describe el stack tecnológico principal].
-SITUACIÓN ACTUAL: [qué ya existe en el código relacionado con la tarea:
-helpers implementados, patrones ya en uso, deuda técnica conocida].
-TAREA DE ESTA SEMANA: [descripción de la tarea principal del sprint]
-NECESITO INVESTIGAR: [pregunta específica de investigación]
-FORMATO DE RESPUESTA ESPERADO: [lo que necesitas: comparativa, ejemplo
-de código, decisión de arquitectura, etc.]
-```
+2. **Bifurcación:**
+   - **Si SearXNG está activo (`exit 0`):**
+     - **Formulación de queries deterministas**: Para cada tarea del sprint que presente incertidumbre arquitectónica, integración de nueva librería o protocolo externo:
+       ```bash
+       bash scripts/agent/lib/searxng-client.sh --query "<stack> <tecnología/librería> <problema concreto>" --output "docs/sprints/sprint-[SPRINT_SIGUIENTE]-research.md"
+       ```
+     - **Bypass determinista para tareas puramente internas**: Si **todas** las tareas del sprint son de alcance interno (refactorización de scripts locales, workflows, reglas o documentación, con cero incertidumbre externa o de red):
+       Declarar explícitamente en `docs/sprints/sprint-[SPRINT_SIGUIENTE]-research.md`:
+       > *Investigación web externa no requerida: tareas de alcance puramente interno/core.*
+       y avanzar directamente al Paso 7 sin llamadas superfluas a la red.
+     - **Sin prompt de Perplexity ni bloqueo en pausa:** pasar directamente al **Paso 7 (Entrega y Aprobación del Sprint)**.
+   - **Si SearXNG está inactivo (`exit 2` o fallo de red/configuración):**
+     **Anuncio obligatorio y ruidoso**: El agente DEBE emitir en el chat el aviso explícito:
+     ```
+     ⚠️ AVISO DE FALLBACK: SearXNG inactivo o no disponible en la flota (código de salida: <RC>, diagnóstico: <salida de searxng-client.sh>).
+     El fallback a investigación asistida nunca es silencioso: activando preparación de prompt de Perplexity Pro.
+     ```
+     Usar como fuente primaria el digest de `inventory-check.sh` si la señal de complejidad fue ≥2. Si fue baja, leer directamente los archivos más relevantes del código relacionado (máx. 3 archivos).
+     Producir el bloque listo para pegar en Perplexity Pro:
 
-### 6. Pausa y handoff a /session-start
+     ```
+     CONTEXTO: Estoy desarrollando [descripción de [PROJECT_NAME] en 2 líneas].
+     STACK: [Describe el stack tecnológico principal].
+     SITUACIÓN ACTUAL: [qué ya existe en el código relacionado con la tarea:
+     helpers implementados, patrones ya en uso, deuda técnica conocida].
+     TAREA DE ESTA SEMANA: [descripción de la tarea principal del sprint]
+     NECESITO INVESTIGAR: [pregunta específica de investigación]
+     FORMATO DE RESPUESTA ESPERADO: [lo que necesitas: comparativa, ejemplo
+     de código, decisión de arquitectura, etc.]
+     ```
+     Continuar al Paso 6 (Pausa asistida).
+
+### 6. Pausa asistida y handoff a /session-start (Solo si SearXNG estaba inactivo)
+
+> **Condición**: Este paso se ejecuta **ÚNICAMENTE** si SearXNG estaba inactivo y se recurrió al fallback de Perplexity en el Paso 5.
+> Si la investigación fue autónoma (SearXNG activo), este paso se omite por completo y el flujo avanza sin pausas.
 
 Mostrar al usuario el siguiente mensaje y **no continuar hasta recibir respuesta**:
 
 ```
-✅ Sprint {{SPRINT_SIGUIENTE}} listo. Prompt de Perplexity generado.
+⚠️ Sprint [SPRINT_SIGUIENTE] preparado con fallback a Perplexity (SearXNG no disponible). Prompt generado.
 
 👉 Próximos pasos:
    1. Copia el prompt del paso anterior y pégalo en Perplexity.
    2. Cuando tengas los hallazgos, vuelve con la investigación, cambia el selector de modelo a Gemini Flash y ejecuta /session-start
-      pegando los hallazgos — el agente los guardará en docs/sprints/sprint-{{SPRINT_SIGUIENTE}}-research.md
+      pegando los hallazgos — el agente los guardará en docs/sprints/sprint-[SPRINT_SIGUIENTE]-research.md
       y los integrará en el task file antes de empezar a codear.
 
-⏸ Este workflow queda en pausa. Hasta luego.
+⏸ Este workflow queda en pausa asistida. Hasta luego.
 ```
 
-> **Nota para el agente:** No ejecutes `/session-start` automáticamente. El usuario necesita hacer la investigación en Perplexity antes de continuar.
+> **Nota para el agente:** No ejecutes `/session-start` automáticamente cuando estés en pausa asistida. El usuario necesita realizar la investigación en Perplexity antes de continuar.
 
-### 6b. Recepción de hallazgos de Perplexity (cuando el usuario vuelve)
+### 6b. Recepción de hallazgos de Perplexity (cuando el usuario vuelve de la pausa asistida)
 
 1. Recibir el output de Perplexity del usuario.
-2. Si `docs/sprints/sprint-{{SPRINT_SIGUIENTE}}-research.md` ya existe (creado por el paso 2e), **NO sobrescribirlo**: añadir las secciones de Perplexity (`## Hallazgos clave`, `## Decisiones tomadas`, `## Descartado`) sin tocar `## Descubrimientos Scout (por tarea)`. Si no existe, crearlo con esta estructura:
+2. Si `docs/sprints/sprint-[SPRINT_SIGUIENTE]-research.md` ya existe (creado por el paso 2e), **NO sobrescribirlo**: añadir las secciones de Perplexity (`## Hallazgos clave`, `## Decisiones tomadas`, `## Descartado`) sin tocar `## Descubrimientos Scout (por tarea)`. Si no existe, crearlo con esta estructura:
 
 ```markdown
-# Research Sprint {{SPRINT_SIGUIENTE}}
+# Research Sprint [SPRINT_SIGUIENTE]
 > Fuente: Perplexity — [fecha]
 > Tarea principal: [descripción de la tarea del sprint]
 
@@ -293,39 +354,83 @@ Si el research incluye URLs de repositorios GitHub:
 - El resultado enriquece el research.md añadiendo una sección `## Patrones de repos analizados`.
 - Listar los repos detectados e indicar los hallazgos analizados.
 
-3. Confirmar: `"💾 Investigación guardada en docs/sprints/sprint-{{SPRINT_SIGUIENTE}}-research.md. Listo para /session-start."`
+3. Confirmar: `"💾 Investigación guardada en docs/sprints/sprint-[SPRINT_SIGUIENTE]-research.md. Listo para /session-start."`
 
-### 7. Entrega (resumen previo a la pausa)
+### 7. Entrega y Ventana de Decisión del Sprint (Aprobación Macro)
 
-Justo antes del mensaje de pausa del paso 6:
-1. Resumen del estado del roadmap (3 líneas máximo).
-2. Decisiones tomadas sobre tareas incompletas del sprint anterior (si las hubo).
-3. Resultado de la verificación de código del paso 2c (tabla con evidencias).
-4. **Resultado de la prospección determinista OSS del paso 2d** (tabla con alternativas detectadas por `scout.sh` y recomendación de adopción vs construcción).
-5. Las tareas del sprint seleccionadas con su tamaño.
-6. **Progreso MVP actualizado:**
-   ```
-   📊 Progreso MVP: XX%
-      Capacidad 1                  ██████████ 100%
-      Capacidad 2                  ████████░░  80%
-      ...
-   ```
-7. El prompt para Perplexity listo para copiar.
-8. Ruta del sprint file creado.
+El agente presenta el informe consolidado y emite **OBLIGATORIAMENTE** la siguiente ventana estructurada de decisión en el chat, finalizando su turno a la espera de la respuesta del operador:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 PROPUESTA DE SPRINT [SPRINT_SIGUIENTE] — APROBACIÓN MACRO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 Resumen del estado:
+- Roadmap: [estado y temas analizados]
+- Inboxes: [entradas procesadas]
+- Tooling Updates (Paso 1c): [versiones detectadas o N/A]
+[Si satélite con actualización del core pendiente: incluir bloque PLAN DE IMPACTO AGENT OS (vLocal -> vUpstream)]
+
+🎯 Tareas propuestas:
+| ID | Tarea | Tamaño | Dependencias | Justificación técnica |
+|---|---|:---:|---|---|
+| T-XXX | ... | S/M/L | — | ... |
+
+🛣️ Propuesta de Carriles de Ejecución (DAG):
+- Carril 1: [T-XXX → T-YYY] (secuencial: comparten caja de archivos o dependencias)
+- Carril 2: [T-ZZZ] (independiente: caja de archivos disjunta, paralelizable si hay capacidad)
+
+🔬 Estado de Research y Prospección:
+- Scout OSS: Completado en docs/sprints/sprint-[SPRINT_SIGUIENTE]-research.md (Gate Scout-First T-129 verificado)
+- Investigación técnica: [Autónoma con SearXNG / Bypass interno / Fallback Perplexity]
+- Prompt Perplexity: [Incluir bloque solo si SearXNG estuvo inactivo; omitir si fue autónomo]
+[Si el proyecto es satélite con MVP-TRACKER.md: incluir barra de progreso MVP]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👉 VENTANA DE DECISIÓN DEL OPERADOR:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ RÉGIMEN OPERATIVO:
+   A) Desatendida: Encadena tareas automáticamente en camino limpio sin volver al usuario entre ellas. Aborta de inmediato a humano ante cualquier anomalía técnica o si la verificación del relé falla.
+   B) Tarea a tarea (Clásico): Pausa para revisión y aprobación humana explícita antes de cada tarea.
+
+Esperando tu respuesta (ej: "A, aprobado" o enmiendas concretas al plan).
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+#### Protocolo de Materialización tras Aprobación del Operador:
+Una vez que el operador responde aprobando el sprint (ej: "A, aprobado" o "Opción A"):
+1. **Sellar el Sprint File**: Escribir `docs/sprints/sprint-[SPRINT_SIGUIENTE].md` sellando el régimen y carriles según la respuesta recibida (ej. `- **Régimen**: Desatendida`).
+2. **Instanciar Task Files**: Crear cada contrato de tarea en `.agents/tasks/task-XXX.md` con su sección `## Diseño macro aprobado en planning` rellenada y veredicto `[APROBADO_EN_PLANNING]`.
+3. **Actualizar Roadmap**: Registrar las nuevas tareas como `🟡 En curso` en `roadmap.md`.
+4. **Archivar Inboxes**: Mover procesados de `docs/idea-inbox/` y `docs/external-inbox/` a sus respectivas subcarpetas `_archived/`.
+5. Confirmar al usuario: `"✅ Sprint [SPRINT_SIGUIENTE] formalizado y sellado en régimen Desatendido. Listo para /session-start."`
 
 ## Reglas
 
-### Selección de Tareas
-- **3 a 5 tareas** por sprint.
+### Criterio de Valor para Tareas de Actualización de Tooling
+- **Prohibido el bump cosmético**: Una tarea de actualización de herramienta **NO es solo subir la versión** del paquete o binario.
+- **Alineación con Topología Declarativa**: Las herramientas deben contextualizarse según el entorno declarado en `.agents/config/fleet.yaml` (Host Local, Nodos Remotos de Inferencia, Nodos PaaS/Coolify).
+- **Impacto en Activos Vivos (No Documentación Pasiva)**: Dado que los runbooks son documentos pasivos, la tarea debe actualizar los componentes que los agentes ejecutan directamente en su contexto activo:
+  1. La **Skill activa** en `.agents/skills/<herramienta>/SKILL.md` (incorporando los nuevos flags, subcomandos y patrones de invocación).
+  2. Los **Workflows** o **Perfiles** (`.agents/profiles/`) si la nueva capacidad optimiza un ritual de trabajo.
+  3. Las sondas deterministas (`fleet-doctor.sh`) si cambian endpoints o firmas.
+- **Agrupación Coherente**: Si hay múltiples herramientas menores con actualizaciones upstream, se deben agrupar en una tarea integral de homologación en lugar de fragmentar el sprint en tareas redundantes.
+
+### Selección de Tareas (Regla de Oro: El agente propone, el usuario confirma)
+- El agente **propone siempre una lista cerrada** de 3 a 5 tareas derivadas autónomamente de spillover, inboxes y roadmap.
+- **Numeración determinista**: Los IDs se asignan de forma estrictamente secuencial a partir de `TAREA_SIGUIENTE_ID` reportado por `check-sprint.sh`. Prohibido saltar o inventar numeración.
+- Prohibido hacer preguntas abiertas al operador sobre qué tareas incluir.
 - Equilibrio de tamaños: no más de 1 tarea L por sprint.
 - Prioridad: tareas arrastradas primero, luego bloqueantes, luego por orden del roadmap.
 - Tamaños: **S** = < 1h, **M** = 1-3h, **L** = 3h+.
-- **Solo entran tareas verificadas como no implementadas** (resultado del paso 2c).
+- **Solo entran tareas verificadas como no implementadas** (resultado del firewall anti-duplicación del Paso 3c).
 
 ### Salvaguarda de Prospección Determinista (scout-first)
 - **Obligatorio para tareas técnicas y nuevas herramientas**: Toda tarea candidata que introduzca conectores, integraciones, agentes, scrapers o utilidades debe evaluarse previamente con `scout.sh`.
 - Si existe una alternativa consolidada (≥500⭐, licencia permisiva MIT/Apache), la recomendación por defecto es la integración/adopción frente al desarrollo a medida.
 - **Coste cero**: El agente solo consume el digest estructurado producido por el script CLI, garantizando 0 tokens en la fase de búsqueda.
+- **Compuerta estricta de completitud (T-129)**: *"Sin research scout estructurado no hay plan de sprint admisible"*. El documento `sprint-[SPRINT_SIGUIENTE]-research.md` es condición de entrega previa a la pausa o solicitud de aprobación humana. Debe incluir subsecciones para cada tarea planificada, documentando alternativas detectadas, recomendaciones, decisiones y opciones rechazadas con su motivo explícito.
 
 ### Escala de Progreso del MVP
 - **0%**: Sin implementación.
@@ -338,3 +443,18 @@ Justo antes del mensaje de pausa del paso 6:
 - **Limpieza previa**: Obligatorio ejecutar `check-session.sh` y resolver sesiones colgadas antes de iniciar.
 - **Auditoría de completado**: Si `check-sprint.sh` alerta de un "sprint completado sin marcar", actualizar estado antes de generar el nuevo sprint.
 - **Restricción de lectura**: Solo leer archivos devueltos por `inventory-check.sh`. Prohibido navegar `src/` manualmente.
+
+### Gobernanza Desacoplada en Dos Niveles (Macro en Planning, Micro por Tarea)
+- **Aprobación de Diseño en Planning**: El usuario humano evalúa y aprueba formalmente la arquitectura, dependencias, interfaces y alcance funcional de cada tarea durante el sprint planning. Ninguna tarea entra al sprint con diseño o contratos abiertos.
+- **Artefacto Concreto Requerido**: Toda tarea activa debe formalizarse con la sección canónica `## Diseño macro aprobado en planning` conteniendo el veredicto `[APROBADO_EN_PLANNING]` y el desglose de interfaces y decisiones acordadas.
+- **Compuerta Técnica y Escalado Vinculante**: Durante `/session-start`, el Revisor Ejecutor (o relé) audita estrictamente la caja de archivos, pruebas y apego al diseño macro ya sellado. Ante cualquier desviación o fuga de alcance, emite bloqueo técnico inmediato con `ESCALADO_A_HUMANO`, suspendiendo la ejecución desatendida.
+- **Papel del Relé en Transición**: El operador humano / relé se mantiene como fallback operativo ante indisponibilidad de pasarela (`SIN_REVISOR`) y sigue frenando de forma obligatoria y manual los merges hasta verificar paridad estadística empírica en el Sprint 27.
+
+### Modelado de Carriles (DAG) y Concurrencia Multi-Agente (Doctrina Sprint 25 & Cajas Disjuntas)
+- **Prohibido el carril único perezoso (Lazy Flattening)**: Si un sprint contiene tareas independientes con cajas de archivos disjuntas, el agente **no debe** aplanar arbitrariamente todas las tareas en un único `Carril 1: [T-A → T-B → T-C → T-D → T-E]`. Debe estructurar los carriles reflejando la independencia real del grafo.
+- **Criterios de Partición en Carriles**:
+  1. *Dependencia funcional*: Si T-B requiere artefactos, contratos o APIs de T-A, van obligatoriamente en el mismo carril (`T-A → T-B`).
+  2. *Caja de archivos solapada*: Si T-A y T-B mutan o crean los mismos ficheros, configuraciones o scripts, **deben** pertenecer al mismo carril (`T-A → T-B`) para prevenir conflictos de merge y desalineaciones de contexto.
+  3. *Cajas disjuntas e independientes*: Si $\text{Archivos}(T_A) \cap \text{Archivos}(T_B) = \emptyset$ y no hay dependencias funcionales, **deben** declararse en carriles paralelos (`Carril 1: [T-A]`, `Carril 2: [T-B]`).
+- **Soberanía Unificada de Git (Doctrina Sprint 25)**: Aunque múltiples workers trabajen concurrentemente en worktrees efímeros independientes (`worktree-dispatch.sh`), los workers **nunca realizan merges entre sí desatendidamente**. La consolidación hacia la rama troncal (`multi-agent`) es potestad exclusiva del Coordinador (o del operador humano), validando con `tests/validate-control-plane.sh` y `verify-goal.sh` antes de cada merge atómico con `worktree-merge.sh`.
+- **Límites Físicos de Inferencia**: El paralelismo operativo real requiere que los agentes no compitan por una pasarela local monohilo saturable (cuello de botella detectado en Sprint 25). Con proveedores en la nube, subagentes desacoplados o múltiples nodos de flota, el despacho paralelo en worktrees está totalmente habilitado. En sesiones interactivas monohilo (un único proceso de chat CLI), el agente procesará los carriles de forma secuencial pero manteniendo su aislamiento modular.

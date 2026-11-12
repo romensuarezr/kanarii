@@ -137,6 +137,13 @@ REAL_TARGET=$(realpath "$TARGET_PROJECT" 2>/dev/null || echo "$TARGET_PROJECT")
 
 TEMP_CORE_DIR=""
 
+# Salvaguarda: sync.sh nunca debe ejecutarse sobre el propio núcleo de Agent OS
+TARGET_ORIGIN="$(git -C "$REAL_TARGET" config --get remote.origin.url 2>/dev/null || true)"
+if [ -f "$REAL_TARGET/tests/validate-control-plane.sh" ] || [[ "$TARGET_ORIGIN" =~ /agent-os(\.git)?$ ]]; then
+    echo "ℹ️  Detectado el núcleo (Core) de Agent OS en $TARGET_PROJECT. 'sync.sh' está diseñado exclusivamente para sincronizar hacia proyectos satélites (hijos), no sobre el propio core."
+    exit 0
+fi
+
 # Si se solicitó --remote, o si AGENT_OS_PATH y TARGET_PROJECT apuntan al mismo directorio (satélite autónomo)
 if [ "$REMOTE" = true ] || [ "$REAL_AGENT_OS" = "$REAL_TARGET" ]; then
     if [ "$REAL_AGENT_OS" = "$REAL_TARGET" ] && [ "$REMOTE" = false ]; then
@@ -213,6 +220,8 @@ if [ "$COMMIT" = true ] && [ "$DRY_RUN" = false ]; then
 fi
 
 TOUCHED_FILES=()
+DRY_RUN_CREATE=()
+DRY_RUN_MODIFY=()
 CORE_SHA=$(git -C "$AGENT_OS_PATH" rev-parse HEAD 2>/dev/null || echo "unknown")
 
 AGENT_OS_RULES="$AGENT_OS_PATH/.agents/rules/global"
@@ -266,6 +275,7 @@ sync_file() {
     if [ ! -f "$dst" ]; then
         if [ "$DRY_RUN" = true ]; then
             echo "    [dry-run] crear: $label"
+            DRY_RUN_CREATE+=("${dst#"$TARGET_PROJECT/"}")
         else
             mkdir -p "$(dirname "$dst")"
             cp "$src" "$dst"
@@ -288,6 +298,7 @@ sync_file() {
     # Caso 3: El archivo existe y difiere del core (personalización o actualización)
     if [ "$DRY_RUN" = true ]; then
         echo "    [dry-run] diferir: $label (personalización local o actualización disponible)"
+        DRY_RUN_MODIFY+=("${dst#"$TARGET_PROJECT/"}")
         return 0
     fi
 
@@ -338,6 +349,13 @@ if [ -d "$TARGET_PROJECT/.agents/workflows" ]; then
             wname=$(basename "$wf")
             sync_file "$wf" "$TARGET_WORKFLOWS/$wname" "workflow: $wname"
         done
+        # Proyectar adaptadores estáticos multi-harness (OpenCode commands)
+        if [ -f "$AGENT_OS_PATH/scripts/agent/lib/project-harness.sh" ]; then
+            source "$AGENT_OS_PATH/scripts/agent/lib/project-harness.sh"
+            if [ "$DRY_RUN" = false ]; then
+                project_opencode_commands "$TARGET_PROJECT"
+            fi
+        fi
     fi
 fi
 
@@ -482,6 +500,8 @@ if [ -d "$AGENT_OS_PATH/templates/root" ]; then
             existing_fuzzy=$(find "$TARGET_PROJECT" -maxdepth 1 -type f \( -iname "*road*" -o -iname "*map*" \) 2>/dev/null | head -n 1 || true)
         elif [ "$fname" = "changelog.md" ]; then
             existing_fuzzy=$(find "$TARGET_PROJECT" -maxdepth 1 -type f \( -iname "*change*" -o -iname "*log*" -o -iname "*history*" \) 2>/dev/null | head -n 1 || true)
+        elif [ "$fname" = "VERSION" ]; then
+            existing_fuzzy=$(find "$TARGET_PROJECT" -maxdepth 1 -type f -iname "VERSION" 2>/dev/null | head -n 1 || true)
         fi
         if [ -z "$existing_fuzzy" ] && [ ! -f "$TARGET_PROJECT/$fname" ]; then
             if [ "$DRY_RUN" = true ]; then
@@ -673,6 +693,31 @@ if [ "$DRY_RUN" = true ]; then
         else
             echo "  [dry-run] commit: omitido porque el destino no es un repositorio git."
         fi
+    fi
+    echo ""
+    echo "=============================================================================="
+    echo "📋 RESUMEN DE SIMULACIÓN DE ACTUALIZACIÓN (--dry-run)"
+    echo "=============================================================================="
+    echo "✨ Archivos nuevos a crear (${#DRY_RUN_CREATE[@]}):"
+    for f in "${DRY_RUN_CREATE[@]}"; do
+        echo "    + $f"
+    done
+    echo "🔄 Archivos a actualizar/revisar (${#DRY_RUN_MODIFY[@]}):"
+    for f in "${DRY_RUN_MODIFY[@]}"; do
+        echo "    ~ $f"
+    done
+    if [ "${#DETECTED_DEPRECATED[@]}" -gt 0 ]; then
+        echo "🗑️  Archivos deprecados a limpiar con --cleanup (${#DETECTED_DEPRECATED[@]}):"
+        for f in "${DETECTED_DEPRECATED[@]}"; do
+            echo "    - $f"
+        done
+    fi
+    TOTAL_PENDING=$((${#DRY_RUN_CREATE[@]} + ${#DRY_RUN_MODIFY[@]} + ${#DETECTED_DEPRECATED[@]}))
+    echo "------------------------------------------------------------------------------"
+    if [ "$TOTAL_PENDING" -eq 0 ]; then
+        echo "ℹ️  Sin cambios pendientes: el proyecto ya cuenta con todos los assets del core al día."
+    else
+        echo "Total activos impactados: $TOTAL_PENDING (Nuevos: ${#DRY_RUN_CREATE[@]}, Modificados: ${#DRY_RUN_MODIFY[@]}, Deprecados: ${#DETECTED_DEPRECATED[@]})"
     fi
     echo "✅ [DRY-RUN] Simulación completada sin escrituras en disco."
 else

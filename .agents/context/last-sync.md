@@ -1,4 +1,4 @@
-2026-10-12
-version: 1.12.0
-tag: v1.12.0
-commit: 738e7ef8d2fe729db408ee593ce83f58dc12984b
+2026-11-12
+version: 1.32.0
+tag: v1.32.0
+commit: e091219dba7dd1658c623b3fcc4dd704c706745e

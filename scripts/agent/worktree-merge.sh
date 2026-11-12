@@ -7,7 +7,7 @@
 # 3. Desmantela el worktree de forma atómica (remove --force + prune) según ADR 004.
 #
 # Salida JSON compatible con orquestadores:
-#   {"task_id": "...", "status": "MERGED|REJECTED", "merged": bool, "worktree_removed": bool, "exit_code": int}
+#   {"task_id": "...", "status": "MERGED|REJECTED", "merged": bool, "worktree_removed": bool, "deliberation_rescued": bool, "exit_code": int}
 # ==============================================================================
 
 set -uo pipefail
@@ -39,7 +39,8 @@ Uso: scripts/agent/worktree-merge.sh [OPCIONES]
 Opciones:
   --task-id <ID>          ID de la tarea a integrar (obligatorio, ej: T-055).
   --target <RAMA>         Rama de integración destino (default: rama actual).
-  --path <DIR>            Ruta al worktree (default: .worktrees/<task-id>).
+  --path <DIR>            Ruta al worktree (default: <padre>/<repo>-<task-id>/,
+                            el mismo canónico de worktree-dispatch.sh).
   --strategy <STRATEGY>   Estrategia de merge: fast-forward (default), squash, no-ff.
   --skip-verify           Omite la ejecución de verify-goal.sh previa al merge.
   --keep-worktree         Conserva el worktree en disco tras el merge.
@@ -110,7 +111,8 @@ log() {
   fi
 }
 
-[ -z "$WORKTREE_PATH" ] && WORKTREE_PATH=".worktrees/${TASK_ID}"
+# Mismo default canónico que worktree-dispatch.sh (T-107): hermano al checkout.
+[ -z "$WORKTREE_PATH" ] && WORKTREE_PATH="${ROOT_DIR%/*}/${ROOT_DIR##*/}-${TASK_ID}"
 [ -z "$TARGET_BRANCH" ] && TARGET_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'main')"
 
 log "🔄 [worktree-merge] Iniciando proceso de integración para '$TASK_ID'..."
@@ -151,14 +153,19 @@ log "   Rama de origen: $WORKTREE_BRANCH"
 # ------------------------------------------------------------------------------
 if [ "$SKIP_VERIFY" = false ]; then
   log "🛡️  [1/3] Ejecutando Quality Gate (verify-goal.sh) dentro del worktree..."
-  VERIFY_SCRIPT="$ROOT_DIR/scripts/agent/verify-goal.sh"
+  # La copia hermana a este script, no la del repo destino: en un satélite sin
+  # agent-os instalado, $ROOT_DIR/... no existe y el gate se saltaría en silencio.
+  MERGE_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+  VERIFY_SCRIPT="$MERGE_SCRIPT_DIR/verify-goal.sh"
 
   if [ ! -x "$VERIFY_SCRIPT" ]; then
     log "⚠️  No se encontró ejecutable $VERIFY_SCRIPT. Omitiendo validación..."
   else
-    # Ejecutar verify-goal en modo JSON dentro del worktree
-    VERIFY_JSON_OUTPUT=$( (cd "$WORKTREE_PATH" && bash "$VERIFY_SCRIPT" --task-id "$TASK_ID" --base "$TARGET_BRANCH" --json) 2>/dev/null || true )
-    VERIFY_EXIT_CODE=$( (cd "$WORKTREE_PATH" && bash "$VERIFY_SCRIPT" --task-id "$TASK_ID" --base "$TARGET_BRANCH" --json >/dev/null 2>&1); echo $? )
+    # Ejecutar verify-goal en modo JSON dentro del worktree. Con --strict, como
+    # el gate /judge (T-107): sin strict, REJECT sería código muerto y el gate
+    # del merge más débil que el del judge.
+    VERIFY_JSON_OUTPUT=$( (cd "$WORKTREE_PATH" && bash "$VERIFY_SCRIPT" --task-id "$TASK_ID" --base "$TARGET_BRANCH" --strict --json) 2>/dev/null || true )
+    VERIFY_EXIT_CODE=$( (cd "$WORKTREE_PATH" && bash "$VERIFY_SCRIPT" --task-id "$TASK_ID" --base "$TARGET_BRANCH" --strict --json >/dev/null 2>&1); echo $? )
 
     IS_PASS=$(python3 -c "import json, sys; d=json.loads(sys.argv[1] or '{}'); print(d.get('status') == 'PASS')" "$VERIFY_JSON_OUTPUT" 2>/dev/null || echo "False")
 
@@ -244,7 +251,27 @@ fi
 log "✅ Merge completado satisfactoriamente."
 
 # ------------------------------------------------------------------------------
-# 4. Desmantelamiento Atómico del Worktree (ADR 004 — Sin Fugas de Inodes)
+# 4. Rescate de Contexto de Deliberación (Puente Worktree → Principal, T-128)
+# ------------------------------------------------------------------------------
+DELIBERATION_RESCUED=false
+WT_DELIB_FILE="$WORKTREE_PATH/.agents/context/deliberation-${TASK_ID}.json"
+DEST_DELIB_DIR="$ROOT_DIR/.agents/context"
+
+# Fallback opcional a plan-deliberation.json si la deliberación nombrada no existe en el worktree
+if [ ! -f "$WT_DELIB_FILE" ] && [ -f "$WORKTREE_PATH/.agents/context/plan-deliberation.json" ]; then
+  WT_DELIB_FILE="$WORKTREE_PATH/.agents/context/plan-deliberation.json"
+fi
+
+if [ -f "$WT_DELIB_FILE" ]; then
+  mkdir -p "$DEST_DELIB_DIR"
+  if cp -f "$WT_DELIB_FILE" "$DEST_DELIB_DIR/deliberation-${TASK_ID}.json" 2>/dev/null; then
+    DELIBERATION_RESCUED=true
+    log "📋 Rescatado artefacto de deliberación: .agents/context/deliberation-${TASK_ID}.json"
+  fi
+fi
+
+# ------------------------------------------------------------------------------
+# 5. Desmantelamiento Atómico del Worktree (ADR 004 — Sin Fugas de Inodes)
 # ------------------------------------------------------------------------------
 WORKTREE_REMOVED=false
 
@@ -253,7 +280,8 @@ if [ "$KEEP_WORKTREE" = false ]; then
   # Secuencia obligatoria solicitada
   git worktree remove --force "$WORKTREE_PATH" 2>/dev/null || rm -rf "$WORKTREE_PATH"
   git worktree prune 2>/dev/null || true
-  git branch -d "$WORKTREE_BRANCH" 2>/dev/null || true
+  # stdout también suprimido: `branch -d` confirma en stdout y rompería el JSON (T-107).
+  git branch -d "$WORKTREE_BRANCH" >/dev/null 2>&1 || true
   WORKTREE_REMOVED=true
   log "✅ Worktree y rama efímera eliminados (0 fugas de disco)."
 else
@@ -261,7 +289,7 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 5. Reporte de Éxito
+# 6. Reporte de Éxito
 # ------------------------------------------------------------------------------
 if [ "$JSON_MODE" = true ]; then
   python3 -c "
@@ -273,9 +301,10 @@ print(json.dumps({
     'worktree_removed': sys.argv[2] == 'true',
     'branch': sys.argv[3],
     'target': sys.argv[4],
+    'deliberation_rescued': sys.argv[5] == 'true',
     'exit_code': 0
 }))
-" "$TASK_ID" "$WORKTREE_REMOVED" "$WORKTREE_BRANCH" "$TARGET_BRANCH"
+" "$TASK_ID" "$WORKTREE_REMOVED" "$WORKTREE_BRANCH" "$TARGET_BRANCH" "$DELIBERATION_RESCUED"
 else
   echo ""
   echo "======================================================"
@@ -285,6 +314,7 @@ else
   echo "  Rama integrada:   $WORKTREE_BRANCH"
   echo "  Rama destino:     $TARGET_BRANCH"
   echo "  Worktree purgado: $WORKTREE_REMOVED"
+  echo "  Deliberación:     $( [ "$DELIBERATION_RESCUED" = true ] && echo "RESCATADA (.agents/context/deliberation-${TASK_ID}.json)" || echo "NO ENCONTRADA (omitida)" )"
   echo "======================================================"
 fi
 

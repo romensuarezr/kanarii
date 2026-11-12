@@ -2,8 +2,10 @@
 # ==============================================================================
 # scripts/agent/worktree-dispatch.sh — Aprovisionamiento de Git Worktrees efímeros
 # ==============================================================================
-# Aprovisiona un entorno aislado en .worktrees/<task-id>/ con rama
-# feat/<task-id>-<profile>, inyectando variables de entorno y contexto operativo.
+# Aprovisiona un entorno aislado HERMANO al repo (<padre>/<repo>-<task-id>/),
+# fuera del árbol (T-107: un worktree dentro del repo contamina el árbol y es
+# la clase de accidente que originó T-103), con rama feat/<task-id>-<profile>,
+# inyectando variables de entorno y contexto operativo.
 #
 # Salida JSON compatible con orquestadores:
 #   {"task_id": "...", "profile": "...", "branch": "...", "base_ref": "...", "worktree_path": "...", "agent_os_root": "...", "status": "CREATED", "exit_code": 0}
@@ -12,7 +14,7 @@
 set -uo pipefail
 
 # Pre-flight: verificación determinista de dependencias
-for cmd in git python3 mkdir cat chmod grep; do
+for cmd in git python3 mkdir cat chmod grep df; do
   if ! command -v "$cmd" &>/dev/null; then
     echo "❌ ERROR: Dependencia requerida no encontrada: $cmd" >&2
     echo "Guía: Instala $cmd en tu sistema antes de continuar." >&2
@@ -28,6 +30,7 @@ PROFILE="coder"
 BASE=""
 BRANCH=""
 WORKTREE_PATH=""
+REGISTRY="${WORKTREE_REGISTRY:-$ROOT_DIR/.agents/context/dispatched.jsonl}"
 FORCE=false
 JSON_MODE=false
 
@@ -40,7 +43,9 @@ Opciones:
   --profile <PERFIL>      Perfil del agente asignado (coder, qa-judge, etc. Default: coder).
   --base <REF>            Rama o commit base (default: HEAD actual).
   --branch <RAMA>         Nombre de la rama aislada (default: feat/<task-id>-<profile>).
-  --path <DIR>            Ruta del worktree (default: .worktrees/<task-id>).
+  --path <DIR>            Ruta del worktree (default: <padre>/<repo>-<task-id>/,
+                            hermano al repo, fuera del árbol).
+  --registry <PATH>       Ruta del registro de despachos (default: .agents/context/dispatched.jsonl).
   --force                 Limpia y recrea el worktree si ya existe.
   --json                  Emite únicamente JSON plano a stdout.
   -h, --help              Muestra esta ayuda.
@@ -67,6 +72,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --path)
       WORKTREE_PATH="$2"
+      shift 2
+      ;;
+    --registry)
+      REGISTRY="$2"
       shift 2
       ;;
     --force)
@@ -111,7 +120,9 @@ log() {
 
 # Configurar valores derivados por defecto
 [ -z "$BRANCH" ] && BRANCH="feat/${TASK_ID}-${PROFILE}"
-[ -z "$WORKTREE_PATH" ] && WORKTREE_PATH=".worktrees/${TASK_ID}"
+# Canónico T-107: hermano al checkout, fuera del árbol. Expansión pura de bash
+# (sin dirname/basename) para no añadir dependencias al pre-flight.
+[ -z "$WORKTREE_PATH" ] && WORKTREE_PATH="${ROOT_DIR%/*}/${ROOT_DIR##*/}-${TASK_ID}"
 [ -z "$BASE" ] && BASE="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'HEAD')"
 
 log "🚀 [worktree-dispatch] Preparando worktree para '$TASK_ID'..."
@@ -119,6 +130,34 @@ log "   Perfil:        $PROFILE"
 log "   Rama:          $BRANCH"
 log "   Base:          $BASE"
 log "   Ruta:          $WORKTREE_PATH"
+
+# ------------------------------------------------------------------------------
+# 0. Gate de disco (T-107, ADR 004): sin espacio no se despacha
+# ------------------------------------------------------------------------------
+# Se mide en el ancestro existente más cercano a la ruta destino (así cubre el
+# default hermano-fuera-del-árbol y cualquier --path). Fail-closed: si no se
+# puede medir, se rehúsa con mensaje accionable, nunca se adivina.
+MIN_FREE_GB="${WORKTREE_MIN_FREE_GB:-5}"
+if [[ ! "$MIN_FREE_GB" =~ ^[0-9]+$ ]]; then
+  log "❌ ERROR: WORKTREE_MIN_FREE_GB inválido: '$MIN_FREE_GB' (entero en GB)."
+  exit 1
+fi
+WT_PROBE="$WORKTREE_PATH"
+while [ ! -d "$WT_PROBE" ] && [ "$WT_PROBE" != "/" ] && [ -n "$WT_PROBE" ]; do
+  WT_PROBE="${WT_PROBE%/*}"
+done
+FREE_KB="$(df -k "$WT_PROBE" 2>/dev/null | python3 -c "import sys; print(sys.stdin.read().splitlines()[-1].split()[3])" 2>/dev/null || echo 0)"
+if [[ ! "$FREE_KB" =~ ^[0-9]+$ ]]; then FREE_KB=0; fi
+if [ "$FREE_KB" -lt $((MIN_FREE_GB * 1024 * 1024)) ]; then
+  FREE_GB_MSG="$(python3 -c "print(round($FREE_KB/1024/1024,1))" 2>/dev/null || echo '?')"
+  if [ "$JSON_MODE" = true ]; then
+    python3 -c "import json,sys; print(json.dumps({'task_id':sys.argv[1],'status':'ERROR','error':'Disco insuficiente','exit_code':1}))" "$TASK_ID"
+  else
+    log "❌ ERROR: disco insuficiente para despachar (libres: ${FREE_GB_MSG} GB, mínimo: ${MIN_FREE_GB} GB)."
+    log "   Política: ADR 004. Libera espacio o ajusta WORKTREE_MIN_FREE_GB."
+  fi
+  exit 1
+fi
 
 # ------------------------------------------------------------------------------
 # 1. Comprobación preventiva de inconsistencias (git worktree prune)
@@ -166,7 +205,9 @@ fi
 if git rev-parse --verify "refs/heads/$BRANCH" >/dev/null 2>&1; then
   if [ "$FORCE" = true ]; then
     log "⚠️  La rama '$BRANCH' ya existe. Eliminándola debido a flag --force..."
-    git branch -D "$BRANCH" 2>/dev/null || true
+    # stdout también se suprime: `branch -D` confirma en stdout y rompería
+    # el contrato JSON en modo --json (T-104).
+    git branch -D "$BRANCH" >/dev/null 2>&1 || true
   else
     log "ℹ️  La rama '$BRANCH' ya existe. Reutilizando rama..."
   fi
@@ -210,10 +251,34 @@ export AGENT_OS_PROFILE="$PROFILE"
 export AGENT_OS_WORKTREE_PATH="$REAL_WORKTREE_PATH"
 export AGENT_OS_BASE_REF="$BASE"
 export AGENT_OS_BRANCH="$BRANCH"
+export AGENT_OS_DELIBERATION_FILE="$REAL_WORKTREE_PATH/.agents/context/deliberation-${TASK_ID}.json"
 EOF
 
 # Crear enlace o asegurar disponibilidad de perfiles y scripts si fuera necesario
 chmod +x "$WORKTREE_PATH/.agents/context/worktree.env"
+
+# ------------------------------------------------------------------------------
+# 3b. Registro en dispatched.jsonl (Trazabilidad determinista)
+# ------------------------------------------------------------------------------
+mkdir -p "$(dirname "$REGISTRY")"
+DISPATCH_TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date +"%Y-%m-%dT%H:%M:%SZ")"
+
+python3 -c "
+import json, sys
+entry = {
+    'task_id': sys.argv[1],
+    'profile': sys.argv[2],
+    'branch': sys.argv[3],
+    'base_ref': sys.argv[4],
+    'worktree_path': sys.argv[5],
+    'agent_os_root': sys.argv[6],
+    'status': 'CREATED',
+    'deliberation': 'PENDING',
+    'dispatched_at': sys.argv[7]
+}
+with open(sys.argv[8], 'a') as f:
+    f.write(json.dumps(entry) + '\n')
+" "$TASK_ID" "$PROFILE" "$BRANCH" "$BASE" "$REAL_WORKTREE_PATH" "$AGENT_OS_ROOT" "$DISPATCH_TIMESTAMP" "$REGISTRY" 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
 # 4. Reporte de Éxito
@@ -230,6 +295,7 @@ data = {
     'base_ref': sys.argv[4],
     'worktree_path': sys.argv[5],
     'agent_os_root': sys.argv[6],
+    'deliberation': 'PENDING',
     'status': 'CREATED',
     'exit_code': 0
 }
@@ -246,9 +312,11 @@ else
   echo "  Base ref:        $BASE"
   echo "  Ruta Worktree:   $REAL_WORKTREE_PATH"
   echo "  AGENT_OS_ROOT:   $AGENT_OS_ROOT"
+  echo "  Deliberación:    PENDING ($REAL_WORKTREE_PATH/.agents/context/deliberation-${TASK_ID}.json)"
   echo "======================================================"
-  echo "  Para entrar al worktree:"
+  echo "  Para entrar al worktree y deliberar:"
   echo "    cd $WORKTREE_PATH && source .agents/context/worktree.env"
+  echo "    bash \$AGENT_OS_ROOT/scripts/agent/deliberate-plan.sh --task-id $TASK_ID --plan .agents/context/plan-draft.md"
   echo "======================================================"
 fi
 

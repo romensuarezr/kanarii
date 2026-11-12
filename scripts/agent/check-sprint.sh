@@ -37,9 +37,28 @@ fi
 
 echo "=== SPRINT CONTEXT ==="
 
+# Detección determinista de arquetipo: Core vs. Satélite ($0 tokens)
+IS_CORE=false
+ORIGIN_URL="$(git -C "$ROOT" config --get remote.origin.url 2>/dev/null || true)"
+if [ -f "$ROOT/tests/validate-control-plane.sh" ] || [[ "$ORIGIN_URL" =~ /agent-os(\.git)?$ ]]; then
+  IS_CORE=true
+  echo "TIPO_PROYECTO: CORE (agent-os — núcleo del sistema)"
+else
+  echo "TIPO_PROYECTO: SATÉLITE (proyecto hijo consumidor)"
+fi
+
 if [ -n "$ROADMAP_PATH" ]; then
   PENDING_GLOBAL=$(grep -c "^- \\[ \\]" "$ROADMAP_PATH" 2>/dev/null || true)
-  echo "ROADMAP: $ROADMAP_PATH (✅ Detectado — $PENDING_GLOBAL tareas pendientes)"
+  # El estandar del core es roadmap.md en minusculas (audit-repo.sh migra ROADMAP.md).
+  # Reportar solo "Detectado" por coincidencia de caso ocultaba que el requisito
+  # del workflow y el fichero real no coincidian.
+  if [ "$(basename "$ROADMAP_PATH")" = "roadmap.md" ]; then
+    echo "ROADMAP: $ROADMAP_PATH (cumple el estandar — $PENDING_GLOBAL tareas pendientes)"
+  else
+    echo "ROADMAP: $ROADMAP_PATH (AVISO: nombre no estandar — $PENDING_GLOBAL tareas pendientes)"
+    echo "      El estandar del core es roadmap.md en minusculas (audit-repo.sh migra ROADMAP.md)."
+    echo "      El prerrequisito de sprint-planning pide roadmap.md: con ROADMAP.md no se cumple."
+  fi
 else
   RED='\033[0;31m'
   NC='\033[0m'
@@ -48,21 +67,63 @@ else
   exit 1
 fi
 
-# 2. Sprint más reciente (excluye research y _archived)
-LAST_SPRINT=$(find "$SPRINTS_DIR" -name "sprint-[0-9][0-9]*.md" \
-  | grep -v -E "research|_archived" | sort -V | tail -1 || true)
+# 2. Sprint más reciente: ACTIVO primero; si no hay ninguno, el último ARCHIVADO.
+# Sin mirar los archivados, con docs/sprints/ vacío la numeración se reiniciaba en
+# sprint-01 y proponía pisar 14 sprints ya cerrados.
+LAST_SPRINT=$(find "$SPRINTS_DIR" -maxdepth 1 -name "sprint-[0-9][0-9]*.md" \
+  | grep -v -E "research" | sort -V | tail -1 || true)
+LAST_ARCHIVED=$(find "$SPRINTS_DIR/_archived" -name "sprint-[0-9][0-9]*.md" 2>/dev/null \
+  | grep -v -E "research" | sort -V | tail -1 || true)
+
+# Mayor numero de sprint conocido, activo o archivado: define la continuacion.
+HIGHEST_NUM=0
+for f in "$LAST_SPRINT" "$LAST_ARCHIVED"; do
+  [ -n "$f" ] || continue
+  n=$(basename "$f" .md | grep -oE '[0-9]+' | head -1)
+  [ -n "$n" ] && [ $((10#$n)) -gt "$HIGHEST_NUM" ] && HIGHEST_NUM=$((10#$n))
+done
+NEXT_NUM=$(printf "%02d" $((HIGHEST_NUM + 1)))
+
+# Cálculo determinista del identificador de tarea más alto y siguiente ($0 tokens)
+HIGHEST_TASK_NUM=0
+if [ -d "$ROOT/.agents/tasks" ]; then
+  while IFS= read -r n; do
+    [ -n "$n" ] && [ "$((10#$n))" -gt "$HIGHEST_TASK_NUM" ] && HIGHEST_TASK_NUM=$((10#$n))
+  done < <(find "$ROOT/.agents/tasks" -name "task-[0-9]*.md" 2>/dev/null | grep -oE '[0-9]+' || true)
+fi
+
+if [ -d "$SPRINTS_DIR" ]; then
+  while IFS= read -r n; do
+    [ -n "$n" ] && [ "$((10#$n))" -gt "$HIGHEST_TASK_NUM" ] && HIGHEST_TASK_NUM=$((10#$n))
+  done < <(grep -rhoE "^\|[[:space:]]*T-[0-9]+" "$SPRINTS_DIR"/sprint-[0-9]*.md "$SPRINTS_DIR"/_archived/sprint-[0-9]*.md 2>/dev/null | grep -oE '[0-9]+' || true)
+fi
+
+if [ "$HIGHEST_TASK_NUM" -gt 0 ]; then
+  ULTIMA_TAREA_ID=$(printf "T-%03d" "$HIGHEST_TASK_NUM")
+  TAREA_SIGUIENTE_ID=$(printf "T-%03d" $((HIGHEST_TASK_NUM + 1)))
+else
+  ULTIMA_TAREA_ID="ninguna"
+  TAREA_SIGUIENTE_ID="T-001"
+fi
 
 if [ -z "$LAST_SPRINT" ]; then
   echo "SPRINT_ACTUAL: ninguno"
-  echo "SPRINT_SIGUIENTE: sprint-01"
-  echo "SPRINT_MODE: INICIALIZACIÓN"
+  echo "SPRINT_SIGUIENTE: sprint-$NEXT_NUM"
+  echo "ULTIMA_TAREA_ID: $ULTIMA_TAREA_ID"
+  echo "TAREA_SIGUIENTE_ID: $TAREA_SIGUIENTE_ID"
+  if [ "$HIGHEST_NUM" -gt 0 ]; then
+    echo "SPRINT_MODE: CONTINUACIÓN (último cerrado: sprint-$(printf "%02d" "$HIGHEST_NUM"), ignorado sin mirar _archived/)"
+  else
+    echo "SPRINT_MODE: INICIALIZACIÓN"
+  fi
 else
   SPRINT_NAME=$(basename "$LAST_SPRINT" .md)
   SPRINT_NUM=$(echo "$SPRINT_NAME" | grep -oE '[0-9]+' | head -1)
-  NEXT_NUM=$(printf "%02d" $((10#$SPRINT_NUM + 1)))
 
   echo "SPRINT_ACTUAL: $LAST_SPRINT"
   echo "SPRINT_SIGUIENTE: sprint-$NEXT_NUM"
+  echo "ULTIMA_TAREA_ID: $ULTIMA_TAREA_ID"
+  echo "TAREA_SIGUIENTE_ID: $TAREA_SIGUIENTE_ID"
 
   # Conteo real de tareas completadas vs total
   TOTAL=$(grep -cE "^\| T-|^-[[:space:]]*\[[ x/]\]" "$LAST_SPRINT" 2>/dev/null || true)

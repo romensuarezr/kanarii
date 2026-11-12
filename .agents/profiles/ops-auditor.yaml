@@ -12,8 +12,8 @@ allowed_tools:
 
 allowed_hosts:
   - local
-  - datamanager
-  - oracle
+  - <nodo-inferencia>
+  - <nodo-orquestacion>
 
 preferred_model_tier: "freellmapi"
 fallback_model_tier: "ollama-local"

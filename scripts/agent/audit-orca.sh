@@ -5,7 +5,7 @@
 # Propósito: Inspeccionar en una sola llamada y con 0 tokens de inferencia:
 # 1. Proceso activo de Orca Desktop (local)
 # 2. Estado y tablas de orchestration.db (runs, tasks, decision_gates pendientes) en modo RO
-# 3. Conectividad y sockets de los relés de Orca en VPS datamanager y oracle
+# 3. Conectividad y sockets de los relés de Orca en VPS <nodo-inferencia> y <nodo-orquestacion>
 # 4. Consumo de disco en workspaces efímeros
 
 set -euo pipefail
@@ -97,24 +97,24 @@ echo ""
 
 # 3. REMOTE RELAYS EN VPS
 echo "🌐 RELAYS REMOTOS:"
-# datamanager
-DM_RELAY=$(ssh -n -o BatchMode=yes -o ConnectTimeout=3 datamanager \
+# <nodo-inferencia>
+DM_RELAY=$(ssh -n -o BatchMode=yes -o ConnectTimeout=3 <nodo-inferencia> \
   "ps aux | grep -E 'relay\.js' | grep -v grep | head -1" 2>/dev/null || echo "")
 if [ -n "$DM_RELAY" ]; then
   DM_PID=$(echo "$DM_RELAY" | awk '{print $2}')
-  echo "  datamanager: ONLINE ✅ (PID: $DM_PID)"
+  echo "  <nodo-inferencia>: ONLINE ✅ (PID: $DM_PID)"
 else
-  echo "  datamanager: OFFLINE ❌ (Sin proceso relay.js)"
+  echo "  <nodo-inferencia>: OFFLINE ❌ (Sin proceso relay.js)"
 fi
 
-# oracle
-ORA_RELAY=$(ssh -n -o BatchMode=yes -o ConnectTimeout=3 oracle \
+# <nodo-orquestacion>
+ORA_RELAY=$(ssh -n -o BatchMode=yes -o ConnectTimeout=3 <nodo-orquestacion> \
   "ps aux | grep -E 'relay\.js' | grep -v grep | head -1" 2>/dev/null || echo "")
 if [ -n "$ORA_RELAY" ]; then
   ORA_PID=$(echo "$ORA_RELAY" | awk '{print $2}')
-  echo "  oracle:       ONLINE ✅ (PID: $ORA_PID)"
+  echo "  <nodo-orquestacion>:       ONLINE ✅ (PID: $ORA_PID)"
 else
-  echo "  oracle:       OFFLINE ❌ (Sin proceso relay.js)"
+  echo "  <nodo-orquestacion>:       OFFLINE ❌ (Sin proceso relay.js)"
 fi
 
 echo ""
@@ -129,9 +129,9 @@ else
   echo "  Local: Sin carpeta workspaces activa ($LOCAL_WS_DIR)"
 fi
 
-ORA_REMOTE_SIZE=$(ssh -n -o BatchMode=yes -o ConnectTimeout=3 oracle \
+ORA_REMOTE_SIZE=$(ssh -n -o BatchMode=yes -o ConnectTimeout=3 <nodo-orquestacion> \
   "du -sh ~/.orca-remote 2>/dev/null | awk '{print \$1}'" 2>/dev/null || echo "N/A")
-echo "  oracle (~/.orca-remote): $ORA_REMOTE_SIZE"
+echo "  <nodo-orquestacion> (~/.orca-remote): $ORA_REMOTE_SIZE"
 
 echo ""
 echo "=== FIN AUDITORÍA ORCA ==="

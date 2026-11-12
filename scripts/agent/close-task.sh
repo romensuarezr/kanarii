@@ -82,12 +82,16 @@ if [ -n "$CUSTOM_MSG" ]; then
     MESSAGE="${CUSTOM_MSG} (${TASK_ID})"
   fi
 else
-  BRANCH_TYPE=$(echo "$BRANCH" | sed -n 's|^\([a-zA-Z0-9_-]*\)/T-.*|\1|p')
-  [ -z "$BRANCH_TYPE" ] && BRANCH_TYPE="feat"
-  BRANCH_DESC=$(echo "$BRANCH" | sed -n "s|.*T-${TASK_NUM}-\(.*\)|\1|p" | tr '-' ' ')
-  [ -z "$BRANCH_DESC" ] && BRANCH_DESC="cierre de tarea"
+  if echo "$BRANCH" | grep -qE '^[a-zA-Z0-9_-]+/T-[0-9]+'; then
+    BRANCH_TYPE=$(echo "$BRANCH" | sed -n 's|^\([a-zA-Z0-9_-]*\)/T-.*|\1|p')
+    [ -z "$BRANCH_TYPE" ] && BRANCH_TYPE="feat"
+    BRANCH_DESC=$(echo "$BRANCH" | sed -n "s|.*T-${TASK_NUM}-\(.*\)|\1|p" | tr '-' ' ')
+    [ -z "$BRANCH_DESC" ] && BRANCH_DESC="cierre de tarea"
 
-  MESSAGE="${BRANCH_TYPE}(${TASK_ID}): ${BRANCH_DESC}"
+    MESSAGE="${BRANCH_TYPE}(${TASK_ID}): ${BRANCH_DESC}"
+  else
+    MESSAGE="feat(${TASK_ID}): cierre de tarea ${TASK_ID}"
+  fi
 fi
 
 TASK_FILE="$ROOT/.agents/tasks/task-${TASK_NUM}.md"
@@ -145,6 +149,15 @@ if [ -f "$LOCK" ]; then
   echo "🔓 Lock eliminado antes del stage"
 fi
 
+
+# Verificación post-condición del commit, compartida con close-sprint.sh.
+# Cargar con source desde la librería del core: la lógica NO se duplica aquí.
+# shellcheck source=scripts/agent/lib/verify-commit.sh
+source "$SCRIPT_DIR/lib/verify-commit.sh" 2>/dev/null || {
+    echo "ERROR: no se encuentra lib/verify-commit.sh; el cierre no puede verificarse." >&2
+    exit 1
+}
+
 # 2. Stage de todo lo modificado (código + docs ya editados por el agente)
 git -C "$ROOT" add -A
 
@@ -162,9 +175,82 @@ mkdir -p "$ARCHIVE_DIR"
 git -C "$ROOT" mv "$TASK_FILE" "$ARCHIVE_DIR/"
 echo "📦 Task file archivado en _archived/"
 
-# 5. Commit atómico único
-git -C "$ROOT" commit -m "$MESSAGE"
-echo "✅ Commit realizado: $MESSAGE"
+# 4b. Actualizar el ENLACE de la fila del sprint para que apunte a _archived/.
+# Sin esto la tabla queda con un enlace roto y obliga a un commit de reparacion manual.
+# Reescritura portable: awk POSIX (nunca sed -i, que difiere entre BSD y GNU) + swap
+# atomico con mv. Idempotente: si ya apunta al destino nuevo, no se toca nada.
+TASK_BASENAME="$(basename "$TASK_FILE")"
+OLD_LINK=".agents/tasks/$TASK_BASENAME"
+NEW_LINK=".agents/tasks/_archived/$TASK_BASENAME"
+LINK_UPDATED=false
+if [ -n "$SPRINT_ACTIVE" ] && [ -f "$SPRINT_ACTIVE" ]; then
+    if grep -q "($OLD_LINK)" "$SPRINT_ACTIVE" 2>/dev/null; then
+        awk -v old="($OLD_LINK)" -v new="($NEW_LINK)" '
+            { idx = index($0, old)
+              if (idx > 0) $0 = substr($0, 1, idx - 1) new substr($0, idx + length(old))
+              print $0 }' "$SPRINT_ACTIVE" > "$SPRINT_ACTIVE.tmp.$$" \
+          && mv "$SPRINT_ACTIVE.tmp.$$" "$SPRINT_ACTIVE" 2>/dev/null || rm -f "$SPRINT_ACTIVE.tmp.$$"
+        if grep -q "($NEW_LINK)" "$SPRINT_ACTIVE" 2>/dev/null; then
+            git -C "$ROOT" add "$SPRINT_ACTIVE"
+            LINK_UPDATED=true
+            echo "🔗 Enlace de $TASK_ID actualizado a _archived/ en $(basename "$SPRINT_ACTIVE")"
+        else
+            RED='\033[0;31m'; NC='\033[0m'
+            echo -e "${RED}❌ ERROR: no se pudo actualizar el enlace en $(basename "$SPRINT_ACTIVE").${NC}"
+            echo -e "${RED}   Arregla la fila a mano antes de commitear; no se archivar con el enlace roto.${NC}"
+            exit 1
+        fi
+    elif grep -q "($NEW_LINK)" "$SPRINT_ACTIVE" 2>/dev/null; then
+        LINK_UPDATED=true     # ya correcto: idempotente, no se toca
+    fi
+fi
+# Limitación conocida y asumida: la búsqueda solo encuentra celdas de tabla
+# ("| T-XXX |"). Una tarea listada como elemento de lista no actualiza su enlace.
+
+# 4c. Generar el registro histórico de diseño (design-digest.sh)
+# Se canaliza obligatoriamente por lib/redact.sh y se añade al commit atómico.
+# Semántica fail-closed: si la generación falla, aborta el cierre sin commit.
+DIGEST_SCRIPT="$SCRIPT_DIR/design-digest.sh"
+if [ -f "$DIGEST_SCRIPT" ]; then
+    echo "📋 Generando digest de diseño para $TASK_ID..."
+    if ! bash "$DIGEST_SCRIPT" --task-id "$TASK_ID"; then
+        RED='\033[0;31m'; NC='\033[0m'
+        echo -e "${RED}❌ ERROR: Falló la generación del digest de diseño para $TASK_ID.${NC}" >&2
+        echo -e "${RED}   Semántica fail-closed: sin digest de diseño no hay cierre de tarea. Abortando sin commit.${NC}" >&2
+        exit 1
+    fi
+    DIGEST_FILE="$ROOT/docs/sprints/design-decisions/${TASK_ID}-digest.md"
+    if [ -f "$DIGEST_FILE" ]; then
+        git -C "$ROOT" add "$DIGEST_FILE"
+        echo "📄 Digest de diseño agregado al staging de cierre: docs/sprints/design-decisions/${TASK_ID}-digest.md"
+    fi
+fi
+
+# 4d. Verificación determinista de higiene de localizadores en staging (T-163)
+# Semántica fail-closed: aborta el cierre si hay fugas de secretos, IPs o rutas personales.
+LOCATOR_HYGIENE="$SCRIPT_DIR/lib/locator-hygiene.sh"
+if [ -f "$LOCATOR_HYGIENE" ]; then
+    echo "🔍 Verificando higiene de frontera portable en el staging de cierre..."
+    if ! bash "$LOCATOR_HYGIENE" --staged --path "$ROOT"; then
+        RED='\033[0;31m'; NC='\033[0m'
+        echo -e "${RED}❌ ERROR: Violación de frontera portable o literales privados detectados en el staging de cierre.${NC}" >&2
+        echo -e "${RED}   Semántica fail-closed: subsana las rutas personales o secretos antes de cerrar la tarea.${NC}" >&2
+        exit 1
+    fi
+    echo "  ✅ Staging 100% limpio de literales privados."
+fi
+
+# 5. Commit atómico único, VALIDADO ANTES de mover el ref
+if agent_verify_commit "$ROOT" "$MESSAGE" "_archived/$TASK_BASENAME" "archivado del task file a _archived/"; then
+    echo "✅ Commit realizado: $MESSAGE"
+else
+    exit 1
+fi
+
+# 5b. Re-chequeo post-cierre de higiene (T-163)
+if [ -f "$LOCATOR_HYGIENE" ]; then
+    bash "$LOCATOR_HYGIENE" --path "$ROOT" --tracked-only --quiet 2>/dev/null || true
+fi
 
 echo ""
 git -C "$ROOT" status --short || true
