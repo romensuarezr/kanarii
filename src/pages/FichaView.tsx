@@ -44,7 +44,12 @@ const fichaSchema = z.object({
   rol: z.string().optional(),
   fechaLlegada: z.string().optional(),
   fechaSalida: z.string().optional(),
-  habilidadesVoluntario: z.string().optional()
+  habilidadesVoluntario: z.string().optional(),
+  instagram: z.string().optional(),
+  linkedin: z.string().optional(),
+  website: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().optional()
 });
 
 type FichaFormData = z.infer<typeof fichaSchema>;
@@ -705,6 +710,36 @@ export function FichaView() {
                       placeholder="Ej: transporte, programar, herramientas..."
                       colorScheme="orange"
                     />
+                  </div>
+                </div>
+
+                <div className="space-y-4 md:col-span-2 border-t border-[#EAE2D6] pt-4 mt-2">
+                  <h3 className="text-lg font-serif text-[#4A4E4D]">Redes Sociales y Contacto Rápido</h3>
+                  <p className="text-xs text-stone-500">
+                    Facilita que otros miembros conecten contigo a través de tus perfiles públicos o canales directos.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-stone-600">Instagram</label>
+                      <input {...register("instagram")} placeholder="@usuario" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-stone-600">LinkedIn</label>
+                      <input {...register("linkedin")} placeholder="URL o perfil" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-stone-600">Sitio Web / Blog</label>
+                      <input {...register("website")} placeholder="https://..." className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-stone-600">Teléfono / WhatsApp</label>
+                      <input {...register("phone")} placeholder="+34..." className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-stone-600">Correo Electrónico</label>
+                      <input {...register("email")} placeholder="correo@ejemplo.com" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                    </div>
                   </div>
                 </div>
 
