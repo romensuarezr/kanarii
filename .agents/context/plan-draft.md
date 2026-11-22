@@ -1,14 +1,14 @@
-# Plan de Ejecución — T-113
+# Plan de Ejecución — T-114
 
 ## Objetivo
-Implementar T-113: Enriquecer `<PasaporteVisual />` con enlaces clickables a redes sociales (Instagram, LinkedIn, Web) y contacto rápido (Teléfono/WhatsApp, Email).
+Implementar T-114: Enriquecer las tarjetas de comunidad en `ComunidadesView.tsx` exponiendo el Propósito, los Cuidadores (`adminUids` resueltos a nombres) y las Necesidades del Espacio.
 
 ## Caja de archivos autorizada
-- `src/components/perfil/PasaporteVisual.tsx`
-- `src/pages/FichaView.tsx`
+- `src/pages/ComunidadesView.tsx`
 
 ## Pasos secuenciales
-1. Extender `UserPassport` en `PasaporteVisual.tsx` y la interfaz de perfil con campos opcionales (`instagram`, `linkedin`, `website`, `phone`, `email`).
-2. Renderizar iconos (`Instagram`, `Linkedin`, `Globe`, `Phone`, `Mail` de `lucide-react`) en `PasaporteVisual.tsx`.
-3. Añadir campos de entrada en `FichaView.tsx` para persistir estos datos mediante `saveFicha`.
-4. Verificar compilación con `npx tsc --noEmit`.
+1. Importar el hook de servicio `useCommunityMembers` y los iconos `Users`, `Target` y `Sparkles` de `lucide-react`.
+2. Crear un subcomponente local `CommunityCaretakers` (dentro del mismo archivo) que use `useCommunityMembers(communityId)` para resolver `adminUids` a nombres mediante `getMemberName`, respetando las reglas de hooks.
+3. Etiquetar la descripción existente de la comunidad como `Propósito` y añadir la sección de `Necesidades del espacio` a partir de `comunidad.tags`.
+4. Insertar `CommunityCaretakers` en la tarjeta de cada comunidad.
+5. Verificar compilación con `npx tsc --noEmit`.
