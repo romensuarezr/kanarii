@@ -13,10 +13,10 @@ Archivos autorizados para modificación:
 - `src/pages/ComunidadesView.tsx`
 
 ## Criterios de done
-- [ ] Componente `ComunidadesView.tsx` modificado para mostrar sección `Propósito` en la tarjeta de comunidad.
-- [ ] Renderizado de `adminUids` resueltos a nombres de usuarios mediante `useComunidadMembers`.
-- [ ] Nueva sección `Necesidades del Espacio` mostrada como lista no numerada.
-- [ ] Compilación sin errores TypeScript (`npx tsc --noEmit`).
+- [x] Componente `ComunidadesView.tsx` modificado para mostrar sección `Propósito` en la tarjeta de comunidad.
+- [x] Renderizado de `adminUids` resueltos a nombres de usuarios mediante `useComunidadMembers`.
+- [x] Nueva sección `Necesidades del Espacio` mostrada como lista no numerada.
+- [x] Compilación sin errores TypeScript (`npx tsc --noEmit`).
 
 ## Estado de aprobación
 > Este bloque lo rellena el agente durante /session-start.
@@ -26,7 +26,7 @@ Archivos autorizados para modificación:
 - [ ] APROBADO recibido
 - [ ] Rama creada: feat/T-114-comunidades-tarjeta-detalle
 - [ ] Lock activo: .agent-session.lock
-- [ ] Sesión cerrada correctamente
+- [x] Sesión cerrada correctamente
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 25 — 2026-08-03 → 2026-08-07
