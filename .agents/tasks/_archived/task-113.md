@@ -14,10 +14,10 @@ Archivos autorizados para modificación:
 - `src/pages/FichaView.tsx`
 
 ## Criterios de done
-- [ ] Añadir campos de edición para Redes Sociales (Instagram, LinkedIn, Sitio Web) y Teléfono/WhatsApp en `FichaView.tsx`.
-- [ ] Renderizar iconos y enlaces clickables a Redes Sociales (Instagram, LinkedIn, Web) en `PasaporteVisual.tsx`.
-- [ ] Renderizar botón/enlace de contacto rápido (WhatsApp/Teléfono e Email) respetando los ajustes de privacidad del miembro en `PasaporteVisual.tsx`.
-- [ ] Compilación sin errores TypeScript (`npx tsc --noEmit`).
+- [x] Añadir campos de edición para Redes Sociales (Instagram, LinkedIn, Sitio Web) y Teléfono/WhatsApp en `FichaView.tsx`.
+- [x] Renderizar iconos y enlaces clickables a Redes Sociales (Instagram, LinkedIn, Web) en `PasaporteVisual.tsx`.
+- [x] Renderizar botón/enlace de contacto rápido (WhatsApp/Teléfono e Email) respetando los ajustes de privacidad del miembro en `PasaporteVisual.tsx`.
+- [x] Compilación sin errores TypeScript (`npx tsc --noEmit`).
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 25 — 2026-08-03 → 2026-08-07
@@ -37,4 +37,4 @@ Archivos autorizados para modificación:
 - [x] APROBADO recibido
 - [ ] Rama creada: feat/T-113-pasaporte-redes-contacto
 - [ ] Lock activo: .agent-session.lock
-- [ ] Sesión cerrada correctamente
+- [x] Sesión cerrada correctamente

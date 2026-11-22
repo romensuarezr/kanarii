@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Shield, Sparkles, MessageCircle, Heart, Award, ArrowUpRight, Check, Clock, UserCheck, UserPlus } from 'lucide-react';
+import { Shield, Sparkles, MessageCircle, Heart, Award, ArrowUpRight, Check, Clock, UserCheck, UserPlus, Instagram, Linkedin, Globe, Phone, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { KinData } from '../../lib/kinMaya';
 import { ConfigPrivacidad, Comunidad } from '../../lib/appService';
@@ -17,6 +17,11 @@ interface UserPassport {
   arquetipo?: string;
   descripcionArquetipo?: string;
   communityIds?: string[];
+  instagram?: string;
+  linkedin?: string;
+  website?: string;
+  phone?: string;
+  email?: string;
 }
 
 interface PasaporteVisualProps {
@@ -112,6 +117,37 @@ export default function PasaporteVisual({
                 </span>
               ))}
             </div>
+
+            {/* Social & Contact Links */}
+            {(user.instagram || user.linkedin || user.website || user.phone || user.email) && (
+              <div className="flex flex-wrap justify-center md:justify-start items-center gap-2 pt-1 pb-1">
+                {user.instagram && (
+                  <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title="Instagram">
+                    <Instagram size={14} />
+                  </a>
+                )}
+                {user.linkedin && (
+                  <a href={user.linkedin.startsWith('http') ? user.linkedin : `https://linkedin.com/in/${user.linkedin}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title="LinkedIn">
+                    <Linkedin size={14} />
+                  </a>
+                )}
+                {user.website && (
+                  <a href={user.website.startsWith('http') ? user.website : `https://${user.website}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title="Sitio Web">
+                    <Globe size={14} />
+                  </a>
+                )}
+                {user.phone && (
+                  <a href={`tel:${user.phone}`} className="p-2 bg-emerald-50 hover:bg-emerald-100 rounded-full text-emerald-700 border border-emerald-200 transition-colors" title="Teléfono / Llamada">
+                    <Phone size={14} />
+                  </a>
+                )}
+                {user.email && (
+                  <a href={`mailto:${user.email}`} className="p-2 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-700 border border-amber-200 transition-colors" title="Correo Electrónico">
+                    <Mail size={14} />
+                  </a>
+                )}
+              </div>
+            )}
 
             {/* Firma Galáctica (Kin Maya) */}
             {user.kinMaya && showKinMaya && (() => {
