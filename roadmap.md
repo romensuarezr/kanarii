@@ -89,6 +89,13 @@ Solo contiene trabajo pendiente REAL. Lo marcado ✅ ya está implementado.
   - [ ] **T-108**: Refactorizar `Sidebar.tsx` y `BottomNav.tsx` para consumir `useNavItems` eliminando la duplicación de código.
   - [ ] **T-109**: Generar rutas dinámicas en `App.tsx` consumiendo `appRoutes` desde `navigation.ts`.
   - [ ] **T-110**: Actualizar `docs/pages-map.md` con las 24 rutas reales del sistema y su estado actual.
+
+### 2.7 Perfiles y passport (Sprint 27)
+- [ ] **T-132**: Corregir duplicidad de rutas `/perfil` y `/ficha` (Sprint 27)
+- [ ] **T-133**: Corregir persistencia de RRSS en saveFicha y mapping mappedUser (Sprint 27)
+- [ ] **T-134**: Añadir selectores de visibilidad de privacidad para RRSS y otros datos (Sprint 27)
+- [ ] **T-135**: Crear menú de configuración dedicado accesible desde el avatar de usuario (Sprint 27)
+
 - [ ] [MEDIO] Auditar listeners, queries y lógica duplicada en Sidebar/BottomNav.
 - [ ] [MEDIO] Revisar consistencia de toasts vs validación inline.
 - [x] Fix botón "Cancelar" en CreateTareaModal deshabilitado offline (Sprint 12 — T-053).

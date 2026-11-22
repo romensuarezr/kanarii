@@ -30,7 +30,7 @@ Ejemplo: C3 pesa 25, va al 85% → aporta 21.25 puntos al total.
 | ID | Capacidad | Peso | Estado | % cap. | Tareas clave | Pendiente para 100% |
 |---|---|---:|---|---:|---|---|
 | C1 | Acceso y membresía multi-comunidad | 15 | 🟢 | 95 | T-001, T-002, T-003, T-006, T-010, T-011, T-017, T-032 | Fix Safari cookies edge cases |
-| C2 | Perfiles, fichas y tríada comunitaria | 15 | 🟢 | 90 | T-009, T-018, T-022, T-036, T-038, T-052, T-055, T-062, T-063, T-064 | Pulido menor pasaportes |
+| C2 | Perfiles, fichas y tríada comunitaria | 15 | 🟢 | 95 | T-009, T-018, T-022, T-036, T-038, T-052, T-055, T-062, T-063, T-064 | Pulido menor pasaportes |
 | C3 | Gobernanza S3 operativa end-to-end | 25 | 🟢 | 90 | T-019, T-020, T-027, T-031, T-033, T-034, T-030, T-065, T-066 | Prueba sesión real con ≥2 miembros |
 | C4 | Marketplace y acuerdos | 15 | 🟡 | 90 | T-023, T-026, T-039, T-024, T-043, T-069, T-070 | Pulido menor de flujos de contraoferta |
 | C5 | Onboarding y ayuda contextual | 10 | 🟢 | 95 | T-035, T-057, sprint-00 onboarding base | TourStepLayout.tsx wrapper (BAJO) |
