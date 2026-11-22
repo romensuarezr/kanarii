@@ -2,6 +2,70 @@
 
 Todos los cambios notables en este proyecto serán documentados en este archivo. El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] — sprint-25 — 2026-11-22
+
+### ✨ Features
+
+- feat(communities): propósito, cuidadores y necesidades en tarjetas de comunidad (T-114)
+- feat(passport): enlaces sociales y contacto rápido en pasaporte y ficha (T-113)
+- feat(i18n): internacionalizar UserAvatarMenu y agregar claves userMenu en common.json
+- feat(i18n): internacionalizar UI fija de FichaView y claves passport (T-131)
+- feat(kin): exportar tonoIndex, selloIndex y colorIndex en KinData para i18n (T-131)
+- feat(i18n): internacionalización de componentes de animación pedagógica del tour (T-130)
+- feat(tour): T-129 internacionalizacion completa de la pagina del tour y selector de idioma
+- feat(i18n): T-127 script auxiliar CLI de deteccion de copy hardcodeado en JSX (Fase 2)
+- feat: fix/T 125 welcome i18n activity fix(T-125)
+- feat: gemini multilingual profiles(T-124)
+- feat: i18n astrology hd(T-123)
+- feat: docs/T 122 update pages map i18n(T-122)
+- feat: i18n tests fallback(T-121)
+- feat(i18n): i18n determinista para Firma Galáctica Kin Maya (sellos, tonos, colores, roles) en pasaporte
+- feat(i18n): T-119 internacionalizar Welcome, Auth, Sidebar y BottomNav
+- feat: language selector html lang(T-118)
+- feat: i18n setup provider(T-117)
+- feat: audit i18n json base(T-116)
+- feat: registro expres perfil(T-112)
+
+### 🐛 Bug Fixes
+
+- fix(close-task): resolución dinámica de sprint y soporte amplio de tokens (60160da)
+- fix(welcome): T-128 pluralizacion i18n del contador de miembros en nodos de Welcome
+- fix(i18n): internacionalizar indicador de sincronizacion SyncIndicator
+- fix(welcome): corregir cobertura i18n residual en miembros y pantalla de carga de Welcome
+- fix(i18n): traducir cabecera de comunidades en el pasaporte a Communities / Comunidades
+- fix(i18n): traducir textos fijos de UI en el pasaporte público en namespace passport
+- fix(i18n): corregir navegabilidad de miembros en Welcome y eliminar claves tabs
+- fix(i18n): conectar i18n en WelcomeHeroSections y status de orientacion
+
+### 📚 Documentación
+
+- docs(pages-map): sincronizar rutas y completitud del perfil (T-115)
+- docs(plan): update plan-draft for T-115
+- docs(plan): update plan-draft for T-114
+- docs(plan): update plan-draft for T-113
+- docs(tasks): confirmar eliminacion de rutas antiguas tras mover a _archived
+- docs(sprint): archivar sprint-26.md y sprint-26-research.md en _archived
+- docs(sprint): cerrar y archivar T-130, T-131 y Sprint 26
+- docs(sprint): actualizar trazabilidad de tareas T-130 y T-131 en sprint-26.md
+- docs(ideas): capturar propuesta de centralización de formato de fechas civiles e instantes
+- docs(i18n): actualizar reporte de paridad i18n tras T-129
+- docs(i18n): actualizar i18n-parity-report.md tras T-128
+- docs(sprint-26): añadir T-126 (Completada) y T-127 (Fase 2 diferida)
+- docs(tasks): archivar task-126
+- docs(i18n): T-126 formalizar guardrails de i18n para agentes en Kanarii
+- docs(sprint-26): cerrar Sprint 26 y archivar tareas pendientes de .agents/tasks
+- docs(task-124): documentar tarea de backlog T-124 para perfil multilingüe estructurado de Gemini
+- docs: registrar observaciones de cierre T-119 para T-120/T-121
+
+### 🔧 Mantenimiento
+
+- chore(planning): prepare sprint 25 task files and research
+- chore(agent-os): sync core assets (e98d423df39f9b925d183452ad84175448cf6513)
+- chore(agent-os): sync core assets (e091219dba7dd1658c623b3fcc4dd704c706745e)
+- chore(agent-os): sync --remote support in sync.sh and check-session (738e7ef)
+- chore(agent-os): sync close-task.sh (859cb16)
+- chore(agent-os): sync core assets (3ed8470)
+
 ## [0.6.0] — sprint-18 — 2026-07-30
 
 ### ✨ Features
