@@ -6,11 +6,11 @@
 
 | Página | Ruta | Propósito | Datos que consume | Rol requerido | Tamaño aprox. |
 |--------|------|-----------|-------------------|---------------|---------------|
-| **Welcome** | `/` | Landing tras login, dashboard mínimo | None (solo verifica auth) | Ninguno (pública para no auth) | ~5KB |
+| **Welcome** | `/`, `/welcome`, `/orientacion` | Panel de orientación de entrada ("Quién soy, quién está, qué nodos existen") con bifurcación de registro | `fichas`, `comunidades`, `community_members` (destacados) + `appUser.hasFicha` | Ninguno (pública para no auth) | ~15KB |
 | **ContextConsent** | `/contexto` | Aceptación de términos y consentimiento de datos | Ninguno | Usuario autenticado sin consentir | ~3KB |
-| **OnboardingChat** | `/onboarding` | Chat guiado para crear ficha personal | Ninguno (guarda en localStorage) | Ninguno (permite no auth) | ~16KB |
-| **FichaPreview** | `/ficha-preview` | Revisión y generación de ficha con IA | `pendingFicha` de localStorage | Usuario autenticado | ~24KB |
-| **FichaView** | `/ficha` | Visualización y edición de ficha personal | `fichas/{userId}` | Autenticado con ficha | ~36KB |
+| **OnboardingChat** | `/onboarding` | Chat guiado para crear ficha personal (flujo largo) | Ninguno (guarda en localStorage) | Ninguno (permite no auth) | ~16KB |
+| **FichaPreview** | `/ficha-preview` | Revisión y guardado del perfil básico / generación de ficha con IA | `pendingFicha` de localStorage | Usuario autenticado | ~31KB |
+| **FichaView** | `/ficha`, `/perfil` | Perfil básico editable y ampliación opcional al Manual Galáctico Completo | `fichas/{userId}`, `appUser.hasFicha` | Autenticado con ficha | ~58KB ⚠️ |
 | **AdminPanel** | `/admin` | Panel de administración comunitaria | Múltiples colecciones (ver abajo) | Admin o community admin | ~84KB ⚠️ |
 | **CruceView** | `/cruce` | Análisis de compatibilidad entre miembros | `fichas`, cruces cacheados | Admin (requiere `requireAdmin`) | ~24KB |
 | **TareasPanel** | `/tareas` | Gestión de tareas (kanban/lista) | `tareas` filtered by communityId | Miembro de comunidad | ~9KB |
@@ -18,13 +18,46 @@
 | **ProyectosView** | `/proyectos` | Listado de proyectos comunitarios | `proyectos` filtered by communityId | Miembro de comunidad | ~8KB |
 | **CalendarioView** | `/calendario` | Calendario de eventos | `eventos` filtered by communityId | Miembro de comunidad | ~8KB |
 | **Tablon** | `/tablon` | Tablón de ofertas/necesidades | `posts` filtered by communityId | Miembro de comunidad | ~10KB |
-| **ComunidadesView** | `/comunidades` | Listado de comunidades del usuario | `comunidades` (filtradas por `communityIds`) | Autenticado | ~20KB |
+| **ComunidadesView** | `/comunidades` | Listado de comunidades del usuario | `comunidades` (filtradas por `communityIds`) | Autenticado | ~22KB |
 | **RegistroComunidadView** | `/nueva-comunidad` | Wizard de creación de comunidad | Validación de slug único | Autenticado | ~24KB |
 | **AdminSolicitudesView** | `/admin/solicitudes` | Gestión de solicitudes de acceso | `solicitudes_acceso` | Admin de comunidad | ~29KB |
 | **MarketplaceView** | `/soberania` | Marketplace de servicios internos | `servicios`, `acuerdos` | Miembro de comunidad | ~23KB |
 | **PropuestasView** | `/gobernanza` | Gobernanza sociocrática (kanban de propuestas) | `propuestas`, `community_members` | Miembro de comunidad | ~5KB |
 | **FichaComunidadView** | `/c/:slug` | Ficha pública de comunidad (vista externa) | `comunidades/{slug}`, `community_members` | Público (lectura) | ~21KB |
+| **PasaporteComunitarioView** | `/c/:slug/miembro/:userId` | Pasaporte de un miembro dentro del contexto de una comunidad | `fichas/{userId}`, `community_members` | Miembro de comunidad | ~10KB |
+| **PasaporteUniversalView** | `/p/:uid` | Pasaporte público universal del miembro | `fichas/{uid}`, roles comunitarios | Público (lectura) | ~10KB |
+| **KanariiTourPage** | `/tour` | Recorrido pedagógico por los nodos de Kanarii | Contenido estático | Ninguno (pública) | ~11KB |
 | **AuthCallbackPage** | `/auth/callback` | Callback de Magic Link login | Ninguno (procesa link) | Ninguno (flujo auth) | ~6KB |
+
+---
+
+## Secuencia de Entrada y Completitud del Perfil
+
+> Refleja el Onboarding Exprés (T-112) y el Panel de Orientación (T-111).
+
+### Secuencia canónica
+
+```
+/ (Welcome pública)
+└── login / registro
+    └── /contexto (ContextConsent: "Siento la llamada y me resuena")
+        └── /orientacion (Welcome: quién soy, quién está, qué nodos existen)
+            ├── Opción A — "Perfil básico en 1 minuto"
+            │   └── /ficha-preview → guarda Tríada (1 saber + 1 necesidad) → hasFicha = true
+            └── Opción B — "Manual Galáctico Completo"
+                └── /onboarding → /ficha-preview → /ficha
+```
+
+### Estados de completitud (`appUser.hasFicha`)
+
+| Estado | Condición | UI / Comportamiento |
+|--------|-----------|---------------------|
+| **Sin perfil** | `!appUser` o `appUser.hasFicha === false` | `Welcome` muestra el bloque de bifurcación de registro y CTAs de onboarding; `App.tsx` muestra banner hacia `/onboarding`. |
+| **Perfil básico** | `appUser.hasFicha === true` con Tríada mínima | El miembro aparece en el directorio comunitario y en los destacados de `Welcome`; `/ficha` queda como ampliación opcional. |
+| **Perfil ampliado** | `hasFicha === true` + Manual Galáctico (carta astral, diseño humano, kin maya) | `PasaporteUniversalView` y `PasaporteComunitarioView` muestran la firma galáctica completa. |
+| **Borrador pendiente** | `pendingFicha` en localStorage | `Welcome` redirige a `/ficha-preview` si hay borrador y aún no existe ficha guardada. |
+
+> La completitud es **progresiva**: el perfil básico nunca bloquea la exploración de nodos ni la participación comunitaria.
 
 ---
 
@@ -50,20 +83,31 @@
 - `AdminGobernanza.tsx`
 - `AdminPanel.tsx` como orquestador con routing por tabs
 
-### FichaView (`/ficha`, ~36KB)
+### FichaView (`/ficha`, `/perfil`, ~58KB)
 
 **Secciones internas:**
-1. **Visualización de ficha:** Datos personales, manual generado
-2. **Edición:** Formulario con validación Zod
-3. **Geocodificación:** Verificación de ubicación
-4. **Modal de abandono:** Wizard de 3 pasos para dejar comunidad
+1. **Perfil básico:** Tríada (saberes, necesidades, ofrendas), bio y edición rápida
+2. **Redes sociales y contacto rápido:** Instagram, LinkedIn, sitio web, teléfono/WhatsApp y email (T-113)
+3. **Manual Galáctico (ampliación opcional):** datos de nacimiento, carta astral, diseño humano, kin maya
+4. **Edición:** Formulario con validación Zod
+5. **Geocodificación:** Verificación de ubicación
+6. **Modal de abandono:** Wizard de 3 pasos para dejar comunidad
 
-### FichaPreview (`/ficha-preview`, ~24KB)
+### ComunidadesView (`/comunidades`, ~22KB)
+
+**Contenido de cada tarjeta de nodo:**
+1. Nombre y enlace a la ficha pública (`/c/:slug`)
+2. **Propósito** (`descripcion`)
+3. **Cuidadores** (`adminUids` resueltos a nombres vía `useCommunityMembers`)
+4. **Necesidades del espacio** (`tags`)
+5. CTA de explorar / solicitar acceso
+
+### FichaPreview (`/ficha-preview`, ~31KB)
 
 **Secciones:**
-1. **Resumen de datos:** Todos los campos del onboarding
+1. **Resumen de datos:** Tríada del perfil básico y campos del onboarding
 2. **Generación de manual:** Llamada a Gemini para generar manual personalizado
-3. **Confirmación:** Botón para guardar en Firestore
+3. **Confirmación:** Botón para guardar en Firestore (`hasFicha = true`)
 
 ### RegistroComunidadView (`/nueva-comunidad`, ~24KB)
 
@@ -112,7 +156,7 @@
 
 | Páginas | Hook compartido | Propósito |
 |---------|-----------------|-----------|
-| `AdminPanel`, `PropuestasView`, `CruceView` | `useCommunityMembers` | Obtener lista de miembros |
+| `AdminPanel`, `PropuestasView`, `CruceView`, `ComunidadesView` | `useCommunityMembers` | Obtener lista de miembros y resolver cuidadores (`adminUids`) |
 | `AdminPanel`, `TareasPanel`, `ProyectosView` | `useTareas`, `useProyectos` | Tareas y proyectos |
 | `AdminPanel`, `MarketplaceView` | `useAllServicios`, `useAcuerdos` | Servicios y acuerdos |
 | `AdminPanel`, `ActasPanel` | `useActas` | Actas de reuniones |
@@ -228,16 +272,20 @@
 
 ```
 / (Welcome)
-├── Si !appUser → Botón login/onboarding
-├── Si appUser && !hasFicha → Banner hacia /onboarding
+├── Si !appUser → /contexto → /orientacion (bifurcación de registro)
+├── Si appUser && !hasFicha → Banner hacia /onboarding o /ficha-preview
 └── Si appUser && hasFicha → Acceder a menú principal
 
-/onboarding → /ficha-preview → /ficha
+Registro básico (1 minuto):
+/orientacion → /ficha-preview → hasFicha = true
+Registro completo (opcional):
+/orientacion → /onboarding → /ficha-preview → /ficha
 
 /comunidades
 ├── /nueva-comunidad (crear)
 ├── /c/:slug (ver ficha pública)
-└── /p/:uid (ver pasaporte comunitario público)
+│   └── /c/:slug/miembro/:userId (pasaporte en contexto)
+└── /p/:uid (ver pasaporte universal público)
 
 Menú principal (Sidebar/BottomNav):
 ├── /tareas
@@ -246,6 +294,7 @@ Menú principal (Sidebar/BottomNav):
 ├── /tablon
 ├── /soberania (Marketplace)
 ├── /gobernanza (Propuestas)
+├── /tour (recorrido pedagógico)
 └── /admin (solo admins)
     ├── /admin/solicitudes
     └── /cruce
@@ -253,4 +302,4 @@ Menú principal (Sidebar/BottomNav):
 
 ---
 
-*Documento vivo. Última actualización: 2026-08-16.*
+*Documento vivo. Última actualización: 2026-11-22.*

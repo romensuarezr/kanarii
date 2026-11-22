@@ -13,19 +13,19 @@ Archivos autorizados para modificación:
 - `docs/pages-map.md`
 
 ## Criterios de done
-- [ ] `docs/pages-map.md` actualizado con nuevas rutas correspondientes a Onboarding Exprés.
-- [ ] Estado de completitud del perfil reflejado para nuevos flujos.
-- [ ] Verificación cruzada: cada entrada en el mapa enlaza con su respectiva vista implementada (`Welcome.tsx`, `ComunidadesView.tsx`, `FichaView.tsx`).
+- [x] `docs/pages-map.md` actualizado con nuevas rutas correspondientes a Onboarding Exprés.
+- [x] Estado de completitud del perfil reflejado para nuevos flujos.
+- [x] Verificación cruzada: cada entrada en el mapa enlaza con su respectiva vista implementada (`Welcome.tsx`, `ComunidadesView.tsx`, `FichaView.tsx`).
 
 ## Estado de aprobación
 > Este bloque lo rellena el agente durante /session-start.
 > No modificar manualmente.
 
-- [ ] Plan presentado al usuario (Fase 3.5)
-- [ ] APROBADO recibido
-- [ ] Rama creada: feat/T-115-pages-map-update
-- [ ] Lock activo: .agent-session.lock
-- [ ] Sesión cerrada correctamente
+- [x] Plan presentado al usuario (Fase 3.5)
+- [x] APROBADO recibido
+- [x] Rama creada: feat/T-115-pages-map-update
+- [x] Lock activo: .agent-session.lock
+- [x] Sesión cerrada correctamente
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 25 — 2026-08-03 → 2026-08-07
