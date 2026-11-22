@@ -19,12 +19,22 @@ Archivos autorizados para modificación:
 - [ ] Renderizar botón/enlace de contacto rápido (WhatsApp/Teléfono e Email) respetando los ajustes de privacidad del miembro en `PasaporteVisual.tsx`.
 - [ ] Compilación sin errores TypeScript (`npx tsc --noEmit`).
 
+## Diseño macro aprobado en planning
+- **Sprint / Fecha**: Sprint 25 — 2026-08-03 → 2026-08-07
+- **Diseño y arquitectura aprobados por**: Humano (operador)
+- **Decisiones e interfaces selladas**: 
+  - Componente `PasaporteVisual.tsx` modificado para incluir sección `SocialLinks` con iconos `lucide-react` (`Instagram`, `LinkedIn`, `Globe`, `Phone`, `Mail`).
+  - Interfaz `UserPassport` extendida con campo `socialLinks` opcional.
+  - `FichaView.tsx` actualizado para capturar campos de redes sociales y contacto rápido.
+  - Uso de esquemas `mailto:` y `tel:` para contacto respetando privacidad.
+- **Veredicto de diseño macro**: `[APROBADO_EN_PLANNING]`
+
 ## Estado de aprobación
 > Este bloque lo rellena el agente durante /session-start.
 > No modificar manualmente.
 
 - [ ] Plan presentado al usuario (Fase 3.5)
-- [ ] APROBADO recibido
+- [x] APROBADO recibido
 - [ ] Rama creada: feat/T-113-pasaporte-redes-contacto
 - [ ] Lock activo: .agent-session.lock
 - [ ] Sesión cerrada correctamente
