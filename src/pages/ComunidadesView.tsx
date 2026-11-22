@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Compass, ShieldCheck, Ticket, Key, Info, MessageSquare, ArrowRight, Loader2, X, CheckCircle2, Plus } from 'lucide-react';
+import { Compass, ShieldCheck, Ticket, Key, Info, MessageSquare, ArrowRight, Loader2, X, CheckCircle2, Plus, Users, Target, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
@@ -18,6 +18,7 @@ import { useToast } from '../components/Toaster';
 import { PageHeader } from '../components/ui/PageHeader';
 import { PageContainer } from '../components/ui/PageContainer';
 import { useTopBarActions } from '../hooks/useTopBarActions';
+import { useCommunityMembers } from '../hooks/useCommunityMembers';
 
 /**
  * TODO: Revisión sistémica de visibilidad de inputs en toda la app.
@@ -26,6 +27,26 @@ import { useTopBarActions } from '../hooks/useTopBarActions';
  */
 
 // --- COMPONENTES AUXILIARES ---
+
+interface CommunityCaretakersProps {
+  communityId: string;
+  adminUids?: string[];
+}
+
+const CommunityCaretakers: React.FC<CommunityCaretakersProps> = ({ communityId, adminUids }) => {
+  const { getMemberName } = useCommunityMembers(communityId);
+
+  if (!adminUids || adminUids.length === 0) return null;
+
+  const names = adminUids.map(uid => getMemberName(uid));
+
+  return (
+    <div className="flex items-start gap-1.5 text-xs text-stone-500">
+      <Users size={12} className="mt-0.5 shrink-0 text-[#6B705C]" />
+      <span className="line-clamp-1">{names.join(' · ')}</span>
+    </div>
+  );
+};
 
 interface ModalProps {
   isOpen: boolean;
@@ -313,9 +334,22 @@ export function ComunidadesView() {
                       <Link to={`/c/${comunidad.slug}`} className="inline-block hover:text-[#CB997E] transition-colors">
                         <h3 className="text-xl font-bold text-stone-800">{comunidad.nombre}</h3>
                       </Link>
-                      <p className="text-stone-500 text-sm line-clamp-3 leading-relaxed">
-                        {comunidad.descripcion}
-                      </p>
+                      <div className="flex items-start gap-1.5">
+                        <Target size={12} className="mt-0.5 shrink-0 text-[#CB997E]" />
+                        <div>
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-[#A5A58D]">Propósito</span>
+                          <p className="text-stone-500 text-sm line-clamp-3 leading-relaxed">
+                            {comunidad.descripcion}
+                          </p>
+                        </div>
+                      </div>
+                      <CommunityCaretakers communityId={comunidad.id} adminUids={comunidad.adminUids} />
+                      {comunidad.tags && comunidad.tags.length > 0 && (
+                        <div className="flex items-start gap-1.5 text-xs text-stone-500">
+                          <Sparkles size={12} className="mt-0.5 shrink-0 text-amber-500" />
+                          <span className="line-clamp-1">{comunidad.tags.join(' · ')}</span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="pt-6 mt-auto flex flex-col gap-3">
