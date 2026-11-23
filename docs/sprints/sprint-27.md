@@ -1,7 +1,7 @@
 # Sprint 27 — 2026-11-23 → 2026-11-29
 
 ## Estado
-🟡 En curso
+✅ Completado
 
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
