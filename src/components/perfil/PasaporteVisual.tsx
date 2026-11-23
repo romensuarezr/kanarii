@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Shield, Sparkles, MessageCircle, Heart, Award, ArrowUpRight, Check, Clock, UserCheck, UserPlus, Globe, Phone, Mail } from 'lucide-react';
+import { Shield, Sparkles, MessageCircle, Heart, Award, ArrowUpRight, Check, Clock, UserCheck, UserPlus, Globe, Phone, Mail, Share2 } from 'lucide-react';
 import { ContactActions } from './ContactActions';
 import { InstagramIcon, LinkedInIcon, TelegramIcon } from '../ui/BrandIcons';
 import { Link } from 'react-router-dom';
@@ -32,6 +32,7 @@ interface PasaporteVisualProps {
   user?: UserPassport;
   privacidad?: ConfigPrivacidad;
   onConnect?: () => void;
+  onShare?: () => void;
   connectionStatus?: 'none' | 'pending' | 'connected' | 'self';
   isSender?: boolean;
   onAccept?: () => void;
@@ -84,6 +85,7 @@ export default function PasaporteVisual({
   user = defaultUser,
   privacidad,
   onConnect,
+  onShare,
   connectionStatus = 'none',
   isSender = false,
   onAccept,
@@ -413,9 +415,22 @@ export default function PasaporteVisual({
         {/* CTA: Call to Action (Cero Jerarquías, Sin mensajería privada directa para transparencia) */}
         <div className="pt-4 font-sans">
           {connectionStatus === 'self' ? (
-            <div className="w-full bg-[#FAF9F6] text-[#A5A58D] py-4 px-6 rounded-[24px] font-bold text-center border border-[#D2B48C]/20 text-sm cursor-default">
-              {t('myPassport')}
-            </div>
+            onShare ? (
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={onShare}
+                className="w-full bg-[#FAF9F6] hover:bg-[#EAE2D6]/60 text-[#6B705C] py-3.5 px-6 rounded-[24px] font-bold text-center border border-[#D2B48C]/30 text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-2xs"
+              >
+                <Share2 size={14} />
+                <span>{t('shareTitle')}</span>
+              </motion.button>
+            ) : (
+              <div className="w-full bg-[#FAF9F6] text-[#A5A58D] py-3.5 px-6 rounded-[24px] font-bold text-center border border-[#D2B48C]/20 text-xs cursor-default flex items-center justify-center gap-2">
+                <span>{t('myPassport')}</span>
+              </div>
+            )
           ) : connectionStatus === 'connected' ? (
             <motion.button
               whileHover={{ scale: 1.02 }}

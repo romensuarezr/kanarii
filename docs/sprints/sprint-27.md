@@ -14,6 +14,7 @@
 | T-135 | Crear menú de configuración dedicado accesible desde el avatar de usuario: añadir botón "Ajustes" en UserAvatarMenu.tsx con submenú de privacidad, RRSS, perfil, comunidad, cuenta | L | ✅ Completada | T-134 | .agents/tasks/_archived/task-135.md |
 | T-138 | UX de Perfil por Pestañas, Privacidad Efectiva, RRSS Favicon/Iconos, WhatsApp y Selector de Idioma en Menú Avatar | M | ✅ Completada | T-135 | .agents/tasks/_archived/task-138.md |
 | T-139 | Centralización de BrandIcons, ContactActions icon-only, soporte de contacto Telegram, PasaporteShareModal (estilo Leaderboard) y OG rewrite para /p/* | M | ✅ Completada | T-138 | .agents/tasks/task-139.md |
+| T-140 | Limpiar selector idioma en topbar, compartir arriba a derecha y unificar nomenclatura pasaporte | S | ✅ Completada | T-139 | .agents/tasks/task-140.md |
 
 ## Régimen Operativo del Sprint
 - **Régimen**: Desatendida (A) — pero trabajando en rama feature/SPRINT27-<tarea>; test local previo antes de merge a main. Secuencia: branch → implementar tarea → test manual/automático → merge a main → siguiente tarea carril 1.
