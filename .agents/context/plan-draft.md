@@ -1,29 +1,30 @@
-# Plan T-134: Selectores de visibilidad de privacidad para RRSS y contacto
+# Plan T-135: Crear menú de configuración y superficie de ajustes dedicada
 
 ## Objetivo
-Extender `ConfigPrivacidad` en `_types.ts` con opciones de audiencia/visibilidad para `instagram`, `linkedin`, `website`, `phone` y `email`, evaluar la visibilidad en `PasaporteVisual.tsx` según el tipo de visitante, y añadir los controles de configuración en el panel de privacidad de `FichaView.tsx`.
+Crear la superficie `/ajustes` con `AjustesView.tsx`, configurada con secciones de privacidad de pasaporte/contacto, gestión de perfil y cuenta, e integrar el botón de acceso en el desplegable `UserAvatarMenu.tsx`.
 
 ## Rama propuesta
-`feat/T-134-privacidad-selectores-rrss`
+`feat/T-135-menu-ajustes-usuario`
 
 ## Archivos a modificar / crear
-- `src/lib/services/_types.ts`: añadir `AudienciaPrivacidad`, `PrivacidadContacto`, extender `ConfigPrivacidad` y definir defaults.
-- `src/components/perfil/PasaporteVisual.tsx`: función de visibilidad para cada red/contacto respetando la audiencia (`comunidad`, `administradores`, `yo`) y `connectionStatus`.
-- `src/pages/FichaView.tsx`: incorporar la sección de "Contacto y Redes Sociales" en el panel de privacidad.
-- `.agents/tasks/task-134.md`
+- `src/pages/AjustesView.tsx` (nuevo): vista principal de configuración organizada por secciones (Privacidad, Perfil/Ficha, Cuenta y Vinculaciones).
+- `src/components/layout/UserAvatarMenu.tsx`: incorporar el botón "Ajustes" hacia `/ajustes`.
+- `src/App.tsx`: registrar la ruta protegida `/ajustes`.
+- `.agents/tasks/task-135.md`
 - `docs/sprints/sprint-27.md`
 
 ## Pasos secuenciales
-1. Extender `ConfigPrivacidad` en `src/lib/services/_types.ts` manteniendo compatibilidad hacia atrás.
-2. Actualizar `PasaporteVisual.tsx` para filtrar los enlaces RRSS según la privacidad configurada y el rol/estado del visitante.
-3. Ampliar el panel de privacidad de `FichaView.tsx` con los controles para los 5 campos de contacto y enlazar con `handleTogglePrivacidad`.
-4. Verificar con `npm run lint` y `npm run build`.
+1. Implementar `src/pages/AjustesView.tsx` reutilizando `useAuth`, `useFicha`, `useToast` y `sincronizarPasaporte` para la edición de privacidad y control de cuenta.
+2. Añadir la ruta `/ajustes` en `src/App.tsx` bajo `ProtectedRoute`.
+3. Integrar la opción "Ajustes" con icono `Settings` en `UserAvatarMenu.tsx`.
+4. Validar compilación con `npm run lint` y `npm run build`.
 
 ## Riesgos detectados
-- Compatibilidad de documentos de ficha existentes sin `contacto` en `privacidad`: mitigado mediante defaults automáticos cuando el campo no está definido.
+- Desincronización entre ajustes modificados y el documento de ficha: mitigado utilizando `saveFicha` y `sincronizarPasaporte` idéntico al panel de `FichaView`.
 
 ## Justificación de skills
-- `implementar-feature-dry`: integración fluida en el panel existente y reutilización de la sincronización de pasaporte.
+- `implementar-feature-dry`: reutilizar lógica de guardado y modelos de privacidad existentes.
+- `structure-guardian`: vista en `src/pages/` y menú en `src/components/layout/`.
 
 ## Conformidad con Diseño Macro
-- 100% alineado con §2 de `docs/sprints/sprint-27-research.md`.
+- 100% alineado con §1 y §6 de `docs/sprints/sprint-27-research.md`.
