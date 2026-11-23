@@ -23,3 +23,27 @@ Extender la funcionalidad de guardado y mapeo para que los campos de redes socia
 - `src/pages/PasaporteUniversalView.tsx`: actualizar `mappedUser` con campos RRSS
 - `src/pages/PasaporteComunitarioView.tsx`: actualizar `mappedUser` con campos RRSS
 - Verificar que `PasaporteVisual.tsx` recibe y muestra los campos (ya tiene la estructura)
+
+## Caja de archivos
+- `src/lib/services/fichas.ts` (lista blanca de `datosPersona`)
+- `src/lib/services/_types.ts` (tipos de `DatosOnboarding`)
+- `src/pages/PasaporteUniversalView.tsx` (`mappedUser`)
+- `src/pages/PasaporteComunitarioView.tsx` (`mappedUser`)
+- `src/pages/PerfilView.tsx` (fallback de datos y tarjeta de contacto)
+- `src/components/perfil/PasaporteVisual.tsx` (mostrar RRSS como texto, no solo iconos)
+- `src/pages/FichaView.tsx` (sección de lectura de RRSS)
+- `.agents/tasks/task-133.md`
+- `docs/sprints/sprint-27.md`
+
+## Skills
+- `implementar-feature-dry`: reutilizar el mapeo existente sin duplicar lógica.
+- `structure-guardian`: mantener los cambios en las capas correctas.
+
+## Criterios de done
+- [x] `saveFicha` persiste `instagram`, `linkedin`, `website`, `phone` y `email` en `datosPersona`.
+- [x] `mappedUser` de `PasaporteUniversalView` incluye los 5 campos.
+- [x] `mappedUser` de `PasaporteComunitarioView` incluye los 5 campos.
+- [x] `PasaporteVisual` muestra los campos cuando existen.
+- [x] `npm run lint` y `npm run build` en verde.
+- [x] Prueba manual: guardar RRSS, recargar y verlos en `/perfil` y en el pasaporte.
+- [x] Sesión cerrada correctamente.

@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { useFicha } from '../hooks/useFicha';
-import { User, Edit2, Check, X, Fingerprint, Sparkles, Users, HeartPulse, History, RefreshCw, Loader2, MapPin, LogOut, Eye, Copy, Download, ArrowLeft } from 'lucide-react';
+import { User, Edit2, Check, X, Fingerprint, Sparkles, Users, HeartPulse, History, RefreshCw, Loader2, MapPin, LogOut, Eye, Copy, Download, ArrowLeft, Globe } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -521,6 +521,79 @@ export function FichaView() {
                     );
                   })()}
                 </div>
+
+                {/* 1b. Redes Sociales y Contacto */}
+                {(datos.instagram || datos.linkedin || datos.website || datos.phone || datos.email) && (
+                  <div className="space-y-4 md:col-span-2">
+                    <div className="flex items-center gap-2 text-[#CB997E] border-b border-[#EAE2D6] pb-2">
+                      <Globe className="w-5 h-5" />
+                      <h3 className="text-lg font-serif">Redes Sociales y Contacto</h3>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {datos.instagram && (
+                        <div>
+                          <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Instagram</h4>
+                          <a
+                            href={`https://instagram.com/${datos.instagram.replace('@', '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-stone-700 hover:text-[#CB997E] hover:underline break-all"
+                          >
+                            {datos.instagram}
+                          </a>
+                        </div>
+                      )}
+                      {datos.linkedin && (
+                        <div>
+                          <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">LinkedIn</h4>
+                          <a
+                            href={datos.linkedin.startsWith('http') ? datos.linkedin : `https://linkedin.com/in/${datos.linkedin}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-stone-700 hover:text-[#CB997E] hover:underline break-all"
+                          >
+                            {datos.linkedin}
+                          </a>
+                        </div>
+                      )}
+                      {datos.website && (
+                        <div>
+                          <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Sitio Web</h4>
+                          <a
+                            href={datos.website.startsWith('http') ? datos.website : `https://${datos.website}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-stone-700 hover:text-[#CB997E] hover:underline break-all"
+                          >
+                            {datos.website}
+                          </a>
+                        </div>
+                      )}
+                      {datos.phone && (
+                        <div>
+                          <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Teléfono / WhatsApp</h4>
+                          <a
+                            href={`tel:${datos.phone}`}
+                            className="text-stone-700 hover:text-[#CB997E] hover:underline break-all"
+                          >
+                            {datos.phone}
+                          </a>
+                        </div>
+                      )}
+                      {datos.email && (
+                        <div>
+                          <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Correo Electrónico</h4>
+                          <a
+                            href={`mailto:${datos.email}`}
+                            className="text-stone-700 hover:text-[#CB997E] hover:underline break-all"
+                          >
+                            {datos.email}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* 2. Tríada Comunitaria */}
                 <div className="space-y-6 md:col-span-2">

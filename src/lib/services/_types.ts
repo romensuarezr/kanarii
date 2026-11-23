@@ -127,6 +127,11 @@ export interface DatosOnboarding {
   fechaSalida?: string;
   habilidadesVoluntario?: string;
   plataformaOrigen?: string;
+  instagram?: string;
+  linkedin?: string;
+  website?: string;
+  phone?: string;
+  email?: string;
 }
 
 export interface TriadaComunitaria {

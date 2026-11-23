@@ -122,28 +122,33 @@ export default function PasaporteVisual({
             {(user.instagram || user.linkedin || user.website || user.phone || user.email) && (
               <div className="flex flex-wrap justify-center md:justify-start items-center gap-2 pt-1 pb-1">
                 {user.instagram && (
-                  <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title="Instagram">
-                    <Instagram size={14} />
+                  <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title={`Instagram: ${user.instagram}`}>
+                    <Instagram size={13} />
+                    <span className="text-[11px] font-medium max-w-[150px] truncate">{user.instagram}</span>
                   </a>
                 )}
                 {user.linkedin && (
-                  <a href={user.linkedin.startsWith('http') ? user.linkedin : `https://linkedin.com/in/${user.linkedin}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title="LinkedIn">
-                    <Linkedin size={14} />
+                  <a href={user.linkedin.startsWith('http') ? user.linkedin : `https://linkedin.com/in/${user.linkedin}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title={`LinkedIn: ${user.linkedin}`}>
+                    <Linkedin size={13} />
+                    <span className="text-[11px] font-medium">LinkedIn</span>
                   </a>
                 )}
                 {user.website && (
-                  <a href={user.website.startsWith('http') ? user.website : `https://${user.website}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title="Sitio Web">
-                    <Globe size={14} />
+                  <a href={user.website.startsWith('http') ? user.website : `https://${user.website}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title={`Web: ${user.website}`}>
+                    <Globe size={13} />
+                    <span className="text-[11px] font-medium">Web</span>
                   </a>
                 )}
                 {user.phone && (
-                  <a href={`tel:${user.phone}`} className="p-2 bg-emerald-50 hover:bg-emerald-100 rounded-full text-emerald-700 border border-emerald-200 transition-colors" title="Teléfono / Llamada">
-                    <Phone size={14} />
+                  <a href={`tel:${user.phone}`} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 rounded-full text-emerald-700 border border-emerald-200 transition-colors" title={`Teléfono: ${user.phone}`}>
+                    <Phone size={13} />
+                    <span className="text-[11px] font-medium max-w-[150px] truncate">{user.phone}</span>
                   </a>
                 )}
                 {user.email && (
-                  <a href={`mailto:${user.email}`} className="p-2 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-700 border border-amber-200 transition-colors" title="Correo Electrónico">
-                    <Mail size={14} />
+                  <a href={`mailto:${user.email}`} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-700 border border-amber-200 transition-colors" title={`Email: ${user.email}`}>
+                    <Mail size={13} />
+                    <span className="text-[11px] font-medium max-w-[180px] truncate">{user.email}</span>
                   </a>
                 )}
               </div>
