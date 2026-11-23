@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Shield, Sparkles, MessageCircle, Heart, Award, ArrowUpRight, Check, Clock, UserCheck, UserPlus, Instagram, Linkedin, Globe, Phone, Mail } from 'lucide-react';
+import { Shield, Sparkles, MessageCircle, Heart, Award, ArrowUpRight, Check, Clock, UserCheck, UserPlus, Globe, Phone, Mail } from 'lucide-react';
 import { ContactActions } from './ContactActions';
+import { InstagramIcon, LinkedInIcon, TelegramIcon } from '../ui/BrandIcons';
 import { Link } from 'react-router-dom';
 import { KinData } from '../../lib/kinMaya';
 import { ConfigPrivacidad, Comunidad } from '../../lib/appService';
@@ -24,6 +25,7 @@ interface UserPassport {
   website?: string;
   phone?: string;
   email?: string;
+  telegram?: string;
 }
 
 interface PasaporteVisualProps {
@@ -92,7 +94,7 @@ export default function PasaporteVisual({
   const showKinMaya = privacidad ? privacidad.kinMaya !== false : true;
   const showArquetipo = privacidad ? privacidad.arquetipo !== false : true;
 
-  const isContactVisible = (field: 'instagram' | 'linkedin' | 'website' | 'phone' | 'email'): boolean => {
+  const isContactVisible = (field: 'instagram' | 'linkedin' | 'website' | 'phone' | 'email' | 'telegram'): boolean => {
     // 1. Si no hay configuración de privacidad, por defecto teléfono y email se ocultan a visitantes
     if (!privacidad) {
       if (field === 'phone' || field === 'email') return connectionStatus === 'self';
@@ -182,6 +184,7 @@ export default function PasaporteVisual({
             {/* Social & Contact Links */}
             {((user.instagram && isContactVisible('instagram')) ||
               (user.linkedin && isContactVisible('linkedin')) ||
+              (user.telegram && isContactVisible('telegram')) ||
               (user.website && isContactVisible('website')) ||
               (user.phone && isContactVisible('phone')) ||
               (user.email && isContactVisible('email'))) && (
@@ -195,7 +198,7 @@ export default function PasaporteVisual({
                     title={`Instagram: ${user.instagram}`}
                     aria-label={`Instagram: ${user.instagram}`}
                   >
-                    <Instagram size={14} />
+                    <InstagramIcon size={15} />
                   </a>
                 )}
                 {user.linkedin && isContactVisible('linkedin') && (
@@ -207,11 +210,26 @@ export default function PasaporteVisual({
                     title={`LinkedIn: ${user.linkedin}`}
                     aria-label={`LinkedIn: ${user.linkedin}`}
                   >
-                    <Linkedin size={14} />
+                    <LinkedInIcon size={14} />
+                  </a>
+                )}
+                {user.telegram && isContactVisible('telegram') && (
+                  <a
+                    href={user.telegram.startsWith('http') ? user.telegram : `https://t.me/${user.telegram.replace('@', '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-[#0088cc]/10 hover:bg-[#0088cc]/20 flex items-center justify-center text-[#0088cc] border border-[#0088cc]/30 transition-colors shadow-2xs"
+                    title={`Telegram: ${user.telegram}`}
+                    aria-label={`Telegram: ${user.telegram}`}
+                  >
+                    <TelegramIcon size={14} />
                   </a>
                 )}
                 {user.website && isContactVisible('website') && (
                   <WebsiteFaviconLink url={user.website} />
+                )}
+                {user.phone && isContactVisible('phone') && (
+                  <ContactActions phone={user.phone} size="sm" iconOnly={true} />
                 )}
                 {user.email && isContactVisible('email') && (
                   <a
@@ -222,9 +240,6 @@ export default function PasaporteVisual({
                   >
                     <Mail size={14} />
                   </a>
-                )}
-                {user.phone && isContactVisible('phone') && (
-                  <ContactActions phone={user.phone} size="sm" showPhoneText={false} />
                 )}
               </div>
             )}

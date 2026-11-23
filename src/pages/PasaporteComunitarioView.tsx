@@ -156,6 +156,7 @@ export function PasaporteComunitarioView() {
     website: ficha?.datosPersona?.website || ficha?.datosOnboarding?.website,
     phone: ficha?.datosPersona?.phone || ficha?.datosOnboarding?.phone,
     email: ficha?.datosPersona?.email || ficha?.datosOnboarding?.email,
+    telegram: ficha?.datosPersona?.telegram || ficha?.datosOnboarding?.telegram,
   };
 
   let connectionStatus: 'none' | 'pending' | 'connected' | 'self' = 'none';

@@ -132,6 +132,7 @@ export interface DatosOnboarding {
   website?: string;
   phone?: string;
   email?: string;
+  telegram?: string;
 }
 
 export interface TriadaComunitaria {
@@ -191,6 +192,12 @@ export interface FichaDatosPersona extends Omit<Partial<DatosOnboarding>, 'antig
   habilidadesVoluntario?: string;
   plataformaOrigen?: string;
   hora_aproximada?: boolean;
+  instagram?: string;
+  linkedin?: string;
+  website?: string;
+  phone?: string;
+  email?: string;
+  telegram?: string;
   [key: string]: any;
 }
 
@@ -231,6 +238,7 @@ export interface PrivacidadContacto {
   website: AudienciaPrivacidad;
   phone: AudienciaPrivacidad;
   email: AudienciaPrivacidad;
+  telegram: AudienciaPrivacidad;
 }
 
 export const PRIVACIDAD_CONTACTO_DEFAULT: PrivacidadContacto = {
@@ -239,6 +247,7 @@ export const PRIVACIDAD_CONTACTO_DEFAULT: PrivacidadContacto = {
   website: 'comunidad',
   phone: 'administradores',
   email: 'administradores',
+  telegram: 'comunidad',
 };
 
 export interface ConfigPrivacidad {
@@ -252,6 +261,7 @@ export interface ConfigPrivacidad {
   website?: boolean;
   phone?: boolean;
   email?: boolean;
+  telegram?: boolean;
   contacto?: Partial<PrivacidadContacto>;
 }
 
@@ -266,6 +276,7 @@ export const PRIVACIDAD_DEFAULT: ConfigPrivacidad = {
   website: true,
   phone: false,
   email: false,
+  telegram: true,
   contacto: PRIVACIDAD_CONTACTO_DEFAULT,
 };
 

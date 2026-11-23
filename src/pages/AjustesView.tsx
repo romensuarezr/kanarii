@@ -189,6 +189,7 @@ export function AjustesView() {
               {[
                 { key: 'instagram', label: 'Instagram', desc: 'Muestra tu handle de Instagram y enlace directo a tu perfil.' },
                 { key: 'linkedin', label: 'LinkedIn', desc: 'Muestra tu perfil profesional de LinkedIn en el pasaporte.' },
+                { key: 'telegram', label: 'Telegram', desc: 'Muestra tu usuario o enlace de Telegram para mensajería directa.' },
                 { key: 'website', label: 'Sitio Web', desc: 'Enlace directo a tu web personal o proyecto.' },
                 { key: 'phone', label: 'Teléfono y WhatsApp', desc: 'Muestra los botones de llamada nativa y apertura directa en WhatsApp.' },
                 { key: 'email', label: 'Correo Electrónico', desc: 'Muestra tu dirección de email pública para contacto comunitario.' }

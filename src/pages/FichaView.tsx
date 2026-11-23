@@ -51,7 +51,8 @@ const fichaSchema = z.object({
   linkedin: z.string().optional(),
   website: z.string().optional(),
   phone: z.string().optional(),
-  email: z.string().optional()
+  email: z.string().optional(),
+  telegram: z.string().optional()
 });
 
 type FichaFormData = z.infer<typeof fichaSchema>;
@@ -511,6 +512,10 @@ export function FichaView() {
                       <input {...register("linkedin")} placeholder="URL o perfil" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                     </div>
                     <div className="space-y-1">
+                      <label className="text-xs font-medium text-stone-600">Telegram</label>
+                      <input {...register("telegram")} placeholder="@usuario o t.me/..." className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                    </div>
+                    <div className="space-y-1">
                       <label className="text-xs font-medium text-stone-600">Sitio Web / Blog</label>
                       <input {...register("website")} placeholder="https://..." className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                     </div>
@@ -630,6 +635,7 @@ export function FichaView() {
                 {[
                   { key: 'instagram', label: 'Instagram', desc: 'Permite que otros miembros vean tu usuario de Instagram y accedan a tu perfil.' },
                   { key: 'linkedin', label: 'LinkedIn', desc: 'Muestra tu perfil profesional de LinkedIn en el pasaporte.' },
+                  { key: 'telegram', label: 'Telegram', desc: 'Muestra tu usuario o enlace de Telegram para mensajería directa.' },
                   { key: 'website', label: 'Sitio Web', desc: 'Muestra el enlace directo a tu web personal o proyecto.' },
                   { key: 'phone', label: 'Teléfono y WhatsApp', desc: 'Muestra los botones de llamada y apertura de chat en WhatsApp.' },
                   { key: 'email', label: 'Correo Electrónico', desc: 'Muestra tu dirección de email de contacto directo.' }
