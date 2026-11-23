@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Fingerprint, Sparkles, Users, HeartPulse, History, Globe, Eye, Copy, Edit2, LogOut } from 'lucide-react';
+import { ContactActions } from './ContactActions';
 import { Ficha, FichaDatosPersona, getTriadaFromFicha } from '../../lib/appService';
 import { calcularKin } from '../../lib/kinMaya';
 import { useTranslation } from 'react-i18next';
@@ -267,12 +268,7 @@ export function FichaReadOnly({
                 {datos.phone && (
                   <div>
                     <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Teléfono / WhatsApp</h4>
-                    <a
-                      href={`tel:${datos.phone}`}
-                      className="text-stone-700 hover:text-[#CB997E] hover:underline break-all"
-                    >
-                      {datos.phone}
-                    </a>
+                    <ContactActions phone={datos.phone} showPhoneText={true} />
                   </div>
                 )}
                 {datos.email && (

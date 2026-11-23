@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Shield, Sparkles, MessageCircle, Heart, Award, ArrowUpRight, Check, Clock, UserCheck, UserPlus, Instagram, Linkedin, Globe, Phone, Mail } from 'lucide-react';
+import { ContactActions } from './ContactActions';
 import { Link } from 'react-router-dom';
 import { KinData } from '../../lib/kinMaya';
 import { ConfigPrivacidad, Comunidad } from '../../lib/appService';
@@ -140,10 +141,7 @@ export default function PasaporteVisual({
                   </a>
                 )}
                 {user.phone && (
-                  <a href={`tel:${user.phone}`} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 rounded-full text-emerald-700 border border-emerald-200 transition-colors" title={`Teléfono: ${user.phone}`}>
-                    <Phone size={13} />
-                    <span className="text-[11px] font-medium max-w-[150px] truncate">{user.phone}</span>
-                  </a>
+                  <ContactActions phone={user.phone} size="sm" />
                 )}
                 {user.email && (
                   <a href={`mailto:${user.email}`} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-700 border border-amber-200 transition-colors" title={`Email: ${user.email}`}>
