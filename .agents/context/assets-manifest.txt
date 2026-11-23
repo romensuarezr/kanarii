@@ -13,6 +13,8 @@
 .agents/rules/global/analysis-principles.md
 .agents/rules/global/audit-before-refactor.md
 .agents/rules/global/self-improvement-distillation.md
+.agents/rules/global/coordinator-boot.md
+.agents/rules/global/roi-first-prioritization.md
 .agents/workflows/session-close.md
 .agents/workflows/honesto.md
 .agents/workflows/sprint-planning.md
@@ -21,6 +23,7 @@
 .agents/workflows/parallel-orchestration.md
 .agents/workflows/session-start.md
 .agents/skills/remote-admin/SKILL.md
+.agents/skills/web-compliance/SKILL.md
 .agents/context/agent-os-changelog.md
 scripts/agent/contribute.sh
 scripts/agent/update-mvp-tracker.sh
@@ -46,7 +49,11 @@ scripts/agent/inspect-skills.sh
 scripts/agent/assets-manifest.txt
 scripts/agent/dispatch-satellite.sh
 .agents/config/satellites.yaml
+.agents/config/orchestration-playbooks.yaml
 scripts/agent/worktree-gc.sh
+scripts/agent/orchestration-report.sh
+scripts/agent/audit-web-compliance.sh
+scripts/ops/coolify.sh
 
 [deprecated]
 # fecha       archivo                              motivo

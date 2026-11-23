@@ -88,31 +88,47 @@ extract_semver() {
 }
 
 detect_remote_hermes_version() {
-  local fleet_file=""
-  if [ -f "$ROOT_DIR/.agents/config/fleet.yaml" ]; then
-    fleet_file="$ROOT_DIR/.agents/config/fleet.yaml"
-  elif [ -f "$ROOT_DIR/config/fleet.yaml" ]; then
-    fleet_file="$ROOT_DIR/config/fleet.yaml"
-  elif [ -f "${HOME:-}/.agents/config/fleet.yaml" ]; then
-    fleet_file="${HOME:-}/.agents/config/fleet.yaml"
-  fi
-  [ -z "$fleet_file" ] && return 0
-
   local remote_target=""
   remote_target="$(python3 -c "
-import yaml
-try:
-    with open('$fleet_file') as f:
-        d = yaml.safe_load(f) or {}
-    nodes = d.get('nodes', {})
-    for node_id, node_cfg in nodes.items():
-        svcs = node_cfg.get('services', {})
-        if 'hermes' in svcs or 'hermes_gateway' in svcs:
-            print(node_cfg.get('alias') or node_id or node_cfg.get('ip') or '')
-            break
-except Exception:
-    pass
-" 2>/dev/null || true)"
+import os, sys, yaml
+
+fleet_env = os.environ.get('FLEET_FILE')
+if fleet_env:
+    candidates = [fleet_env]
+else:
+    root = sys.argv[1]
+    candidates = [
+        os.path.join(root, '.agents/config/fleet.yaml'),
+        os.path.join(root, 'config/fleet.yaml'),
+        os.path.expanduser('~/.agents/config/fleet.yaml'),
+    ]
+    try:
+        import pwd
+        real_home = pwd.getpwuid(os.getuid()).pw_dir
+        real_fleet = os.path.join(real_home, '.agents/config/fleet.yaml')
+        if real_fleet not in candidates:
+            candidates.append(real_fleet)
+    except Exception:
+        pass
+
+for cand in candidates:
+    if not os.path.isfile(cand):
+        continue
+    try:
+        with open(cand, 'r', encoding='utf-8') as f:
+            d = yaml.safe_load(f) or {}
+        nodes = d.get('nodes', {})
+        for node_id, node_cfg in nodes.items():
+            svcs = node_cfg.get('services', {})
+            if 'hermes' in svcs or 'hermes_gateway' in svcs:
+                val = node_cfg.get('alias') or node_id or node_cfg.get('ip') or ''
+                if val:
+                    print(val)
+                    sys.exit(0)
+    except Exception:
+        continue
+sys.exit(0)
+" "$ROOT_DIR" 2>/dev/null || true)"
 
   if [ -n "$remote_target" ] && command -v ssh >/dev/null 2>&1; then
     local r_out=""
@@ -140,7 +156,7 @@ except Exception:
     pass
 " 2>/dev/null || true)"
       fi
-      [ -z "$ver" ] && ver="2.2.7"
+      [ -z "$ver" ] && ver="2.3.2"
       ;;
     hermes)
       if command -v hermes >/dev/null 2>&1; then
@@ -155,19 +171,26 @@ except Exception:
           ver="$r_ver"
         fi
       fi
-      [ -z "$ver" ] && ver="0.23.1"
+      [ -z "$ver" ] && ver="0.23.3"
       ;;
     orca)
       if command -v orca-ide >/dev/null 2>&1; then
         ver="$(extract_semver "$(orca-ide --version 2>/dev/null || true)")"
+      elif command -v orca >/dev/null 2>&1; then
+        # Verificar que no sea el lector de pantalla de GNOME
+        local real_orca
+        real_orca="$(readlink -f "$(command -v orca)" 2>/dev/null || command -v orca)"
+        if [ "$real_orca" != "/usr/bin/orca" ] && [ "$real_orca" != "/bin/orca" ]; then
+          ver="$(extract_semver "$(orca --version 2>/dev/null || true)")"
+        fi
       fi
-      [ -z "$ver" ] && ver="1.4.256"
+      [ -z "$ver" ] && ver="1.4.268"
       ;;
     infisical)
       if command -v infisical >/dev/null 2>&1; then
         ver="$(extract_semver "$(infisical --version 2>/dev/null || true)")"
       fi
-      [ -z "$ver" ] && ver="0.45.6"
+      [ -z "$ver" ] && ver="0.45.14"
       ;;
     glances)
       if command -v glances >/dev/null 2>&1; then
@@ -348,8 +371,36 @@ except Exception:
       TODAY="$(date +%Y-%m-%d)"
       CLEAN_LATEST="$(echo "$LATEST" | sed 's/^v//')"
       INBOX_FILE="$ROOT_DIR/docs/idea-inbox/${TODAY}-${t_id}-v${CLEAN_LATEST}.md"
-      if [ ! -f "$INBOX_FILE" ]; then
-        mkdir -p "$ROOT_DIR/docs/idea-inbox"
+
+      mkdir -p "$ROOT_DIR/docs/idea-inbox"
+
+      # 1. Purgar borradores de versiones anteriores obsoletas para esta herramienta
+      for old_doc in "$ROOT_DIR/docs/idea-inbox"/*"-${t_id}-v"*.md; do
+        [ -f "$old_doc" ] || continue
+        case "$old_doc" in
+          *"-${t_id}-v${CLEAN_LATEST}.md")
+            ;;
+          *)
+            rm -f "$old_doc"
+            ;;
+        esac
+      done
+
+      # 2. Comprobar si ya existe una propuesta para esta versión exacta (de hoy o de fecha anterior)
+      EXISTING_PROPOSALS=()
+      for exist_doc in "$ROOT_DIR/docs/idea-inbox"/*"-${t_id}-v${CLEAN_LATEST}.md"; do
+        [ -f "$exist_doc" ] && EXISTING_PROPOSALS+=("$exist_doc")
+      done
+
+      # Si existen duplicados de la misma versión (fechas distintas), conservar solo uno y purgar el resto
+      if [ "${#EXISTING_PROPOSALS[@]}" -gt 1 ]; then
+        for ((idx=1; idx<${#EXISTING_PROPOSALS[@]}; idx++)); do
+          rm -f "${EXISTING_PROPOSALS[$idx]}"
+        done
+      fi
+
+      # 3. Solo crear el archivo si no existía previamente ninguna propuesta para esta versión
+      if [ "${#EXISTING_PROPOSALS[@]}" -eq 0 ]; then
         cat <<EOF > "$INBOX_FILE"
 # Idea: Actualización de ${t_name} a v${CLEAN_LATEST}
 

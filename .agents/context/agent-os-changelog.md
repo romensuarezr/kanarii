@@ -9,6 +9,250 @@ Historial de cambios y releases del núcleo de Agent OS.
 4. **Única fuente de verdad**: `changelog.md` es la única fuente canónica de versiones; no se duplica la versión estática en ningún otro archivo.
 5. **Breaking Changes**: Los cambios breaking incrementan `MAJOR` (ej. `2.0.0`), documentándose con su correspondiente ADR en `docs/adrs/`.
 
+## [1.40.0] — sprint-44 — 2026-11-21
+
+### ✨ Features
+
+- feat(T-237): control plane validation sprint 44
+- feat(T-236): orca reactive wait optimization
+- feat(T-235): orca bot identities bridge
+- feat(T-234): skill orca cli v1 4 268
+- feat(T-233): fleet tooling update
+- feat(fleet): homologacion de versiones de tooling de flota (T-232)
+- feat(homepage): despliegue en vivo y verificacion en <nodo-orquestacion> vps (T-231)
+- feat(homepage): soporte multihost y stack completo en generador de dashboard (T-230)
+- feat(telemetry): despliegue de glances web en vps <nodo-inferencia> via tailscale (T-229)
+- feat(fleet): declaracion integral del stack auditado en fleet.yaml (T-228)
+- feat(workflow): blindar honestidad de fuentes y URLs en research de sprint-planning
+
+### 🐛 Bug Fixes
+
+- fix(control-plane): sanear frontera portable con marcadores genericos en sprint-43 y task files
+- fix(fleet): resolucion multinivel en cascada para searxng, nango y hermes
+- fix(tooling): deduplicar propuestas y purgar borradores de versiones obsoletas en idea-inbox
+
+### 🔧 Mantenimiento
+
+- chore(sprint): formalizar sprint 44 e instanciar tareas T-233 a T-237
+- chore: archive sprint-43 [v1.39.0]
+- chore(sprint): abrir sprint-43 dashboard operativo, stack coolify y telemetria <nodo-inferencia> (T-228 a T-232)
+
+## [1.39.0] — sprint-43 — 2026-11-18
+
+### ✨ Features
+
+- feat(fleet): homologacion de versiones de tooling de flota (T-232)
+- feat(homepage): despliegue en vivo y verificacion en <nodo-orquestacion> vps (T-231)
+- feat(homepage): soporte multihost y stack completo en generador de dashboard (T-230)
+- feat(telemetry): despliegue de glances web en vps <nodo-inferencia> via tailscale (T-229)
+- feat(fleet): declaracion integral del stack auditado en fleet.yaml (T-228)
+- feat(workflow): blindar honestidad de fuentes y URLs en research de sprint-planning
+
+### 🐛 Bug Fixes
+
+- fix(control-plane): sanear frontera portable con marcadores genericos en sprint-43 y task files
+- fix(fleet): resolucion multinivel en cascada para searxng, nango y hermes
+- fix(tooling): deduplicar propuestas y purgar borradores de versiones obsoletas en idea-inbox
+
+### 🔧 Mantenimiento
+
+- chore(sprint): abrir sprint-43 dashboard operativo, stack coolify y telemetria <nodo-inferencia> (T-228 a T-232)
+
+## [1.38.0] — sprint-42 — 2026-11-15
+
+### ✨ Features
+
+- feat(T-227): cierre de tarea T-227
+- feat(T-226): cierre de tarea T-226
+- feat(T-225): cierre de tarea T-225
+- feat(T-224): cierre de tarea T-224
+
+### 📚 Documentación
+
+- docs(templates): explicitar contrato de contribucion bidireccional y contribute.sh en AGENTS.md de satelites
+
+### 🔧 Mantenimiento
+
+- chore(sprint): abrir sprint-42 hermes vps autonomia, auto-sync core y contratos operativos (T-224 a T-227)
+
+## [1.37.0] — sprint-41 — 2026-11-14
+
+### ✨ Features
+
+- feat(T-223): cierre de tarea T-223
+- feat(T-222): cierre de tarea T-222
+- feat(T-221): cierre de tarea T-221
+- feat(T-220): cierre de tarea T-220
+- feat(T-219): cierre de tarea T-219
+
+### 🔧 Mantenimiento
+
+- chore(sprint): abrir sprint-41 orquestacion, sincronizacion y universalizacion (T-219 a T-223)
+
+## [1.36.0] — sprint-40 — 2026-11-14
+
+### ✨ Features
+
+- feat(validation): validacion E2E del conserje y ensayo de flota con failover en vivo (T-218)
+- feat(observability): cronjobs de monitoreo proactivo y briefing matutino en whatsapp (T-217)
+- feat(hermes): despliegue de hermes-concierge bridge y failover de cuentas (T-216)
+- feat(infra): despliegue de harness y autenticacion dual google pro en nodo-inferencia (T-215)
+- feat(infra): sincronizacion de agent-os v1.35.0 y 31 skills en nodo-inferencia (T-214)
+
+### 📚 Documentación
+
+- docs(sprint): planificar sprint-40 (T-214 a T-218) hermes conserje y flota autonoma
+
+## [1.35.0] — sprint-39 — 2026-11-13
+
+### ✨ Features
+
+- feat(satellites): ensayo E2E de web compliance y sincronizacion en annascheer-web (T-213)
+- feat(orchestration): desacoplamiento de build en worktrees y flag --fast en verify-goal.sh (T-212)
+- feat(orchestration): protocolo de latidos proactivos (Heartbeats) y telemetria anti-ansiedad (T-211)
+- feat(scripts): herramienta determinista audit-web-compliance.sh y actualizacion de activos (T-210)
+- feat(skills): skill web-compliance para cookies, legal y cabeceras (T-209)
+
+### 📚 Documentación
+
+- docs(sprint): planificar sprint-39 (T-209 a T-213) web compliance y resiliencia multi-agente
+
+## [1.34.0] — sprint-38 — 2026-11-13
+
+### ✨ Features
+
+- feat(rules): regla global de priorizacion ROI-first y sesgo anti-actividad (T-207)
+- feat(telemetry): reporte de modelos y sincronizacion a satelite (T-206)
+- feat(coordination): protocolo dinamico de modelos y reporte de rendicion (T-205)
+- feat(validation): ensayo E2E en satelite real annascheer-web (T-204)
+- feat(telemetry): contrato de retorno compacto y script orchestration-report (T-203)
+- feat(orchestration): playbooks declarativos y regla de umbral de 3 archivos (T-202)
+- feat(satellites): plantilla AGENTS.md y regla de boot proactivo del coordinador (T-201)
+- feat(fleet): resolución jerárquica de fleet.yaml con fallback global ~/.agents/config/
+- feat(skills): skill idea-validator con veredicto de viabilidad 1–10 (T-200)
+- feat(skills): skill idea-validator con veredicto de viabilidad 1–10 (T-200)
+- feat(security): regla sandbox no-root y skill security-audit (T-199)
+- feat(security): regla sandbox no-root y skill security-audit (T-199)
+- feat(inference): rol /advisor en routing-policy y proveedores DeepSeek/NIM en FreeLLMAPI (T-198)
+- feat(inference): rol /advisor en routing-policy y proveedores DeepSeek/NIM en FreeLLMAPI (T-198)
+- feat(tooling): auditoría de tokenomics y skills huérfanas con --context (T-197)
+- feat(tooling): auditoría de tokenomics y skills huérfanas con --context (T-197)
+- feat(rules): jerarquía de conocimiento y regla anti-AI-slop (T-196)
+- feat(secrets): desbloqueo y delimitación de alcance para cloudflare api token (T-195)
+- feat(releases): estandarización de changelog, github releases y version universal (T-194)
+- feat(satellites): actualización asistida de agent-os con dry-run y plan de impacto (T-193)
+- feat(tooling): homologación integral de tooling upstream y detección remota en VPS (T-192)
+- feat(T-191): cierre de tarea T-191
+- feat(T-191): sonda determinista de automejora en planning con canalización a idea-inbox
+- feat(T-190): cierre de tarea T-190
+- feat(T-190): adaptadores estáticos multi-harness con proyección determinista y test fail-closed
+- feat(T-189): cierre de tarea T-189
+- feat(T-189): hardening determinista de sprint-planning y unificación de régimen Desatendida
+
+### 🐛 Bug Fixes
+
+- fix(review): desambiguar directiva skills.forbidden entre revisor y coder en generate-reviewer-spec.sh
+- fix(deliberation): calibración de esfuerzo y timeout en agy revisor Tier 1
+- fix(releases): normalización de urls remotas con alias ssh en update-changelog
+- fix(sprint): cálculo determinista de TAREA_SIGUIENTE_ID en check-sprint.sh e invariante en planning
+- fix(harness): proyección de agent build en adaptadores opencode y desambiguación de placeholders en planning
+- fix(planning): discriminación determinista de core vs satélite en check-sprint y salvaguarda en sync.sh
+- fix(planning): ventana de decisión A/B en Paso 7 y eliminación de restricción read-only en adaptadores OpenCode
+
+### 📚 Documentación
+
+- docs(sprint): ampliar sprint-38 con investigacion, regla ROI-first y sincronizacion universal (T-207, T-208)
+- docs(sprint): planificar sprint-38
+- docs(sprint): planificar sprint-37
+- docs(workflows): formalizar criterios de modelado de carriles DAG y concurrencia multi-agente
+- docs(tasks): integración de research scout/SearXNG en task-200 (T-200)
+- docs(tasks): integración de research scout/SearXNG en task-199 (T-199)
+- docs(tasks): integración de research SearXNG/scout en task-198 (T-198)
+- docs(tasks): integración de research scout en task-197 (T-197)
+- docs(rules): jerarquía de conocimiento y regla anti-AI-slop (T-196)
+- docs(tasks): integración de research scout en task-196 (T-196)
+- docs(idea-inbox): propuesta estratégica de gobernanza de contexto, sandboxing, inferencia y estándares web
+- docs(sprint-34): cierre formal de sprint-34 y registro de hardening empírico T-189/T-190
+- docs(sprint-34): formalización de sprint 34 y contratos de tarea T-189, T-190 y T-191
+
+### 🔧 Mantenimiento
+
+- chore: archive sprint-37 [v1.33.0]
+- chore: archive sprint-36 [v1.32.0]
+- chore(sprint-36): formalización y sellado de sprint-36 en régimen Desatendido
+- chore: archive sprint-35 [v1.31.0]
+- chore(sprint-35): formalización y sellado de sprint-35 en régimen Desatendido
+- chore: archive sprint-34 [v1.30.0]
+
+### 📦 Otros
+
+- test(control-plane): fix pipefail SIGPIPE al capturar help de check-tooling-updates.sh
+
+## [1.33.0] — sprint-37 — 2026-11-12
+
+### ✨ Features
+
+- feat(validation): ensayo E2E en satelite real annascheer-web (T-204)
+- feat(telemetry): contrato de retorno compacto y script orchestration-report (T-203)
+- feat(orchestration): playbooks declarativos y regla de umbral de 3 archivos (T-202)
+- feat(satellites): plantilla AGENTS.md y regla de boot proactivo del coordinador (T-201)
+- feat(fleet): resolución jerárquica de fleet.yaml con fallback global ~/.agents/config/
+- feat(skills): skill idea-validator con veredicto de viabilidad 1–10 (T-200)
+- feat(skills): skill idea-validator con veredicto de viabilidad 1–10 (T-200)
+- feat(security): regla sandbox no-root y skill security-audit (T-199)
+- feat(security): regla sandbox no-root y skill security-audit (T-199)
+- feat(inference): rol /advisor en routing-policy y proveedores DeepSeek/NIM en FreeLLMAPI (T-198)
+- feat(inference): rol /advisor en routing-policy y proveedores DeepSeek/NIM en FreeLLMAPI (T-198)
+- feat(tooling): auditoría de tokenomics y skills huérfanas con --context (T-197)
+- feat(tooling): auditoría de tokenomics y skills huérfanas con --context (T-197)
+- feat(rules): jerarquía de conocimiento y regla anti-AI-slop (T-196)
+- feat(secrets): desbloqueo y delimitación de alcance para cloudflare api token (T-195)
+- feat(releases): estandarización de changelog, github releases y version universal (T-194)
+- feat(satellites): actualización asistida de agent-os con dry-run y plan de impacto (T-193)
+- feat(tooling): homologación integral de tooling upstream y detección remota en VPS (T-192)
+- feat(T-191): cierre de tarea T-191
+- feat(T-191): sonda determinista de automejora en planning con canalización a idea-inbox
+- feat(T-190): cierre de tarea T-190
+- feat(T-190): adaptadores estáticos multi-harness con proyección determinista y test fail-closed
+- feat(T-189): cierre de tarea T-189
+- feat(T-189): hardening determinista de sprint-planning y unificación de régimen Desatendida
+
+### 🐛 Bug Fixes
+
+- fix(review): desambiguar directiva skills.forbidden entre revisor y coder en generate-reviewer-spec.sh
+- fix(deliberation): calibración de esfuerzo y timeout en agy revisor Tier 1
+- fix(releases): normalización de urls remotas con alias ssh en update-changelog
+- fix(sprint): cálculo determinista de TAREA_SIGUIENTE_ID en check-sprint.sh e invariante en planning
+- fix(harness): proyección de agent build en adaptadores opencode y desambiguación de placeholders en planning
+- fix(planning): discriminación determinista de core vs satélite en check-sprint y salvaguarda en sync.sh
+- fix(planning): ventana de decisión A/B en Paso 7 y eliminación de restricción read-only en adaptadores OpenCode
+
+### 📚 Documentación
+
+- docs(sprint): planificar sprint-37
+- docs(workflows): formalizar criterios de modelado de carriles DAG y concurrencia multi-agente
+- docs(tasks): integración de research scout/SearXNG en task-200 (T-200)
+- docs(tasks): integración de research scout/SearXNG en task-199 (T-199)
+- docs(tasks): integración de research SearXNG/scout en task-198 (T-198)
+- docs(tasks): integración de research scout en task-197 (T-197)
+- docs(rules): jerarquía de conocimiento y regla anti-AI-slop (T-196)
+- docs(tasks): integración de research scout en task-196 (T-196)
+- docs(idea-inbox): propuesta estratégica de gobernanza de contexto, sandboxing, inferencia y estándares web
+- docs(sprint-34): cierre formal de sprint-34 y registro de hardening empírico T-189/T-190
+- docs(sprint-34): formalización de sprint 34 y contratos de tarea T-189, T-190 y T-191
+
+### 🔧 Mantenimiento
+
+- chore: archive sprint-36 [v1.32.0]
+- chore(sprint-36): formalización y sellado de sprint-36 en régimen Desatendido
+- chore: archive sprint-35 [v1.31.0]
+- chore(sprint-35): formalización y sellado de sprint-35 en régimen Desatendido
+- chore: archive sprint-34 [v1.30.0]
+
+### 📦 Otros
+
+- test(control-plane): fix pipefail SIGPIPE al capturar help de check-tooling-updates.sh
+
 ## [1.32.0] — sprint-36 — 2026-11-11
 
 ### ✨ Features
@@ -1780,6 +2024,13 @@ Historial de cambios y releases del núcleo de Agent OS.
   - `inventory-check.sh` y `update-mvp-tracker.sh`.
 - **Workflows Base**: `session-start.md`, `session-close.md`, `sprint-planning.md`, `changelog.md`, `honesto.md`.
 
+[1.40.0]: https://github.com/romensuarezr/agent-os/compare/v1.38.0...v1.40.0
+[1.39.0]: https://github.com/romensuarezr/agent-os/compare/v1.38.0...v1.39.0
+[1.38.0]: https://github.com/romensuarezr/agent-os/compare/v1.37.0...v1.38.0
+[1.37.0]: https://github.com/romensuarezr/agent-os/compare/v1.36.0...v1.37.0
+[1.35.0]: https://github.com/romensuarezr/agent-os/compare/v1.34.0...v1.35.0
+[1.34.0]: https://github.com/romensuarezr/agent-os/compare/v1.29.0...v1.34.0
+[1.33.0]: https://github.com/romensuarezr/agent-os/compare/v1.29.0...v1.33.0
 [1.32.0]: https://github.com/romensuarezr/agent-os/compare/v1.29.0...v1.32.0
 [1.31.0]: https://github.com/romensuarezr/agent-os/compare/v1.30.0...v1.31.0
 [1.30.0]: https://github.com/romensuarezr/agent-os/compare/v1.29.0...v1.30.0
