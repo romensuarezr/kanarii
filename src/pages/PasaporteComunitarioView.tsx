@@ -151,6 +151,11 @@ export function PasaporteComunitarioView() {
     arquetipo: ficha?.perfilVisual?.arquetipo || memberInfo?.arquetipo_s3,
     descripcionArquetipo: ficha?.perfilVisual?.descripcion_arquetipo,
     communityIds: memberUserDoc?.communityIds || [],
+    instagram: ficha?.datosPersona?.instagram || ficha?.datosOnboarding?.instagram,
+    linkedin: ficha?.datosPersona?.linkedin || ficha?.datosOnboarding?.linkedin,
+    website: ficha?.datosPersona?.website || ficha?.datosOnboarding?.website,
+    phone: ficha?.datosPersona?.phone || ficha?.datosOnboarding?.phone,
+    email: ficha?.datosPersona?.email || ficha?.datosOnboarding?.email,
   };
 
   let connectionStatus: 'none' | 'pending' | 'connected' | 'self' = 'none';

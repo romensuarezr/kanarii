@@ -235,6 +235,11 @@ export async function saveFicha(
       fechaSalida: datosOnboarding.fechaSalida,
       habilidadesVoluntario: datosOnboarding.habilidadesVoluntario,
       plataformaOrigen: datosOnboarding.plataformaOrigen,
+      instagram: datosOnboarding.instagram,
+      linkedin: datosOnboarding.linkedin,
+      website: datosOnboarding.website,
+      phone: datosOnboarding.phone,
+      email: datosOnboarding.email,
       ...(isHoraAproximada ? { hora_aproximada: true } : {})
     };
 
