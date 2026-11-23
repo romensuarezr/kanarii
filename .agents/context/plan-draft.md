@@ -1,40 +1,31 @@
-# Plan Draft — T-132: Corregir duplicidad de rutas /perfil y /ficha
+# Plan T-136: Unificar lectura de perfil y ficha (FichaReadOnly)
 
 ## Objetivo
-Separar las rutas `/perfil` y `/ficha` en `src/App.tsx` para que apunten a vistas distintas:
-- `/perfil` → Perfil de usuario (datos personales, configuración básica)
-- `/ficha` → Vista de ficha comunitaria (tríada, ofrendas, saberes, necesidades)
+Extraer la vista de lectura de ficha a un componente reutilizable `FichaReadOnly.tsx`, consumirlo en `PerfilView.tsx` y en el modo lectura de `FichaView.tsx`, y corregir el merge de `getDatosPersona`.
 
 ## Rama propuesta
-`feat/T-132-separar-routes-perfil-ficha`
+`feat/T-136-unificar-lectura-perfil-ficha`
 
-## Archivos a modificar
-- `src/App.tsx`: Modificar rutas para que `/perfil` apunte a `PerfilView` y `/ficha` a `FichaView`
-- `src/config/navigation.ts`: Extender interface `AppRoute` con discriminador `purpose: 'profile' | 'ficha'`
-
-## Archivos nuevos
-- `src/pages/PerfilView.tsx`: Nuevo componente para perfil de usuario (reestructuración de FichaView)
+## Archivos a modificar / crear
+- `src/components/perfil/FichaReadOnly.tsx` (nuevo): componente de lectura que agrupa identidad, redes/contacto, tríada, rol/convivencia, tensión, kin/arquetipo y manual de la ficha.
+- `src/pages/PerfilView.tsx`: renderizar `FichaReadOnly` manteniendo el PasaporteVisual y el botón «Editar ficha».
+- `src/pages/FichaView.tsx`: reemplazar el bloque de lectura inline por `FichaReadOnly` cuando `!isEditing` y aplicar merge robusto de `datosPersona` con `datosOnboarding`.
+- `.agents/tasks/task-136.md`
+- `docs/sprints/sprint-27.md`
 
 ## Pasos secuenciales
-1. Crear rama `feat/T-132-separar-routes-perfil-ficha`
-2. Extender `AppRoute` interface en `src/config/navigation.ts`
-3. Crear `src/pages/PerfilView.tsx` con perfil de usuario
-4. Modificar `src/App.tsx` rutas: `/perfil` → PerfilView, `/ficha` → FichaView
-5. Testear localmente que ambas rutas funcionan correctamente
-6. Verificar que el pasaporte universal `/p/:uid` no se ve afectado
-7. Commit y merge a main
+1. Crear `src/components/perfil/FichaReadOnly.tsx` extrayendo las secciones de lectura completas de `FichaView.tsx` (redes, tríada, convivencia, tensión, manual, etc.).
+2. En `FichaView.tsx`, integrar `FichaReadOnly` para el modo de solo lectura y refactorizar `getDatosPersona` para que haga fallback campo a campo a `datosOnboarding`.
+3. En `PerfilView.tsx`, incorporar `FichaReadOnly` bajo la sección principal para ofrecer la visualización unificada completa.
+4. Validar compilación con `npm run lint` y `npm run build`.
 
-## Riesgos
-- Posible impacto en componentes que dependen de la ruta `/perfil`
-- Posible duplicación de código entre PerfilView y FichaView
-- Cambios en el flujo de navegación que afecten la experiencia del usuario
+## Riesgos detectados
+- Divergencia de props o tipos entre `PerfilView` y `FichaView`: mitigado usando los tipos `Ficha` y `AppUser` existentes.
+- Estilos visuales: asegurar que `FichaReadOnly` mantenga los tokens de diseño unificados (`@theme`).
 
 ## Justificación de skills
-- `implementar-feature-dry`: Evitar duplicación de lógica entre PerfilView y FichaView
-- `structure-guardian`: Supervisar que la separación de componentes no rompa la arquitectura existente
+- `implementar-feature-dry`: unificación directa de dos vistas divergentes en un único componente compartido.
+- `structure-guardian`: ubicación estándar en `src/components/perfil/`.
 
-## Verificación de conformidad con diseño macro
-- ✅ Nueva interface `AppRoute` con discriminador `purpose: 'profile' | 'ficha'`
-- ✅ `src/App.tsx` rutas modificadas: `/perfil` → PerfilView, `/ficha` → FichaView
-- ✅ `src/pages/PerfilView.tsx` creado como separación de `FichaView`
-- ✅ Ruta `/p/:uid` permanece sin cambios
+## Conformidad con Diseño Macro
+- Alineado 100% con la sección 4 de `docs/sprints/sprint-27-research.md`.
