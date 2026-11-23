@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { useFicha } from '../hooks/useFicha';
-import { User, Edit2, Check, X, Fingerprint, Sparkles, Users, HeartPulse, History, RefreshCw, Loader2, MapPin, LogOut, Eye, Copy, Download } from 'lucide-react';
+import { User, Edit2, Check, X, Fingerprint, Sparkles, Users, HeartPulse, History, RefreshCw, Loader2, MapPin, LogOut, Eye, Copy, Download, ArrowLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -57,6 +57,7 @@ type FichaFormData = z.infer<typeof fichaSchema>;
 export function FichaView() {
   const { appUser, logout } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { t, i18n } = useTranslation('passport');
   const currentLocale = i18n.language === 'en' ? 'en' : 'es';
   const { 
@@ -263,6 +264,16 @@ export function FichaView() {
     }
   }, [ficha, loadingFicha]);
 
+  // Abrir directamente en modo edición al llegar desde /perfil ("Editar ficha")
+  useEffect(() => {
+    if (!loadingFicha && searchParams.get('edit') === '1') {
+      setEditing(true);
+      const next = new URLSearchParams(searchParams);
+      next.delete('edit');
+      setSearchParams(next, { replace: true });
+    }
+  }, [loadingFicha, searchParams, setSearchParams]);
+
   useEffect(() => {
     if (showLeaveModal && appUser?.communityIds) {
       setLoadingCommunities(true);
@@ -363,6 +374,13 @@ export function FichaView() {
             <User className="text-[#6B705C] w-8 h-8" />
             <h1 className="text-3xl font-serif text-[#4A4E4D]">{t('myPassportTitle')}</h1>
           </div>
+          <Link
+            to="/perfil"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[#6B705C] hover:text-[#4A4E4D] transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Mi perfil
+          </Link>
         </div>
 
         <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] p-8 relative overflow-hidden mb-8">

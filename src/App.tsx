@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Welcome } from './pages/Welcome';
 import { ContextConsent } from './pages/ContextConsent';
 import { OnboardingChat } from './pages/OnboardingChat';
+const PerfilView = React.lazy(() => import('./pages/PerfilView').then(m => ({ default: m.PerfilView })));
 const FichaView = React.lazy(() => import('./pages/FichaView').then(m => ({ default: m.FichaView })));
 const FichaPreview = React.lazy(() => import('./pages/FichaPreview').then(m => ({ default: m.FichaPreview })));
 const AdminPanel = React.lazy(() => import('./pages/AdminPanel').then(m => ({ default: m.AdminPanel })));
@@ -93,8 +94,8 @@ function AppContent() {
           <Route path="/orientacion" element={<Welcome />} />
           <Route path="/onboarding" element={<OnboardingChat />} />
           <Route path="/ficha-preview" element={<FichaPreview />} />
+          <Route path="/perfil" element={<ProtectedRoute><PerfilView /></ProtectedRoute>} />
           <Route path="/ficha" element={<ProtectedRoute><FichaView /></ProtectedRoute>} />
-          <Route path="/perfil" element={<ProtectedRoute><FichaView /></ProtectedRoute>} />
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminPanel /></ProtectedRoute>} />
           <Route path="/cruce" element={<ProtectedRoute requireAdmin><CruceView /></ProtectedRoute>} />

@@ -1,4 +1,4 @@
-import { Home, User, CheckSquare, Briefcase, FileText, Settings, Calendar, MessageSquare, Handshake, Scale } from 'lucide-react';
+import { Home, User, CheckSquare, Briefcase, FileText, Settings, Calendar, MessageSquare, Handshake, Scale, Users } from 'lucide-react';
 
 export interface NavItem {
   label: string;
@@ -22,46 +22,61 @@ export const navigationConfig: NavItem[] = [
     icon: CheckSquare,
   },
   {
-    label: 'Calendario',
-    labelKey: 'nav.calendar',
-    href: '/calendario',
-    icon: Calendar,
+    label: 'Comunidades',
+    labelKey: 'nav.communities',
+    href: '/comunidades',
+    icon: Users,
   },
   {
-    label: 'Tablón',
-    labelKey: 'nav.board',
+    label: 'Propuestas',
+    labelKey: 'nav.propuestas',
     href: '/tablon',
     icon: MessageSquare,
   },
   {
-    label: 'Proyectos',
-    labelKey: 'nav.projects',
-    href: '/proyectos',
-    icon: Briefcase,
-  },
-  {
     label: 'Actas',
-    labelKey: 'nav.minutes',
+    labelKey: 'nav.actas',
     href: '/actas',
     icon: FileText,
   },
   {
-    label: 'Gobernanza',
-    labelKey: 'nav.governance',
-    href: '/gobernanza',
-    icon: Scale,
+    label: 'Proyectos',
+    labelKey: 'nav.proyectos',
+    href: '/proyectos',
+    icon: Briefcase,
   },
   {
     label: 'Marketplace',
     labelKey: 'nav.marketplace',
-    href: '/soberania',
+    href: '/marketplace',
     icon: Handshake,
   },
   {
-    label: 'Panel Admin',
+    label: 'Cruce',
+    labelKey: 'nav.cruce',
+    href: '/cruce',
+    icon: Scale,
+  },
+  {
+    label: 'Admin',
     labelKey: 'nav.admin',
     href: '/admin',
     icon: Settings,
     adminOnly: true,
   },
+];
+
+export interface AppRouteConfig {
+  path: string;
+  label?: string;
+  purpose?: 'profile' | 'ficha' | 'other';
+  requireAuth?: boolean;
+  requireAdmin?: boolean;
+}
+
+export const appRouteConfigs: AppRouteConfig[] = [
+  { path: '/', label: 'Inicio', purpose: 'other' },
+  { path: '/perfil', label: 'Perfil', purpose: 'profile', requireAuth: true },
+  { path: '/ficha', label: 'Ficha', purpose: 'ficha', requireAuth: true },
+  { path: '/p/:uid', label: 'Pasaporte', purpose: 'other' }
 ];
