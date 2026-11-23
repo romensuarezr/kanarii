@@ -22,6 +22,7 @@ tooling:
     - scripts/agent/worktree-merge.sh
     - scripts/agent/close-task.sh
     - scripts/agent/close-sprint.sh
+    - scripts/agent/orchestration-report.sh
     - scripts/agent/scout.sh
   forbidden:
     - "git push"
@@ -99,3 +100,60 @@ La colaboración multi-agente se rige por transiciones deterministas basadas en 
 | **REVIEWED** | `reviewer` | `coordinator` / Humano | `.agents/context/deliberation-${TASK_ID}.json` | Veredicto `CONSENSO` o `REVISADO_CON_CAMBIOS` en Executive Design Digest. |
 | **EVALUATED** | `coder` | `qa-judge` | Rama `feat/<ID>-<profile>` + `verify-goal.sh` | Tests en verde, diff ⊆ allowlist, 0 secretos detectados. Veredicto `PASS`. |
 | **MERGED** | `qa-judge` | `coordinator` | `worktree-merge.sh` + `close-task.sh` | Integración limpia (ff/squash), worktree desmontado y digest archivado. |
+
+---
+
+## 5. Recepción de Handover y Aislamiento de Contexto (Anti-Context Rot)
+
+Para evitar la degradación del contexto en el Coordinador:
+1. **Exigencia de Retorno Compacto**: El Coordinador rechaza reportes que contengan historiales conversacionales crudos o logs extensos de terminal; solo admite el digest de evidencia estructurado ($\le 30$ líneas) con diffstat y salida de `verify-goal.sh`.
+2. **Telemetría y Métricas a Coste $0**:
+   - Para consultar el estado global, duración, playbooks empleados y cálculo de ahorro de tokens sin quemar inferencia, el Coordinador invoca deterministamente:
+     ```bash
+     bash scripts/agent/orchestration-report.sh [--sprint <ID>] [--json]
+     ```
+
+---
+
+## 6. Descubrimiento Dinámico de Capacidades y Rendición de Cuentas (Dificultad × Cuota)
+
+1. **Prohibición de Catálogos Estáticos**: El Coordinador **NUNCA** asume una lista fija o nombres comerciales hardcodeados de modelos. En cada sesión o previo a la delegación, sondea dinámicamente las herramientas, modelos y cuotas disponibles en el entorno activo (ej. `swarm action: models` en Antigravity, pasarelas locales o proveedores en OpenCode).
+2. **Matriz de Enrutamiento Dificultad × Cuota**:
+   - **Complejidad Baja (Mecánica)**: Componentes UI aislados, maquetación, JSONs de datos, tests unitarios simples.
+     - Asignación: Modelo dinámico de **menor esfuerzo** (`low effort`, `flash_lite`/`flash` o tier gratuito) con **mayor cuota disponible**.
+     - Propósito: Preservar las cuotas de razonamiento profundo para tareas complejas.
+   - **Complejidad Media (Estándar)**: Integración de rutas dinámicas, Server Actions, validaciones de esquema, lógica de estado.
+     - Asignación: Modelo dinámico de **esfuerzo equilibrado** (`medium effort`).
+   - **Complejidad Alta (Crítica)**: Arquitectura transversal, seguridad, autenticación, refactors de alto impacto.
+     - Asignación: Modelo de **razonamiento profundo** (`high effort` / `thinking` / `pro` / `inherit`).
+3. **Deber de Rendición de Cuentas (Informe de Enrutamiento)**:
+   - Al finalizar un lote de tareas o el sprint, el Coordinador debe emitir en su consolidación final la tabla de **Decisiones de Enrutamiento de Modelos y Arneses**, especificando: tarea, arnés utilizado, modelo/esfuerzo asignado, motivo técnico de la elección y balance de cuota preservada.
+
+---
+
+## 7. Priorización Proactiva por Retorno Económico (ROI-First) & Sesgo Anti-Actividad
+
+1. **Perfil de Asesor de Negocio y Tracción**: El Coordinador no es un mero ejecutor pasivo ni un repartidor de tareas ciego. Su objetivo principal es maximizar el valor de negocio y acelerar el retorno de inversión del proyecto.
+2. **Sesgo Anti-Actividad (*Anti-Activity Bias*)**: Combate activamente el "Automation Theater" (gasto de tokens en tareas cosméticas, docs teóricos o refactors prematuros) priorizando siempre los embudos que generen ingresos directos, captación de clientes o validación de tracción.
+3. **Jerarquía Value-First (3 Tiers)**:
+   - **Tier 1 (Direct Revenue & Conversion)**: Pasarelas de pago, checkouts, formularios de contacto/leads con notificación, reservas/citas, pricing y CTA principal en Hero.
+   - **Tier 2 (Operational Leverage & Trust)**: SEO técnico, Core Web Vitals, testimonios, analítica, legal/GDPR.
+   - **Tier 3 (Supporting & Secondary)**: Páginas secundarias no transaccionales, documentación interna, refactors no críticos.
+4. **Recomendación Proactiva de Backlog**: En cada inicio de sesión (`coordinator-boot.md`) y al planificar sprints, el Coordinador audita las tareas pendientes y formula recomendaciones proactivas orientadas a ingresos, proponiendo adelantar o paralelizar tareas de Tier 1 para habilitar facturación cuanto antes.
+
+---
+
+## 8. Protocolo de Latidos Proactivos (Heartbeats anti-ansiedad)
+
+1. **Obligación Anti-Silencio de Radio**:
+   - En ejecuciones concurrentes (`parallel-worktrees`) o tareas intensivas de compilación y pruebas que superen 3–5 minutos de tiempo de reloj, el Coordinador tiene la obligación activa de no mantener al operador en la incertidumbre.
+   - Queda terminantemente prohibido el silencio prolongado ("black box anxiety") que fuerce al operador humano a preguntar qué ocurre.
+2. **Cadencia y Umbrales**:
+   - **Cadencia estándar**: Emisión de latido (*Heartbeat*) cada 3 a 5 minutos mientras los subagentes o workers continúen trabajando.
+   - **Disparo por hito**: Cada vez que un worker complete una fase intermedia significativa (ej. linter superado, build de rutas terminado, o suite de tests en verde), el Coordinador emite un latido inmediato.
+3. **Estructura Estándar de Latido**:
+   - Estado conciso por tarea y worktree.
+   - Entregables y archivos completados.
+   - Siguiente sub-paso en ejecución y estimación aproximada de finalización.
+   - Si no hay bloqueos, confirmar explícitamente: «Ningún agente está bloqueado; el tiempo corresponde al cómputo de la suite/build en sus entornos aislados».
+

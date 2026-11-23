@@ -226,11 +226,13 @@ CORE_SHA=$(git -C "$AGENT_OS_PATH" rev-parse HEAD 2>/dev/null || echo "unknown")
 
 AGENT_OS_RULES="$AGENT_OS_PATH/.agents/rules/global"
 AGENT_OS_SCRIPTS="$AGENT_OS_PATH/scripts/agent"
+AGENT_OS_OPS="$AGENT_OS_PATH/scripts/ops"
 AGENT_OS_SKILLS="$AGENT_OS_PATH/.agents/skills"
 AGENT_OS_PROFILES="$AGENT_OS_PATH/.agents/profiles"
 AGENT_OS_GOALS="$AGENT_OS_PATH/templates/goals"
 TARGET_RULES="$TARGET_PROJECT/.agents/rules"
 TARGET_SCRIPTS="$TARGET_PROJECT/scripts/agent"
+TARGET_OPS="$TARGET_PROJECT/scripts/ops"
 TARGET_SKILLS="$TARGET_PROJECT/.agents/skills"
 TARGET_PROFILES="$TARGET_PROJECT/.agents/profiles"
 TARGET_GOALS="$TARGET_PROJECT/templates/goals"
@@ -387,6 +389,19 @@ if [ -d "$TARGET_SCRIPTS" ]; then
     fi
 fi
 
+# 3b. Scripts de operaciones (scripts/ops)
+if [ -d "$AGENT_OS_OPS" ]; then
+    echo "  Sincronizando scripts de operaciones (scripts/ops)..."
+    for ops_sc in "$AGENT_OS_OPS"/*.sh; do
+        [ -f "$ops_sc" ] || continue
+        ops_name=$(basename "$ops_sc")
+        sync_file "$ops_sc" "$TARGET_OPS/$ops_name" "ops: $ops_name"
+        if [ "$DRY_RUN" = false ]; then
+            chmod +x "$TARGET_OPS/$ops_name" 2>/dev/null || true
+        fi
+    done
+fi
+
 # 4. Skills (sincroniza solo skills activas en destino, sin reintroducir descartadas)
 if [ -d "$AGENT_OS_SKILLS" ]; then
     echo "  Sincronizando skills activas en destino..."
@@ -502,12 +517,19 @@ if [ -d "$AGENT_OS_PATH/templates/root" ]; then
             existing_fuzzy=$(find "$TARGET_PROJECT" -maxdepth 1 -type f \( -iname "*change*" -o -iname "*log*" -o -iname "*history*" \) 2>/dev/null | head -n 1 || true)
         elif [ "$fname" = "VERSION" ]; then
             existing_fuzzy=$(find "$TARGET_PROJECT" -maxdepth 1 -type f -iname "VERSION" 2>/dev/null | head -n 1 || true)
+        elif [ "$fname" = "AGENTS.md" ]; then
+            existing_fuzzy=$(find "$TARGET_PROJECT" -maxdepth 1 -type f \( -iname "*agents*.md" -o -iname "*agent.md" \) 2>/dev/null | head -n 1 || true)
         fi
         if [ -z "$existing_fuzzy" ] && [ ! -f "$TARGET_PROJECT/$fname" ]; then
             if [ "$DRY_RUN" = true ]; then
                 echo "    [dry-run] propagar template root: $fname"
             else
-                cp "$tmpl" "$TARGET_PROJECT/$fname"
+                if [ "$fname" = "AGENTS.md" ] || [ "$fname" = "roadmap.md" ]; then
+                    target_pname=$(basename "$(cd "$TARGET_PROJECT" 2>/dev/null && pwd || echo "$TARGET_PROJECT")")
+                    sed "s/{{PROJECT_NAME}}/$target_pname/g" "$tmpl" > "$TARGET_PROJECT/$fname"
+                else
+                    cp "$tmpl" "$TARGET_PROJECT/$fname"
+                fi
                 echo "    [propagado] template root: $fname"
                 TOUCHED_FILES+=("$fname")
             fi
