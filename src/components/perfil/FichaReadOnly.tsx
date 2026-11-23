@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Fingerprint, Sparkles, Users, HeartPulse, History, Globe, Eye, Copy, Edit2, LogOut } from 'lucide-react';
 import { ContactActions } from './ContactActions';
+import { TelegramIcon } from '../ui/BrandIcons';
 import { Ficha, FichaDatosPersona, getTriadaFromFicha } from '../../lib/appService';
 import { calcularKin } from '../../lib/kinMaya';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +36,7 @@ export function getMergedDatosPersona(ficha: Ficha | null | undefined): Partial<
     website: p.website || o.website,
     phone: p.phone || o.phone,
     email: p.email || o.email,
+    telegram: p.telegram || o.telegram,
   };
 }
 
@@ -67,7 +69,7 @@ export function FichaReadOnly({
   const kinMaya = datos?.fechaNacimiento ? calcularKin(datos.fechaNacimiento) : null;
   const privacidad = ficha?.privacidad;
 
-  const isContactVisible = (field: 'instagram' | 'linkedin' | 'website' | 'phone' | 'email'): boolean => {
+  const isContactVisible = (field: 'instagram' | 'linkedin' | 'website' | 'phone' | 'email' | 'telegram'): boolean => {
     if (!privacidad) return true;
     if (privacidad[field] !== undefined) return !!privacidad[field];
     if (field === 'phone' || field === 'email') return false;
@@ -231,7 +233,8 @@ export function FichaReadOnly({
             (datos.linkedin && isContactVisible('linkedin')) ||
             (datos.website && isContactVisible('website')) ||
             (datos.phone && isContactVisible('phone')) ||
-            (datos.email && isContactVisible('email'))) && (
+            (datos.email && isContactVisible('email')) ||
+            (datos.telegram && isContactVisible('telegram'))) && (
             <div className="space-y-4 md:col-span-2">
               <div className="flex items-center gap-2 text-[#CB997E] border-b border-[#EAE2D6] pb-2">
                 <Globe className="w-5 h-5" />
@@ -261,6 +264,22 @@ export function FichaReadOnly({
                       className="text-stone-700 hover:text-[#CB997E] hover:underline break-all"
                     >
                       {datos.linkedin}
+                    </a>
+                  </div>
+                )}
+                {datos.telegram && isContactVisible('telegram') && (
+                  <div>
+                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                      <TelegramIcon size={13} className="text-[#0088cc]" />
+                      Telegram
+                    </h4>
+                    <a
+                      href={datos.telegram.startsWith('http') ? datos.telegram : `https://t.me/${datos.telegram.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-stone-700 hover:text-[#0088cc] hover:underline break-all"
+                    >
+                      {datos.telegram.startsWith('@') ? datos.telegram : `@${datos.telegram.replace(/https?:\/\/t\.me\//, '')}`}
                     </a>
                   </div>
                 )}

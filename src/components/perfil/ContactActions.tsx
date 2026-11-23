@@ -1,6 +1,7 @@
 import React from 'react';
-import { Phone, MessageCircle } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import { formatPhoneDisplay, toTelUrl, toWhatsAppUrl } from '../../lib/phone';
+import { WhatsAppIcon } from '../ui/BrandIcons';
 
 export interface ContactActionsProps {
   phone?: string | null;
@@ -10,6 +11,7 @@ export interface ContactActionsProps {
   className?: string;
   showCall?: boolean;
   whatsappLabel?: string;
+  iconOnly?: boolean;
 }
 
 export function ContactActions({
@@ -20,6 +22,7 @@ export function ContactActions({
   className = '',
   showCall = true,
   whatsappLabel = 'WhatsApp',
+  iconOnly = false,
 }: ContactActionsProps) {
   if (!phone || !phone.trim()) return null;
 
@@ -30,6 +33,36 @@ export function ContactActions({
   const isSmall = size === 'sm';
   const iconSize = isSmall ? 13 : 15;
   const paddingClass = isSmall ? 'px-2.5 py-1 text-[11px]' : 'px-3 py-1.5 text-xs';
+
+  if (iconOnly) {
+    return (
+      <div className={`inline-flex items-center gap-1.5 ${className}`}>
+        {showCall && telUrl && (
+          <a
+            href={telUrl}
+            className="w-8 h-8 rounded-full bg-emerald-50 hover:bg-emerald-100 flex items-center justify-center text-emerald-700 border border-emerald-200 transition-colors shadow-2xs"
+            title={`Llamar a ${formattedDisplay}`}
+            aria-label={`Llamar a ${formattedDisplay}`}
+          >
+            <Phone size={14} />
+          </a>
+        )}
+
+        {waUrl && (
+          <a
+            href={waUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-8 h-8 rounded-full bg-[#25D366] hover:bg-[#20BA5A] flex items-center justify-center text-white transition-colors shadow-2xs"
+            title={`Abrir chat de WhatsApp con ${formattedDisplay}`}
+            aria-label={`Abrir chat de WhatsApp con ${formattedDisplay}`}
+          >
+            <WhatsAppIcon size={16} />
+          </a>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={`inline-flex items-center flex-wrap gap-2 ${className}`}>
@@ -56,7 +89,7 @@ export function ContactActions({
           className={`inline-flex items-center gap-1.5 font-semibold bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#075E54] rounded-full border border-[#25D366]/40 transition-colors shadow-2xs ${paddingClass}`}
           title={`Abrir chat de WhatsApp con ${formattedDisplay}`}
         >
-          <MessageCircle size={iconSize} className="text-[#25D366]" />
+          <WhatsAppIcon size={iconSize} className="text-[#25D366]" />
           <span>{whatsappLabel}</span>
         </a>
       )}

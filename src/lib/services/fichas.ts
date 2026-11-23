@@ -240,6 +240,7 @@ export async function saveFicha(
       website: datosOnboarding.website,
       phone: datosOnboarding.phone,
       email: datosOnboarding.email,
+      telegram: datosOnboarding.telegram,
       ...(isHoraAproximada ? { hora_aproximada: true } : {})
     };
 

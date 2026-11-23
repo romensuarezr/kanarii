@@ -48,6 +48,7 @@ export function PerfilView() {
     website: datos.website,
     phone: datos.phone,
     email: datos.email,
+    telegram: datos.telegram,
   };
 
   const userComunidades = (appUser.communityIds || [])
