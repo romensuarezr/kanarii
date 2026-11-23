@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Loader2, AlertTriangle, Sparkles, Share2 } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertTriangle, Share2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { useToast } from '../hooks/useToast';
@@ -199,9 +199,16 @@ export function PasaporteUniversalView() {
           <ArrowLeft size={14} />
           {t('backToMembers')}
         </button>
-        <div className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#A5A58D]">
-          <Sparkles size={12} />
-          {t('universalTitle')}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIsShareModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#6B705C] hover:bg-[#5A5A40] text-white rounded-full text-xs font-bold transition-all shadow-xs active:scale-95 cursor-pointer"
+            title={t('shareTitle')}
+          >
+            <Share2 size={13} />
+            <span>{t('shareTitle')}</span>
+          </button>
         </div>
       </div>
 
@@ -209,24 +216,9 @@ export function PasaporteUniversalView() {
         user={mappedUser} 
         privacidad={ficha?.privacidad}
         onConnect={handleConnect} 
+        onShare={() => setIsShareModalOpen(true)}
         connectionStatus={connectionStatus}
       />
-
-      {/* Compartir Pasaporte Section */}
-      <div className="w-full max-w-xl mt-6 bg-white border border-[#D2B48C]/15 rounded-[24px] p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-center sm:text-left">
-          <h4 className="text-sm font-serif font-bold text-[#3E2723]">{t('shareTitle')}</h4>
-          <p className="text-xs text-[#5D4037]/60 mt-1">{t('shareDesc')}</p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setIsShareModalOpen(true)}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#6B705C] hover:bg-[#5A5A40] text-white py-2.5 px-6 rounded-xl font-bold text-xs transition-all active:scale-95 shadow-xs"
-        >
-          <Share2 size={16} />
-          <span>Compartir Pasaporte</span>
-        </button>
-      </div>
 
       <PasaporteShareModal
         open={isShareModalOpen}

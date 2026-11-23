@@ -1,12 +1,11 @@
 import { useTopBar } from '../../contexts/TopBarContext';
 import { UserAvatarMenu } from './UserAvatarMenu';
-import { LanguageSelector } from '../language/LanguageSelector';
 
 export function TopBar() {
   const { topBarState } = useTopBar();
 
   return (
-    <header className="sticky top-0 z-30 bg-bg-page/95 backdrop-blur-md border-b border-border px-4 md:px-6 h-14 flex items-center justify-between shadow-xs">
+    <header className="md:hidden sticky top-0 z-30 bg-bg-page/95 backdrop-blur-md border-b border-border px-4 h-14 flex items-center justify-between shadow-xs">
       {/* Zona Izquierda: Logo Kanarii y/o Título */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex items-center gap-2 shrink-0">
@@ -34,7 +33,6 @@ export function TopBar() {
           <div className="h-5 w-px bg-border mx-2 sm:mx-3 shrink-0" />
         )}
 
-        <LanguageSelector />
         <UserAvatarMenu />
       </div>
     </header>

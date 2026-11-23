@@ -6,7 +6,11 @@ import { useComunidad } from '../../contexts/ComunidadContext';
 import { TelegramLinkModal } from '../perfil/TelegramLinkModal';
 import { useTranslation } from 'react-i18next';
 
-export function UserAvatarMenu() {
+interface UserAvatarMenuProps {
+  placement?: 'top-right' | 'sidebar-bottom';
+}
+
+export function UserAvatarMenu({ placement = 'top-right' }: UserAvatarMenuProps) {
   const { t, i18n } = useTranslation('common');
   const navigate = useNavigate();
   const { user, appUser, logout } = useAuth();
@@ -51,34 +55,70 @@ export function UserAvatarMenu() {
   const email = appUser?.email || user?.email || '';
   const roleLabel = isAdmin ? t('userMenu.roles.superAdmin') : isCommunityAdmin ? t('userMenu.roles.communityAdmin') : t('userMenu.roles.member');
 
+  const isSidebar = placement === 'sidebar-bottom';
+
   return (
-    <div className="relative inline-block text-left" ref={menuRef}>
+    <div className={`relative ${isSidebar ? 'w-full' : 'inline-block text-left'}`} ref={menuRef}>
       {/* Avatar Trigger Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-1.5 rounded-full hover:bg-[#EAE2D6]/40 transition-colors focus:outline-none focus:ring-2 focus:ring-[#CB997E]/50"
-        aria-expanded={isOpen}
-        aria-haspopup="true"
-        title={t('userMenu.title')}
-      >
-        {avatarUrl ? (
-          <img
-            src={avatarUrl}
-            alt={displayName}
-            className="w-9 h-9 rounded-full border-2 border-white shadow-sm object-cover"
-            referrerPolicy="no-referrer"
-          />
-        ) : (
-          <div className="w-9 h-9 rounded-full bg-[#EAE2D6] border-2 border-white shadow-sm flex items-center justify-center text-[#6B705C]">
-            <User className="w-4 h-4" />
+      {isSidebar ? (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-[#EAE2D6]/50 transition-colors focus:outline-none focus:ring-2 focus:ring-[#CB997E]/50 text-left group"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+          title={t('userMenu.title')}
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={displayName}
+                className="w-9 h-9 rounded-full border border-[#D2B48C]/40 shadow-xs object-cover shrink-0"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-[#EAE2D6] border border-[#D2B48C]/40 shadow-xs flex items-center justify-center text-[#6B705C] shrink-0">
+                <User className="w-4 h-4" />
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-[#4A4E4D] truncate group-hover:text-stone-800 transition-colors">
+                {displayName}
+              </p>
+              <p className="text-[10px] text-stone-400 truncate">
+                {roleLabel}
+              </p>
+            </div>
           </div>
-        )}
-        <ChevronDown className={`w-3.5 h-3.5 text-stone-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
+          <ChevronDown className={`w-3.5 h-3.5 text-stone-400 group-hover:text-stone-600 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
+      ) : (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2 p-1.5 rounded-full hover:bg-[#EAE2D6]/40 transition-colors focus:outline-none focus:ring-2 focus:ring-[#CB997E]/50"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+          title={t('userMenu.title')}
+        >
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={displayName}
+              className="w-9 h-9 rounded-full border-2 border-white shadow-sm object-cover"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <div className="w-9 h-9 rounded-full bg-[#EAE2D6] border-2 border-white shadow-sm flex items-center justify-center text-[#6B705C]">
+              <User className="w-4 h-4" />
+            </div>
+          )}
+          <ChevronDown className={`w-3.5 h-3.5 text-stone-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
+      )}
 
       {/* Popover Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#FDFBF7] border border-[#EAE2D6] shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className={`absolute ${isSidebar ? 'left-0 bottom-full mb-2 w-60' : 'right-0 mt-2 w-64'} rounded-2xl bg-[#FDFBF7] border border-[#EAE2D6] shadow-xl z-50 overflow-hidden animate-in fade-in ${isSidebar ? 'slide-in-from-bottom-2' : 'slide-in-from-top-2'} duration-150`}>
           {/* Cabecera del Perfil */}
           <div className="p-4 bg-[#F9F7F1] border-b border-[#EAE2D6]">
             <div className="flex items-center gap-3">

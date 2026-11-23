@@ -10,6 +10,7 @@ import { useNotificaciones } from '../hooks/useNotificaciones';
 import NotifBadge from './ui/NotifBadge';
 import { useAcuerdosBadge } from '../hooks/useAcuerdosBadge';
 import { useTranslation } from 'react-i18next';
+import { UserAvatarMenu } from './layout/UserAvatarMenu';
 
 export function Sidebar() {
   const { t } = useTranslation('common');
@@ -258,6 +259,11 @@ export function Sidebar() {
           </div>
         )}
       </nav>
+
+      {/* User Profile Footer (Standard Desktop Navigation) */}
+      <div className="p-3 border-t border-[#EAE2D6] bg-[#FAF9F6]">
+        <UserAvatarMenu placement="sidebar-bottom" />
+      </div>
     </aside>
   );
 }
