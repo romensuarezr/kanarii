@@ -57,7 +57,8 @@ export function formatPhoneDisplay(phone?: string | null, defaultCountry: Countr
 /**
  * Construye el enlace universal a WhatsApp (`https://wa.me/<dígitos>?text=...`).
  * Reglas de WhatsApp: número completo internacional SIN '+', sin espacios ni guiones.
- * Devuelve `null` si el teléfono no es válido.
+ * Devuelve `null` si el teléfono no es válido o no tiene suficientes dígitos.
+ * Cuenta con fallback resiliente para números sin prefijo nacional.
  */
 export function toWhatsAppUrl(
   phone?: string | null,
@@ -78,6 +79,18 @@ export function toWhatsAppUrl(
     }
   } catch {
     // Fallback silencioso
+  }
+
+  // Fallback resiliente: sanitizar dígitos si la validación estricta falló
+  const cleanDigits = trimmed.replace(/\D/g, '');
+  if (cleanDigits.length >= 9) {
+    let finalNumber = cleanDigits;
+    // Si tiene 9 dígitos y empieza por 6 o 7 (móvil español habitual), anteponer 34 si el país por defecto es ES
+    if (cleanDigits.length === 9 && (cleanDigits.startsWith('6') || cleanDigits.startsWith('7')) && defaultCountry === 'ES') {
+      finalNumber = `34${cleanDigits}`;
+    }
+    const queryParam = message ? `?text=${encodeURIComponent(message)}` : '';
+    return `https://wa.me/${finalNumber}${queryParam}`;
   }
 
   return null;

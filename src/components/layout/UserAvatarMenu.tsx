@@ -7,13 +7,20 @@ import { TelegramLinkModal } from '../perfil/TelegramLinkModal';
 import { useTranslation } from 'react-i18next';
 
 export function UserAvatarMenu() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const navigate = useNavigate();
   const { user, appUser, logout } = useAuth();
   const { comunidad } = useComunidad();
   const [isOpen, setIsOpen] = useState(false);
   const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const currentLang = i18n.language ? i18n.language.split('-')[0] : 'es';
+
+  const handleLanguageToggle = () => {
+    const nextLang = currentLang === 'es' ? 'en' : 'es';
+    i18n.changeLanguage(nextLang);
+  };
 
   const isAdmin = appUser?.role === 'admin';
   const isCommunityAdmin = !!(isAdmin || (comunidad?.adminUids && Array.isArray(comunidad.adminUids) && comunidad.adminUids.includes(appUser?.uid || '')));
@@ -145,6 +152,24 @@ export function UserAvatarMenu() {
                 <span>{t('userMenu.adminPanel')}</span>
               </button>
             )}
+
+            {/* Selector de Idioma */}
+            <div className="pt-1 border-t border-[#EAE2D6]/60 my-1">
+              <button
+                type="button"
+                onClick={handleLanguageToggle}
+                className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold text-[#4A4E4D] hover:bg-[#EAE2D6]/60 transition-colors"
+                title={t('language.selector', 'Cambiar idioma')}
+              >
+                <div className="flex items-center gap-3">
+                  <Globe className="w-4 h-4 text-[#6B705C]" />
+                  <span>{t('language.selector', 'Idioma')}</span>
+                </div>
+                <span className="px-2 py-0.5 rounded-md bg-[#EAE2D6] text-[10px] font-bold uppercase tracking-wider text-[#6B705C]">
+                  {currentLang === 'es' ? 'ES' : 'EN'}
+                </span>
+              </button>
+            </div>
           </div>
 
           {/* Logout Footer */}

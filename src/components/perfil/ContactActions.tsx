@@ -8,6 +8,8 @@ export interface ContactActionsProps {
   size?: 'sm' | 'md';
   showPhoneText?: boolean;
   className?: string;
+  showCall?: boolean;
+  whatsappLabel?: string;
 }
 
 export function ContactActions({
@@ -16,6 +18,8 @@ export function ContactActions({
   size = 'md',
   showPhoneText = false,
   className = '',
+  showCall = true,
+  whatsappLabel = 'WhatsApp',
 }: ContactActionsProps) {
   if (!phone || !phone.trim()) return null;
 
@@ -24,22 +28,22 @@ export function ContactActions({
   const formattedDisplay = formatPhoneDisplay(phone);
 
   const isSmall = size === 'sm';
-  const iconSize = isSmall ? 12 : 14;
-  const paddingClass = isSmall ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs';
+  const iconSize = isSmall ? 13 : 15;
+  const paddingClass = isSmall ? 'px-2.5 py-1 text-[11px]' : 'px-3 py-1.5 text-xs';
 
   return (
-    <div className={`inline-flex items-center flex-wrap gap-1.5 ${className}`}>
+    <div className={`inline-flex items-center flex-wrap gap-2 ${className}`}>
       {showPhoneText && (
-        <span className="text-stone-700 font-medium mr-1">{formattedDisplay}</span>
+        <span className="text-stone-700 font-medium mr-1 text-sm">{formattedDisplay}</span>
       )}
 
-      {telUrl && (
+      {showCall && telUrl && (
         <a
           href={telUrl}
-          className={`inline-flex items-center gap-1 font-medium bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-full border border-emerald-200 transition-colors shadow-xs ${paddingClass}`}
+          className={`inline-flex items-center gap-1.5 font-medium bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-full border border-emerald-200 transition-colors shadow-2xs ${paddingClass}`}
           title={`Llamar a ${formattedDisplay}`}
         >
-          <Phone size={iconSize} />
+          <Phone size={iconSize} className="text-emerald-600" />
           <span>Llamar</span>
         </a>
       )}
@@ -49,11 +53,11 @@ export function ContactActions({
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1 font-medium bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#075E54] rounded-full border border-[#25D366]/30 transition-colors shadow-xs ${paddingClass}`}
+          className={`inline-flex items-center gap-1.5 font-semibold bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#075E54] rounded-full border border-[#25D366]/40 transition-colors shadow-2xs ${paddingClass}`}
           title={`Abrir chat de WhatsApp con ${formattedDisplay}`}
         >
           <MessageCircle size={iconSize} className="text-[#25D366]" />
-          <span>WhatsApp</span>
+          <span>{whatsappLabel}</span>
         </a>
       )}
     </div>

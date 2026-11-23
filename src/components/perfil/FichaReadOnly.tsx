@@ -65,6 +65,14 @@ export function FichaReadOnly({
   const datos = getMergedDatosPersona(ficha);
   const triada = getTriadaFromFicha(ficha);
   const kinMaya = datos?.fechaNacimiento ? calcularKin(datos.fechaNacimiento) : null;
+  const privacidad = ficha?.privacidad;
+
+  const isContactVisible = (field: 'instagram' | 'linkedin' | 'website' | 'phone' | 'email'): boolean => {
+    if (!privacidad) return true;
+    if (privacidad[field] !== undefined) return !!privacidad[field];
+    if (field === 'phone' || field === 'email') return false;
+    return true;
+  };
 
   const handleCopyPasaporteUrl = () => {
     if (!comunidadSlug || !appUserUid) return;
@@ -219,14 +227,18 @@ export function FichaReadOnly({
           </div>
 
           {/* 1b. Redes Sociales y Contacto */}
-          {(datos.instagram || datos.linkedin || datos.website || datos.phone || datos.email) && (
+          {((datos.instagram && isContactVisible('instagram')) ||
+            (datos.linkedin && isContactVisible('linkedin')) ||
+            (datos.website && isContactVisible('website')) ||
+            (datos.phone && isContactVisible('phone')) ||
+            (datos.email && isContactVisible('email'))) && (
             <div className="space-y-4 md:col-span-2">
               <div className="flex items-center gap-2 text-[#CB997E] border-b border-[#EAE2D6] pb-2">
                 <Globe className="w-5 h-5" />
                 <h3 className="text-lg font-serif">Redes Sociales y Contacto</h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {datos.instagram && (
+                {datos.instagram && isContactVisible('instagram') && (
                   <div>
                     <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Instagram</h4>
                     <a
@@ -239,7 +251,7 @@ export function FichaReadOnly({
                     </a>
                   </div>
                 )}
-                {datos.linkedin && (
+                {datos.linkedin && isContactVisible('linkedin') && (
                   <div>
                     <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">LinkedIn</h4>
                     <a
@@ -252,7 +264,7 @@ export function FichaReadOnly({
                     </a>
                   </div>
                 )}
-                {datos.website && (
+                {datos.website && isContactVisible('website') && (
                   <div>
                     <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Sitio Web</h4>
                     <a
@@ -265,13 +277,13 @@ export function FichaReadOnly({
                     </a>
                   </div>
                 )}
-                {datos.phone && (
+                {datos.phone && isContactVisible('phone') && (
                   <div>
                     <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Teléfono / WhatsApp</h4>
                     <ContactActions phone={datos.phone} showPhoneText={true} />
                   </div>
                 )}
-                {datos.email && (
+                {datos.email && isContactVisible('email') && (
                   <div>
                     <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Correo Electrónico</h4>
                     <a
