@@ -616,6 +616,51 @@ export function FichaView() {
                 );
               })}
             </div>
+
+            <div className="mt-8 pt-6 border-t border-[#EAE2D6]">
+              <div className="flex items-center gap-2 mb-2">
+                <Globe className="text-[#CB997E] w-5 h-5" />
+                <h4 className="text-base font-serif font-bold text-[#4A4E4D]">Redes Sociales y Canales de Contacto</h4>
+              </div>
+              <p className="text-stone-500 text-xs mb-4">
+                Elige qué canales de contacto directo son visibles en tu pasaporte para otros miembros de la comunidad.
+              </p>
+              
+              <div className="space-y-3">
+                {[
+                  { key: 'instagram', label: 'Instagram', desc: 'Permite que otros miembros vean tu usuario de Instagram y accedan a tu perfil.' },
+                  { key: 'linkedin', label: 'LinkedIn', desc: 'Muestra tu perfil profesional de LinkedIn en el pasaporte.' },
+                  { key: 'website', label: 'Sitio Web', desc: 'Muestra el enlace directo a tu web personal o proyecto.' },
+                  { key: 'phone', label: 'Teléfono y WhatsApp', desc: 'Muestra los botones de llamada y apertura de chat en WhatsApp.' },
+                  { key: 'email', label: 'Correo Electrónico', desc: 'Muestra tu dirección de email de contacto directo.' }
+                ].map(({ key, label, desc }) => {
+                  const privacidad = displayFicha?.privacidad || PRIVACIDAD_DEFAULT;
+                  const isEnabled = privacidad[key as keyof typeof privacidad] ?? (key === 'phone' || key === 'email' ? false : true);
+                  return (
+                    <div key={key} className="flex items-start justify-between gap-4 p-4 rounded-2xl bg-[#F9F7F1] border border-[#EAE2D6] transition-all duration-200">
+                      <div className="flex-1 min-w-0">
+                        <span className="font-serif font-medium text-stone-800 text-sm md:text-base">{label}</span>
+                        <p className="text-stone-500 text-xs md:text-sm mt-0.5 leading-relaxed">{desc}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleTogglePrivacidad(key)}
+                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          isEnabled ? 'bg-[#6B705C]' : 'bg-stone-300'
+                        }`}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            isEnabled ? 'translate-x-5' : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         )}
 

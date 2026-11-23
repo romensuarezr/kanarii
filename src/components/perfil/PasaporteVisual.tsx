@@ -57,6 +57,26 @@ export default function PasaporteVisual({
   const showKinMaya = privacidad ? privacidad.kinMaya !== false : true;
   const showArquetipo = privacidad ? privacidad.arquetipo !== false : true;
 
+  const isContactVisible = (field: 'instagram' | 'linkedin' | 'website' | 'phone' | 'email'): boolean => {
+    if (connectionStatus === 'self') return true;
+    if (!privacidad) return true;
+
+    const audiencia = privacidad.contacto?.[field];
+    if (audiencia) {
+      if (audiencia === 'yo') return false;
+      if (audiencia === 'comunidad') return true;
+      if (audiencia === 'administradores') return false;
+    }
+
+    if (privacidad[field] !== undefined) {
+      return !!privacidad[field];
+    }
+
+    // Por defecto, teléfono y email se ocultan a visitantes si no se ha configurado
+    if (field === 'phone' || field === 'email') return false;
+    return true;
+  };
+
   const memberComunidades = (user.communityIds || [])
     .map(id => comunidades.find(c => c.slug === id || c.id === id))
     .filter(Boolean) as Comunidad[];
@@ -120,30 +140,34 @@ export default function PasaporteVisual({
             </div>
 
             {/* Social & Contact Links */}
-            {(user.instagram || user.linkedin || user.website || user.phone || user.email) && (
+            {((user.instagram && isContactVisible('instagram')) ||
+              (user.linkedin && isContactVisible('linkedin')) ||
+              (user.website && isContactVisible('website')) ||
+              (user.phone && isContactVisible('phone')) ||
+              (user.email && isContactVisible('email'))) && (
               <div className="flex flex-wrap justify-center md:justify-start items-center gap-2 pt-1 pb-1">
-                {user.instagram && (
+                {user.instagram && isContactVisible('instagram') && (
                   <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title={`Instagram: ${user.instagram}`}>
                     <Instagram size={13} />
                     <span className="text-[11px] font-medium max-w-[150px] truncate">{user.instagram}</span>
                   </a>
                 )}
-                {user.linkedin && (
+                {user.linkedin && isContactVisible('linkedin') && (
                   <a href={user.linkedin.startsWith('http') ? user.linkedin : `https://linkedin.com/in/${user.linkedin}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title={`LinkedIn: ${user.linkedin}`}>
                     <Linkedin size={13} />
                     <span className="text-[11px] font-medium">LinkedIn</span>
                   </a>
                 )}
-                {user.website && (
+                {user.website && isContactVisible('website') && (
                   <a href={user.website.startsWith('http') ? user.website : `https://${user.website}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title={`Web: ${user.website}`}>
                     <Globe size={13} />
                     <span className="text-[11px] font-medium">Web</span>
                   </a>
                 )}
-                {user.phone && (
+                {user.phone && isContactVisible('phone') && (
                   <ContactActions phone={user.phone} size="sm" />
                 )}
-                {user.email && (
+                {user.email && isContactVisible('email') && (
                   <a href={`mailto:${user.email}`} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-700 border border-amber-200 transition-colors" title={`Email: ${user.email}`}>
                     <Mail size={13} />
                     <span className="text-[11px] font-medium max-w-[180px] truncate">{user.email}</span>

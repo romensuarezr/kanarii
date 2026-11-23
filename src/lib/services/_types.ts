@@ -223,12 +223,36 @@ export interface FichaConfiguracion {
   [key: string]: any;
 }
 
+export type AudienciaPrivacidad = 'comunidad' | 'administradores' | 'yo';
+
+export interface PrivacidadContacto {
+  instagram: AudienciaPrivacidad;
+  linkedin: AudienciaPrivacidad;
+  website: AudienciaPrivacidad;
+  phone: AudienciaPrivacidad;
+  email: AudienciaPrivacidad;
+}
+
+export const PRIVACIDAD_CONTACTO_DEFAULT: PrivacidadContacto = {
+  instagram: 'comunidad',
+  linkedin: 'comunidad',
+  website: 'comunidad',
+  phone: 'administradores',
+  email: 'administradores',
+};
+
 export interface ConfigPrivacidad {
   disenoHumano: boolean;
   arquetipo: boolean;
   kinMaya: boolean;
   manualCompleto: boolean;
   datosAstrologicos: boolean;
+  instagram?: boolean;
+  linkedin?: boolean;
+  website?: boolean;
+  phone?: boolean;
+  email?: boolean;
+  contacto?: Partial<PrivacidadContacto>;
 }
 
 export const PRIVACIDAD_DEFAULT: ConfigPrivacidad = {
@@ -237,6 +261,12 @@ export const PRIVACIDAD_DEFAULT: ConfigPrivacidad = {
   kinMaya: true,
   manualCompleto: false,
   datosAstrologicos: false,
+  instagram: true,
+  linkedin: true,
+  website: true,
+  phone: false,
+  email: false,
+  contacto: PRIVACIDAD_CONTACTO_DEFAULT,
 };
 
 export interface Ficha {
