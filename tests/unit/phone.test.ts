@@ -39,6 +39,9 @@ describe('Phone Utilities (E.164 & WhatsApp)', () => {
     // Sin mensaje personalizado
     expect(toWhatsAppUrl('+34 600 12 34 56', 'ES', '')).toBe('https://wa.me/34600123456');
 
+    // Fallback resiliente con 9 dígitos
+    expect(toWhatsAppUrl('612-345-678', 'ES', '')).toBe('https://wa.me/34612345678');
+
     // Teléfono inválido devuelve null
     expect(toWhatsAppUrl('12345')).toBeNull();
     expect(toWhatsAppUrl('')).toBeNull();

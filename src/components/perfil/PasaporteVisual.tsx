@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Shield, Sparkles, MessageCircle, Heart, Award, ArrowUpRight, Check, Clock, UserCheck, UserPlus, Instagram, Linkedin, Globe, Phone, Mail } from 'lucide-react';
 import { ContactActions } from './ContactActions';
@@ -43,6 +44,40 @@ const defaultUser: UserPassport = {
   needs: ['Semillas de variedades locales de tomate', 'Colaborador para taller de compostaje', 'Espacio para guardar herramientas'],
 };
 
+function WebsiteFaviconLink({ url }: { url: string }) {
+  const [hasError, setHasError] = useState(false);
+  const cleanUrl = url.startsWith('http') ? url : `https://${url}`;
+  let domain = '';
+  try {
+    domain = new URL(cleanUrl).hostname;
+  } catch {
+    domain = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0];
+  }
+  const faviconUrl = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=32` : '';
+
+  return (
+    <a
+      href={cleanUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-8 h-8 rounded-full bg-stone-50 hover:bg-stone-100 flex items-center justify-center text-stone-600 hover:text-[#CB997E] border border-stone-200 transition-colors shadow-2xs overflow-hidden"
+      title={`Sitio Web: ${domain || url}`}
+      aria-label={`Sitio Web: ${domain || url}`}
+    >
+      {!hasError && faviconUrl ? (
+        <img
+          src={faviconUrl}
+          alt=""
+          className="w-4 h-4 object-contain rounded-xs"
+          onError={() => setHasError(true)}
+        />
+      ) : (
+        <Globe size={14} />
+      )}
+    </a>
+  );
+}
+
 export default function PasaporteVisual({
   user = defaultUser,
   privacidad,
@@ -58,21 +93,26 @@ export default function PasaporteVisual({
   const showArquetipo = privacidad ? privacidad.arquetipo !== false : true;
 
   const isContactVisible = (field: 'instagram' | 'linkedin' | 'website' | 'phone' | 'email'): boolean => {
-    if (connectionStatus === 'self') return true;
-    if (!privacidad) return true;
+    // 1. Si no hay configuración de privacidad, por defecto teléfono y email se ocultan a visitantes
+    if (!privacidad) {
+      if (field === 'phone' || field === 'email') return connectionStatus === 'self';
+      return true;
+    }
 
+    // 2. Si hay audiencia configurada (yo, administradores, comunidad)
     const audiencia = privacidad.contacto?.[field];
     if (audiencia) {
       if (audiencia === 'yo') return false;
+      if (audiencia === 'administradores') return connectionStatus === 'self';
       if (audiencia === 'comunidad') return true;
-      if (audiencia === 'administradores') return false;
     }
 
+    // 3. Si hay booleano directo en privacidad (privacidad.phone, privacidad.instagram, etc.)
     if (privacidad[field] !== undefined) {
       return !!privacidad[field];
     }
 
-    // Por defecto, teléfono y email se ocultan a visitantes si no se ha configurado
+    // 4. Por defecto, teléfono y email se ocultan si no se ha configurado expresamente
     if (field === 'phone' || field === 'email') return false;
     return true;
   };
@@ -147,31 +187,44 @@ export default function PasaporteVisual({
               (user.email && isContactVisible('email'))) && (
               <div className="flex flex-wrap justify-center md:justify-start items-center gap-2 pt-1 pb-1">
                 {user.instagram && isContactVisible('instagram') && (
-                  <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title={`Instagram: ${user.instagram}`}>
-                    <Instagram size={13} />
-                    <span className="text-[11px] font-medium max-w-[150px] truncate">{user.instagram}</span>
+                  <a
+                    href={`https://instagram.com/${user.instagram.replace('@', '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-stone-50 hover:bg-stone-100 flex items-center justify-center text-stone-600 hover:text-pink-600 border border-stone-200 transition-colors shadow-2xs"
+                    title={`Instagram: ${user.instagram}`}
+                    aria-label={`Instagram: ${user.instagram}`}
+                  >
+                    <Instagram size={14} />
                   </a>
                 )}
                 {user.linkedin && isContactVisible('linkedin') && (
-                  <a href={user.linkedin.startsWith('http') ? user.linkedin : `https://linkedin.com/in/${user.linkedin}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title={`LinkedIn: ${user.linkedin}`}>
-                    <Linkedin size={13} />
-                    <span className="text-[11px] font-medium">LinkedIn</span>
+                  <a
+                    href={user.linkedin.startsWith('http') ? user.linkedin : `https://linkedin.com/in/${user.linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-stone-50 hover:bg-stone-100 flex items-center justify-center text-stone-600 hover:text-blue-600 border border-stone-200 transition-colors shadow-2xs"
+                    title={`LinkedIn: ${user.linkedin}`}
+                    aria-label={`LinkedIn: ${user.linkedin}`}
+                  >
+                    <Linkedin size={14} />
                   </a>
                 )}
                 {user.website && isContactVisible('website') && (
-                  <a href={user.website.startsWith('http') ? user.website : `https://${user.website}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-50 hover:bg-stone-100 rounded-full text-stone-600 border border-stone-200 transition-colors" title={`Web: ${user.website}`}>
-                    <Globe size={13} />
-                    <span className="text-[11px] font-medium">Web</span>
+                  <WebsiteFaviconLink url={user.website} />
+                )}
+                {user.email && isContactVisible('email') && (
+                  <a
+                    href={`mailto:${user.email}`}
+                    className="w-8 h-8 rounded-full bg-amber-50 hover:bg-amber-100 flex items-center justify-center text-amber-700 border border-amber-200 transition-colors shadow-2xs"
+                    title={`Email: ${user.email}`}
+                    aria-label={`Email: ${user.email}`}
+                  >
+                    <Mail size={14} />
                   </a>
                 )}
                 {user.phone && isContactVisible('phone') && (
-                  <ContactActions phone={user.phone} size="sm" />
-                )}
-                {user.email && isContactVisible('email') && (
-                  <a href={`mailto:${user.email}`} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-700 border border-amber-200 transition-colors" title={`Email: ${user.email}`}>
-                    <Mail size={13} />
-                    <span className="text-[11px] font-medium max-w-[180px] truncate">{user.email}</span>
-                  </a>
+                  <ContactActions phone={user.phone} size="sm" showPhoneText={false} />
                 )}
               </div>
             )}
