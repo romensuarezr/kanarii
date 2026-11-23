@@ -11,6 +11,7 @@ import { saveFicha, saveManual, saveResumenManual, DatosOnboarding, getComunidad
 import Markdown from 'react-markdown';
 import { ManualSeccionesViewer } from '../components/ManualSeccionesViewer';
 import { FichaReadOnly, getMergedDatosPersona } from '../components/perfil/FichaReadOnly';
+import { normalizePhone } from '../lib/phone';
 import { geocodeLugar } from '../lib/geocoding';
 import { useComunidadActions } from '../hooks/useComunidadActions';
 import { useTagArray } from '../hooks/useTagArray';
@@ -317,11 +318,16 @@ export function FichaView() {
       necesidades: necesidadesState.tags
     };
 
-    await saveFicha(appUser.uid, data as DatosOnboarding, fichaId, true, triadaObj);
+    const sanitizedData: FichaFormData = {
+      ...data,
+      phone: data.phone ? normalizePhone(data.phone) : data.phone
+    };
+
+    await saveFicha(appUser.uid, sanitizedData as DatosOnboarding, fichaId, true, triadaObj);
     setLocalFicha({ 
       ...displayFicha, 
       id: fichaId,
-      datosPersona: data as FichaDatosPersona, 
+      datosPersona: sanitizedData as FichaDatosPersona, 
       datosOnboarding: undefined,
       triada: triadaObj
     });

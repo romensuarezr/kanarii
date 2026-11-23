@@ -1,31 +1,36 @@
-# Plan T-136: Unificar lectura de perfil y ficha (FichaReadOnly)
+# Plan T-137: Normalización de teléfono E.164 y acción directa de WhatsApp (ContactActions)
 
 ## Objetivo
-Extraer la vista de lectura de ficha a un componente reutilizable `FichaReadOnly.tsx`, consumirlo en `PerfilView.tsx` y en el modo lectura de `FichaView.tsx`, y corregir el merge de `getDatosPersona`.
+Crear las utilidades de formateo y normalización telefónica con `libphonenumber-js`, generar enlaces oficiales a WhatsApp (`wa.me`) y llamadas nativas (`tel:`), proveer el componente reutilizable `ContactActions`, e integrarlo en la lectura de ficha y pasaporte.
 
 ## Rama propuesta
-`feat/T-136-unificar-lectura-perfil-ficha`
+`feat/T-137-telefono-e164-whatsapp`
 
 ## Archivos a modificar / crear
-- `src/components/perfil/FichaReadOnly.tsx` (nuevo): componente de lectura que agrupa identidad, redes/contacto, tríada, rol/convivencia, tensión, kin/arquetipo y manual de la ficha.
-- `src/pages/PerfilView.tsx`: renderizar `FichaReadOnly` manteniendo el PasaporteVisual y el botón «Editar ficha».
-- `src/pages/FichaView.tsx`: reemplazar el bloque de lectura inline por `FichaReadOnly` cuando `!isEditing` y aplicar merge robusto de `datosPersona` con `datosOnboarding`.
-- `.agents/tasks/task-136.md`
+- `src/lib/phone.ts` (nuevo): normalización E.164, validación, formateo de visualización y generación de URL de WhatsApp.
+- `src/components/perfil/ContactActions.tsx` (nuevo): componente reutilizable con botones de Llamar y WhatsApp con estilos Tailwind acordes al diseño.
+- `src/components/perfil/FichaReadOnly.tsx`: reemplazar el renderizado crudo de teléfono por `ContactActions`.
+- `src/components/perfil/PasaporteVisual.tsx`: integrar el botón de WhatsApp junto al de llamada.
+- `src/pages/FichaView.tsx`: normalizar el teléfono a E.164 antes de persistir en `saveFicha`.
+- `tests/unit/phone.test.ts` (nuevo): cobertura de tests unitarios para formateo y normalización.
+- `package.json` y `package-lock.json`: dependencia `libphonenumber-js`.
+- `.agents/tasks/task-137.md`
 - `docs/sprints/sprint-27.md`
 
 ## Pasos secuenciales
-1. Crear `src/components/perfil/FichaReadOnly.tsx` extrayendo las secciones de lectura completas de `FichaView.tsx` (redes, tríada, convivencia, tensión, manual, etc.).
-2. En `FichaView.tsx`, integrar `FichaReadOnly` para el modo de solo lectura y refactorizar `getDatosPersona` para que haga fallback campo a campo a `datosOnboarding`.
-3. En `PerfilView.tsx`, incorporar `FichaReadOnly` bajo la sección principal para ofrecer la visualización unificada completa.
-4. Validar compilación con `npm run lint` y `npm run build`.
+1. Implementar `src/lib/phone.ts` con funciones puras `normalizePhone`, `formatPhoneDisplay`, `toWhatsAppUrl` y `isValidPhone`.
+2. Crear suite unitaria `tests/unit/phone.test.ts` para verificar casos estándar (`600123456`, `+34...`, `0034...`, números no válidos, etc.).
+3. Crear `src/components/perfil/ContactActions.tsx` renderizando los botones de Llamar y WhatsApp con iconos y tooltip accesibles.
+4. Conectar `ContactActions` en `FichaReadOnly.tsx` y `PasaporteVisual.tsx`.
+5. En `FichaView.tsx`, asegurar que al guardar se normalice a E.164.
+6. Validar con tests, `npm run lint` y `npm run build`.
 
 ## Riesgos detectados
-- Divergencia de props o tipos entre `PerfilView` y `FichaView`: mitigado usando los tipos `Ficha` y `AppUser` existentes.
-- Estilos visuales: asegurar que `FichaReadOnly` mantenga los tokens de diseño unificados (`@theme`).
+- Números antiguos en formatos arbitrarios: `normalizePhone` debe actuar como fallback graceful (devolver el valor original si no es parseable sin lanzar excepciones).
 
 ## Justificación de skills
-- `implementar-feature-dry`: unificación directa de dos vistas divergentes en un único componente compartido.
-- `structure-guardian`: ubicación estándar en `src/components/perfil/`.
+- `implementar-feature-dry`: utilidades centralizadas en `src/lib/phone.ts` y componente único `ContactActions.tsx`.
+- `testing-flows`: pruebas unitarias en `tests/unit/phone.test.ts`.
 
 ## Conformidad con Diseño Macro
-- Alineado 100% con la sección 4 de `docs/sprints/sprint-27-research.md`.
+- 100% alineado con §3 de `docs/sprints/sprint-27-research.md`.
