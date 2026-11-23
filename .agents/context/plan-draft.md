@@ -1,36 +1,29 @@
-# Plan T-137: Normalización de teléfono E.164 y acción directa de WhatsApp (ContactActions)
+# Plan T-134: Selectores de visibilidad de privacidad para RRSS y contacto
 
 ## Objetivo
-Crear las utilidades de formateo y normalización telefónica con `libphonenumber-js`, generar enlaces oficiales a WhatsApp (`wa.me`) y llamadas nativas (`tel:`), proveer el componente reutilizable `ContactActions`, e integrarlo en la lectura de ficha y pasaporte.
+Extender `ConfigPrivacidad` en `_types.ts` con opciones de audiencia/visibilidad para `instagram`, `linkedin`, `website`, `phone` y `email`, evaluar la visibilidad en `PasaporteVisual.tsx` según el tipo de visitante, y añadir los controles de configuración en el panel de privacidad de `FichaView.tsx`.
 
 ## Rama propuesta
-`feat/T-137-telefono-e164-whatsapp`
+`feat/T-134-privacidad-selectores-rrss`
 
 ## Archivos a modificar / crear
-- `src/lib/phone.ts` (nuevo): normalización E.164, validación, formateo de visualización y generación de URL de WhatsApp.
-- `src/components/perfil/ContactActions.tsx` (nuevo): componente reutilizable con botones de Llamar y WhatsApp con estilos Tailwind acordes al diseño.
-- `src/components/perfil/FichaReadOnly.tsx`: reemplazar el renderizado crudo de teléfono por `ContactActions`.
-- `src/components/perfil/PasaporteVisual.tsx`: integrar el botón de WhatsApp junto al de llamada.
-- `src/pages/FichaView.tsx`: normalizar el teléfono a E.164 antes de persistir en `saveFicha`.
-- `tests/unit/phone.test.ts` (nuevo): cobertura de tests unitarios para formateo y normalización.
-- `package.json` y `package-lock.json`: dependencia `libphonenumber-js`.
-- `.agents/tasks/task-137.md`
+- `src/lib/services/_types.ts`: añadir `AudienciaPrivacidad`, `PrivacidadContacto`, extender `ConfigPrivacidad` y definir defaults.
+- `src/components/perfil/PasaporteVisual.tsx`: función de visibilidad para cada red/contacto respetando la audiencia (`comunidad`, `administradores`, `yo`) y `connectionStatus`.
+- `src/pages/FichaView.tsx`: incorporar la sección de "Contacto y Redes Sociales" en el panel de privacidad.
+- `.agents/tasks/task-134.md`
 - `docs/sprints/sprint-27.md`
 
 ## Pasos secuenciales
-1. Implementar `src/lib/phone.ts` con funciones puras `normalizePhone`, `formatPhoneDisplay`, `toWhatsAppUrl` y `isValidPhone`.
-2. Crear suite unitaria `tests/unit/phone.test.ts` para verificar casos estándar (`600123456`, `+34...`, `0034...`, números no válidos, etc.).
-3. Crear `src/components/perfil/ContactActions.tsx` renderizando los botones de Llamar y WhatsApp con iconos y tooltip accesibles.
-4. Conectar `ContactActions` en `FichaReadOnly.tsx` y `PasaporteVisual.tsx`.
-5. En `FichaView.tsx`, asegurar que al guardar se normalice a E.164.
-6. Validar con tests, `npm run lint` y `npm run build`.
+1. Extender `ConfigPrivacidad` en `src/lib/services/_types.ts` manteniendo compatibilidad hacia atrás.
+2. Actualizar `PasaporteVisual.tsx` para filtrar los enlaces RRSS según la privacidad configurada y el rol/estado del visitante.
+3. Ampliar el panel de privacidad de `FichaView.tsx` con los controles para los 5 campos de contacto y enlazar con `handleTogglePrivacidad`.
+4. Verificar con `npm run lint` y `npm run build`.
 
 ## Riesgos detectados
-- Números antiguos en formatos arbitrarios: `normalizePhone` debe actuar como fallback graceful (devolver el valor original si no es parseable sin lanzar excepciones).
+- Compatibilidad de documentos de ficha existentes sin `contacto` en `privacidad`: mitigado mediante defaults automáticos cuando el campo no está definido.
 
 ## Justificación de skills
-- `implementar-feature-dry`: utilidades centralizadas en `src/lib/phone.ts` y componente único `ContactActions.tsx`.
-- `testing-flows`: pruebas unitarias en `tests/unit/phone.test.ts`.
+- `implementar-feature-dry`: integración fluida en el panel existente y reutilización de la sincronización de pasaporte.
 
 ## Conformidad con Diseño Macro
-- 100% alineado con §3 de `docs/sprints/sprint-27-research.md`.
+- 100% alineado con §2 de `docs/sprints/sprint-27-research.md`.
