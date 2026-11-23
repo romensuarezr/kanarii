@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 export function Welcome() {
   const { user, appUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Hooks de datos para cuando el usuario está logueado y tiene una comunidad activa
@@ -50,7 +51,6 @@ export function Welcome() {
     );
   }
 
-  const location = useLocation();
   const isOrientacionRoute = location.pathname === '/orientacion';
 
   // Si el usuario está autenticado O viene por /orientacion, renderizamos el Panel de Orientación

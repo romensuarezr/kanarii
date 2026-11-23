@@ -29,3 +29,17 @@ Separar las rutas `/perfil` y `/ficha` en `src/App.tsx` para que apunten a vista
 ## Skills
 - `implementar-feature-dry`: Para evitar duplicación de lógica en routes y componentes
 - `structure-guardian`: Para supervisar la higiene del sistema de archivos
+
+## Criterios de done
+- [x] `/perfil` renderiza `PerfilView` y `/ficha` renderiza `FichaView`.
+- [x] `/perfil` ofrece «Editar ficha» y abre `/ficha` directamente en modo edición.
+- [x] `/ficha` ofrece «← Mi perfil» para volver.
+- [x] `/p/:uid` sigue apuntando a `PasaporteUniversalView`.
+- [x] `npm run lint` y `npm run build` en verde.
+- [x] Prueba manual de navegación perfil ↔ ficha.
+- [x] Sesión cerrada correctamente.
+
+## Notas de sesión
+- Guardia de emergencia fuera de caja: `src/lib/services/fichas.ts` — el guardado de la ficha ya no sobrescribe `rol` en `community_members` (evitaba el bloqueo por permisos al guardar). El fix completo de roles queda para T-133/T-136.
+- Fix fuera de caja: `src/pages/Welcome.tsx` — `useLocation()` se llamaba después de un `return` temprano y rompía el orden de hooks. Detectado durante la prueba local.
+- Investigación UX del sprint: `docs/sprints/sprint-27-ux-research.md`.

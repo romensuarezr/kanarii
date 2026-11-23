@@ -484,7 +484,8 @@ export async function _writeFichaRaw(userId: string, fichaFull: Ficha, isUpdate:
             antiguedad_anos: base.antiguedad_anos || 0,
             rol_comunidad: base.rol_comunidad || '',
             rolComunitario: base.rol_comunidad || base.rol || 'miembro',
-            rol: base.rol || 'miembro',
+            // `rol` es un permiso (admin/miembro/visitante), no un dato de presentación.
+            // No se deriva de la ficha para no sobrescribir el rol real de la membresía.
             estado: fichaFull.estado || 'activo',
             ...(fichaFull.triada !== undefined && fichaFull.triada !== null ? { triada: fichaFull.triada } : {}),
             photoURL: userPhotoURL,

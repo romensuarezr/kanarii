@@ -6,10 +6,10 @@
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
 |---|---|---|---|---|---|
-| T-132 | Corregir duplicidad de rutas `/perfil` y `/ficha`: separar en rutas distintas — `/perfil` a perfil de usuario, `/ficha` a vista de ficha comunitaria | S | ⬜ Pendiente | — | .agents/tasks/task-T-132.md |
-| T-133 | Corregir persistencia de RRSS en saveFicha y mapping mappedUser: extender lista blanca en fichas.ts y añadir campos a mappedUser en PasaporteUniversalView y PasaporteComunitarioView | M | ⬜ Pendiente | — | .agents/tasks/task-T-133.md |
-| T-134 | Añadir selectores de visibilidad de privacidad para RRSS y otros datos: extender ConfigPrivacidad con campos instagram/linkedin/website/phone/email y crear controles UI en FichaView y PasaporteVisual | M | ⬜ Pendiente | T-133 | .agents/tasks/task-T-134.md |
-| T-135 | Crear menú de configuración dedicado accesible desde el avatar de usuario: añadir botón "Ajustes" en UserAvatarMenu.tsx con submenú de privacidad, RRSS, perfil, comunidad, cuenta | L | ⬜ Pendiente | T-134 | .agents/tasks/task-T-135.md |
+| T-132 | Corregir duplicidad de rutas `/perfil` y `/ficha`: separar en rutas distintas — `/perfil` a perfil de usuario, `/ficha` a vista de ficha comunitaria | S | ✅ Completada | — | .agents/tasks/task-132.md |
+| T-133 | Corregir persistencia de RRSS en saveFicha y mapping mappedUser: extender lista blanca en fichas.ts y añadir campos a mappedUser en PasaporteUniversalView y PasaporteComunitarioView | M | ⬜ Pendiente | — | .agents/tasks/task-133.md |
+| T-134 | Añadir selectores de visibilidad de privacidad para RRSS y otros datos: extender ConfigPrivacidad con campos instagram/linkedin/website/phone/email y crear controles UI en FichaView y PasaporteVisual | M | ⬜ Pendiente | T-133 | .agents/tasks/task-134.md |
+| T-135 | Crear menú de configuración dedicado accesible desde el avatar de usuario: añadir botón "Ajustes" en UserAvatarMenu.tsx con submenú de privacidad, RRSS, perfil, comunidad, cuenta | L | ⬜ Pendiente | T-134 | .agents/tasks/task-135.md |
 
 ## Régimen Operativo del Sprint
 - **Régimen**: Desatendida (A) — pero trabajando en rama feature/SPRINT27-<tarea>; test local previo antes de merge a main. Secuencia: branch → implementar tarea → test manual/automático → merge a main → siguiente tarea carril 1.
