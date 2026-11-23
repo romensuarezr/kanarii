@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, LogOut, Send, Globe, Settings, ChevronDown } from 'lucide-react';
+import { User, LogOut, Send, Globe, Settings, Shield, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useComunidad } from '../../contexts/ComunidadContext';
 import { TelegramLinkModal } from '../perfil/TelegramLinkModal';
@@ -118,6 +118,14 @@ export function UserAvatarMenu() {
             )}
 
             <button
+              onClick={() => handleNavigate('/ajustes')}
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#4A4E4D] hover:bg-[#EAE2D6]/60 transition-colors"
+            >
+              <Settings className="w-4 h-4 text-[#6B705C]" />
+              <span>{t('userMenu.settings', 'Ajustes')}</span>
+            </button>
+
+            <button
               onClick={() => {
                 setIsOpen(false);
                 setIsTelegramModalOpen(true);
@@ -133,7 +141,7 @@ export function UserAvatarMenu() {
                 onClick={() => handleNavigate('/admin')}
                 className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#4A4E4D] hover:bg-[#EAE2D6]/60 transition-colors"
               >
-                <Settings className="w-4 h-4 text-[#6B705C]" />
+                <Shield className="w-4 h-4 text-[#6B705C]" />
                 <span>{t('userMenu.adminPanel')}</span>
               </button>
             )}

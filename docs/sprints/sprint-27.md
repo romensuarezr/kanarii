@@ -11,7 +11,7 @@
 | T-136 | Unificar lectura de perfil y ficha: extraer FichaReadOnly, renderizar en /perfil con toda la info y mergear getDatosPersona con datosOnboarding | M | ✅ Completada | T-133 | .agents/tasks/task-136.md |
 | T-137 | Normalización de teléfono E.164 y acción de WhatsApp: añadir ContactActions (Llamar/WhatsApp), validador y selector de país | M | ✅ Completada | T-136 | .agents/tasks/task-137.md |
 | T-134 | Añadir selectores de visibilidad de privacidad para RRSS y otros datos: extender ConfigPrivacidad con campos instagram/linkedin/website/phone/email y crear controles UI en FichaView y PasaporteVisual | M | ✅ Completada | T-137 | .agents/tasks/task-134.md |
-| T-135 | Crear menú de configuración dedicado accesible desde el avatar de usuario: añadir botón "Ajustes" en UserAvatarMenu.tsx con submenú de privacidad, RRSS, perfil, comunidad, cuenta | L | ⬜ Pendiente | T-134 | .agents/tasks/task-135.md |
+| T-135 | Crear menú de configuración dedicado accesible desde el avatar de usuario: añadir botón "Ajustes" en UserAvatarMenu.tsx con submenú de privacidad, RRSS, perfil, comunidad, cuenta | L | ✅ Completada | T-134 | .agents/tasks/task-135.md |
 
 ## Régimen Operativo del Sprint
 - **Régimen**: Desatendida (A) — pero trabajando en rama feature/SPRINT27-<tarea>; test local previo antes de merge a main. Secuencia: branch → implementar tarea → test manual/automático → merge a main → siguiente tarea carril 1.
