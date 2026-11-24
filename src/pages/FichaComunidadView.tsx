@@ -13,6 +13,8 @@ import { useCommunityMembers } from '../hooks/useCommunityMembers';
 import { useTareas } from '../hooks/useTareas';
 import { useProyectos } from '../hooks/useProyectos';
 import { useTranslation } from 'react-i18next';
+import { MemberCard } from '../components/members/MemberCard';
+import { PasaporteModal } from '../components/perfil/PasaporteModal';
 
 export function FichaComunidadView() {
   const { t } = useTranslation('communities');
@@ -31,6 +33,8 @@ export function FichaComunidadView() {
   const [loginMode, setLoginMode] = useState<'login' | 'onboarding'>('login');
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [activeTab, setActiveTab] = useState<'presentacion' | 'miembros' | 'actividad'>('presentacion');
+  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  const [isPassportModalOpen, setIsPassportModalOpen] = useState(false);
 
   const isAdmin = appUser?.role === 'admin';
   const isCommunityAdmin = !!(isAdmin || (comunidad?.adminUids && Array.isArray(comunidad.adminUids) && comunidad.adminUids.includes(appUser?.uid || '')));
@@ -382,40 +386,25 @@ export function FichaComunidadView() {
                           <>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               {members.map((member) => {
-                                // FIX 1: Fallback inteligente de nombre → displayName → inicial del email
+                                const memberId = member.userId || member.id || '';
                                 const displayName = member.nombre && member.nombre !== 'Sin Nombre'
                                   ? member.nombre
                                   : member.displayName || (member.email ? member.email.split('@')[0] : 'Miembro');
-                                const avatarInitial = displayName.charAt(0).toUpperCase();
 
                                 return (
-                                  <div key={member.id} className="bg-[#F9F7F1]/30 border border-[#EAE2D6]/40 rounded-2xl p-4 flex items-center gap-3">
-                                    {member.photoURL ? (
-                                      <img src={member.photoURL} alt={displayName} className="w-12 h-12 rounded-full object-cover border border-[#EAE2D6]" />
-                                    ) : (
-                                      <div className="w-12 h-12 rounded-full bg-[#A5A58D]/10 text-[#6B705C] border border-[#EAE2D6] flex items-center justify-center font-bold text-lg">
-                                        {avatarInitial}
-                                      </div>
-                                    )}
-                                    <div className="min-w-0 flex-1">
-                                      <p className="font-bold text-stone-800 truncate">{displayName}</p>
-                                      {member.rol_comunidad && (
-                                        <p className="text-xs text-[#CB997E] font-semibold">{member.rol_comunidad}</p>
-                                      )}
-                                      <div className="flex flex-wrap gap-1.5 mt-1">
-                                        {member.arquetipo_s3 && (
-                                          <span className="inline-block px-2 py-0.5 bg-[#CB997E]/10 text-[#CB997E] text-[10px] font-bold rounded-full border border-[#CB997E]/20">
-                                            {member.arquetipo_s3}
-                                          </span>
-                                        )}
-                                        {member.tipo_hd && (
-                                          <span className="inline-block px-2 py-0.5 bg-[#A5A58D]/10 text-[#6B705C] text-[10px] font-bold rounded-full border border-[#A5A58D]/20">
-                                            {member.tipo_hd}
-                                          </span>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
+                                  <MemberCard
+                                    key={member.id}
+                                    id={memberId}
+                                    name={displayName}
+                                    photoUrl={member.photoURL}
+                                    role={member.rol_comunidad || member.rolComunitario || member.rol}
+                                    bio={member.arquetipo_s3 ? `Arquetipo: ${member.arquetipo_s3}` : undefined}
+                                    saberes={member.tipo_hd ? [member.tipo_hd] : undefined}
+                                    onOpenPassport={(uid) => {
+                                      setSelectedMemberId(uid);
+                                      setIsPassportModalOpen(true);
+                                    }}
+                                  />
                                 );
                               })}
                             </div>
@@ -630,6 +619,16 @@ export function FichaComunidadView() {
         isOpen={isLoginModalOpen}
         mode={loginMode}
         onClose={() => setIsLoginModalOpen(false)}
+      />
+
+      {/* Modal de Pasaporte rápido */}
+      <PasaporteModal
+        userId={selectedMemberId}
+        isOpen={isPassportModalOpen}
+        onClose={() => {
+          setIsPassportModalOpen(false);
+          setSelectedMemberId(null);
+        }}
       />
     </div>
   );

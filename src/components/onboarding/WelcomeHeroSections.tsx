@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, FilePlus2, Scroll, Landmark, ArrowRight, Activity, Heart, Users, MapPin, CheckCircle2, Compass } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { MemberCard } from '../members/MemberCard';
+import { PasaporteModal } from '../perfil/PasaporteModal';
 
 interface WelcomeHeroSectionsProps {
   userName?: string;
@@ -71,6 +74,7 @@ export default function WelcomeHeroSections({
   hasIncompleteProfile = false,
 }: WelcomeHeroSectionsProps) {
   const { t } = useTranslation('welcome');
+  const [selectedPassportUserId, setSelectedPassportUserId] = useState<string | null>(null);
   const displayStatus = communityStatus || t('subtitle');
 
   const quickActions = [
@@ -229,70 +233,18 @@ export default function WelcomeHeroSections({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {featuredMembers.slice(0, 3).map((member) => (
-              <div
+              <MemberCard
                 key={member.id}
-                onClick={() => member.id && onSelectMember?.(member.id)}
-                className="bg-white p-5 rounded-[24px] border border-[#D2B48C]/15 shadow-sm hover:shadow-md transition-all space-y-3 flex flex-col justify-between cursor-pointer group"
-                tabIndex={0}
-                role="button"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    member.id && onSelectMember?.(member.id);
-                  }
+                id={member.id}
+                name={member.name}
+                photoUrl={member.photoUrl}
+                saberes={member.saberes}
+                necesidades={member.necesidades}
+                onOpenPassport={(id) => {
+                  setSelectedPassportUserId(id);
+                  onSelectMember?.(id);
                 }}
-              >
-                <div className="flex items-center gap-3">
-                  {member.photoUrl ? (
-                    <img
-                      src={member.photoUrl}
-                      alt={member.name}
-                      className="w-10 h-10 rounded-full object-cover border border-[#EAE2D6]"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-emerald-50 text-[#6B705C] flex items-center justify-center font-bold font-serif text-sm">
-                      {member.name.charAt(0)}
-                    </div>
-                  )}
-                  <div>
-                    <h4 className="font-serif font-bold text-sm text-[#3E2723] group-hover:text-[#6B705C] transition-colors">{member.name}</h4>
-                    <span className="text-[10px] text-[#A5A58D] font-mono">{t('members.activeMember')}</span>
-                  </div>
-                </div>
-
-                {/* Tríada reducida */}
-                <div className="space-y-2 text-xs pt-1 border-t border-[#FAF9F6]">
-                  {member.saberes && member.saberes.length > 0 && (
-                    <div>
-                      <span className="text-[10px] font-bold uppercase text-[#6B705C] block">{t('members.offersSkills')}</span>
-                      <div className="flex flex-wrap gap-1 mt-0.5">
-                        {member.saberes.slice(0, 2).map((s, idx) => (
-                          <span key={idx} className="bg-emerald-50 text-[#6B705C] px-2 py-0.5 rounded-full text-[10px]">
-                            {s}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {member.necesidades && member.necesidades.length > 0 && (
-                    <div>
-                      <span className="text-[10px] font-bold uppercase text-[#CB997E] block">{t('members.needs')}</span>
-                      <div className="flex flex-wrap gap-1 mt-0.5">
-                        {member.necesidades.slice(0, 2).map((n, idx) => (
-                          <span key={idx} className="bg-amber-50 text-[#CB997E] px-2 py-0.5 rounded-full text-[10px]">
-                            {n}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="pt-2 border-t border-[#EAE2D6]/40 flex items-center justify-end text-xs font-semibold text-[#6B705C] group-hover:underline gap-1">
-                  <span>{t('hero.viewProfile')}</span>
-                  <ArrowRight size={12} />
-                </div>
-              </div>
+              />
             ))}
           </div>
         </section>
@@ -550,6 +502,11 @@ export default function WelcomeHeroSections({
         </div>
       </section>
 
+      <PasaporteModal
+        userId={selectedPassportUserId}
+        isOpen={!!selectedPassportUserId}
+        onClose={() => setSelectedPassportUserId(null)}
+      />
     </div>
   );
 }

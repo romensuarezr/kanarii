@@ -111,5 +111,16 @@
       "Cataliza la transformación. Mueve con potencia lo que necesita cambiar.",
       "Ilumina y eleva. Celebra la conciencia compartida y el florecimiento del grupo."
     ]
+  },
+  "card": {
+    "viewPassport": "Ver Pasaporte",
+    "quickView": "Vista rápida",
+    "connect": "Conectar",
+    "noLocation": "Comunidad Kanarii",
+    "openFullPage": "Abrir ficha completa",
+    "close": "Cerrar",
+    "activeMember": "Miembro activo",
+    "skillsLabel": "Ofrece / Saberes",
+    "needsLabel": "Necesita"
   }
 }
