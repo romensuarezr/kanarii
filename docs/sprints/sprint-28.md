@@ -6,7 +6,7 @@
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
 |---|---|---|---|---|---|
-| T-141 | Cohesionar Navegación: Corregir enlaces rotos (Marketplace), separar Tablón de Gobernanza, añadir Calendario y restringir Cruce | S | 🟡 En curso | — | .agents/tasks/task-141.md |
+| T-141 | Cohesionar Navegación: Corregir enlaces rotos (Marketplace), separar Tablón de Gobernanza, añadir Calendario y restringir Cruce | S | ✅ Completada | — | .agents/tasks/_archived/task-141.md |
 | T-142 | Home Pública Retribalizada y Enlace Directo a Pedagogía/Demos | M | ⏳ Pendiente | T-141 | .agents/tasks/task-142.md |
 | T-143 | Tarjetas de Miembros Estilo Retribalize con Acciones Rápidas y Conexión | M | ⏳ Pendiente | T-141 | .agents/tasks/task-143.md |
 | T-144 | Tarjeta-Resumen de Sinergia y Estados Vacíos en Cruce de Perfiles y Panel | M | ⏳ Pendiente | T-142, T-143 | .agents/tasks/task-144.md |
