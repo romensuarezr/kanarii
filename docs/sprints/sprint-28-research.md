@@ -68,4 +68,68 @@ En la plataforma abierta de comunidades **Hylo**:
 | `CruceView.tsx` | Informe largo sin resumen superior | Tarjeta de Sinergia ejecutiva superior antes del desglose | SaaS Dashboard Summary Cards |
 
 ---
-*Documento aprobado para la ejecución de T-142 a T-144 en Sprint 28.*
+
+## 5. Decisión de Arquitectura: Modelo en 2 Capas, Red de Nodos y Sinergias Deterministas
+
+Tras la ingeniería inversa detallada de Retribalize.io y las sesiones de diseño de producto, se formaliza la arquitectura del encuentro y la convivencia comunitaria en Kanarii:
+
+### A. Diagnóstico y Cambio de Enfoque
+- **Situación previa**: El panel de bienvenida/orientación desplegaba directamente todo el menú operativo de la plataforma (Gobernanza, Actas, Tareas, Balances). Esto resultaba confuso y abrumador para un usuario que acaba de registrarse o que aún no pertenece a ninguna comunidad concreta.
+- **Aprendizaje de Retribalize**: La interacción y el encuentro humano deben ocurrir antes que la gestión burocrática. Las herramientas operativas solo tienen sentido **dentro del contexto de un nodo específico**. Fuera de él, la experiencia debe ser un dashboard ligero enfocado en descubrir personas afines, nodos y oportunidades de colaboración.
+
+### B. Arquitectura de Navegación en 2 Capas
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        CAPA 1: RED GLOBAL                             │
+│       (Menú siempre visible al iniciar sesión → va a /dashboard)       │
+├────────────────────────────────────────────────────────────────────────┤
+│  ⚡ Encuentro & Sinergias (/dashboard)                                  │
+│  🌐 Nodos (/comunidades o /nodos)                                      │
+│  📅 Eventos (/eventos)                                                 │
+│  🏡 Residencias (/residencias)                                         │
+│  👥 Directorio de Personas (/personas)                                 │
+│  🪪 Mi Pasaporte (/ficha)                                              │
+└─────────────────────────────────┬──────────────────────────────────────┘
+                                  │ Clic en un nodo → Ficha de Presentación
+                                  │ (Tabs: About · Miembros · Actividades)
+                                  ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                   CAPA 2: ESPACIO OPERATIVO DEL NODO                   │
+│          (Se activa al pulsar "🌿 Entrar al Espacio del Nodo")          │
+├────────────────────────────────────────────────────────────────────────┤
+│  ← Volver a la Red (sale del nodo y regresa a /dashboard)              │
+│  📢 Tablón Local del Nodo                                              │
+│  ⚖️ Gobernanza Sociocrática S3 (Propuestas y Consentimiento)           │
+│  📝 Actas y Acuerdos Vivos                                             │
+│  ✅ Círculos y Tareas Comunitarias                                     │
+│  📆 Calendario Comunal                                                 │
+│  💎 Soberanía y Balances                                               │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### C. De "Comunidad" a "Red de Nodos"
+El término "comunidad" suele evocar únicamente una ecoaldea física constituida con terreno. Cambiar el paradigma a **Nodos** permite acoger la diversidad real del archipiélago y la red:
+1. 🏡 **Nodos Físicos / Ecoaldeas / Fincas**: Espacios con tierra, producción agrícola y convivencia fija.
+2. 🛏️ **Nodos de Residencia / Coliving**: Espacios habitacionales que ofrecen estancias temporales, voluntariado o incubadoras comunitarias.
+3. 🌐 **Nodos Online / Círculos de Afinidad**: Grupos sin territorio físico compartido (ej. soberanía energética, crianza respetuosa, semillas libres) que se organizan sociocráticamente por asambleas o proyectos.
+
+### D. Eventos y Residencias como Palancas de Interacción Temprana
+- La barrera de entrada para mudarse a una comunidad es muy alta.
+- **Eventos** (talleres, círculos de palabra, siembras comunitarias, encuentros insulares) y **Residencias** (convocatorias de 1 semana a varios meses) actúan como el puente natural: permiten a las personas conocerse en el mundo real, compartir trabajo y validar afinidades antes de dar un paso definitivo.
+
+### E. Motor de Sinergias Determinista vs. Algoritmos Opacos
+- Retribalize delega sus matches en textos genéricos redactados por un LLM ("Writing the why...").
+- En Kanarii el motor es **transparente, determinista y no depende de cajas negras**:
+  1. 📍 **Proximidad Insular**: Gran Canaria, Tenerife, La Palma, Lanzarote, Fuerteventura, La Gomera, El Hierro o Red Global.
+  2. ⚡ **Afinidad Energética (Nuestra API de Astrología)**:
+     - **Kin Maya**: Sellos, tonos galácticos y oráculo de relaciones (aliados naturales/análogos, poder oculto, antípodas/tensión creativa, misma onda encantada).
+     - **Diseño Humano**: Interacción complementaria entre tipos (Guía del Proyector + Energía del Generador; Manifestadores iniciando + informando), autoridades y canales electromagnéticos activos.
+  3. 🤝 **Tríada de Reciprocidad**: Cruce exacto entre lo que una persona ofrece y lo que la otra (o el nodo) necesita.
+
+### F. Hoja de Ruta de Implementación en Sprint 28
+- **T-144 (✅ Completada)**: Dashboard de Encuentro (`/dashboard`), tarjeta `SynergyCard` y motor determinista `calcularSinergia`.
+- **T-145 (⏳ Siguiente)**: Directorio enriquecido de Nodos (Fincas, Residencias, Nodos Online), Ficha de presentación con pestañas (*About*, *Miembros*, *Actividades*) y botón *"🌿 Entrar al Espacio del Nodo"*.
+- **T-146 (⏳ Cierre de Sprint)**: Sidebar de 2 Capas (menú de Red Global vs. Toolset Operativo de Nodo con botón *"← Volver a la Red"*), y secciones de Eventos y Residencias.
+
+---
+*Documento aprobado y actualizado para la ejecución de T-144 a T-146 en Sprint 28.*
