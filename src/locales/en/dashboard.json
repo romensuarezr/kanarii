@@ -1,0 +1,36 @@
+{
+  "header": {
+    "title": "Encounters & Synergies",
+    "subtitle": "Deterministic connections computed based on your island, energetic resonance (Mayan Kin and Human Design), and gift complementarity.",
+    "todayKin": "Today's Kin",
+    "greeting": "Hello, {{name}}"
+  },
+  "filters": {
+    "all": "All synergies",
+    "sameIsland": "On my island",
+    "energetic": "Energetic resonance",
+    "triad": "Triad complements",
+    "count_one": "{{count}} suggested connection",
+    "count_other": "{{count}} suggested connections"
+  },
+  "card": {
+    "synergyScore": "{{score}}% Synergy",
+    "viewPassport": "View Passport",
+    "connect": "Connect",
+    "sameIslandBadge": "Same island",
+    "reasonsTitle": "Resonance highlights:",
+    "kinMayaBadge": "Mayan Kin",
+    "hdBadge": "Human Design",
+    "offersTitle": "Offers what you seek:",
+    "needsTitle": "Seeks what you offer:",
+    "sharedKnowledgeTitle": "Shared skills:"
+  },
+  "empty": {
+    "noMatchesTitle": "No matches for this filter",
+    "noMatchesDesc": "Explore 'All synergies' or invite new members to the network to discover resonances.",
+    "resetFilter": "Show all",
+    "incompleteProfileTitle": "Complete your Passport to unlock all your synergies",
+    "incompleteProfileDesc": "Add your birth date and define your triad (offerings and needs) so the engine can calculate your deterministic network connections.",
+    "completePassportBtn": "Complete my Passport"
+  }
+}
