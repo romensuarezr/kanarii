@@ -1,4 +1,4 @@
-import { Home, User, CheckSquare, Briefcase, FileText, Settings, Calendar, MessageSquare, Handshake, Scale, Users } from 'lucide-react';
+import { Home, User, CheckSquare, Briefcase, FileText, Settings, Calendar, MessageSquare, Handshake, Scale, Users, Vote } from 'lucide-react';
 
 export interface NavItem {
   label: string;
@@ -28,10 +28,16 @@ export const navigationConfig: NavItem[] = [
     icon: Users,
   },
   {
-    label: 'Propuestas',
-    labelKey: 'nav.propuestas',
+    label: 'Tablón',
+    labelKey: 'nav.board',
     href: '/tablon',
     icon: MessageSquare,
+  },
+  {
+    label: 'Gobernanza',
+    labelKey: 'nav.governance',
+    href: '/gobernanza',
+    icon: Vote,
   },
   {
     label: 'Actas',
@@ -46,9 +52,15 @@ export const navigationConfig: NavItem[] = [
     icon: Briefcase,
   },
   {
+    label: 'Calendario',
+    labelKey: 'nav.calendar',
+    href: '/calendario',
+    icon: Calendar,
+  },
+  {
     label: 'Marketplace',
     labelKey: 'nav.marketplace',
-    href: '/marketplace',
+    href: '/soberania',
     icon: Handshake,
   },
   {
@@ -56,6 +68,7 @@ export const navigationConfig: NavItem[] = [
     labelKey: 'nav.cruce',
     href: '/cruce',
     icon: Scale,
+    adminOnly: true,
   },
   {
     label: 'Admin',
