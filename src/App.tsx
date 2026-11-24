@@ -110,6 +110,7 @@ function AppContent() {
           <Route path="/nueva-comunidad" element={<ProtectedRoute><RegistroComunidadView /></ProtectedRoute>} />
           <Route path="/admin/solicitudes" element={<ProtectedRoute><AdminSolicitudesView /></ProtectedRoute>} />
           <Route path="/soberania" element={<ProtectedRoute><MarketplaceView /></ProtectedRoute>} />
+          <Route path="/marketplace" element={<Navigate to="/soberania" replace />} />
           <Route path="/gobernanza" element={<ProtectedRoute><PropuestasView /></ProtectedRoute>} />
           <Route path="/c/:slug" element={<FichaComunidadView />} />
           <Route path="/c/:slug/miembro/:userId" element={<PasaporteComunitarioView />} />
