@@ -111,5 +111,16 @@
       "Catalyzes transformation. Powerfully shifts what needs to change.",
       "Illuminates and elevates. Celebrates shared consciousness and group flourishing."
     ]
+  },
+  "card": {
+    "viewPassport": "View Passport",
+    "quickView": "Quick view",
+    "connect": "Connect",
+    "noLocation": "Kanarii Community",
+    "openFullPage": "Open full page",
+    "close": "Close",
+    "activeMember": "Active member",
+    "skillsLabel": "Offers / Skills",
+    "needsLabel": "Needs"
   }
 }
