@@ -1,0 +1,36 @@
+{
+  "header": {
+    "title": "Encuentro y Sinergias",
+    "subtitle": "Conexiones deterministas calculadas según tu isla, resonancia energética (Kin Maya y Diseño Humano) y complementariedad de dones.",
+    "todayKin": "Kin del día",
+    "greeting": "Hola, {{name}}"
+  },
+  "filters": {
+    "all": "Todas las sinergias",
+    "sameIsland": "En mi isla",
+    "energetic": "Resonancia energética",
+    "triad": "Complementarios de tríada",
+    "count_one": "{{count}} conexión sugerida",
+    "count_other": "{{count}} conexiones sugeridas"
+  },
+  "card": {
+    "synergyScore": "{{score}}% Sinergia",
+    "viewPassport": "Ver Pasaporte",
+    "connect": "Conectar",
+    "sameIslandBadge": "Misma isla",
+    "reasonsTitle": "Puntos de resonancia:",
+    "kinMayaBadge": "Kin Maya",
+    "hdBadge": "Diseño Humano",
+    "offersTitle": "Aporta lo que buscas:",
+    "needsTitle": "Busca lo que ofreces:",
+    "sharedKnowledgeTitle": "Saberes afines:"
+  },
+  "empty": {
+    "noMatchesTitle": "No hay resultados en este filtro",
+    "noMatchesDesc": "Explora 'Todas las sinergias' o activa nuevos miembros en la red para descubrir resonancias.",
+    "resetFilter": "Ver todas",
+    "incompleteProfileTitle": "Completa tu Pasaporte para desbloquear todas tus sinergias",
+    "incompleteProfileDesc": "Añade tu fecha de nacimiento y define tu tríada (lo que ofreces y necesitas) para que el motor calcule tus conexiones deterministas con la red.",
+    "completePassportBtn": "Completar mi Pasaporte"
+  }
+}

@@ -12,7 +12,7 @@ export const navigationConfig: NavItem[] = [
   {
     label: 'Inicio',
     labelKey: 'nav.orientation',
-    href: '/',
+    href: '/dashboard',
     icon: Home,
   },
   {
