@@ -79,8 +79,8 @@ service cloud.firestore {
 
     // ─── COMUNIDADES ───────────────────────────────────────────────────────
     match /comunidades/{communityId} {
-      // Lectura autenticada por defecto
-      allow read: if request.auth != null;
+      // Lectura permitida si el usuario está autenticado O si la comunidad está marcada como pública (ADR-027)
+      allow read: if request.auth != null || resource.data.esPublica == true;
       // Crear comunidad: cualquier autenticado
       allow create: if request.auth != null && request.resource.data.createdBy == request.auth.uid;
       // Actualizar/borrar: solo admin local de esa comunidad o global admin

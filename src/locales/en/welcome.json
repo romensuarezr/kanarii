@@ -263,5 +263,41 @@
         "purpose": "Purpose"
       }
     }
+  },
+  "publicNav": {
+    "howItWorks": "How it works",
+    "communities": "Communities",
+    "login": "Log in",
+    "join": "Join"
+  },
+  "publicHero": {
+    "badge": "Community sovereignty and coordination platform",
+    "title": "Kanarii",
+    "nativeName": "Tawăzawazt",
+    "headline": "Reconnecting the tribe, coordinating life.",
+    "ctaJoin": "Join the community",
+    "ctaTour": "See how it works",
+    "ctaLogin": "Already a member? (Log in)"
+  },
+  "pillars": {
+    "sectionTag": "Pedagogy & Ecosystem",
+    "title": "Three pillars for community life",
+    "subtitle": "Technology crafted around autonomy, consent, and mutual care.",
+    "p1Tag": "Dynamic Governance",
+    "p1Title": "Sociocracy 3.0 Governance",
+    "p1Desc": "Consent-based decision making, transparent role selections, and linked circles without rigid hierarchies.",
+    "p1Cta": "Explore governance",
+    "p2Tag": "Gift Economy",
+    "p2Title": "Triad of Gifts & Needs",
+    "p2Desc": "Beyond transactional market logic: real-time matching of gifts, offerings, and needs to nurture living reciprocity.",
+    "p2Cta": "See gift matching",
+    "p3Tag": "Sovereignty & Memory",
+    "p3Title": "Sovereignty & Living Agreements",
+    "p3Desc": "Collective memory, structured minutes, support noticeboards, and asynchronous coordination paced for human life.",
+    "p3Cta": "See live coordination"
+  },
+  "publicFooter": {
+    "quote": "Alone we can achieve great things, but together we are invincible.",
+    "rights": "Kanarii • Free & Open Source for Community Autonomy"
   }
 }

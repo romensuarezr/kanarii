@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Compass, ShieldCheck, Ticket, Key, Info, MessageSquare, ArrowRight, Loader2, X, CheckCircle2, Plus, Users, Target, Sparkles } from 'lucide-react';
+import { Compass, ShieldCheck, Ticket, Key, Info, MessageSquare, ArrowRight, Loader2, X, CheckCircle2, Plus, Users, Target, Sparkles, LogIn, ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
+import { AuthGateModal } from '../components/AuthGateModal';
+import { LanguageSelector } from '../components/language/LanguageSelector';
 import { 
   Comunidad, 
   getComunidadesPublicas, 
@@ -34,11 +36,23 @@ interface CommunityCaretakersProps {
 }
 
 const CommunityCaretakers: React.FC<CommunityCaretakersProps> = ({ communityId, adminUids }) => {
+  const { appUser } = useAuth();
   const { getMemberName } = useCommunityMembers(communityId);
 
   if (!adminUids || adminUids.length === 0) return null;
 
-  const names = adminUids.map(uid => getMemberName(uid));
+  // Visitantes anónimos ven el conteo de cuidadores sin intentar resolver UIDs privados
+  if (!appUser) {
+    return (
+      <div className="flex items-start gap-1.5 text-xs text-stone-500">
+        <Users size={12} className="mt-0.5 shrink-0 text-[#6B705C]" />
+        <span>{adminUids.length === 1 ? '1 facilitador/a' : `${adminUids.length} facilitadores`}</span>
+      </div>
+    );
+  }
+
+  const names = adminUids.map(uid => getMemberName(uid)).filter(name => name && name !== 'Cargando...');
+  if (names.length === 0) return null;
 
   return (
     <div className="flex items-start gap-1.5 text-xs text-stone-500">
@@ -115,6 +129,7 @@ export function ComunidadesView() {
   const [solicitudMsg, setSolicitudMsg] = useState('');
   const [userRequests, setUserRequests] = useState<Record<string, SolicitudAcceso | null>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -122,21 +137,31 @@ export function ComunidadesView() {
 
   const loadData = async () => {
     setLoading(true);
-    const list = await getComunidadesPublicas();
-    setComunidades(list);
-    
-    if (appUser) {
-      const requests: Record<string, SolicitudAcceso | null> = {};
-      for (const c of list) {
-        const sol = await getUltimaSolicitud(c.slug, appUser.uid);
-        requests[c.slug] = sol;
+    try {
+      const list = await getComunidadesPublicas();
+      setComunidades(list);
+      
+      if (appUser) {
+        const requests: Record<string, SolicitudAcceso | null> = {};
+        for (const c of list) {
+          const sol = await getUltimaSolicitud(c.slug, appUser.uid);
+          requests[c.slug] = sol;
+        }
+        setUserRequests(requests);
       }
-      setUserRequests(requests);
+    } catch (error) {
+      console.warn('No se pudieron cargar comunidades públicas (posible falta de sesión o reglas de seguridad):', error);
+      setComunidades([]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleJoinByCode = async (codeOverride?: string) => {
+    if (!appUser) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     const rawCode = codeOverride || inviteCode;
     // Sanitizado robusto: remover todos los espacios intermedios/extremos y pasar a minúsculas
     const code = rawCode.replace(/\s+/g, '').toLowerCase();
@@ -235,6 +260,28 @@ export function ComunidadesView() {
 
   return (
     <PageContainer>
+      {!appUser && (
+        <div className="bg-[#FAF9F6] border-b border-[#EAE2D6] px-6 py-3 flex items-center justify-between text-xs sm:text-sm">
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-1.5 text-[#6B705C] hover:text-[#4A4E4D] font-medium transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Volver a inicio</span>
+          </button>
+          <div className="flex items-center gap-3">
+            <LanguageSelector />
+            <button
+              onClick={() => setIsLoginModalOpen(true)}
+              className="flex items-center gap-1.5 bg-[#6B705C] hover:bg-[#585C4B] text-white px-3 py-1.5 rounded-xl font-medium transition-colors shadow-2xs"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Iniciar sesión</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       <PageHeader
         title="Explorar Comunidades"
         subtitle="Encuentra tu lugar en la red. Únete a un espacio existente o descubre nuevas formas de colaborar."
@@ -391,6 +438,10 @@ export function ComunidadesView() {
                       ) : comunidad.requiereAprobacion ? (
                         <button 
                           onClick={() => {
+                            if (!appUser) {
+                              setIsLoginModalOpen(true);
+                              return;
+                            }
                             setSelectedComunidad(comunidad);
                             setShowSolicitud(true);
                           }}
@@ -495,6 +546,12 @@ export function ComunidadesView() {
           </div>
         </div>
       </Modal>
+
+      <AuthGateModal
+        isOpen={isLoginModalOpen}
+        mode="login"
+        onClose={() => setIsLoginModalOpen(false)}
+      />
     </PageContainer>
   );
 }

@@ -263,5 +263,41 @@
         "purpose": "Propósito"
       }
     }
+  },
+  "publicNav": {
+    "howItWorks": "Cómo funciona",
+    "communities": "Comunidades",
+    "login": "Entrar",
+    "join": "Unirse"
+  },
+  "publicHero": {
+    "badge": "Plataforma de soberanía y coordinación comunitaria",
+    "title": "Kanarii",
+    "nativeName": "Tawăzawazt",
+    "headline": "Reconectar la tribu, coordinar la vida.",
+    "ctaJoin": "Unirse a la tribu",
+    "ctaTour": "Ver cómo funciona",
+    "ctaLogin": "Ya soy parte (Iniciar sesión)"
+  },
+  "pillars": {
+    "sectionTag": "Pedagogía y Ecosistema",
+    "title": "Tres pilares para la vida comunitaria",
+    "subtitle": "Tecnología diseñada desde la autonomía, el consentimiento y el cuidado mutuo.",
+    "p1Tag": "Gobernanza Dinámica",
+    "p1Title": "Gobernanza Sociocrática S3",
+    "p1Desc": "Toma de decisiones por consentimiento, elecciones transparentes de roles y círculos conectados sin jerarquías rígidas.",
+    "p1Cta": "Explorar gobernanza",
+    "p2Tag": "Economía del Don",
+    "p2Title": "Tríada de Saberes y Necesidades",
+    "p2Desc": "Supera la lógica de mercado: cruza en tiempo real ofrendas, dones y necesidades para tejer reciprocidad viva.",
+    "p2Cta": "Ver cruce de ofrendas",
+    "p3Tag": "Soberanía y Memoria",
+    "p3Title": "Soberanía y Acuerdos Vivos",
+    "p3Desc": "Memoria colectiva, actas transparentes, tablones de apoyo y coordinación asíncrona adaptada al ritmo de las personas.",
+    "p3Cta": "Ver coordinación viva"
+  },
+  "publicFooter": {
+    "quote": "Las personas solas pueden llegar a ser poderosas, pero juntas somos invencibles.",
+    "rights": "Kanarii • Software Libre para la Autonomía Comunitaria"
   }
 }

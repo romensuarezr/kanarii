@@ -106,7 +106,7 @@ function AppContent() {
           <Route path="/proyectos" element={<ProtectedRoute><ProyectosView /></ProtectedRoute>} />
           <Route path="/calendario" element={<ProtectedRoute><CalendarioView /></ProtectedRoute>} />
           <Route path="/tablon" element={<ProtectedRoute><Tablon /></ProtectedRoute>} />
-          <Route path="/comunidades" element={<ProtectedRoute><ComunidadesView /></ProtectedRoute>} />
+          <Route path="/comunidades" element={<ComunidadesView />} />
           <Route path="/nueva-comunidad" element={<ProtectedRoute><RegistroComunidadView /></ProtectedRoute>} />
           <Route path="/admin/solicitudes" element={<ProtectedRoute><AdminSolicitudesView /></ProtectedRoute>} />
           <Route path="/soberania" element={<ProtectedRoute><MarketplaceView /></ProtectedRoute>} />

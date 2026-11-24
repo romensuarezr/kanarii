@@ -1,7 +1,7 @@
 # ADR 005: Política de Visibilidad de Comunidades por Lectura Autenticada
 
-**Estado:** Accepted
-**Fecha:** 2026-05-22
+**Estado:** Superseded by ADR-027
+**Fecha:** 2026-05-22 (Superado el 2026-11-24)
 **Contexto:** Kanarii - Privacidad y Acceso a Datos
 
 ## Contexto
