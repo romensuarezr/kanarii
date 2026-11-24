@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import GovernanceFlowAnimation from '../components/onboarding/GovernanceFlowAnimation';
 import AsynchronousLogicAnimation from '../components/onboarding/AsynchronousLogicAnimation';
@@ -24,14 +25,26 @@ import {
 } from 'lucide-react';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from '../components/language/LanguageSelector';
+
+const MODULE_ALIASES: Record<string, string> = {
+  gobernanza: 'a1',
+  cruce: 'a2',
+  ficha: 'a3',
+  tiempo: 'a4',
+  roles: 'a5',
+  enlaces: 'a6',
+  elecciones: 'a7',
+  estructura: 'a8',
+};
 
 export default function KanariiTourPage() {
   const { t } = useTranslation('welcome');
   const { appUser } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   
   const { 
     view, 
@@ -55,6 +68,16 @@ export default function KanariiTourPage() {
     { id: 'a2', title: t('tour.modules.a2.title'), icon: ArrowRightLeft, color: 'bg-[#5D4037]', desc: t('tour.modules.a2.desc') },
     { id: 'a3', title: t('tour.modules.a3.title'), icon: UserCircle, color: 'bg-[#3E2723]', desc: t('tour.modules.a3.desc') },
   ];
+
+  // Deep-link directo mediante query param: /tour?module=a2 o /tour?module=cruce
+  useEffect(() => {
+    const rawModule = searchParams.get('module');
+    if (!rawModule) return;
+    const resolvedId = MODULE_ALIASES[rawModule.toLowerCase()] || rawModule;
+    if (modules.some(m => m.id === resolvedId)) {
+      viewModule(resolvedId);
+    }
+  }, [searchParams]);
 
   const progressTracker = (
     <div className="flex items-center gap-4 bg-white/80 backdrop-blur-md px-6 py-3 rounded-full border border-[#D2B48C]/20 shadow-lg w-fit mt-8 pb-6">

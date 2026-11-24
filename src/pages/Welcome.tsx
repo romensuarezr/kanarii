@@ -1,7 +1,18 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useEffect, useState } from 'react';
-import { User } from 'lucide-react';
+import { 
+  Sparkles, 
+  ArrowRight, 
+  Vote, 
+  ArrowRightLeft, 
+  ShieldCheck, 
+  Users, 
+  LogIn, 
+  Compass,
+  HeartHandshake,
+  User
+} from 'lucide-react';
 import { AuthGateModal } from '../components/AuthGateModal';
 import WelcomeHeroSections from '../components/onboarding/WelcomeHeroSections';
 import { useComunidad } from '../contexts/ComunidadContext';
@@ -237,7 +248,7 @@ export function Welcome() {
                 referrerPolicy="no-referrer"
               />
             ) : (
-              <User className="w-4 h-4 text-[#6B705C]" />
+              <User className="w-4 h-4 text-forest-deep" />
             )}
             <span>{t('hero.myFicha')}</span>
           </button>
@@ -259,7 +270,7 @@ export function Welcome() {
           onNewProposal={() => navigate('/gobernanza')}
           onViewMinutes={() => navigate('/actas')}
           onGoToBoard={() => navigate('/tablon')}
-          onExplorePedagogy={(id) => navigate('/tour')}
+          onExplorePedagogy={(id) => navigate(id ? `/tour?module=${id}` : '/tour')}
           onGoToProfiles={() => navigate('/comunidades')}
           onGoToCommunities={() => navigate('/comunidades')}
           onSelectMember={(uid) => navigate(`/p/${uid}`)}
@@ -275,53 +286,204 @@ export function Welcome() {
     );
   }
 
+  const pillarsData = [
+    {
+      id: 'a1',
+      tag: t('pillars.p1Tag'),
+      title: t('pillars.p1Title'),
+      desc: t('pillars.p1Desc'),
+      cta: t('pillars.p1Cta'),
+      icon: Vote,
+      colorClass: 'text-forest-deep',
+    },
+    {
+      id: 'a2',
+      tag: t('pillars.p2Tag'),
+      title: t('pillars.p2Title'),
+      desc: t('pillars.p2Desc'),
+      cta: t('pillars.p2Cta'),
+      icon: ArrowRightLeft,
+      colorClass: 'text-brand-terracota',
+    },
+    {
+      id: 'a8',
+      tag: t('pillars.p3Tag'),
+      title: t('pillars.p3Title'),
+      desc: t('pillars.p3Desc'),
+      cta: t('pillars.p3Cta'),
+      icon: ShieldCheck,
+      colorClass: 'text-forest-deep',
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-stone-800 flex flex-col items-center justify-center p-6 font-sans relative">
-      <div className="absolute top-6 right-6">
-        <LanguageSelector />
-      </div>
-      <div className="max-w-xl w-full text-center space-y-8">
-        <div className="flex justify-center mb-4">
-          <img src="/kanarii-logo.svg" alt="Kanarii" style={{ width: '140px', height: '140px', objectFit: 'contain' }} />
+    <div className="min-h-screen bg-bg-page text-text-ink font-sans flex flex-col justify-between selection:bg-brand-terracota/20">
+      {/* 1. Header / Navbar Pública */}
+      <header className="sticky top-0 z-40 bg-bg-page/85 backdrop-blur-md border-b border-border transition-all">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between gap-4">
+          <div 
+            onClick={() => navigate('/')} 
+            className="flex items-center gap-3 cursor-pointer group"
+          >
+            <img 
+              src="/kanarii-logo.svg" 
+              alt="Kanarii" 
+              className="w-10 h-10 object-contain group-hover:scale-105 transition-transform" 
+            />
+            <div className="flex flex-col">
+              <span className="font-serif font-bold text-xl text-text-strong tracking-tight">
+                Kanarii
+              </span>
+              <span className="text-[10px] tracking-widest uppercase text-forest-mid font-medium">
+                Tawăzawazt
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-4">
+            <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-text-ink">
+              <button
+                onClick={() => navigate('/tour')}
+                className="hover:text-forest-deep transition-colors flex items-center gap-1.5"
+              >
+                <Compass className="w-4 h-4 text-forest-mid" />
+                <span>{t('publicNav.howItWorks')}</span>
+              </button>
+              <button
+                onClick={() => navigate('/comunidades')}
+                className="hover:text-forest-deep transition-colors flex items-center gap-1.5"
+              >
+                <Users className="w-4 h-4 text-forest-mid" />
+                <span>{t('publicNav.communities')}</span>
+              </button>
+            </nav>
+
+            <div className="flex items-center gap-2">
+              <LanguageSelector />
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="flex items-center gap-1.5 text-xs sm:text-sm font-medium px-3.5 py-2 rounded-xl border border-border hover:border-border-hover bg-bg-surface text-text-strong transition-all shadow-sm hover:shadow"
+              >
+                <LogIn className="w-3.5 h-3.5 text-forest-deep" />
+                <span>{t('publicNav.login')}</span>
+              </button>
+            </div>
+          </div>
         </div>
-        <h1 className="text-4xl md:text-5xl font-serif text-[#4A4E4D]">Kanarii</h1>
-        <h2 className="text-xl md:text-2xl font-light text-[#8A817C] tracking-wide">Tawăzawazt</h2>
-        
-        <div className="text-lg text-stone-600 leading-relaxed mt-6 space-y-4">
-          <p className="font-medium text-[#6B705C]">
+      </header>
+
+      {/* 2. Hero Section */}
+      <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-12 md:py-20 max-w-5xl mx-auto w-full text-center space-y-10">
+        <div className="inline-flex items-center gap-2 bg-bg-surface border border-border px-4 py-1.5 rounded-full text-xs font-medium text-forest-deep shadow-xs">
+          <HeartHandshake className="w-3.5 h-3.5 text-brand-terracota" />
+          <span>{t('publicHero.badge')}</span>
+        </div>
+
+        <div className="space-y-4 max-w-3xl">
+          <div className="flex justify-center mb-2">
+            <img 
+              src="/kanarii-logo.svg" 
+              alt="Kanarii" 
+              className="w-24 h-24 sm:w-28 sm:h-28 object-contain" 
+            />
+          </div>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-text-strong leading-tight">
+            {t('publicHero.headline')}
+          </h1>
+          <p className="text-lg sm:text-xl font-medium text-forest-deep max-w-2xl mx-auto pt-2">
             {t('heroMessage')}
           </p>
-          <p>
+          <p className="text-base sm:text-lg text-text-ink/80 max-w-2xl mx-auto leading-relaxed">
             {t('heroDescription')}
           </p>
         </div>
 
-        <div className="pt-6 space-y-4 max-w-md mx-auto">
+        {/* CTAs Principales */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md pt-2">
           <button
             onClick={() => navigate('/contexto')}
-            className="w-full bg-[#A5A58D] hover:bg-[#6B705C] text-white transition-colors duration-300 py-4 px-6 rounded-2xl text-lg font-medium shadow-sm hover:shadow-md flex items-center justify-center gap-3"
+            className="w-full sm:w-auto flex-1 bg-forest-deep hover:bg-forest-mid text-white transition-all duration-300 py-3.5 px-6 rounded-2xl text-base font-semibold shadow-sm hover:shadow-md flex items-center justify-center gap-2 group cursor-pointer"
           >
-            {t('cta.joinTribe')}
-          </button>
-          
-          <button
-            onClick={() => setIsLoginModalOpen(true)}
-            className="w-full py-4 px-6 text-[#A5A58D] hover:text-[#6B705C] transition-colors rounded-2xl text-lg font-medium"
-          >
-            {t('cta.alreadyMember')}
+            <span>{t('publicHero.ctaJoin')}</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
 
           <button
             onClick={() => navigate('/tour')}
-            className="w-full py-3 px-6 text-[#8A817C] hover:text-[#6B705C] transition-colors rounded-2xl text-sm font-medium"
+            className="w-full sm:w-auto flex-1 bg-bg-surface hover:bg-white text-text-strong border border-border hover:border-border-hover transition-all duration-300 py-3.5 px-6 rounded-2xl text-base font-semibold shadow-xs hover:shadow-sm flex items-center justify-center gap-2 cursor-pointer"
           >
-            {t('cta.knowPhilosophy')}
+            <Sparkles className="w-4 h-4 text-brand-terracota" />
+            <span>{t('publicHero.ctaTour')}</span>
           </button>
-          <p className="text-[#CB997E] font-medium font-serif text-xl pt-6">
-            {t('heroQuote')}
-          </p>
         </div>
-      </div>
+
+        <button
+          onClick={() => setIsLoginModalOpen(true)}
+          className="text-sm font-medium text-forest-mid hover:text-forest-deep transition-colors cursor-pointer"
+        >
+          {t('publicHero.ctaLogin')}
+        </button>
+
+        {/* 3. Tres Pilares de la Vida Comunitaria */}
+        <section className="w-full pt-16 pb-8 border-t border-border space-y-8 text-left">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-forest-mid">
+              {t('pillars.sectionTag')}
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-text-strong">
+              {t('pillars.title')}
+            </h2>
+            <p className="text-sm sm:text-base text-text-ink/80">
+              {t('pillars.subtitle')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+            {pillarsData.map((p) => {
+              const IconComponent = p.icon;
+              return (
+                <div
+                  key={p.id}
+                  onClick={() => navigate(`/tour?module=${p.id}`)}
+                  className="bg-bg-surface p-6 rounded-3xl border border-border hover:border-border-hover shadow-xs hover:shadow-md transition-all flex flex-col justify-between cursor-pointer group"
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold tracking-wider uppercase text-forest-mid bg-bg-page px-2.5 py-1 rounded-full border border-border">
+                        {p.tag}
+                      </span>
+                      <IconComponent className={`w-5 h-5 ${p.colorClass} group-hover:scale-110 transition-transform`} />
+                    </div>
+                    <h3 className="font-serif font-bold text-lg text-text-strong group-hover:text-forest-deep transition-colors">
+                      {p.title}
+                    </h3>
+                    <p className="text-sm text-text-ink/80 leading-relaxed">
+                      {p.desc}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-border/60 flex items-center gap-1.5 text-xs font-semibold text-forest-deep group-hover:text-forest-mid transition-colors">
+                    <span>{p.cta}</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </main>
+
+      {/* 4. Footer Comunitario */}
+      <footer className="border-t border-border bg-bg-surface py-8 px-4 text-center space-y-3">
+        <p className="font-serif italic text-base sm:text-lg text-brand-terracota max-w-xl mx-auto">
+          "{t('publicFooter.quote')}"
+        </p>
+        <p className="text-xs text-forest-mid font-medium">
+          {t('publicFooter.rights')}
+        </p>
+      </footer>
+
+      {/* Auth Gate Modal */}
       <AuthGateModal
         isOpen={isLoginModalOpen}
         mode="login"

@@ -89,12 +89,22 @@ async function runTests() {
     await testEnv.withSecurityRulesDisabled(async (context) => {
       const db = context.firestore();
       
-      // Creamos comunidadA
+      // Creamos comunidadA (privada / esPublica: false)
       await setDoc(doc(db, "comunidades", "comunidadA"), {
         nombre: "Comunidad A",
         createdBy: "alice",
         adminUids: ["alice"],
-        requiereAprobacion: false
+        requiereAprobacion: false,
+        esPublica: false
+      });
+
+      // Creamos comunidadPublica (esPublica: true)
+      await setDoc(doc(db, "comunidades", "comunidadPublica"), {
+        nombre: "Comunidad Pública",
+        createdBy: "alice",
+        adminUids: ["alice"],
+        requiereAprobacion: false,
+        esPublica: true
       });
 
       // Alice es admin de comunidadA
@@ -151,6 +161,28 @@ async function runTests() {
       })
     );
     console.log("✓ No-miembro (Charlie) no puede editar la comunidad");
+
+    // Test ADR-027: Apertura pública de comunidades
+    // F1: Usuario anónimo puede leer comunidad si esPublica == true
+    await assertSucceeds(
+      getDoc(doc(unauthDb, "comunidades", "comunidadPublica"))
+    );
+    console.log("✓ Usuario no autenticado puede leer comunidad pública (ADR-027)");
+
+    // F2: Usuario anónimo NO puede leer comunidad si esPublica != true
+    await assertFails(
+      getDoc(doc(unauthDb, "comunidades", "comunidadA"))
+    );
+    console.log("✓ Usuario no autenticado NO puede leer comunidad privada (ADR-027)");
+
+    // F3: Usuario anónimo no puede crear, editar o borrar comunidades
+    await assertFails(
+      setDoc(doc(unauthDb, "comunidades", "comunidadAnonima"), {
+        nombre: "Anon",
+        esPublica: true
+      })
+    );
+    console.log("✓ Usuario no autenticado no puede crear comunidades");
 
 
     // ==========================================
