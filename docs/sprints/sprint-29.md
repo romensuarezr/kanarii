@@ -1,7 +1,7 @@
 # Sprint 29 — 2026-11-25 → 2026-12-02
 
 ## Estado
-🟡 En curso
+✅ Hecho
 
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
@@ -9,7 +9,7 @@
 | T-147 | Blindaje y Sanitización de Roles de Membresía en Ficha y Onboarding | S | ✅ Hecho | — | .agents/tasks/_archived/task-147.md |
 | T-148 | Persistencia y Conexión de Convocatorias de Eventos y Residencias Comunitarias | M | ✅ Hecho | T-147 | .agents/tasks/_archived/task-148.md |
 | T-149 | Flujo de Solicitud y Conexión de Sinergias entre Miembros de la Red | M | ✅ Hecho | T-148 | .agents/tasks/_archived/task-149.md |
-| T-150 | Homologación de Herramientas de Flota (Hermes, Orca) y Sync Core Agent OS | S | ⬜ Pendiente | — | .agents/tasks/task-150.md |
+| T-150 | Homologación de Herramientas de Flota (Hermes, Orca) y Sync Core Agent OS | S | ✅ Hecho | — | .agents/tasks/_archived/task-150.md |
 
 ## Régimen Operativo del Sprint
 - **Régimen**: Desatendida
