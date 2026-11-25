@@ -1,5 +1,6 @@
 {
-  "title": "Communities & Nodes",
+  "title": "Node Network & Communities",
+  "subtitle": "Find your place in the network. Discover regenerative farms, coliving residencies, and online nodes across the Canary Islands.",
   "searchPlaceholder": "Search nodes or projects...",
   "type": "Type",
   "location": "Location",
@@ -12,14 +13,14 @@
   "member_other": "members",
   "node": "Community Node",
   "space": "Community Space",
-  "backToCommunities": "Back to Communities",
+  "backToCommunities": "Back to Nodes",
   "backToHome": "Back to Home",
-  "loadingDetails": "Loading space details...",
-  "notFoundTitle": "Space not found",
-  "notFoundDesc": "The community with identifier /c/{{slug}} does not exist or has been removed.",
-  "privateTitle": "Private Community",
+  "loadingDetails": "Loading node details...",
+  "notFoundTitle": "Node not found",
+  "notFoundDesc": "The node with identifier /c/{{slug}} does not exist or has been removed.",
+  "privateTitle": "Private Node",
   "privateDesc": "This space is private. To access its content, view its manifesto, or join, you must receive a direct invitation from a community member.",
-  "exploreOtherCommunities": "Explore other communities",
+  "exploreOtherCommunities": "Explore other nodes",
   "goToWelcome": "Go to welcome page",
   "viewPublicCard": "View Public Profile",
   "settings": "Settings",
@@ -28,24 +29,74 @@
   "tabs": {
     "presentation": "Overview",
     "members": "Members",
-    "activity": "Activity"
+    "activity": "Activities & Tasks"
+  },
+  "filters": {
+    "all": "All nodes",
+    "finca": "🏡 Farms & Ecovillages",
+    "residencia": "🛏️ Residencies & Colivings",
+    "online": "🌐 Online Nodes & Circles",
+    "spacesCount_one": "{{count}} space available",
+    "spacesCount_other": "{{count}} spaces available"
+  },
+  "types": {
+    "finca": "Farm / Ecovillage",
+    "ecoaldea": "Ecovillage",
+    "cohousing": "Cohousing",
+    "residencia": "Residency / Coliving",
+    "nomada": "Nomadic Node",
+    "online": "Online Node",
+    "urbano": "Urban Node",
+    "otro": "Community Node"
+  },
+  "codeSection": {
+    "title": "Do you have an invite code?",
+    "subtitle": "Enter your code to get instant access to a node.",
+    "placeholder": "e.g. wise-mountain-42",
+    "joinBtn": "Join node"
+  },
+  "card": {
+    "viewNode": "View Node Profile",
+    "enterSpace": "🌿 Enter Node Workspace",
+    "memberBadge": "You are a member",
+    "pendingBadge": "Pending request",
+    "requestRequired": "Request required",
+    "openAccess": "Open access",
+    "rejectedTitle": "Request rejected",
+    "emptyTitle": "No nodes available in this category.",
+    "emptyDesc": "Try selecting another filter or use an invitation code."
+  },
+  "facilitators_one": "{{count}} facilitator",
+  "facilitators_other": "{{count}} facilitators",
+  "activitySection": {
+    "recentTasks": "Node Tasks",
+    "noTasks": "No tasks publicly recorded.",
+    "activeProjects": "Active Projects",
+    "noProjects": "No active projects recorded.",
+    "internalNotice": "Sociocratic tasks and work circles are reserved for active members of the node."
+  },
+  "membersSection": {
+    "promptTitle": "Want to connect with the node members?",
+    "promptDesc": "Join this space to access complete profiles, connect directly, and participate in circles."
   },
   "manifesto": "Community Manifesto",
   "noActivity": "No active tasks or projects publicly recorded.",
   "quickContact": "Quick Contact",
   "website": "Website",
   "accessState": {
-    "alreadyMember": "You are already a member of this community!",
-    "goToAdmin": "Go to Admin Panel",
-    "pending": "Your access request is currently under review by guardians.",
+    "alreadyMember": "You are already a member of this node!",
+    "enterSpace": "🌿 Enter Node Workspace",
+    "goToAdmin": "Node Administration",
+    "manageCommunity": "Manage Node",
+    "pending": "Your access request is currently under review by facilitators.",
     "rejected": "Your previous request was rejected. You can try sending a new message.",
-    "requestDirect": "This community is open! You can join directly.",
-    "joinDirect": "Join community",
+    "requestDirect": "This node is open! You can join directly.",
+    "joinDirect": "Join node",
     "requestIntro": "To join this space, send a short message stating your motivation and how you'd like to collaborate.",
     "placeholderMessage": "Hello, I would like to join because...",
     "charCount": "Minimum 20 characters ({{count}}/20)",
     "sendRequest": "Send Access Request",
-    "loginRequired": "You must log in to join or request access to this community.",
+    "loginRequired": "You must log in to join or request access to this node.",
     "loginToJoin": "Log In to Join",
     "registerToJoin": "Create Account to Join"
   }
