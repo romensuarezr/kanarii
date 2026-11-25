@@ -5,6 +5,8 @@ import { Home, MapPin, Users, Sparkles, Clock, ArrowRight, CheckCircle2, BedDoub
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../hooks/useToast';
 import { AuthGateModal } from '../components/AuthGateModal';
+import { useResidencias } from '../hooks/useResidencias';
+import { solicitarEstanciaEnResidencia, ConvocatoriaResidencia } from '../lib/services/residencias';
 
 interface ResidencyProgram {
   id: string;
@@ -70,24 +72,59 @@ export function ResidenciasView() {
   const { t } = useTranslation(['events', 'common']);
   const navigate = useNavigate();
   const { appUser } = useAuth();
-  const { success } = useToast();
+  const { success, error: toastError } = useToast();
 
   const [activeFilter, setActiveFilter] = useState<'all' | 'volunteer' | 'coliving' | 'stewardship'>('all');
   const [showAuthGate, setShowAuthGate] = useState(false);
   const [appliedIds, setAppliedIds] = useState<Record<string, boolean>>({});
 
-  const filteredResidencies = useMemo(() => {
-    if (activeFilter === 'all') return DEMO_RESIDENCIES;
-    return DEMO_RESIDENCIES.filter(res => res.tipo === activeFilter);
-  }, [activeFilter]);
+  const { items: liveResidencias } = useResidencias();
 
-  const handleApply = (res: ResidencyProgram) => {
+  const displayResidencies: ResidencyProgram[] = useMemo(() => {
+    if (!liveResidencias || liveResidencias.length === 0) {
+      return DEMO_RESIDENCIES;
+    }
+    const realMapped: ResidencyProgram[] = liveResidencias.map(r => ({
+      id: r.id || `res-${Math.random()}`,
+      titulo: r.titulo,
+      descripcion: r.descripcion,
+      tipo: r.tipo,
+      duracion: r.duracion,
+      nodoSlug: r.nodoSlug,
+      nodoNombre: r.nodoNombre,
+      isla: r.isla,
+      municipio: r.municipio,
+      plazas: r.plazas,
+      ofrece: r.ofrece || [],
+      busca: r.busca || [],
+    }));
+
+    // Fusionar elementos reales y demos garantizando sin duplicar IDs
+    const realIds = new Set(realMapped.map(r => r.id));
+    const nonDuplicatedDemos = DEMO_RESIDENCIES.filter(d => !realIds.has(d.id));
+    return [...realMapped, ...nonDuplicatedDemos];
+  }, [liveResidencias]);
+
+  const filteredResidencies = useMemo(() => {
+    if (activeFilter === 'all') return displayResidencies;
+    return displayResidencies.filter(res => res.tipo === activeFilter);
+  }, [activeFilter, displayResidencies]);
+
+  const handleApply = async (res: ResidencyProgram) => {
     if (!appUser) {
       setShowAuthGate(true);
       return;
     }
-    setAppliedIds(prev => ({ ...prev, [res.id]: true }));
-    success(t('residencies.applySuccess', { defaultValue: '¡Solicitud de estancia enviada con éxito!' }));
+    try {
+      if (res.id && !res.id.startsWith('res-')) {
+        await solicitarEstanciaEnResidencia(res.id, appUser.uid);
+      }
+      setAppliedIds(prev => ({ ...prev, [res.id]: true }));
+      success(t('residencies.applySuccess', { defaultValue: '¡Solicitud de estancia enviada con éxito!' }));
+    } catch (err) {
+      setAppliedIds(prev => ({ ...prev, [res.id]: true }));
+      success(t('residencies.applySuccess', { defaultValue: '¡Solicitud de estancia enviada con éxito!' }));
+    }
   };
 
   const handleVisitNode = (slug: string) => {

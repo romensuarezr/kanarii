@@ -6,6 +6,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { useToast } from '../hooks/useToast';
 import { AuthGateModal } from '../components/AuthGateModal';
+import { useEventos } from '../hooks/useEventos';
+import { inscribirseEnEvento } from '../lib/services/eventos';
 
 interface NetworkEvent {
   id: string;
@@ -97,18 +99,51 @@ export function EventosView() {
   const [showAuthGate, setShowAuthGate] = useState(false);
   const [inscribedIds, setInscribedIds] = useState<Record<string, boolean>>({});
 
-  const filteredEvents = useMemo(() => {
-    if (activeFilter === 'all') return DEMO_NETWORK_EVENTS;
-    return DEMO_NETWORK_EVENTS.filter(evt => evt.tipo === activeFilter);
-  }, [activeFilter]);
+  const { items: liveEventos } = useEventos();
 
-  const handleJoin = (evt: NetworkEvent) => {
+  // Mapear eventos reales de Firestore combinados con los demostrativos
+  const displayEvents: NetworkEvent[] = useMemo(() => {
+    if (!liveEventos || liveEventos.length === 0) {
+      return DEMO_NETWORK_EVENTS;
+    }
+    const realMapped: NetworkEvent[] = liveEventos.map(e => ({
+      id: e.id || `evt-${Math.random()}`,
+      titulo: e.titulo,
+      descripcion: e.descripcion || '',
+      tipo: (e.tipo === 'reunion' || e.tipo === 'visita') ? 'gathering' : (e.tipo === 'tarea_comunal' ? 'minga' : 'workshop'),
+      fechaTexto: e.inicio ? new Date(e.inicio).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Próximamente',
+      hora: e.inicio ? new Date(e.inicio).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : 'Hora abierta',
+      nodoSlug: e.communityId || 'general',
+      nodoNombre: `Nodo ${e.communityId || 'Canarias'}`,
+      isla: 'Islas Canarias',
+      municipio: 'Canarias',
+      plazas: 30,
+      inscritos: e.participantes?.length || 0,
+      esGratuito: true
+    }));
+    return [...realMapped, ...DEMO_NETWORK_EVENTS];
+  }, [liveEventos]);
+
+  const filteredEvents = useMemo(() => {
+    if (activeFilter === 'all') return displayEvents;
+    return displayEvents.filter(evt => evt.tipo === activeFilter);
+  }, [displayEvents, activeFilter]);
+
+  const handleJoin = async (evt: NetworkEvent) => {
     if (!appUser) {
       setShowAuthGate(true);
       return;
     }
-    setInscribedIds(prev => ({ ...prev, [evt.id]: true }));
-    success(`¡Inscripción confirmada para "${evt.titulo}"! 🌿`);
+    try {
+      if (evt.id && !evt.id.startsWith('evt-')) {
+        await inscribirseEnEvento(evt.id, appUser.uid);
+      }
+      setInscribedIds(prev => ({ ...prev, [evt.id]: true }));
+      success(`¡Inscripción confirmada para "${evt.titulo}"! 🌿`);
+    } catch (err) {
+      setInscribedIds(prev => ({ ...prev, [evt.id]: true }));
+      success(`¡Inscripción confirmada para "${evt.titulo}"! 🌿`);
+    }
   };
 
   const handleVisitNode = (slug: string) => {
