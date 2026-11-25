@@ -8,7 +8,7 @@
 |---|---|---|---|---|---|
 | T-151 | Deduplicación Determinista de Sinergias y Fichas (Fix React Unique Key) | S | 🟢 Completada | — | .agents/tasks/task-151.md |
 | T-152 | Unificación de Marca y Enfoque Territorial Canarias (Logo Oficial y Red Viva Canarias) | S | 🟢 Completada | — | .agents/tasks/task-152.md |
-| T-153 | Navegación Móvil de 2 Capas Coherente con Web (`BottomNav.tsx`) | M | ⬜ Pendiente | T-152 | .agents/tasks/task-153.md |
+| T-153 | Navegación Móvil de 2 Capas Coherente con Web (`BottomNav.tsx`) | M | 🟢 Completada | T-152 | .agents/tasks/task-153.md |
 | T-154 | Rediseño del Dashboard con Sencillez Retribalize (Encontrar Nuevas Conexiones vs Crear Algo) | M | ⬜ Pendiente | T-151 | .agents/tasks/task-154.md |
 
 ## Régimen Operativo del Sprint

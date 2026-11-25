@@ -5,7 +5,7 @@
 - **Título**: Navegación Móvil de 2 Capas Coherente con Web (`BottomNav.tsx`)
 - **Sprint**: Sprint 30
 - **Tipo**: UX / Mobile / Responsive
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-25
 
 ## Diseño macro aprobado en planning
@@ -28,7 +28,7 @@ La navegación web evolucionó a una separación nítida en dos capas (Red viva 
 - `.agents/tasks/task-153.md`
 
 ## Criterios de Aceptación
-- [ ] `BottomNav` refleja de forma interactiva la Capa 1 o Capa 2 según el espacio activo.
-- [ ] Botón de retorno rápido a la Red Canarias visible desde el espacio de cualquier nodo en móvil.
-- [ ] Enlaces directos a Nodos, Eventos y Residencias disponibles en la barra móvil.
-- [ ] `npm run lint` y `npm run build` pasan limpios sin errores.
+- [x] `BottomNav` refleja de forma interactiva la Capa 1 o Capa 2 según el espacio activo.
+- [x] Botón de retorno rápido a la Red Canarias visible desde el espacio de cualquier nodo en móvil.
+- [x] Enlaces directos a Nodos, Eventos y Residencias disponibles en la barra móvil.
+- [x] `npm run lint` y `npm run build` pasan limpios sin errores.
