@@ -23,6 +23,24 @@ import { CommunityMember, FeedbackSalida } from './_types';
 import { _writeFichaRaw } from './fichas';
 import { auth } from '../firebase';
 
+export type CanonicalMemberRole = 'admin' | 'miembro' | 'visitante';
+
+/**
+ * Normaliza cualquier rol de presentación o entrada legacy al enum canónico de autorización RBAC
+ * reconocido por firestore.rules ('admin' | 'miembro' | 'visitante').
+ */
+export function normalizeMemberRole(rol?: string | null): CanonicalMemberRole {
+  if (!rol) return 'miembro';
+  const clean = rol.trim().toLowerCase();
+  if (clean === 'admin' || clean === 'propietario' || clean === 'owner' || clean === 'fundador') {
+    return 'admin';
+  }
+  if (clean === 'visitante' || clean === 'visitor') {
+    return 'visitante';
+  }
+  return 'miembro';
+}
+
 export async function getMemberInfo(uid: string, communityId?: string): Promise<any | null> {
   try {
     let snap = null;
@@ -198,7 +216,7 @@ export async function unirseComunidadDirecto(communityId: string, uid: string): 
         antiguedad_anos: base.antiguedad_anos || 0,
         rol_comunidad: base.rol_comunidad || '',
         rolComunitario: base.rol_comunidad || base.rol || 'miembro',
-        rol: base.rol || 'miembro',
+        rol: normalizeMemberRole(base.rol),
         estado: 'activo',
         photoURL: userData.photoURL || '',
         displayName: resolvedDisplayName,

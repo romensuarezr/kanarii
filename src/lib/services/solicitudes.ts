@@ -15,6 +15,7 @@ import {
 } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType, DEFAULT_LIST_LIMIT } from './_core';
 import { SolicitudAcceso } from './_types';
+import { normalizeMemberRole } from './members';
 
 export async function solicitarUnirse(communityId: string, uid: string, mensaje: string): Promise<void> {
   try {
@@ -153,7 +154,7 @@ export async function resolverSolicitud(
           antiguedad_anos: base.antiguedad_anos || 0,
           rol_comunidad: base.rol_comunidad || '',
           rolComunitario: base.rol_comunidad || base.rol || 'miembro',
-          rol: base.rol || 'miembro',
+          rol: normalizeMemberRole(base.rol),
           estado: 'activo',
           photoURL: userData.photoURL || '',
           displayName: userData.displayName || resolvedName || '',

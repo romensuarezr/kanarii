@@ -5,8 +5,9 @@
 - **Título**: Blindaje y Sanitización de Roles de Membresía en Ficha y Onboarding
 - **Sprint**: Sprint 29
 - **Tipo**: Bugfix / Seguridad / Backend
-- **Estado**: En curso
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-25
+- **Fecha fin**: 2026-11-25
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 29 / 2026-11-25
@@ -31,7 +32,7 @@ Al completar el onboarding o editar la ficha, valores de presentación (`propiet
 - `.agents/tasks/task-147.md`
 
 ## Criterios de Aceptación
-- [ ] `normalizeMemberRole()` implementado y testeado para mapear strings arbitrarios a `'admin' | 'miembro' | 'visitante'`.
-- [ ] `saveFicha()` en `fichas.ts` nunca sobrescribe un rol de administrador existente ni escribe roles inválidos en `community_members`.
-- [ ] Script `scripts/fix-member-roles.ts` creado para inspeccionar y corregir documentos con roles no canónicos en Firestore.
-- [ ] `npm run lint` y `npm run build` pasan limpios sin errores.
+- [x] `normalizeMemberRole()` implementado y testeado para mapear strings arbitrarios a `'admin' | 'miembro' | 'visitante'`.
+- [x] `saveFicha()` en `fichas.ts` nunca sobrescribe un rol de administrador existente ni escribe roles inválidos en `community_members`.
+- [x] Script `scripts/fix-member-roles.ts` creado para inspeccionar y corregir documentos con roles no canónicos en Firestore.
+- [x] `npm run lint` y `npm run build` pasan limpios sin errores.
