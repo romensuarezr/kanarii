@@ -1,0 +1,38 @@
+{
+  "events": {
+    "headerTitle": "Eventos & Encuentros de la Red",
+    "headerSubtitle": "Talleres, mingas, celebraciones y asambleas abiertas para tejer comunidad entre los nodos de las Islas Canarias.",
+    "filterAll": "Todos los eventos",
+    "filterWorkshop": "Talleres & Aprendizaje",
+    "filterMinga": "Mingas & Siembra",
+    "filterGathering": "Celebraciones & Festivales",
+    "filterOnline": "Círculos Online",
+    "joinEvent": "Inscribirme / Asistir",
+    "eventDetails": "Ver detalles",
+    "freeAccess": "Acceso libre y comunitario",
+    "hostedBy": "Convocado por el nodo",
+    "location": "Ubicación",
+    "spots": "plazas",
+    "noEvents": "No hay eventos próximos en esta categoría",
+    "createEvent": "Proponer evento",
+    "networkEvent": "Encuentro de Red"
+  },
+  "residencies": {
+    "headerTitle": "Residencias & Estancias en Nodos",
+    "headerSubtitle": "Inmersiones comunitarias, coliving rural, voluntariado agrícola e intercambio de dones en la red viva de Canarias.",
+    "filterAll": "Todas las estancias",
+    "filterVolunteer": "Voluntariado & Permacultura",
+    "filterColiving": "Coliving & Trabajo Remoto",
+    "filterStewardship": "Custodia & Bio-construcción",
+    "applyResidency": "Solicitar Estancia",
+    "duration": "Duración",
+    "spotsAvailable": "plazas disponibles",
+    "weOffer": "El nodo ofrece",
+    "weSeek": "Aporte esperado",
+    "noResidencies": "No hay convocatorias abiertas en esta categoría",
+    "flexibleDates": "Fechas flexibles",
+    "exchange": "Intercambio de dones y reciprocidad",
+    "applySuccess": "¡Solicitud de estancia enviada con éxito!",
+    "applyNote": "Tu pasaporte comunitario será compartido con los guardianes del nodo para valorar la sinergia."
+  }
+}

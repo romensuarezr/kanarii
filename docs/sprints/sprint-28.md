@@ -1,7 +1,7 @@
 # Sprint 28 — 2026-11-24 → 2026-11-30
 
 ## Estado
-🟡 En curso
+🟢 Completado (6/6 tareas)
 
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
@@ -11,7 +11,7 @@
 | T-143 | Tarjetas de Miembros Estilo Retribalize con Acciones Rápidas y Conexión | M | ✅ Completada | T-141 | .agents/tasks/_archived/task-143.md |
 | T-144 | Dashboard de Encuentro (/dashboard) y Tarjeta de Sinergia Determinista (Isla + Kin/HD + Tríada) | L | ✅ Completada | T-142, T-143 | .agents/tasks/_archived/task-144.md |
 | T-145 | Directorio de Nodos (Comunidades, Residencias, Nodos Online) y Ficha con Pestañas e i18n | M | ✅ Completada | T-142 | .agents/tasks/_archived/task-145.md |
-| T-146 | Navegación de 2 Capas en Sidebar (Red Global vs. Espacio de Nodo con 'Volver a la Red') | M | ⏳ Pendiente | T-144, T-145 | .agents/tasks/task-146.md |
+| T-146 | Navegación de 2 Capas en Sidebar (Red Global vs. Espacio de Nodo con 'Volver a la Red') | M | ✅ Completada | T-144, T-145 | .agents/tasks/_archived/task-146.md |
 
 ## Régimen Operativo del Sprint
 - **Régimen**: Desatendida (A) — ramas aisladas `feat/SPRINT28-<tarea>`, verificación con `npm run lint` y `npm run build` antes de merge a `staging` con `--no-ff`. Al completar el conjunto de tareas de UI/UX del sprint, merge consolidado `staging` → `main`.

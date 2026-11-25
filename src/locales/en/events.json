@@ -1,0 +1,38 @@
+{
+  "events": {
+    "headerTitle": "Network Events & Gatherings",
+    "headerSubtitle": "Workshops, mingas, celebrations and open assemblies to weave community across Canary Islands nodes.",
+    "filterAll": "All events",
+    "filterWorkshop": "Workshops & Learning",
+    "filterMinga": "Mingas & Farming",
+    "filterGathering": "Celebrations & Festivals",
+    "filterOnline": "Online Circles",
+    "joinEvent": "Register / Attend",
+    "eventDetails": "View details",
+    "freeAccess": "Free community access",
+    "hostedBy": "Hosted by node",
+    "location": "Location",
+    "spots": "spots",
+    "noEvents": "No upcoming events in this category",
+    "createEvent": "Propose event",
+    "networkEvent": "Network Gathering"
+  },
+  "residencies": {
+    "headerTitle": "Node Residencies & Stays",
+    "headerSubtitle": "Community immersions, rural coliving, farming volunteering and gift exchange across the Canary network.",
+    "filterAll": "All residencies",
+    "filterVolunteer": "Volunteering & Permaculture",
+    "filterColiving": "Coliving & Remote Work",
+    "filterStewardship": "Stewardship & Bio-construction",
+    "applyResidency": "Apply for Stay",
+    "duration": "Duration",
+    "spotsAvailable": "spots available",
+    "weOffer": "The node offers",
+    "weSeek": "Expected gift / contribution",
+    "noResidencies": "No open residency calls in this category",
+    "flexibleDates": "Flexible dates",
+    "exchange": "Gift exchange and reciprocity",
+    "applySuccess": "Stay application sent successfully!",
+    "applyNote": "Your community passport will be shared with the node caretakers to evaluate synergy."
+  }
+}

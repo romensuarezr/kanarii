@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MoreHorizontal, Compass, ShieldCheck, Scale, ChevronDown, MapPin } from 'lucide-react';
+import { MoreHorizontal, Compass, ShieldCheck, Scale, ChevronDown, MapPin, Calendar, Tent, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { navigationConfig } from '../config/navigation';
@@ -14,7 +14,7 @@ export function BottomNav() {
   const navigate = useNavigate();
   const location = useLocation();
   const { appUser, logout } = useAuth();
-  const { comunidad, comunidades, setCommunityId } = useComunidad();
+  const { comunidad, comunidades, setCommunityId, currentCommunityId, exitCommunitySpace } = useComunidad();
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const { acuerdosPendingCount, acuerdosSolicitanteCount } = useAcuerdosBadge();
 
@@ -41,12 +41,25 @@ export function BottomNav() {
   // Items extra que no están en el config (Explorar y Solicitudes)
   const extraNavItems = [];
 
+  extraNavItems.push({
+    label: 'Eventos',
+    labelKey: 'nav.events',
+    href: '/eventos',
+    icon: Calendar,
+  });
+
+  extraNavItems.push({
+    label: 'Residencias',
+    labelKey: 'nav.residencies',
+    href: '/residencias',
+    icon: Tent,
+  });
+
   if (hasCommunities) {
     extraNavItems.push({
       label: 'Explorar comunidades',
       href: '/comunidades',
       icon: Compass,
-      color: '#CB997E'
     });
   }
 
@@ -85,7 +98,7 @@ export function BottomNav() {
   return (
     <>
       <div 
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FDFBF7] border-t border-[#EAE2D6] flex items-center justify-around"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-bg-surface border-t border-border flex items-center justify-around"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)', minHeight: '56px' }}
       >
         {mainNavItems.map((item, idx) => {
@@ -99,17 +112,17 @@ export function BottomNav() {
               key={idx}
               onClick={() => handleNav(item)}
               className={`flex flex-col items-center justify-center flex-1 h-full min-h-[56px] space-y-1 relative transition-colors ${
-                isReallyActive ? 'text-[#6B705C]' : 'text-stone-400'
+                isReallyActive ? 'text-forest-deep font-bold' : 'text-stone-400'
               }`}
             >
               <div className="relative">
                 <item.icon className="w-5 h-5" />
                 {item.label === 'Marketplace' && (acuerdosPendingCount + acuerdosSolicitanteCount) > 0 && !isReallyActive && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-terracotta rounded-full" />
                 )}
               </div>
               <span className="text-[10px] uppercase tracking-wide">{navLabel}</span>
-              {isReallyActive && <div className="w-1 h-1 rounded-full bg-[#6B705C] absolute bottom-1" />}
+              {isReallyActive && <div className="w-1 h-1 rounded-full bg-forest-deep absolute bottom-1" />}
             </button>
           );
         })}
@@ -117,13 +130,13 @@ export function BottomNav() {
         <button
           onClick={() => setIsMoreMenuOpen(true)}
           className={`flex flex-col items-center justify-center flex-1 h-full min-h-[56px] space-y-1 relative transition-colors ${
-            isMoreMenuOpen ? 'text-[#6B705C]' : 'text-stone-400'
+            isMoreMenuOpen ? 'text-forest-deep font-bold' : 'text-stone-400'
           }`}
         >
           <div className="relative">
             <MoreHorizontal className="w-5 h-5" />
             {showMoreDot && (
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-terracotta rounded-full" />
             )}
           </div>
           <span className="text-[10px] uppercase tracking-wide">{t('actions.more' as any) || 'Más'}</span>
@@ -136,14 +149,29 @@ export function BottomNav() {
             className="absolute inset-0 bg-stone-900/40 backdrop-blur-sm"
             onClick={() => setIsMoreMenuOpen(false)}
           />
-          <div className="relative bg-[#FDFBF7] rounded-t-3xl pt-2 pb-6 px-4 shadow-xl z-10" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
+          <div className="relative bg-bg-surface rounded-t-3xl pt-2 pb-6 px-4 shadow-xl z-10 border-t border-border" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
             <div className="w-8 h-1 bg-stone-300 rounded-full mx-auto mb-6" />
             
+            {/* Si está en el espacio del nodo: botón Volver a la Red */}
+            {currentCommunityId && (
+              <button
+                onClick={() => {
+                  exitCommunitySpace();
+                  setIsMoreMenuOpen(false);
+                  navigate('/dashboard');
+                }}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-terracotta/10 text-terracotta text-xs font-bold border border-terracotta/20 mb-3 shadow-2xs"
+              >
+                <ArrowLeft size={14} />
+                <span>{t('nav.backToNetwork', { defaultValue: '← Volver a la Red' })}</span>
+              </button>
+            )}
+
             {/* Selector de Comunidad en Móvil */}
             {hasCommunities && (
-              <div className="bg-[#F9F7F1] border border-[#EAE2D6] rounded-2xl p-3 shadow-sm mb-4">
+              <div className="bg-sand-light/50 border border-border rounded-2xl p-3 shadow-2xs mb-4">
                 <p className="text-[9px] font-bold text-stone-400 uppercase tracking-widest mb-1 flex items-center gap-1">
-                  <MapPin size={10} className="text-[#CB997E]" />
+                  <MapPin size={10} className="text-terracotta" />
                   {t('nav.activeSpace')}
                 </p>
                 {userComunidades.length > 1 ? (
@@ -154,16 +182,16 @@ export function BottomNav() {
                         setCommunityId(e.target.value);
                         setIsMoreMenuOpen(false);
                       }}
-                      className="appearance-none bg-transparent border-none p-0 pr-6 text-xs text-[#4A4E4D] font-bold focus:ring-0 cursor-pointer w-full truncate"
+                      className="appearance-none bg-transparent border-none p-0 pr-6 text-xs text-forest-deep font-bold focus:ring-0 cursor-pointer w-full truncate"
                     >
                       {userComunidades.map(c => (
                         <option key={c.id} value={c.id}>{c.nombre}</option>
                       ))}
                     </select>
-                    <ChevronDown size={12} className="absolute right-0 top-1/2 -translate-y-1/2 text-[#A5A58D] pointer-events-none group-hover/sel:text-[#6B705C] transition-colors" />
+                    <ChevronDown size={12} className="absolute right-0 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none group-hover/sel:text-stone-600 transition-colors" />
                   </div>
                 ) : (
-                  <div className="text-xs font-bold text-[#4A4E4D] truncate flex items-center">
+                  <div className="text-xs font-bold text-forest-deep truncate flex items-center">
                     {comunidad?.nombre || 'General'}
                   </div>
                 )}
@@ -193,12 +221,12 @@ export function BottomNav() {
                         navigate(item.href);
                       }
                     }}
-                    className="w-full text-left px-5 py-4 rounded-2xl font-medium text-[#4A4E4D] hover:bg-[#EAE2D6] transition-colors flex items-center gap-3"
+                    className="w-full text-left px-5 py-4 rounded-2xl font-medium text-forest-deep hover:bg-sand-light transition-colors flex items-center gap-3"
                   >
                     <div className="relative">
-                      <item.icon className={`w-5 h-5 ${(item as any).color ? '' : 'text-stone-400'}`} style={{ color: (item as any).color }} />
+                      <item.icon className="w-5 h-5 text-stone-400" />
                       {item.label === 'Marketplace' && (acuerdosPendingCount + acuerdosSolicitanteCount) > 0 && location.pathname !== '/soberania' && (
-                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
+                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-terracotta rounded-full" />
                       )}
                     </div>
                     {navLabel}

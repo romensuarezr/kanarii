@@ -24,7 +24,17 @@
     "admin": "Panel Admin",
     "requests": "Solicitudes",
     "activeSpace": "Espacio Activo",
-    "exploreCommunities": "Explorar comunidades"
+    "exploreCommunities": "Explorar comunidades",
+    "globalNetwork": "Red Global",
+    "backToNetwork": "Volver a la Red",
+    "nodeSpace": "Espacio del Nodo",
+    "synergies": "Sinergias & Encuentro",
+    "nodes": "Directorio de Nodos",
+    "events": "Eventos & Encuentros",
+    "residencies": "Residencias & Estancias",
+    "myPassport": "Mi Pasaporte",
+    "nodeTools": "Herramientas del Nodo",
+    "allNodes": "Todos los Nodos"
   },
   "language": {
     "selector": "Idioma",
