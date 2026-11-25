@@ -6,7 +6,7 @@
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
 |---|---|---|---|---|---|
-| T-147 | Blindaje y Sanitización de Roles de Membresía en Ficha y Onboarding | S | ⬜ Pendiente | — | — |
+| T-147 | Blindaje y Sanitización de Roles de Membresía en Ficha y Onboarding | S | ✅ Hecho | — | .agents/tasks/_archived/task-147.md |
 | T-148 | Persistencia y Conexión de Convocatorias de Eventos y Residencias Comunitarias | M | ⬜ Pendiente | T-147 | — |
 | T-149 | Flujo de Solicitud y Conexión de Sinergias entre Miembros de la Red | M | ⬜ Pendiente | T-148 | — |
 | T-150 | Homologación de Herramientas de Flota (Hermes, Orca) y Sync Core Agent OS | S | ⬜ Pendiente | — | — |
