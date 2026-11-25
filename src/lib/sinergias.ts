@@ -327,6 +327,7 @@ export function calcularSinergia(
 
 /**
  * Calcula y ordena las sinergias de una lista de fichas frente al usuario logueado.
+ * Garantiza deduplicación determinista por userId para evitar colisiones de keys en UI.
  */
 export function calcularSinergiasMultiples(
   userFicha: Ficha | null | undefined,
@@ -334,12 +335,18 @@ export function calcularSinergiasMultiples(
   currentUserId?: string
 ): SynergyMatch[] {
   const matches: SynergyMatch[] = [];
+  const seenUserIds = new Set<string>();
 
   for (const ficha of allFichas) {
     const fUserId = ficha.userId || ficha.id;
+    // Omitir fichas sin ID identificable
+    if (!fUserId) continue;
     // Omitir al propio usuario
     if (currentUserId && fUserId === currentUserId) continue;
+    // Deduplicación determinista: procesar solo una vez cada usuario
+    if (seenUserIds.has(fUserId)) continue;
 
+    seenUserIds.add(fUserId);
     matches.push(calcularSinergia(userFicha, ficha));
   }
 

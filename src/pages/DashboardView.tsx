@@ -465,9 +465,9 @@ export function DashboardView() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMatches.map((match) => (
+            {filteredMatches.map((match, idx) => (
               <SynergyCard
-                key={match.targetUserId}
+                key={match.targetUserId || `match-${idx}`}
                 match={match}
                 onOpenPassport={handleOpenPassport}
               />
