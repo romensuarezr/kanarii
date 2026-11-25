@@ -5,7 +5,7 @@
 - **Título**: Deduplicación Determinista de Sinergias y Fichas (Fix React Unique Key)
 - **Sprint**: Sprint 30
 - **Tipo**: Bugfix / DX / Robustez
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-25
 
 ## Diseño macro aprobado en planning
@@ -28,7 +28,7 @@ La consola del navegador reporta warnings de React (`Encountered two children wi
 - `.agents/tasks/task-151.md`
 
 ## Criterios de Aceptación
-- [ ] `calcularSinergiasMultiples` deduplica de forma estricta por `userId`.
-- [ ] Claves únicas garantizadas en las tarjetas de sinergia y miembros.
-- [ ] Cero warnings de React de claves duplicadas en consola.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] `calcularSinergiasMultiples` deduplica de forma estricta por `userId`.
+- [x] Claves únicas garantizadas en las tarjetas de sinergia y miembros.
+- [x] Cero warnings de React de claves duplicadas en consola.
+- [x] `npm run lint` y `npm run build` pasan sin errores.
