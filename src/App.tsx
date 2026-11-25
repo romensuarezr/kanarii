@@ -26,6 +26,8 @@ const PasaporteUniversalView = React.lazy(() => import('./pages/PasaporteUnivers
 const KanariiTourPage = React.lazy(() => import('./pages/KanariiTourPage'));
 const AuthCallbackPage = React.lazy(() => import('./pages/AuthCallbackPage').then(m => ({ default: m.AuthCallbackPage })));
 const DashboardView = React.lazy(() => import('./pages/DashboardView'));
+const EventosView = React.lazy(() => import('./pages/EventosView'));
+const ResidenciasView = React.lazy(() => import('./pages/ResidenciasView'));
 import { Activity, ArrowRight } from 'lucide-react';
 import { ToastProvider, useToast } from './components/Toaster';
 import { BottomNav } from './components/BottomNav';
@@ -61,7 +63,7 @@ function AppContent() {
   const showNav = appUser !== null && !hideNavRoutes.includes(location.pathname);
 
   return (
-    <div className="flex min-h-screen bg-[#F9F7F1]">
+    <div className="flex min-h-screen bg-bg-page">
       {showNav && <Sidebar />}
       
       <main className="flex-1 min-w-0 flex flex-col">
@@ -92,6 +94,8 @@ function AppContent() {
           <Route path="/calendario" element={<ProtectedRoute><CalendarioView /></ProtectedRoute>} />
           <Route path="/tablon" element={<ProtectedRoute><Tablon /></ProtectedRoute>} />
           <Route path="/comunidades" element={<ComunidadesView />} />
+          <Route path="/eventos" element={<EventosView />} />
+          <Route path="/residencias" element={<ResidenciasView />} />
           <Route path="/nueva-comunidad" element={<ProtectedRoute><RegistroComunidadView /></ProtectedRoute>} />
           <Route path="/admin/solicitudes" element={<ProtectedRoute><AdminSolicitudesView /></ProtectedRoute>} />
           <Route path="/soberania" element={<ProtectedRoute><MarketplaceView /></ProtectedRoute>} />

@@ -16,6 +16,8 @@ import esAstrology from '../locales/es/astrology.json';
 import enAstrology from '../locales/en/astrology.json';
 import esDashboard from '../locales/es/dashboard.json';
 import enDashboard from '../locales/en/dashboard.json';
+import esEvents from '../locales/es/events.json';
+import enEvents from '../locales/en/events.json';
 
 i18n
   .use(LanguageDetector)
@@ -30,6 +32,7 @@ i18n
         passport: esPassport,
         astrology: esAstrology,
         dashboard: esDashboard,
+        events: esEvents,
       },
       en: {
         common: enCommon,
@@ -39,12 +42,13 @@ i18n
         passport: enPassport,
         astrology: enAstrology,
         dashboard: enDashboard,
+        events: enEvents,
       },
     },
     supportedLngs: ['es', 'en'],
     fallbackLng: 'es',
     debug: import.meta.env.DEV,
-    ns: ['common', 'welcome', 'auth', 'communities', 'passport', 'astrology', 'dashboard'],
+    ns: ['common', 'welcome', 'auth', 'communities', 'passport', 'astrology', 'dashboard', 'events'],
     defaultNS: 'common',
     detection: {
       order: ['localStorage', 'navigator'],

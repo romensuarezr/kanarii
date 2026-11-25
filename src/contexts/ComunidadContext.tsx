@@ -6,7 +6,8 @@ interface ComunidadContextType {
   currentCommunityId: string | undefined;
   comunidad: Comunidad | null;
   comunidades: Comunidad[];
-  setCommunityId: (id: string) => void;
+  setCommunityId: (id: string | null | undefined) => void;
+  exitCommunitySpace: () => void;
   loading: boolean;
   loadingCommunity: boolean;
 }
@@ -58,9 +59,21 @@ export const ComunidadProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const prevCommunityIdsRef = useRef<string[]>([]);
 
   // Guardar ID en storage y actualizar estado
-  const setCommunityId = (id: string) => {
-    setCurrentCommunityId(id);
-    safeStorageSet('session', 'kanarii_current_community_id', id);
+  const setCommunityId = (id: string | null | undefined) => {
+    if (!id || id === 'none') {
+      setCurrentCommunityId(undefined);
+      setComunidad(null);
+      safeStorageSet('session', 'kanarii_current_community_id', 'none');
+    } else {
+      setCurrentCommunityId(id);
+      safeStorageSet('session', 'kanarii_current_community_id', id);
+    }
+  };
+
+  const exitCommunitySpace = () => {
+    setCurrentCommunityId(undefined);
+    setComunidad(null);
+    safeStorageSet('session', 'kanarii_current_community_id', 'none');
   };
 
   // Inicializar seed una sola vez cuando esté autenticado si no existe la comunidad
@@ -126,27 +139,40 @@ export const ComunidadProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
     }
 
+    // Si el usuario eligió estar en la Red Global, respetar esa decisión
+    const storedId = safeStorageGet('session', 'kanarii_current_community_id');
+    if (storedId === 'none') {
+      if (currentCommunityId !== undefined) {
+        setCurrentCommunityId(undefined);
+        setComunidad(null);
+      }
+      prevCommunityIdsRef.current = ids;
+      return;
+    }
+
     // Determinar la comunidad a establecer
     let targetId = currentCommunityId;
 
     if (!targetId) {
       // Intentar leer de storage
-      const storedId = safeStorageGet('session', 'kanarii_current_community_id') || safeStorageGet('local', 'kanarii_current_community_id');
-      if (storedId && ids.includes(storedId)) {
-        targetId = storedId;
-      } else {
-        targetId = ids[0];
+      const fallbackStored = storedId || safeStorageGet('local', 'kanarii_current_community_id');
+      if (fallbackStored && fallbackStored !== 'none' && ids.includes(fallbackStored)) {
+        targetId = fallbackStored;
       }
     } else if (!ids.includes(targetId)) {
       // Validar si el actual es admin de la comunidad activa aunque no esté en sus ids
       const isDirectAdmin = comunidad?.adminUids && Array.isArray(comunidad.adminUids) && comunidad.adminUids.includes(appUser.uid);
       if (!isDirectAdmin) {
-        targetId = ids[0];
+        targetId = undefined;
       }
     }
 
     if (targetId !== currentCommunityId) {
-      setCommunityId(targetId!);
+      if (targetId) {
+        setCommunityId(targetId);
+      } else {
+        exitCommunitySpace();
+      }
     }
 
     prevCommunityIdsRef.current = ids;
@@ -182,6 +208,7 @@ export const ComunidadProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       comunidad, 
       comunidades, 
       setCommunityId,
+      exitCommunitySpace,
       loading,
       loadingCommunity
     }}>

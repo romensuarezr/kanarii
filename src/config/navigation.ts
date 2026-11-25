@@ -89,6 +89,10 @@ export interface AppRouteConfig {
 
 export const appRouteConfigs: AppRouteConfig[] = [
   { path: '/', label: 'Inicio', purpose: 'other' },
+  { path: '/dashboard', label: 'Sinergias', purpose: 'other' },
+  { path: '/comunidades', label: 'Nodos', purpose: 'other' },
+  { path: '/eventos', label: 'Eventos', purpose: 'other' },
+  { path: '/residencias', label: 'Residencias', purpose: 'other' },
   { path: '/perfil', label: 'Perfil', purpose: 'profile', requireAuth: true },
   { path: '/ficha', label: 'Ficha', purpose: 'ficha', requireAuth: true },
   { path: '/p/:uid', label: 'Pasaporte', purpose: 'other' }
