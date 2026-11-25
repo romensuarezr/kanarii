@@ -3,7 +3,14 @@
     "title": "Encuentro y Sinergias",
     "subtitle": "Conexiones deterministas calculadas según tu isla, resonancia energética (Kin Maya y Diseño Humano) y complementariedad de dones.",
     "todayKin": "Kin del día",
-    "greeting": "Hola, {{name}}"
+    "greeting": "Hola, {{name}}",
+    "findConnectionsBtn": "Encontrar nuevas conexiones",
+    "createNewBtn": "Crear algo",
+    "manageEntities": "Explorar en Canarias",
+    "entityAll": "Sinergias",
+    "entityNodes": "Nodos",
+    "entityEvents": "Eventos",
+    "entityResidencies": "Residencias"
   },
   "filters": {
     "all": "Todas las sinergias",
@@ -48,5 +55,21 @@
     "sentSubtitle": "Le hemos enviado una notificación a {{name}} para sincronizar vuestras intenciones comunitarias.",
     "successToast": "¡Solicitud de conexión enviada!",
     "errorToast": "Error al enviar la solicitud de conexión."
+  },
+  "createNew": {
+    "badge": "Sembrar en Canarias",
+    "title": "Crear algo nuevo",
+    "subtitle": "Selecciona cómo deseas convocar o activar a la red comunitaria.",
+    "tribeTitle": "Iniciar un Nodo o Tribu",
+    "tribeDesc": "Crea una nueva comunidad, finca, ecoaldea o colectivo en el archipiélago canario.",
+    "eventTitle": "Organizar un Encuentro",
+    "eventDesc": "Convoca una asamblea, charla, taller o reunión presencial u online.",
+    "residencyTitle": "Publicar una Residencia o Estancia",
+    "residencyDesc": "Ofrece espacio de acogida, voluntariado o convivencia en tu finca o espacio.",
+    "draftsTitle": "Tus borradores guardados",
+    "hasCommunityDraft": "Tienes un borrador de Nodo pendiente.",
+    "hasFichaDraft": "Tienes una ficha comunitaria sin completar.",
+    "resumeDraft": "Continuar",
+    "draftsDesc": "Nada guardado todavía. Inicia una propuesta y si cierras antes de terminar, tu trabajo quedará seguro aquí."
   }
 }

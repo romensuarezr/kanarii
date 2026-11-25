@@ -7,10 +7,11 @@ import { calcularSinergiasMultiples, detectIsland, SynergyMatch } from '../lib/s
 import { SynergyCard } from '../components/sinergias/SynergyCard';
 import { PasaporteModal } from '../components/perfil/PasaporteModal';
 import { AuthGateModal } from '../components/AuthGateModal';
-import { Sparkles, MapPin, Compass, ArrowRight, Users, Loader2, LogIn } from 'lucide-react';
+import { Sparkles, MapPin, Compass, ArrowRight, Users, Loader2, LogIn, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Ficha } from '../lib/services/_types';
+import { CreateNewModal } from '../components/dashboard/CreateNewModal';
 
 type FilterType = 'all' | 'sameIsland' | 'energetic' | 'triad';
 
@@ -191,6 +192,7 @@ export function DashboardView() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [isPassportOpen, setIsPassportOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isCreateNewOpen, setIsCreateNewOpen] = useState(false);
 
   const todayKin = useMemo(() => kinDeHoy(), []);
 
@@ -337,6 +339,68 @@ export function DashboardView() {
             </div>
           </div>
 
+          {/* Dos Acciones Claras de Arranque Estilo Retribalize */}
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                const el = document.getElementById('sinergias-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-5 py-3 rounded-2xl bg-forest-deep text-white text-xs sm:text-sm font-bold hover:bg-forest-deep/90 transition-all shadow-xs flex items-center gap-2 cursor-pointer group"
+            >
+              <Sparkles size={16} className="text-sand-light group-hover:rotate-12 transition-transform" />
+              <span>{t('header.findConnectionsBtn')}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsCreateNewOpen(true)}
+              className="px-5 py-3 rounded-2xl bg-sand-light border border-border text-forest-deep text-xs sm:text-sm font-bold hover:bg-sand-dark/60 transition-all shadow-xs flex items-center gap-2 cursor-pointer"
+            >
+              <Plus size={16} className="text-terracotta" />
+              <span>{t('header.createNewBtn')}</span>
+            </button>
+          </div>
+
+          {/* Barra de Entidades / Navegación Rápida Estilo Retribalize */}
+          <div className="pt-2 border-t border-border/80 flex items-center gap-2 overflow-x-auto pb-1">
+            <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider shrink-0 mr-1 hidden sm:inline">
+              {t('header.manageEntities')}:
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                const el = document.getElementById('sinergias-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-forest-deep text-white border border-forest-deep shadow-2xs shrink-0 cursor-pointer"
+            >
+              {t('header.entityAll')}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/comunidades')}
+              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-bg-surface text-stone-600 border border-border hover:bg-sand-light transition-colors shrink-0 cursor-pointer"
+            >
+              {t('header.entityNodes')}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/eventos')}
+              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-bg-surface text-stone-600 border border-border hover:bg-sand-light transition-colors shrink-0 cursor-pointer"
+            >
+              {t('header.entityEvents')}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/residencias')}
+              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-bg-surface text-stone-600 border border-border hover:bg-sand-light transition-colors shrink-0 cursor-pointer"
+            >
+              {t('header.entityResidencies')}
+            </button>
+          </div>
+
           {/* Banner de perfil incompleto (si falta fecha o tríada) */}
           {hasIncompletePassport && (
             <div className="bg-sand-light/50 border border-border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
@@ -364,7 +428,8 @@ export function DashboardView() {
           )}
         </div>
 
-        {/* Barra de Filtros */}
+        {/* Barra de Filtros y Cuadrícula de Sinergias */}
+        <div id="sinergias-section" className="space-y-6 pt-2">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
             <button
@@ -474,6 +539,7 @@ export function DashboardView() {
             ))}
           </div>
         )}
+        </div>
       </div>
 
       {/* Modal in situ del Pasaporte Comunitario */}
@@ -491,6 +557,12 @@ export function DashboardView() {
         isOpen={isAuthModalOpen}
         mode="login"
         onClose={() => setIsAuthModalOpen(false)}
+      />
+
+      {/* Modal "Crear algo" Estilo Retribalize */}
+      <CreateNewModal
+        isOpen={isCreateNewOpen}
+        onClose={() => setIsCreateNewOpen(false)}
       />
     </div>
   );

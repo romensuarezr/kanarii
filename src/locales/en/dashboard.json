@@ -3,7 +3,14 @@
     "title": "Encounters & Synergies",
     "subtitle": "Deterministic connections computed based on your island, energetic resonance (Mayan Kin and Human Design), and gift complementarity.",
     "todayKin": "Today's Kin",
-    "greeting": "Hello, {{name}}"
+    "greeting": "Hello, {{name}}",
+    "findConnectionsBtn": "Find New Connections",
+    "createNewBtn": "Create New",
+    "manageEntities": "Explore in the Canaries",
+    "entityAll": "Synergies",
+    "entityNodes": "Nodes",
+    "entityEvents": "Events",
+    "entityResidencies": "Residencies"
   },
   "filters": {
     "all": "All synergies",
@@ -48,5 +55,21 @@
     "sentSubtitle": "We have sent a notification to {{name}} to harmonize your community intentions.",
     "successToast": "Connection request sent!",
     "errorToast": "Failed to send connection request."
+  },
+  "createNew": {
+    "badge": "Plant in the Canaries",
+    "title": "Create Something New",
+    "subtitle": "Choose how you want to convene or activate the community network.",
+    "tribeTitle": "Start a Node or Tribe",
+    "tribeDesc": "Create a new community, farm, ecovillage, or collective across the Canary archipelago.",
+    "eventTitle": "Host a Gathering",
+    "eventDesc": "Convene an assembly, talk, workshop, or meeting, online or in person.",
+    "residencyTitle": "List a Residency or Stay",
+    "residencyDesc": "Offer accommodation, volunteering, or co-living at your farm or project space.",
+    "draftsTitle": "Your Saved Drafts",
+    "hasCommunityDraft": "You have a pending Node draft.",
+    "hasFichaDraft": "You have an incomplete community profile draft.",
+    "resumeDraft": "Resume",
+    "draftsDesc": "Nothing saved yet. Start something and close it — your work is kept here."
   }
 }
