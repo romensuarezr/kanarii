@@ -35,7 +35,7 @@ Ejemplo: C3 pesa 25, va al 85% → aporta 21.25 puntos al total.
 | C4 | Marketplace y acuerdos | 15 | 🟡 | 90 | T-023, T-026, T-039, T-024, T-043, T-069, T-070 | Pulido menor de flujos de contraoferta |
 | C5 | Onboarding y ayuda contextual | 10 | 🟢 | 95 | T-035, T-057, sprint-00 onboarding base | TourStepLayout.tsx wrapper (BAJO) |
 | C6 | Robustez base: permisos, consistencia, offline | 20 | 🟡 | 90 | T-001, T-005, T-007, T-008, T-012, T-028, T-029, T-032, T-037, T-040, T-051, T-071 | Paginación cursor-based (MEDIO) |
-| **TOTAL** | | **100** | | **91%** | | |
+| **TOTAL** | | **100** | | **92%** | | |
 
 > 🧮 Cálculo: (15×95 + 15×90 + 25×90 + 15×90 + 10×95 + 20×90) / 100 = **91.25%** → redondeado a **91%**
 
@@ -125,3 +125,4 @@ Ejemplo: C3 pesa 25, va al 85% → aporta 21.25 puntos al total.
 | 2026-07-31 | — | 91% | Actualizado automáticamente por update-mvp-tracker.sh |
 | 2026-08-02 | — | 91% | Actualizado automáticamente por update-mvp-tracker.sh |
 | 2026-08-16 | — | 91% | Actualizado automáticamente por update-mvp-tracker.sh |
+| 2026-11-25 | — | 92% | Actualizado automáticamente por update-mvp-tracker.sh |

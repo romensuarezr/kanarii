@@ -53,6 +53,12 @@ Solo contiene trabajo pendiente REAL. Lo marcado ✅ ya está implementado.
 
 ## 🎯 Foco activo
 
+### Sprint 29 — Sanitización de Roles, Convocatorias y Sinergias (🟡 En curso)
+- [ ] [ALTO] **T-147**: Blindaje y Sanitización de Roles de Membresía en Ficha y Onboarding.
+- [ ] [ALTO] **T-148**: Persistencia y Conexión de Convocatorias de Eventos y Residencias Comunitarias.
+- [ ] [ALTO] **T-149**: Flujo de Solicitud y Conexión de Sinergias entre Miembros de la Red.
+- [ ] [MEDIO] **T-150**: Homologación de Herramientas de Flota (Hermes, Orca) y Sync Core Agent OS.
+
 ### 2.4 Gestión de Propuestas y Consentimiento (S3)
 - [x] [ALTO] Directorio de decisiones con filtros por estado y badge "requiere tu atención" (Sprint 06 — T-027).
 - [x] [BAJO] UI: Badge visual "acuerdo cálido" diferenciado en PropuestaDetail (Sprint 15 — T-066).
