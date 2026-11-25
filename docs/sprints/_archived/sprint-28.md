@@ -1,7 +1,7 @@
 # Sprint 28 — 2026-11-24 → 2026-11-30
 
 ## Estado
-🟢 Completado (6/6 tareas)
+✅ Completado
 
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |

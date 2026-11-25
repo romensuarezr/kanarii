@@ -2,6 +2,73 @@
 
 Todos los cambios notables en este proyecto serán documentados en este archivo. El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] — sprint-28 — 2026-11-25
+
+### ✨ Features
+
+- feat(navigation): 2-layer sidebar navigation, events and residencies views (T-146)
+- feat(nodos): enhance node directory, node presentation tabs and i18n (T-145)
+- feat(dashboard): implement deterministic synergy matching feed and dashboard view (T-144)
+- feat(members): tarjetas de miembros estilo retribalize con pasaporte modal y conexion rapida (T-143)
+- feat(welcome): home publica retribalizada, enlaces directos a demos y apertura de comunidades (T-142, ADR-027)
+- feat(nav): cohesionar navegacion principal, arreglar marketplace 404, separar tablon de gobernanza y anadir calendario (T-141)
+- feat(ui): limpiar selector idioma, compartir top-right, integrar avatar en sidebar y unificar pasaporte (T-140)
+- feat(share): brand icons centralizados, share modal leaderboard, telegram y contact actions icon-only (T-139)
+- feat(perfil): ux en pestanas, privacidad efectiva, favicon web, whatsapp y selector idioma (T-138)
+- feat(ajustes): crear superficie dedicada y enlace en menu de usuario (T-135)
+- feat(privacidad): selectores de visibilidad para redes sociales y contacto (T-134)
+- feat(contacto): normalizar telefono E.164 y anadir accion directa de WhatsApp (T-137)
+- feat(fichas): persistir y mostrar campos de redes sociales en ficha y pasaporte (T-133)
+- feat(T-132): separar rutas perfil y ficha + guardia de rol y fix de hooks
+- feat(communities): propósito, cuidadores y necesidades en tarjetas de comunidad (T-114)
+- feat(passport): enlaces sociales y contacto rápido en pasaporte y ficha (T-113)
+- feat(i18n): internacionalizar UserAvatarMenu y agregar claves userMenu en common.json
+- feat(i18n): internacionalizar UI fija de FichaView y claves passport (T-131)
+- feat(kin): exportar tonoIndex, selloIndex y colorIndex en KinData para i18n (T-131)
+
+### 🐛 Bug Fixes
+
+- fix(close-task): resolución dinámica de sprint y soporte amplio de tokens (60160da)
+
+### ♻️ Refactoring
+
+- refactor(perfil): extraer FichaReadOnly para unificar lectura entre perfil y ficha (T-136)
+
+### 📚 Documentación
+
+- docs(sprint-28): update operating regime to use staging branch for UI/UX consolidation
+- docs(research): document 2-layer architecture, node network and deterministic synergy engine for sprint 28
+- docs: archive sprint 27 design decisions and ux research
+- docs(research): formalizar research de UI/UX de Retribalize y Hylo para Sprint 28
+- docs(tasks): archivar task-141 completada
+- docs(sprint): actualizar rutas de tareas archivadas en sprint-27
+- docs(tasks): archivar task-140 de Sprint 27
+- docs(sprint-27): marcar sprint 27 como completado
+- docs(sprint-27): consolidar research UX + scout de industria (T-136/T-137)
+- docs(pages-map): sincronizar rutas y completitud del perfil (T-115)
+- docs(plan): update plan-draft for T-115
+- docs(plan): update plan-draft for T-114
+- docs(plan): update plan-draft for T-113
+- docs(tasks): confirmar eliminacion de rutas antiguas tras mover a _archived
+- docs(sprint): archivar sprint-26.md y sprint-26-research.md en _archived
+- docs(sprint): cerrar y archivar T-130, T-131 y Sprint 26
+- docs(sprint): actualizar trazabilidad de tareas T-130 y T-131 en sprint-26.md
+- docs(ideas): capturar propuesta de centralización de formato de fechas civiles e instantes
+
+### 🔧 Mantenimiento
+
+- chore: archive sprint-27 [v0.8.0]
+- chore(agent-os): sync core assets to v1.40.0
+- chore: sprint-27 planning and task files created
+- chore: archive sprint-24 (closed with pending tasks)
+- chore: archive sprint-25 [v0.7.0]
+- chore(planning): prepare sprint 25 task files and research
+- chore(agent-os): sync core assets (e98d423df39f9b925d183452ad84175448cf6513)
+- chore(agent-os): sync core assets (e091219dba7dd1658c623b3fcc4dd704c706745e)
+- chore(agent-os): sync --remote support in sync.sh and check-session (738e7ef)
+- chore(agent-os): sync close-task.sh (859cb16)
+- chore(agent-os): sync core assets (3ed8470)
+
 ## [0.8.0] — sprint-27 — 2026-11-23
 
 ### ✨ Features
