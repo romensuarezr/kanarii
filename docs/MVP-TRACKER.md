@@ -126,3 +126,4 @@ Ejemplo: C3 pesa 25, va al 85% → aporta 21.25 puntos al total.
 | 2026-08-02 | — | 91% | Actualizado automáticamente por update-mvp-tracker.sh |
 | 2026-08-16 | — | 91% | Actualizado automáticamente por update-mvp-tracker.sh |
 | 2026-11-25 | — | 92% | Actualizado automáticamente por update-mvp-tracker.sh |
+| 2026-11-25 | sprint-30 | 92% | Actualizado automáticamente por update-mvp-tracker.sh |
