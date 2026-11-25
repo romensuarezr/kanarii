@@ -5,8 +5,9 @@
 - **Título**: Flujo de Solicitud y Conexión de Sinergias entre Miembros de la Red
 - **Sprint**: Sprint 29
 - **Tipo**: Feature / Interacción / Mensajería
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-25
+- **Fecha fin**: 2026-11-25
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 29 / 2026-11-25
@@ -32,7 +33,7 @@ Habilita la acción interactiva de conectar entre personas que arrojan alta comp
 - `.agents/tasks/task-149.md`
 
 ## Criterios de Aceptación
-- [ ] `ConnectModal.tsx` integrado en `SynergyCard` y `MemberCard`.
-- [ ] Envío de mensaje de intención con notificación al miembro destinatario.
-- [ ] Textos internacionalizados en español e inglés.
-- [ ] `npm run lint` y `npm run build` pasan limpios sin errores.
+- [x] `ConnectModal.tsx` integrado en `SynergyCard` y `MemberCard`.
+- [x] Envío de mensaje de intención con notificación al miembro destinatario.
+- [x] Textos internacionalizados en español e inglés.
+- [x] `npm run lint` y `npm run build` pasan limpios sin errores.

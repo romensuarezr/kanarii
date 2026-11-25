@@ -8,7 +8,10 @@ import {
   serverTimestamp,
   handleFirestoreError,
   OperationType,
-  onSnapshot
+  onSnapshot,
+  collection,
+  addDoc,
+  increment
 } from './_core';
 
 export interface MemberConnection {
@@ -17,6 +20,16 @@ export interface MemberConnection {
   receiverId: string;
   communityId: string;
   status: 'pending' | 'connected' | 'rejected';
+  note?: string;
+  synergyData?: {
+    kinMaya?: string;
+    island?: string;
+    score?: number;
+    offerings?: string[];
+    needs?: string[];
+  };
+  senderName?: string;
+  senderAvatar?: string;
   createdAt: any;
   updatedAt: any;
 }
@@ -52,13 +65,25 @@ export async function getConnection(userA: string, userB: string): Promise<Membe
 export async function requestConnection(
   senderId: string, 
   receiverId: string, 
-  communityId: string
+  communityId: string,
+  options?: {
+    note?: string;
+    senderName?: string;
+    senderAvatar?: string;
+    synergyData?: {
+      kinMaya?: string;
+      island?: string;
+      score?: number;
+      offerings?: string[];
+      needs?: string[];
+    };
+  }
 ): Promise<void> {
   try {
     const connectionId = getConnectionId(senderId, receiverId);
     const docRef = doc(db, 'connections', connectionId);
     
-    const data = {
+    const data: Record<string, any> = {
       senderId,
       receiverId,
       communityId,
@@ -66,8 +91,36 @@ export async function requestConnection(
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     };
+
+    if (options?.note) data.note = options.note;
+    if (options?.senderName) data.senderName = options.senderName;
+    if (options?.senderAvatar) data.senderAvatar = options.senderAvatar;
+    if (options?.synergyData) data.synergyData = options.synergyData;
     
     await setDoc(docRef, data);
+
+    // Si hay una comunidad asociada, crear notificación para el receptor
+    if (communityId && communityId !== 'network') {
+      try {
+        const memberRef = doc(db, 'community_members', `${communityId}_${receiverId}`);
+        const notifsCol = collection(memberRef, 'notificaciones');
+        await addDoc(notifsCol, {
+          tipo: 'conexion_sinergia',
+          referenciaId: connectionId,
+          leida: false,
+          creadaAt: serverTimestamp(),
+          meta: {
+            autorNombre: options?.senderName || 'Un miembro de la red',
+            excerpt: options?.note?.slice(0, 100) || 'Desea conectar e intercambiar saberes en la red.'
+          }
+        });
+        await updateDoc(memberRef, {
+          unreadNotifCount: increment(1)
+        }).catch(() => {});
+      } catch (e) {
+        // Fallback silencioso si no existe el doc de miembro en esa comunidad específica
+      }
+    }
   } catch (err) {
     handleFirestoreError(err, OperationType.CREATE, 'connections');
     throw err;

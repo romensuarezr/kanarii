@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { MapPin, Zap, ArrowRight, Sparkles, Check, HeartHandshake } from 'lucide-react';
+import { MapPin, Zap, ArrowRight, Sparkles, Check, HeartHandshake, UserPlus } from 'lucide-react';
 import { SynergyMatch } from '../../lib/sinergias';
 import { ContactActions } from '../perfil/ContactActions';
 import { useTranslation } from 'react-i18next';
+import { ConnectModal } from './ConnectModal';
 
 export interface SynergyCardProps {
   match: SynergyMatch;
@@ -13,6 +14,7 @@ export interface SynergyCardProps {
 
 export function SynergyCard({ match, onOpenPassport, className = '' }: SynergyCardProps) {
   const { t } = useTranslation('dashboard');
+  const [isConnectOpen, setIsConnectOpen] = useState(false);
 
   const initial = match.targetName ? match.targetName.trim().charAt(0).toUpperCase() : 'M';
 
@@ -164,6 +166,18 @@ export function SynergyCard({ match, onOpenPassport, className = '' }: SynergyCa
         </button>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsConnectOpen(true);
+            }}
+            className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-forest-deep text-white hover:bg-forest-deep/90 transition-colors flex items-center gap-1 shadow-2xs"
+          >
+            <UserPlus size={12} />
+            <span>{t('card.connect')}</span>
+          </button>
+
           {phone && (
             <ContactActions
               phone={phone}
@@ -184,6 +198,24 @@ export function SynergyCard({ match, onOpenPassport, className = '' }: SynergyCa
           )}
         </div>
       </div>
+
+      {/* Modal de Conexión de Sinergia */}
+      <ConnectModal
+        isOpen={isConnectOpen}
+        onClose={() => setIsConnectOpen(false)}
+        targetUserId={match.targetUserId}
+        targetName={match.targetName}
+        targetAvatar={match.targetAvatar}
+        targetRole={match.targetRole}
+        targetLocation={match.targetLocation}
+        synergyScore={match.score}
+        synergyData={{
+          kinMaya: match.kinMayaRelation?.badgeLabel,
+          island: match.targetIsland,
+          offerings: match.triadSynergy?.complementaryOfferings,
+          needs: match.triadSynergy?.complementaryNeeds,
+        }}
+      />
     </motion.div>
   );
 }

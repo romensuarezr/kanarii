@@ -530,7 +530,7 @@ export interface PresenciaParticipante {
 
 export interface NotificacionKanarii {
   id: string;
-  tipo: 'mencion_tablon' | 'propuesta_nueva' | 'tarea_asignada';
+  tipo: 'mencion_tablon' | 'propuesta_nueva' | 'tarea_asignada' | 'conexion_sinergia';
   referenciaId: string; // id del post, propuesta o tarea
   leida: boolean;
   creadaAt: any; // Timestamp de Firestore
