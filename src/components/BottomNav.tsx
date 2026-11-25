@@ -1,27 +1,57 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MoreHorizontal, Compass, ShieldCheck, Scale, ChevronDown, MapPin, Calendar, Tent, ArrowLeft } from 'lucide-react';
+import {
+  MoreHorizontal,
+  Compass,
+  ShieldCheck,
+  ChevronDown,
+  MapPin,
+  Calendar,
+  Tent,
+  ArrowLeft,
+  Sparkles,
+  User,
+  MessageSquare,
+  CheckSquare,
+  Vote,
+  FileText,
+  Briefcase,
+  Handshake,
+  Layers,
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
-import { navigationConfig } from '../config/navigation';
 import { SyncIndicator } from './ui/SyncIndicator';
 import { useAcuerdosBadge } from '../hooks/useAcuerdosBadge';
+import { useNotificaciones } from '../hooks/useNotificaciones';
 import { useTranslation } from 'react-i18next';
 
+interface BottomNavItem {
+  label: string;
+  labelKey?: string;
+  href: string;
+  icon: any;
+  badge?: number;
+  adminOnly?: boolean;
+}
 
 export function BottomNav() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const location = useLocation();
-  const { appUser, logout } = useAuth();
+  const { appUser } = useAuth();
   const { comunidad, comunidades, setCommunityId, currentCommunityId, exitCommunitySpace } = useComunidad();
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const { acuerdosPendingCount, acuerdosSolicitanteCount } = useAcuerdosBadge();
+  const { unreadCount } = useNotificaciones(comunidad?.id, appUser?.uid);
 
   const isAdmin = appUser?.role === 'admin';
   const isCommunityAdmin = !!(isAdmin || (comunidad?.adminUids && Array.isArray(comunidad.adminUids) && comunidad.adminUids.includes(appUser?.uid || '')));
 
-  // Filtramos por pertenencia a comunidades
+  // Capa 2 activa cuando existe un espacio de nodo seleccionado
+  const isNodeSpace = Boolean(currentCommunityId);
+
+  // Pertenencia a comunidades
   const hasCommunities = (appUser?.communityIds && appUser.communityIds.length > 0) || isAdmin || !!comunidad?.id;
 
   // Filtrar comunidades para el selector
@@ -30,140 +60,248 @@ export function BottomNav() {
     return (appUser?.communityIds || []).includes(c.id) || (comunidad?.id === c.id);
   });
 
-  const availableNavItems = navigationConfig.filter(item => {
-    if (item.adminOnly) return isAdmin;
-    if (!hasCommunities) {
-      return ['Inicio', 'Mi Ficha'].includes(item.label);
-    }
-    return true;
-  });
-
-  // Items extra que no están en el config (Explorar y Solicitudes)
-  const extraNavItems = [];
-
-  extraNavItems.push({
-    label: 'Eventos',
-    labelKey: 'nav.events',
-    href: '/eventos',
-    icon: Calendar,
-  });
-
-  extraNavItems.push({
-    label: 'Residencias',
-    labelKey: 'nav.residencies',
-    href: '/residencias',
-    icon: Tent,
-  });
-
-  if (hasCommunities) {
-    extraNavItems.push({
-      label: 'Explorar comunidades',
+  // --- NAVEGACIÓN CAPA 1: RED CANARIAS ---
+  const networkMainItems: BottomNavItem[] = [
+    {
+      label: 'Sinergias',
+      labelKey: 'nav.synergies',
+      href: '/dashboard',
+      icon: Sparkles,
+    },
+    {
+      label: 'Nodos',
+      labelKey: 'nav.nodes',
       href: '/comunidades',
       icon: Compass,
-    });
-  }
-
-  if (isCommunityAdmin) {
-    extraNavItems.push({
-      label: 'Solicitudes',
-      href: '/admin/solicitudes',
-      icon: ShieldCheck
-    });
-  }
-
-  // Seleccionamos los primeros 4 items para la barra principal
-  const mainNavItems = availableNavItems.filter(item => !item.adminOnly).slice(0, 4);
-  // El resto van al menú "Más"
-  const moreNavItems = [
-    ...availableNavItems.filter(item => !item.adminOnly).slice(4),
-    ...extraNavItems,
-    ...availableNavItems.filter(item => item.adminOnly)
+    },
+    {
+      label: 'Eventos',
+      labelKey: 'nav.events',
+      href: '/eventos',
+      icon: Calendar,
+    },
+    {
+      label: 'Residencias',
+      labelKey: 'nav.residencies',
+      href: '/residencias',
+      icon: Tent,
+    },
   ];
 
-  const handleNav = (item: any) => {
-    if (item.label === 'Marketplace') {
-      navigate(item.href, { 
+  const networkMoreItems: BottomNavItem[] = [
+    {
+      label: 'Mi Pasaporte',
+      labelKey: 'nav.myPassport',
+      href: '/ficha',
+      icon: User,
+    },
+    ...(isAdmin ? [{
+      label: 'Panel Admin',
+      labelKey: 'nav.admin',
+      href: '/admin',
+      icon: ShieldCheck,
+      adminOnly: true,
+    }] : []),
+  ];
+
+  // --- NAVEGACIÓN CAPA 2: ESPACIO OPERATIVO DEL NODO ---
+  const nodeSpaceMainItems: BottomNavItem[] = [
+    {
+      label: 'Tablón',
+      labelKey: 'nav.board',
+      href: '/tablon',
+      icon: MessageSquare,
+      badge: unreadCount > 0 ? unreadCount : undefined,
+    },
+    {
+      label: 'Tareas',
+      labelKey: 'nav.tasks',
+      href: '/tareas',
+      icon: CheckSquare,
+    },
+    {
+      label: 'Gobernanza',
+      labelKey: 'nav.governance',
+      href: '/gobernanza',
+      icon: Vote,
+    },
+    {
+      label: 'Proyectos',
+      labelKey: 'nav.projects',
+      href: '/proyectos',
+      icon: Briefcase,
+    },
+  ];
+
+  const nodeSpaceMoreItems: BottomNavItem[] = [
+    ...(comunidad?.slug ? [{
+      label: 'Ficha del Nodo',
+      labelKey: 'nav.nodeSpace',
+      href: `/c/${comunidad.slug}`,
+      icon: Compass,
+    }] : []),
+    {
+      label: 'Actas',
+      labelKey: 'nav.minutes',
+      href: '/actas',
+      icon: FileText,
+    },
+    {
+      label: 'Soberanía / Almacén',
+      labelKey: 'nav.marketplace',
+      href: '/soberania',
+      icon: Handshake,
+      badge: (acuerdosPendingCount + acuerdosSolicitanteCount) > 0 ? (acuerdosPendingCount + acuerdosSolicitanteCount) : undefined,
+    },
+    {
+      label: 'Calendario',
+      labelKey: 'nav.calendar',
+      href: '/calendario',
+      icon: Calendar,
+    },
+    ...(isCommunityAdmin ? [{
+      label: 'Solicitudes',
+      labelKey: 'nav.requests',
+      href: '/admin/solicitudes',
+      icon: ShieldCheck,
+    }] : []),
+  ];
+
+  // Selección activa de items según la capa
+  const activeMainItems = isNodeSpace ? nodeSpaceMainItems : networkMainItems;
+  const activeMoreItems = isNodeSpace ? nodeSpaceMoreItems : networkMoreItems;
+
+  const handleNav = (href: string, label?: string) => {
+    setIsMoreMenuOpen(false);
+    if (label === 'Soberanía / Almacén' || href === '/soberania') {
+      navigate(href, {
         state: (acuerdosPendingCount > 0 || acuerdosSolicitanteCount > 0)
-          ? { initialTab: 'mis_acuerdos' } 
-          : undefined 
+          ? { initialTab: 'mis_acuerdos' }
+          : undefined,
       });
     } else {
-      navigate(item.href);
+      navigate(href);
     }
   };
 
-  const isMarketplaceInMore = moreNavItems.some(item => item.label === 'Marketplace');
-  const showMoreDot = isMarketplaceInMore && (acuerdosPendingCount + acuerdosSolicitanteCount) > 0 && location.pathname !== '/soberania';
+  const hasAnyBadgeInMore = activeMoreItems.some(item => (item.badge && item.badge > 0));
 
   return (
     <>
-      <div 
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-bg-surface border-t border-border flex items-center justify-around"
+      {/* Barra de Retorno y Contexto de Capa 2 (Espacio de Nodo) */}
+      {isNodeSpace && (
+        <div
+          className="md:hidden fixed bottom-[56px] left-0 right-0 z-30 bg-bg-surface/95 backdrop-blur-md border-t border-border px-3 py-1.5 flex items-center justify-between shadow-2xs"
+          style={{ paddingBottom: '2px' }}
+        >
+          <div className="flex items-center gap-1.5 min-w-0 pr-2">
+            <MapPin size={12} className="text-terracotta shrink-0" />
+            <span className="text-xs font-bold text-forest-deep truncate">
+              {comunidad?.nombre || t('nav.nodeSpace', { defaultValue: 'Espacio de Nodo' })}
+            </span>
+          </div>
+          <button
+            onClick={() => {
+              exitCommunitySpace();
+              navigate('/dashboard');
+            }}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-terracotta/10 text-terracotta hover:bg-terracotta/20 text-[11px] font-bold transition-all border border-terracotta/20 shrink-0 cursor-pointer"
+          >
+            <ArrowLeft size={12} />
+            <span>{t('nav.backToNetwork', { defaultValue: 'Volver a Red Canarias' })}</span>
+          </button>
+        </div>
+      )}
+
+      {/* Barra Principal Inferior */}
+      <nav
+        aria-label="Navegación móvil"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-bg-surface border-t border-border flex items-center justify-around shadow-xs"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)', minHeight: '56px' }}
       >
-        {mainNavItems.map((item, idx) => {
-          const isReallyActive = item.href === '/' 
-            ? location.pathname === '/' 
+        {activeMainItems.map((item, idx) => {
+          const isReallyActive = item.href === '/dashboard' || item.href === '/'
+            ? (location.pathname === '/' || location.pathname === '/dashboard')
             : location.pathname.startsWith(item.href);
-          const navLabel = item.labelKey ? t(item.labelKey as any) : item.label;
-          
+          const navLabel = item.labelKey ? t(item.labelKey as any, { defaultValue: item.label }) : item.label;
+
           return (
             <button
               key={idx}
-              onClick={() => handleNav(item)}
-              className={`flex flex-col items-center justify-center flex-1 h-full min-h-[56px] space-y-1 relative transition-colors ${
+              onClick={() => handleNav(item.href, item.label)}
+              className={`flex flex-col items-center justify-center flex-1 h-full min-h-[56px] space-y-1 relative transition-colors cursor-pointer ${
                 isReallyActive ? 'text-forest-deep font-bold' : 'text-stone-400'
               }`}
             >
               <div className="relative">
                 <item.icon className="w-5 h-5" />
-                {item.label === 'Marketplace' && (acuerdosPendingCount + acuerdosSolicitanteCount) > 0 && !isReallyActive && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-terracotta rounded-full" />
+                {item.badge && item.badge > 0 && !isReallyActive && (
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-terracotta rounded-full" />
                 )}
               </div>
-              <span className="text-[10px] uppercase tracking-wide">{navLabel}</span>
+              <span className="text-[10px] uppercase tracking-wide truncate max-w-[64px] text-center">
+                {navLabel}
+              </span>
               {isReallyActive && <div className="w-1 h-1 rounded-full bg-forest-deep absolute bottom-1" />}
             </button>
           );
         })}
-        
+
+        {/* Botón "Más" */}
         <button
           onClick={() => setIsMoreMenuOpen(true)}
-          className={`flex flex-col items-center justify-center flex-1 h-full min-h-[56px] space-y-1 relative transition-colors ${
+          className={`flex flex-col items-center justify-center flex-1 h-full min-h-[56px] space-y-1 relative transition-colors cursor-pointer ${
             isMoreMenuOpen ? 'text-forest-deep font-bold' : 'text-stone-400'
           }`}
         >
           <div className="relative">
             <MoreHorizontal className="w-5 h-5" />
-            {showMoreDot && (
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-terracotta rounded-full" />
+            {hasAnyBadgeInMore && (
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-terracotta rounded-full" />
             )}
           </div>
-          <span className="text-[10px] uppercase tracking-wide">{t('actions.more' as any) || 'Más'}</span>
+          <span className="text-[10px] uppercase tracking-wide">{t('actions.more' as any, { defaultValue: 'Más' })}</span>
         </button>
-      </div>
+      </nav>
 
+      {/* Sheet Modal Desplegable ("Más") */}
       {isMoreMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex flex-col justify-end">
-          <div 
+          <div
             className="absolute inset-0 bg-stone-900/40 backdrop-blur-sm"
             onClick={() => setIsMoreMenuOpen(false)}
           />
-          <div className="relative bg-bg-surface rounded-t-3xl pt-2 pb-6 px-4 shadow-xl z-10 border-t border-border" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
-            <div className="w-8 h-1 bg-stone-300 rounded-full mx-auto mb-6" />
-            
-            {/* Si está en el espacio del nodo: botón Volver a la Red */}
-            {currentCommunityId && (
+          <div
+            className="relative bg-bg-surface rounded-t-3xl pt-2 pb-6 px-4 shadow-xl z-10 border-t border-border max-h-[85vh] overflow-y-auto"
+            style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}
+          >
+            <div className="w-8 h-1 bg-stone-300 rounded-full mx-auto mb-5" />
+
+            {/* Cabecera del Sheet indicando la Capa activa */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between pb-2 border-b border-border">
+                <span className="text-xs font-bold text-forest-deep uppercase tracking-wider flex items-center gap-1.5">
+                  <Layers size={13} className="text-forest-moss" />
+                  {isNodeSpace
+                    ? t('nav.nodeSpace', { defaultValue: 'Herramientas del Nodo' })
+                    : t('nav.globalNetwork', { defaultValue: 'Red Viva Canarias' })}
+                </span>
+                <span className="text-[11px] text-stone-400">Kanarii</span>
+              </div>
+            </div>
+
+            {/* Si está en el espacio del nodo: botón prioritario Volver a Red Canarias */}
+            {isNodeSpace && (
               <button
                 onClick={() => {
                   exitCommunitySpace();
                   setIsMoreMenuOpen(false);
                   navigate('/dashboard');
                 }}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-terracotta/10 text-terracotta text-xs font-bold border border-terracotta/20 mb-3 shadow-2xs"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-terracotta/10 text-terracotta text-xs font-bold border border-terracotta/20 mb-4 shadow-2xs hover:bg-terracotta/20 transition-colors cursor-pointer"
               >
-                <ArrowLeft size={14} />
-                <span>{t('nav.backToNetwork', { defaultValue: '← Volver a la Red' })}</span>
+                <ArrowLeft size={15} />
+                <span>{t('nav.backToNetwork', { defaultValue: 'Volver a Red Canarias' })}</span>
               </button>
             )}
 
@@ -172,7 +310,7 @@ export function BottomNav() {
               <div className="bg-sand-light/50 border border-border rounded-2xl p-3 shadow-2xs mb-4">
                 <p className="text-[9px] font-bold text-stone-400 uppercase tracking-widest mb-1 flex items-center gap-1">
                   <MapPin size={10} className="text-terracotta" />
-                  {t('nav.activeSpace')}
+                  {t('nav.activeSpace', { defaultValue: 'Espacio de Nodo' })}
                 </p>
                 {userComunidades.length > 1 ? (
                   <div className="relative flex items-center group/sel">
@@ -203,41 +341,38 @@ export function BottomNav() {
               <SyncIndicator />
             </div>
 
-            <div className="flex flex-col space-y-2">
-              {moreNavItems.map((item, idx) => {
-                const navLabel = (item as any).labelKey ? t((item as any).labelKey) : item.label;
+            {/* Lista de enlaces complementarios del menú Más */}
+            <div className="flex flex-col space-y-1.5">
+              {activeMoreItems.map((item, idx) => {
+                const navLabel = item.labelKey ? t(item.labelKey as any, { defaultValue: item.label }) : item.label;
+                const isItemActive = location.pathname.startsWith(item.href);
+
                 return (
                   <button
                     key={idx}
-                    onClick={() => { 
-                      setIsMoreMenuOpen(false); 
-                      if (item.label === 'Marketplace') {
-                        navigate(item.href, { 
-                          state: (acuerdosPendingCount > 0 || acuerdosSolicitanteCount > 0)
-                            ? { initialTab: 'mis_acuerdos' } 
-                            : undefined 
-                        });
-                      } else {
-                        navigate(item.href);
-                      }
-                    }}
-                    className="w-full text-left px-5 py-4 rounded-2xl font-medium text-forest-deep hover:bg-sand-light transition-colors flex items-center gap-3"
+                    onClick={() => handleNav(item.href, item.label)}
+                    className={`w-full text-left px-4 py-3 rounded-2xl font-medium transition-colors flex items-center justify-between cursor-pointer ${
+                      isItemActive ? 'bg-forest-deep/10 text-forest-deep font-bold' : 'text-stone-700 hover:bg-sand-light'
+                    }`}
                   >
-                    <div className="relative">
-                      <item.icon className="w-5 h-5 text-stone-400" />
-                      {item.label === 'Marketplace' && (acuerdosPendingCount + acuerdosSolicitanteCount) > 0 && location.pathname !== '/soberania' && (
-                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-terracotta rounded-full" />
-                      )}
+                    <div className="flex items-center gap-3">
+                      <item.icon className="w-5 h-5 text-forest-moss" />
+                      <span className="text-sm">{navLabel}</span>
                     </div>
-                    {navLabel}
+                    {item.badge && item.badge > 0 && (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-terracotta text-white">
+                        {item.badge}
+                      </span>
+                    )}
                   </button>
                 );
               })}
+
               <button
                 onClick={() => setIsMoreMenuOpen(false)}
-                className="w-full text-center mt-2 px-5 py-4 rounded-2xl font-medium text-stone-500 hover:bg-stone-100 transition-colors"
+                className="w-full text-center mt-3 px-4 py-3 rounded-2xl font-medium text-stone-500 hover:bg-stone-100 transition-colors cursor-pointer"
               >
-                {t('actions.cancel')}
+                {t('actions.cancel', { defaultValue: 'Cerrar' })}
               </button>
             </div>
           </div>
@@ -246,4 +381,3 @@ export function BottomNav() {
     </>
   );
 }
-
