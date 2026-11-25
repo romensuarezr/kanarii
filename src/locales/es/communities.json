@@ -1,5 +1,6 @@
 {
-  "title": "Comunidades y Nodos",
+  "title": "Red de Nodos y Comunidades",
+  "subtitle": "Encuentra tu lugar en la red. Descubre fincas regenerativas, residencias de coliving y nodos online en las Islas Canarias.",
   "searchPlaceholder": "Buscar nodos o proyectos...",
   "type": "Tipo",
   "location": "Ubicación",
@@ -12,14 +13,14 @@
   "member_other": "miembros",
   "node": "Nodo Comunitario",
   "space": "Espacio Comunitario",
-  "backToCommunities": "Volver a Comunidades",
+  "backToCommunities": "Volver a Nodos",
   "backToHome": "Volver al Inicio",
   "loadingDetails": "Cargando detalles del espacio...",
-  "notFoundTitle": "Espacio no encontrado",
-  "notFoundDesc": "La comunidad con el identificador /c/{{slug}} no existe o ha sido eliminada.",
-  "privateTitle": "Comunidad Privada",
+  "notFoundTitle": "Nodo no encontrado",
+  "notFoundDesc": "El nodo con el identificador /c/{{slug}} no existe o ha sido eliminado.",
+  "privateTitle": "Nodo Privado",
   "privateDesc": "Este espacio es privado. Para acceder a su contenido, ver su manifiesto o unirte, debes recibir una invitación directa de un miembro de la comunidad.",
-  "exploreOtherCommunities": "Explorar otras comunidades",
+  "exploreOtherCommunities": "Explorar otros nodos",
   "goToWelcome": "Ir a la página de bienvenida",
   "viewPublicCard": "Ver Ficha Pública",
   "settings": "Configuración",
@@ -28,24 +29,74 @@
   "tabs": {
     "presentation": "Presentación",
     "members": "Miembros",
-    "activity": "Actividad"
+    "activity": "Actividades & Tareas"
+  },
+  "filters": {
+    "all": "Todos los nodos",
+    "finca": "🏡 Fincas y Ecoaldeas",
+    "residencia": "🛏️ Residencias y Colivings",
+    "online": "🌐 Nodos Online y Círculos",
+    "spacesCount_one": "{{count}} espacio disponible",
+    "spacesCount_other": "{{count}} espacios disponibles"
+  },
+  "types": {
+    "finca": "Finca / Ecoaldea",
+    "ecoaldea": "Ecoaldea",
+    "cohousing": "Cohousing",
+    "residencia": "Residencia / Coliving",
+    "nomada": "Nodo Nómada",
+    "online": "Nodo Online",
+    "urbano": "Nodo Urbano",
+    "otro": "Nodo Comunitario"
+  },
+  "codeSection": {
+    "title": "¿Tienes un código de invitación?",
+    "subtitle": "Introduce tu código para obtener acceso inmediato a un nodo.",
+    "placeholder": "ej: sabio-monte-42",
+    "joinBtn": "Unirse al nodo"
+  },
+  "card": {
+    "viewNode": "Ver Ficha del Nodo",
+    "enterSpace": "🌿 Entrar al Espacio del Nodo",
+    "memberBadge": "Ya eres miembro",
+    "pendingBadge": "Solicitud pendiente",
+    "requestRequired": "Solicitud requerida",
+    "openAccess": "Entrada libre",
+    "rejectedTitle": "Solicitud rechazada",
+    "emptyTitle": "No hay nodos disponibles en esta categoría.",
+    "emptyDesc": "Prueba a seleccionar otro filtro o utiliza un código de invitación."
+  },
+  "facilitators_one": "{{count}} facilitador/a",
+  "facilitators_other": "{{count}} facilitadores",
+  "activitySection": {
+    "recentTasks": "Tareas del Nodo",
+    "noTasks": "No hay tareas registradas públicamente.",
+    "activeProjects": "Proyectos Activos",
+    "noProjects": "No hay proyectos activos registrados.",
+    "internalNotice": "Las tareas sociocráticas y círculos de trabajo están reservados a los miembros activos del nodo."
+  },
+  "membersSection": {
+    "promptTitle": "¿Quieres conectar con los miembros del nodo?",
+    "promptDesc": "Únete a este espacio para acceder a los perfiles completos, conectar directamente y compartir proyectos."
   },
   "manifesto": "Manifiesto de Convivencia",
   "noActivity": "No hay tareas o proyectos activos registrados públicamente.",
   "quickContact": "Contacto rápido",
   "website": "Sitio Web",
   "accessState": {
-    "alreadyMember": "¡Ya eres miembro de esta comunidad!",
-    "goToAdmin": "Ir al Panel de Administración",
-    "pending": "Tu solicitud de acceso está en revisión por los cuidadores.",
+    "alreadyMember": "¡Ya eres miembro de este nodo!",
+    "enterSpace": "🌿 Entrar al Espacio del Nodo",
+    "goToAdmin": "Administración del Nodo",
+    "manageCommunity": "Gestionar Nodo",
+    "pending": "Tu solicitud de acceso está en revisión por los facilitadores.",
     "rejected": "Tu solicitud previa fue rechazada. Puedes intentar enviar un nuevo mensaje.",
-    "requestDirect": "¡Esta comunidad es abierta! Puedes unirte directamente.",
-    "joinDirect": "Unirme a la comunidad",
+    "requestDirect": "¡Este nodo es abierto! Puedes unirte directamente.",
+    "joinDirect": "Unirme al nodo",
     "requestIntro": "Para unirte a este espacio, envía una breve presentación exponiendo tu motivación y cómo te gustaría colaborar.",
     "placeholderMessage": "Hola, me gustaría unirme porque...",
     "charCount": "Mínimo 20 caracteres ({{count}}/20)",
     "sendRequest": "Enviar Solicitud de Acceso",
-    "loginRequired": "Debes iniciar sesión para unirte o solicitar acceso a esta comunidad.",
+    "loginRequired": "Debes iniciar sesión para unirte o solicitar acceso a este nodo.",
     "loginToJoin": "Iniciar Sesión para Unirse",
     "registerToJoin": "Crear Cuenta para Unirse"
   }

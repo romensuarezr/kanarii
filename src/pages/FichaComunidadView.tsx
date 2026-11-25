@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { MapPin, Users, CheckCircle2, Lock, Globe, BookOpen, ArrowLeft, Loader2, MessageSquare, AlertTriangle, Settings, Eye, ChevronRight } from 'lucide-react';
+import { MapPin, Users, CheckCircle2, Lock, Globe, BookOpen, ArrowLeft, Loader2, MessageSquare, AlertTriangle, Settings, Eye, ChevronRight, ArrowRight } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
@@ -64,7 +64,7 @@ export function FichaComunidadView() {
           setLatestRequest(req);
         }
       } catch (err) {
-        console.error('Error al cargar la comunidad:', err);
+        console.error('Error al cargar el nodo:', err);
       } finally {
         setLoading(false);
       }
@@ -77,8 +77,9 @@ export function FichaComunidadView() {
     try {
       await unirseComunidad(comunidad.slug, appUser.uid, {
         onSuccess: () => {
-          toast.success('¡Te has unido a la comunidad! Bienvenido/a. 🎉');
-          navigate(`/admin`);
+          toast.success(t('accessState.alreadyMember') + ' 🎉');
+          setCommunityId(comunidad.slug);
+          navigate('/tablon');
         }
       });
     } catch (err) {
@@ -102,6 +103,14 @@ export function FichaComunidadView() {
     }
   };
 
+  const handleEnterSpace = () => {
+    if (comunidad) {
+      setCommunityId(comunidad.slug);
+      toast.success(t('card.enterSpace') + ` · ${comunidad.nombre}`);
+      navigate('/tablon');
+    }
+  };
+
   const openLoginModal = (mode: 'login' | 'onboarding') => {
     setLoginMode(mode);
     setIsLoginModalOpen(true);
@@ -109,8 +118,8 @@ export function FichaComunidadView() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#FDFBF7] text-[#8A817C]">
-        <Loader2 className="w-10 h-10 animate-spin mb-4 text-[#A5A58D]" />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-bg-page text-stone-500">
+        <Loader2 className="w-10 h-10 animate-spin mb-4 text-forest-deep" />
         <p className="font-medium font-serif">{t('loadingDetails')}</p>
       </div>
     );
@@ -118,22 +127,22 @@ export function FichaComunidadView() {
 
   if (!comunidad) {
     return (
-      <div className="min-h-screen bg-[#FDFBF7] flex flex-col items-center justify-center p-6 text-stone-800">
+      <div className="min-h-screen bg-bg-page flex flex-col items-center justify-center p-6 text-text-strong">
         <div className="max-w-md w-full text-center space-y-6">
           <div className="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center mx-auto text-rose-500 border border-rose-100 shadow-inner">
             <AlertTriangle className="w-10 h-10" />
           </div>
-          <h1 className="text-3xl font-serif text-[#4A4E4D]">{t('notFoundTitle')}</h1>
+          <h1 className="text-3xl font-serif text-text-strong">{t('notFoundTitle')}</h1>
           <p className="text-stone-600">
             {t('notFoundDesc', { slug })}
           </p>
           <div className="pt-4">
             <Link
-              to="/"
-              className="inline-flex items-center gap-2 bg-[#A5A58D] hover:bg-[#6B705C] text-white py-3 px-6 rounded-2xl font-bold transition-all shadow-md"
+              to="/comunidades"
+              className="inline-flex items-center gap-2 bg-forest-deep hover:bg-forest-deep/90 text-white py-3 px-6 rounded-2xl font-bold transition-all shadow-md"
             >
               <ArrowLeft className="w-5 h-5" />
-              {t('backToHome')}
+              {t('backToCommunities')}
             </Link>
           </div>
         </div>
@@ -145,25 +154,25 @@ export function FichaComunidadView() {
 
   if (isPrivate && !isMember) {
     return (
-      <div className="min-h-screen bg-[#FDFBF7] flex flex-col items-center justify-center p-6 text-stone-800">
-        <div className="max-w-md w-full text-center space-y-6 bg-white border border-[#EAE2D6] rounded-[2rem] p-8 shadow-lg">
-          <div className="w-20 h-20 bg-[#F9F7F1] rounded-full flex items-center justify-center mx-auto text-[#6B705C] border border-[#EAE2D6]">
+      <div className="min-h-screen bg-bg-page flex flex-col items-center justify-center p-6 text-text-strong">
+        <div className="max-w-md w-full text-center space-y-6 bg-bg-surface border border-border rounded-[2rem] p-8 shadow-lg">
+          <div className="w-20 h-20 bg-sand-light rounded-full flex items-center justify-center mx-auto text-forest-deep border border-border">
             <Lock className="w-10 h-10" />
           </div>
-          <h1 className="text-3xl font-serif text-[#4A4E4D]">{t('privateTitle')}</h1>
+          <h1 className="text-3xl font-serif text-text-strong">{t('privateTitle')}</h1>
           <p className="text-stone-600 leading-relaxed">
             {t('privateDesc')}
           </p>
           <div className="pt-4 flex flex-col gap-3">
             <Link
               to="/comunidades"
-              className="inline-flex items-center justify-center gap-2 bg-[#A5A58D] hover:bg-[#6B705C] text-white py-3 px-6 rounded-2xl font-bold transition-all shadow-md"
+              className="inline-flex items-center justify-center gap-2 bg-forest-deep hover:bg-forest-deep/90 text-white py-3 px-6 rounded-2xl font-bold transition-all shadow-md"
             >
               {t('exploreOtherCommunities')}
             </Link>
             <Link
               to="/"
-              className="text-[#CB997E] hover:underline font-bold text-sm"
+              className="text-terracotta-deep hover:underline font-bold text-sm"
             >
               {t('goToWelcome')}
             </Link>
@@ -176,15 +185,17 @@ export function FichaComunidadView() {
   const hasPending = latestRequest?.estado === 'pendiente';
   const hasRejected = latestRequest?.estado === 'rechazada';
 
+  const tipoLabel = comunidad.tipo && t(`types.${comunidad.tipo}`, { defaultValue: comunidad.tipo });
+
   return (
-    <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-6 pb-24 text-stone-800 font-sans">
+    <div className="min-h-screen bg-bg-page p-4 md:p-6 pb-24 text-text-strong font-sans">
       <div className="max-w-6xl mx-auto space-y-6">
         
         {/* Cabecera y Botón de Volver */}
         <div className="flex items-center justify-between">
           <Link
             to={appUser ? '/comunidades' : '/'}
-            className="inline-flex items-center gap-2 text-stone-500 hover:text-stone-800 transition-colors font-bold text-sm"
+            className="inline-flex items-center gap-2 text-stone-500 hover:text-text-strong transition-colors font-bold text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             {appUser ? t('backToCommunities') : t('backToHome')}
@@ -192,7 +203,7 @@ export function FichaComunidadView() {
         </div>
 
         {/* Ficha Principal de la Comunidad */}
-        <div className="bg-white border border-[#EAE2D6] rounded-[2.5rem] shadow-xl overflow-hidden relative">
+        <div className="bg-bg-surface border border-border rounded-[2.5rem] shadow-sm overflow-hidden relative">
           
           {/* Portada / Banner */}
           {comunidad.bannerUrl ? (
@@ -202,8 +213,7 @@ export function FichaComunidadView() {
             />
           ) : (
             <div 
-              className="h-48 md:h-64 w-full" 
-              style={{ background: 'linear-gradient(135deg, oklch(0.72 0.08 60), oklch(0.58 0.12 140))' }} 
+              className="h-48 md:h-64 w-full bg-linear-to-br from-forest-light to-forest-deep/20" 
             />
           )}
 
@@ -211,16 +221,16 @@ export function FichaComunidadView() {
           {isCommunityAdmin && (
             <button
               onClick={handleToggleEdit}
-              className="absolute top-4 right-4 bg-white/90 hover:bg-white backdrop-blur-sm border border-[#EAE2D6] p-2.5 rounded-2xl text-stone-700 shadow-md hover:shadow-lg transition-all z-10 flex items-center gap-1.5 font-semibold text-xs uppercase tracking-wider px-4 animate-fade-in"
+              className="absolute top-4 right-4 bg-bg-surface/90 hover:bg-bg-surface backdrop-blur-xs border border-border p-2.5 rounded-2xl text-text-strong shadow-xs hover:shadow-md transition-all z-10 flex items-center gap-1.5 font-semibold text-xs uppercase tracking-wider px-4 cursor-pointer"
             >
               {isEditingMode ? (
                 <>
-                  <Eye className="w-4 h-4 text-[#A5A58D]" />
+                  <Eye className="w-4 h-4 text-stone-500" />
                   {t('viewPublicCard')}
                 </>
               ) : (
                 <>
-                  <Settings className="w-4 h-4 text-[#CB997E]" />
+                  <Settings className="w-4 h-4 text-terracotta-deep" />
                   {t('settings')}
                 </>
               )}
@@ -237,7 +247,7 @@ export function FichaComunidadView() {
                       const data = await getComunidad(slug);
                       setComunidad(data);
                     } catch (err) {
-                      console.error('Error al recargar comunidad:', err);
+                      console.error('Error al recargar el nodo:', err);
                     }
                   }
                 }}
@@ -248,8 +258,8 @@ export function FichaComunidadView() {
             <div className="p-6 md:p-8 space-y-8">
               
               {/* Bloque A: Info Básica y Logo Superpuesto */}
-              <div className="relative border-b border-[#EAE2D6] pb-6">
-                <div className="absolute -top-16 md:-top-20 left-0 w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-white border-2 border-[#EAE2D6] shadow-md flex items-center justify-center overflow-hidden z-10">
+              <div className="relative border-b border-border pb-6">
+                <div className="absolute -top-16 md:-top-20 left-0 w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-bg-surface border-2 border-border shadow-md flex items-center justify-center overflow-hidden z-10">
                   {comunidad.logoUrl ? (
                     <img
                       src={comunidad.logoUrl}
@@ -257,7 +267,7 @@ export function FichaComunidadView() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-3xl md:text-5xl font-serif text-[#6B705C] font-bold">
+                    <span className="text-3xl md:text-5xl font-serif text-forest-deep font-bold">
                       {comunidad.nombre.charAt(0).toUpperCase()}
                     </span>
                   )}
@@ -266,17 +276,19 @@ export function FichaComunidadView() {
                 <div className="pt-10 md:pt-0 md:pl-40 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-3">
-                      <h1 className="text-2xl md:text-4xl font-serif text-[#4A4E4D] font-bold">
+                      <h1 className="text-2xl md:text-4xl font-serif text-text-strong font-bold">
                         {comunidad.nombre}
                       </h1>
-                      <span className="px-3 py-1 bg-[#F9F7F1] text-[#6B705C] text-xs font-bold rounded-full border border-[#EAE2D6] uppercase tracking-wider">
-                        {comunidad.tipo ? comunidad.tipo.charAt(0).toUpperCase() + comunidad.tipo.slice(1) : t('node')}
-                      </span>
+                      {tipoLabel && (
+                        <span className="px-3 py-1 bg-forest-light text-forest-deep text-xs font-bold rounded-full border border-forest-deep/20 uppercase tracking-wider">
+                          {tipoLabel}
+                        </span>
+                      )}
                     </div>
 
                     {comunidad.ubicacion && (
                       <div className="flex items-center gap-1.5 text-stone-500 text-sm font-medium">
-                        <MapPin className="w-4 h-4 text-[#CB997E]" />
+                        <MapPin className="w-4 h-4 text-terracotta-deep" />
                         <span>
                           {comunidad.ubicacion.municipio}, {comunidad.ubicacion.region}, {comunidad.ubicacion.pais}
                         </span>
@@ -285,10 +297,10 @@ export function FichaComunidadView() {
                   </div>
 
                   {/* Ocupación / Capacidad */}
-                  <div className="w-full md:w-auto min-w-[240px] bg-[#F9F7F1]/50 border border-[#EAE2D6]/40 rounded-2xl p-4 space-y-2">
-                    <div className="flex items-center justify-between text-xs font-bold text-[#8A817C] uppercase tracking-wider">
+                  <div className="w-full md:w-auto min-w-[240px] bg-sand-light/50 border border-border rounded-2xl p-4 space-y-2">
+                    <div className="flex items-center justify-between text-xs font-bold text-stone-500 uppercase tracking-wider">
                       <span className="flex items-center gap-1">
-                        <Users className="w-4 h-4 text-[#A5A58D]" />
+                        <Users className="w-4 h-4 text-forest-deep" />
                         {members.length} {t(members.length === 1 ? 'member_one' : 'member_other')}
                       </span>
                       {comunidad.capacidad && comunidad.capacidad > 0 ? (
@@ -296,47 +308,63 @@ export function FichaComunidadView() {
                       ) : null}
                     </div>
                     
-                    {comunidad.capacidad && comunidad.capacidad > 0 ? (
+                    {comunidad.capacidad && comunidad.capacidad > 0 && (
                       <div className="space-y-1">
-                        <div className="w-full bg-stone-200/60 rounded-full h-2 overflow-hidden">
+                        <div className="w-full bg-sand-dark h-2 rounded-full overflow-hidden">
                           <div 
-                            className="bg-[#A5A58D] h-full rounded-full transition-all duration-500" 
-                            style={{ width: `${Math.min(100, (members.length / comunidad.capacidad) * 100)}%` }}
+                            className="bg-forest-deep h-full rounded-full transition-all duration-500" 
+                            style={{ width: `${Math.min(100, Math.round((members.length / comunidad.capacidad) * 100))}%` }}
                           />
                         </div>
-                        <p className="text-[10px] text-right text-stone-400 font-medium">
+                        <p className="text-[10px] text-right text-stone-500 font-medium">
                           {t('occupationPercent', { percent: Math.round((members.length / comunidad.capacidad) * 100) })}
                         </p>
                       </div>
-                    ) : null}
+                    )}
                   </div>
                 </div>
               </div>
 
-              {/* Layout principal: 2 columnas en desktop */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Bloque B: Grid de 2 Columnas (Contenido Principal vs Barra Lateral) */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                {/* Columna Izquierda (2/3): Tabs y Contenido */}
-                <div className="md:col-span-2 space-y-6">
+                {/* Columna Izquierda (2/3): Pestañas de Contenido */}
+                <div className="lg:col-span-2 space-y-6">
                   
-                  {/* Barra de pestañas */}
-                  <div className="flex border-b border-[#EAE2D6] gap-2 overflow-x-auto scrollbar-none">
-                    {(['presentacion', 'miembros', 'actividad'] as const).map((tab) => (
-                      <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`px-4 py-3 font-bold text-xs md:text-sm border-b-2 transition-all uppercase tracking-widest whitespace-nowrap ${
-                          activeTab === tab
-                            ? 'border-[#CB997E] text-[#CB997E]'
-                            : 'border-transparent text-stone-400 hover:text-stone-700'
-                        }`}
-                      >
-                        {t(`tabs.${tab}` as any)}
-                      </button>
-                    ))}
+                  {/* Selector de Pestañas estilo Retribalize */}
+                  <div className="flex items-center gap-2 border-b border-border pb-3">
+                    <button
+                      onClick={() => setActiveTab('presentacion')}
+                      className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                        activeTab === 'presentacion'
+                          ? 'bg-forest-deep text-white shadow-xs'
+                          : 'text-stone-500 hover:text-text-strong bg-sand-light/60'
+                      }`}
+                    >
+                      {t('tabs.presentation')}
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('miembros')}
+                      className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                        activeTab === 'miembros'
+                          ? 'bg-forest-deep text-white shadow-xs'
+                          : 'text-stone-500 hover:text-text-strong bg-sand-light/60'
+                      }`}
+                    >
+                      {t('tabs.members')} ({members.length})
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('actividad')}
+                      className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                        activeTab === 'actividad'
+                          ? 'bg-forest-deep text-white shadow-xs'
+                          : 'text-stone-500 hover:text-text-strong bg-sand-light/60'
+                      }`}
+                    >
+                      {t('tabs.activity')}
+                    </button>
                   </div>
 
-                  {/* Vistas de pestañas con transiciones CSS nativas */}
                   <div className="relative">
                     
                     {/* Tab: Presentación */}
@@ -352,7 +380,7 @@ export function FichaComunidadView() {
                             {comunidad.tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="px-3 py-1.5 bg-[#F9F7F1] border border-[#EAE2D6] text-stone-700 text-xs font-semibold rounded-xl"
+                                className="px-3 py-1.5 bg-sand-light border border-border text-stone-700 text-xs font-semibold rounded-xl"
                               >
                                 #{tag}
                               </span>
@@ -362,12 +390,12 @@ export function FichaComunidadView() {
 
                         {/* Manifiesto */}
                         {comunidad.manifiesto && (
-                          <div className="space-y-3 pt-6 border-t border-stone-100">
-                            <h3 className="text-lg md:text-xl font-serif text-[#4A4E4D] font-bold flex items-center gap-2">
-                              <BookOpen className="w-5 h-5 text-[#A5A58D]" />
+                          <div className="space-y-3 pt-6 border-t border-border">
+                            <h3 className="text-lg md:text-xl font-serif text-text-strong font-bold flex items-center gap-2">
+                              <BookOpen className="w-5 h-5 text-forest-deep" />
                               {t('manifesto')}
                             </h3>
-                            <div className="bg-[#FDFBF7] border border-[#EAE2D6] rounded-3xl p-6 md:p-8 text-stone-700 prose prose-stone max-w-none prose-p:text-stone-600 prose-headings:font-serif prose-headings:text-[#4A4E4D]">
+                            <div className="bg-bg-page border border-border rounded-3xl p-6 md:p-8 text-stone-700 prose prose-stone max-w-none prose-headings:font-serif prose-headings:text-text-strong">
                               <ReactMarkdown>{comunidad.manifiesto}</ReactMarkdown>
                             </div>
                           </div>
@@ -380,7 +408,7 @@ export function FichaComunidadView() {
                       <div className="space-y-6 transition-all duration-200 ease-out opacity-100 translate-y-0">
                         {loadingMembers ? (
                           <div className="flex justify-center py-12">
-                            <Loader2 className="w-8 h-8 animate-spin text-[#A5A58D]" />
+                            <Loader2 className="w-8 h-8 animate-spin text-forest-deep" />
                           </div>
                         ) : (
                           <>
@@ -410,12 +438,12 @@ export function FichaComunidadView() {
                             </div>
 
                             {!isMember && (
-                              <div className="bg-[#F9F7F1]/50 border border-[#EAE2D6]/40 rounded-3xl p-6 text-center space-y-4 shadow-sm">
-                                <Users className="w-10 h-10 text-[#CB997E] mx-auto" />
+                              <div className="bg-sand-light/50 border border-border rounded-3xl p-6 text-center space-y-4 shadow-2xs">
+                                <Users className="w-10 h-10 text-terracotta-deep mx-auto" />
                                 <div className="space-y-1">
-                                  <h4 className="text-lg font-bold text-stone-800">¿Quieres conocer más a los miembros?</h4>
-                                  <p className="text-sm text-stone-600 max-w-md mx-auto">
-                                    Únete a este espacio para poder ver perfiles completos, conectar con la comunidad y compartir proyectos.
+                                  <h4 className="text-base font-bold text-text-strong">{t('membersSection.promptTitle')}</h4>
+                                  <p className="text-xs text-stone-600 max-w-md mx-auto leading-relaxed">
+                                    {t('membersSection.promptDesc')}
                                   </p>
                                 </div>
                               </div>
@@ -430,36 +458,34 @@ export function FichaComunidadView() {
                       <div className="space-y-6 transition-all duration-200 ease-out opacity-100 translate-y-0">
                         {loadingTareas || loadingProyectos ? (
                           <div className="flex justify-center py-12">
-                            <Loader2 className="w-8 h-8 animate-spin text-[#A5A58D]" />
+                            <Loader2 className="w-8 h-8 animate-spin text-forest-deep" />
                           </div>
                         ) : (
                           <>
                             {/* Tareas */}
                             <div className="space-y-3">
-                              <h4 className="text-xs font-bold text-stone-400 uppercase tracking-widest">Tareas Recientes</h4>
+                              <h4 className="text-xs font-bold text-stone-500 uppercase tracking-widest">{t('activitySection.recentTasks')}</h4>
                               {tareas.length === 0 ? (
-                                <div className="bg-[#F9F7F1]/20 border border-[#EAE2D6]/30 rounded-2xl p-6 text-center text-sm text-stone-500">
-                                  No hay tareas registradas.
+                                <div className="bg-sand-light/30 border border-border rounded-2xl p-6 text-center text-xs text-stone-500">
+                                  {t('activitySection.noTasks')}
                                 </div>
                               ) : (
                                 <div className="space-y-2">
                                   {tareas.slice(0, 5).map((tarea) => (
-                                    <div key={tarea.id} className="bg-white border border-[#EAE2D6] rounded-2xl p-4 flex items-center justify-between gap-3 shadow-sm">
+                                    <div key={tarea.id} className="bg-bg-surface border border-border rounded-2xl p-4 flex items-center justify-between gap-3 shadow-2xs">
                                       <div className="min-w-0 flex-1">
-                                        <p className="font-bold text-stone-800 truncate">{tarea.titulo}</p>
+                                        <p className="font-bold text-text-strong text-sm truncate">{tarea.titulo}</p>
                                         {isMember && tarea.descripcion && (
-                                          <p className="text-sm text-stone-600 line-clamp-1 mt-0.5">{tarea.descripcion}</p>
+                                          <p className="text-xs text-stone-500 line-clamp-1 mt-0.5">{tarea.descripcion}</p>
                                         )}
                                       </div>
-                                      <div className="shrink-0 flex items-center gap-2">
-                                        <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                                          tarea.estado === 'completada'
-                                            ? 'bg-green-50 text-green-700 border border-green-200'
-                                            : 'bg-stone-100 text-stone-600'
-                                        }`}>
-                                          {tarea.estado || 'pendiente'}
-                                        </span>
-                                      </div>
+                                      <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+                                        tarea.estado === 'completada' 
+                                          ? 'bg-status-success-bg text-status-success-text border-status-success-text/20' 
+                                          : 'bg-sand-light text-stone-700 border-border'
+                                      }`}>
+                                        {tarea.estado === 'completada' ? 'Completada' : 'Pendiente'}
+                                      </span>
                                     </div>
                                   ))}
                                 </div>
@@ -467,36 +493,36 @@ export function FichaComunidadView() {
                             </div>
 
                             {/* Proyectos */}
-                            <div className="space-y-3 pt-4">
-                              <h4 className="text-xs font-bold text-stone-400 uppercase tracking-widest">Proyectos Activos</h4>
+                            <div className="space-y-3 pt-4 border-t border-border">
+                              <h4 className="text-xs font-bold text-stone-500 uppercase tracking-widest">{t('activitySection.activeProjects')}</h4>
                               {proyectos.length === 0 ? (
-                                <div className="bg-[#F9F7F1]/20 border border-[#EAE2D6]/30 rounded-2xl p-6 text-center text-sm text-stone-500">
-                                  No hay proyectos activos.
+                                <div className="bg-sand-light/30 border border-border rounded-2xl p-6 text-center text-xs text-stone-500">
+                                  {t('activitySection.noProjects')}
                                 </div>
                               ) : (
                                 <div className="space-y-2">
                                   {proyectos.slice(0, 5).map((proyecto) => (
-                                    <div key={proyecto.id} className="bg-white border border-[#EAE2D6] rounded-2xl p-4 flex items-center justify-between gap-3 shadow-sm">
+                                    <div key={proyecto.id} className="bg-bg-surface border border-border rounded-2xl p-4 flex items-center justify-between gap-3 shadow-2xs">
                                       <div className="min-w-0 flex-1">
-                                        <p className="font-bold text-stone-800 truncate">{proyecto.titulo}</p>
+                                        <p className="font-bold text-text-strong text-sm truncate">{proyecto.titulo}</p>
                                         {isMember && proyecto.descripcion && (
-                                          <p className="text-sm text-stone-600 line-clamp-1 mt-0.5">{proyecto.descripcion}</p>
+                                          <p className="text-xs text-stone-500 line-clamp-1 mt-0.5">{proyecto.descripcion}</p>
                                         )}
                                       </div>
-                                      <div className="shrink-0">
-                                        <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                                          proyecto.estado === 'en_marcha'
-                                            ? 'bg-green-50 text-green-700 border border-green-200'
-                                            : 'bg-stone-100 text-stone-600'
-                                        }`}>
-                                          {proyecto.estado || 'planificado'}
-                                        </span>
-                                      </div>
+                                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sand-light text-stone-700 border border-border">
+                                        {proyecto.estado || 'planificado'}
+                                      </span>
                                     </div>
                                   ))}
                                 </div>
                               )}
                             </div>
+
+                            {!isMember && (
+                              <div className="bg-sand-light/40 border border-border rounded-2xl p-4 text-xs text-stone-600 leading-relaxed text-center">
+                                ℹ️ {t('activitySection.internalNotice')}
+                              </div>
+                            )}
                           </>
                         )}
                       </div>
@@ -507,42 +533,54 @@ export function FichaComunidadView() {
 
                 {/* Columna Derecha (1/3): CTAs de Acceso y Participación */}
                 <div className="space-y-6">
-                  <div className="bg-[#F9F7F1]/50 border border-[#EAE2D6] rounded-3xl p-6 shadow-md space-y-6 sticky top-6">
+                  <div className="bg-sand-light/50 border border-border rounded-3xl p-6 shadow-xs space-y-6 sticky top-6">
                     <div>
-                      <h3 className="text-lg font-serif font-bold text-[#4A4E4D] mb-2">{t('join')}</h3>
-                      <p className="text-sm text-[#8A817C] leading-relaxed">
+                      <h3 className="text-lg font-serif font-bold text-text-strong mb-1">{t('join')}</h3>
+                      <p className="text-xs text-stone-500 leading-relaxed">
                         {comunidad.esPublica
                           ? t('accessState.requestDirect')
                           : t('privateDesc')}
                       </p>
                     </div>
 
-                    <div className="border-t border-[#EAE2D6] pt-6">
+                    <div className="border-t border-border pt-6">
                       {isMember ? (
                         <div className="space-y-3">
-                          <div className="flex items-center gap-2 text-green-700 font-bold text-sm bg-green-50 border border-green-200 rounded-2xl p-4">
-                            <CheckCircle2 className="w-5 h-5 shrink-0" />
+                          <div className="flex items-center gap-2 text-status-success-text font-bold text-xs bg-status-success-bg border border-status-success-text/20 rounded-2xl p-3.5">
+                            <CheckCircle2 className="w-4 h-4 shrink-0" />
                             <span>{t('accessState.alreadyMember')}</span>
                           </div>
+
+                          {/* Botón principal para miembros: Entrar al espacio del nodo */}
                           <button
-                            onClick={() => navigate('/admin')}
-                            className="w-full bg-[#A5A58D] hover:bg-[#6B705C] text-white py-3.5 px-6 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center gap-2"
+                            onClick={handleEnterSpace}
+                            className="w-full bg-forest-deep hover:bg-forest-deep/90 text-white py-3.5 px-6 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer text-sm"
                           >
-                            {t('accessState.goToAdmin')}
-                            <ChevronRight className="w-4 h-4" />
+                            <span>{t('accessState.enterSpace')}</span>
+                            <ArrowRight className="w-4 h-4" />
                           </button>
+
+                          {isCommunityAdmin && (
+                            <button
+                              onClick={() => navigate('/admin')}
+                              className="w-full bg-bg-surface hover:bg-sand-light text-stone-700 py-2.5 px-4 rounded-xl font-semibold transition-all border border-border flex items-center justify-center gap-1.5 text-xs cursor-pointer"
+                            >
+                              <span>{t('accessState.goToAdmin')}</span>
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
+                          )}
                         </div>
                       ) : !appUser ? (
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           <button
                             onClick={() => openLoginModal('login')}
-                            className="w-full bg-[#A5A58D] hover:bg-[#6B705C] text-white py-3.5 px-6 rounded-2xl font-bold transition-all shadow-md text-center"
+                            className="w-full bg-forest-deep hover:bg-forest-deep/90 text-white py-3 px-5 rounded-2xl font-bold transition-all shadow-xs text-center text-xs cursor-pointer"
                           >
                             {t('accessState.loginToJoin')}
                           </button>
                           <button
                             onClick={() => openLoginModal('onboarding')}
-                            className="w-full border border-[#A5A58D] text-[#A5A58D] hover:bg-white py-3.5 px-6 rounded-2xl font-bold transition-all text-center"
+                            className="w-full border border-border bg-bg-surface hover:bg-sand-light text-text-strong py-3 px-5 rounded-2xl font-bold transition-all text-center text-xs cursor-pointer"
                           >
                             {t('accessState.registerToJoin')}
                           </button>
@@ -550,13 +588,13 @@ export function FichaComunidadView() {
                       ) : comunidad.requiereAprobacion ? (
                         <div className="space-y-4">
                           {hasPending ? (
-                            <div className="bg-blue-50/50 border border-blue-100 rounded-3xl p-5 flex flex-col gap-3 text-[#1E3A8A]">
+                            <div className="bg-sand-light border border-border rounded-2xl p-4 flex flex-col gap-2 text-stone-700">
                               <div className="flex items-center gap-2">
-                                <Loader2 className="w-5 h-5 text-blue-600 animate-spin shrink-0" />
-                                <span className="font-bold text-sm">{t('accessState.pending')}</span>
+                                <Loader2 className="w-4 h-4 text-forest-deep animate-spin shrink-0" />
+                                <span className="font-bold text-xs">{t('accessState.pending')}</span>
                               </div>
                               {latestRequest?.mensaje && (
-                                <div className="bg-white/80 border border-blue-100 rounded-xl p-3 text-stone-700 text-xs italic">
+                                <div className="bg-bg-surface border border-border rounded-xl p-2.5 text-stone-600 text-xs italic">
                                   "{latestRequest.mensaje}"
                                 </div>
                               )}
@@ -564,12 +602,12 @@ export function FichaComunidadView() {
                           ) : (
                             <div className="space-y-4">
                               {hasRejected && (
-                                <div className="bg-rose-50/50 border border-rose-100 rounded-2xl p-4 text-rose-900 text-xs">
+                                <div className="bg-rose-50 border border-rose-100 rounded-2xl p-3 text-rose-900 text-xs">
                                   <p className="font-bold mb-1">{t('accessState.rejected')}</p>
                                 </div>
                               )}
 
-                              <div className="space-y-2">
+                              <div className="space-y-1.5">
                                 <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest block">
                                   {t('accessState.charCount', { count: solicitudMsg.trim().length })}
                                 </label>
@@ -578,17 +616,17 @@ export function FichaComunidadView() {
                                   value={solicitudMsg}
                                   onChange={(e) => setSolicitudMsg(e.target.value)}
                                   placeholder={t('accessState.placeholderMessage')}
-                                  className="w-full bg-white border border-[#EAE2D6] rounded-2xl p-3 text-stone-800 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-[#A5A58D] transition-all text-sm outline-none"
+                                  className="w-full bg-bg-page border border-border rounded-2xl p-3 text-text-strong placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-forest-deep transition-all text-xs"
                                 />
                               </div>
 
                               <button
                                 onClick={handleSendRequest}
                                 disabled={isExecuting || solicitudMsg.trim().length < 20}
-                                className="w-full bg-[#CB997E] hover:bg-[#B58368] text-white py-3.5 px-6 rounded-2xl font-bold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-forest-deep hover:bg-forest-deep/90 text-white py-3 px-5 rounded-2xl font-bold transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-xs cursor-pointer"
                               >
-                                <MessageSquare className="w-5 h-5" />
-                                {t('accessState.sendRequest')}
+                                <MessageSquare className="w-4 h-4" />
+                                <span>{t('accessState.sendRequest')}</span>
                               </button>
                             </div>
                           )}
@@ -597,7 +635,7 @@ export function FichaComunidadView() {
                         <button
                           onClick={handleJoinDirect}
                           disabled={isExecuting}
-                          className="w-full bg-[#CB997E] hover:bg-[#B58368] text-white py-3.5 px-6 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center gap-2"
+                          className="w-full bg-forest-deep hover:bg-forest-deep/90 text-white py-3 px-5 rounded-2xl font-bold transition-all shadow-xs flex items-center justify-center gap-2 text-xs cursor-pointer"
                         >
                           {t('accessState.joinDirect')}
                         </button>
@@ -633,3 +671,5 @@ export function FichaComunidadView() {
     </div>
   );
 }
+
+export default FichaComunidadView;

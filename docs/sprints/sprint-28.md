@@ -10,7 +10,7 @@
 | T-142 | Home Pública Retribalizada y Enlace Directo a Pedagogía/Demos | M | ✅ Completada | T-141 | .agents/tasks/_archived/task-142.md |
 | T-143 | Tarjetas de Miembros Estilo Retribalize con Acciones Rápidas y Conexión | M | ✅ Completada | T-141 | .agents/tasks/_archived/task-143.md |
 | T-144 | Dashboard de Encuentro (/dashboard) y Tarjeta de Sinergia Determinista (Isla + Kin/HD + Tríada) | L | ✅ Completada | T-142, T-143 | .agents/tasks/_archived/task-144.md |
-| T-145 | Directorio de Nodos (Comunidades, Residencias, Nodos Online) y Ficha con Pestañas e i18n | M | ⏳ Pendiente | T-142 | .agents/tasks/task-145.md |
+| T-145 | Directorio de Nodos (Comunidades, Residencias, Nodos Online) y Ficha con Pestañas e i18n | M | ✅ Completada | T-142 | .agents/tasks/_archived/task-145.md |
 | T-146 | Navegación de 2 Capas en Sidebar (Red Global vs. Espacio de Nodo con 'Volver a la Red') | M | ⏳ Pendiente | T-144, T-145 | .agents/tasks/task-146.md |
 
 ## Régimen Operativo del Sprint
