@@ -33,11 +33,18 @@ Resolver la experiencia móvil y de bienvenida a Kanarii alineándola con el flu
   - En Capa 2: [Tablón, Ficha Nodo, Tareas/Proyectos, Volver a Red Canarias].
 - **Veredicto Scout**: Desarrollo a medida sobre `BottomNav.tsx` y `navigationConfig` existente.
 
-### T-154: Rediseño del Dashboard con Sencillez Retribalize (2 Secciones y Acciones Claras de Arranque)
-- **Diagnóstico**: El dashboard actual presenta múltiples bloques dispersos. El modelo de Retribalize demuestra que una interfaz con dos bloques de intención ("Explorar Comunidades/Nodos" y "Descubrir Sinergias") y dos botones de acción primarios de bienvenida aumenta la conversión y la claridad cognitiva.
-- **Estrategia técnica**:
-  - Reorganizar la parte superior de `DashboardView.tsx` en dos secciones tipo tarjeta de bienvenida:
-    1. **Nodos & Tribus en Canarias**: tarjeta clara con botón "Explorar Nodos".
-    2. **Resonancias & Sinergias**: tarjeta clara con botón "Ver Mis Sinergias".
-  - Mantener la información del Kin del día y el grid reactivo de sinergias debajo.
-- **Veredicto Scout**: Refactorización de componentes en `DashboardView.tsx` y tokens semánticos del `@theme`.
+### T-154: Rediseño del Dashboard con Sencillez Retribalize (Encontrar Nuevas Conexiones vs Crear Algo)
+- **Diagnóstico**: Contrastada la interfaz en vivo de Retribalize (`https://retribalize.io/dashboard?tab=connect`), se constata que la arquitectura de acción de su dashboard se asienta sobre dos intenciones madre:
+  1. **"Find New Connections"** (Encontrar nuevas conexiones): el botón primario que canaliza el descubrimiento de personas, tribus, eventos y residencias según resonancia y afinidad.
+  2. **"Create New"** (Crear algo): botón de acción directa que despliega las 3 formas nucleares de convocar en la red:
+     - **Tribu / Nodo**: Iniciar una nueva comunidad ("Start a new tribe").
+     - **Evento**: Organizar un encuentro online o presencial ("Host a gathering").
+     - **Residencia**: Ofrecer o publicar un lugar para estancias/voluntariado ("List a place for people to stay").
+     - Borradores integrados: nada se pierde si se cancela a medio proceso.
+- **Estrategia técnica para Kanarii**:
+  - Reorganizar la cabecera de `DashboardView.tsx` con estas dos acciones nucleares de bienvenida:
+    1. **"Encontrar nuevas conexiones"** (botón de acción principal destacado para activar sinergias en Canarias).
+    2. **"Crear algo"** (botón que abre `CreateNewModal` con las opciones: *Crear un Nodo*, *Convocar un Encuentro*, *Publicar una Estancia/Residencia*).
+  - Incluir el selector rápido de categorías tipo Retribalize: Personas, Nodos, Eventos, Residencias.
+  - Mantener la información del Kin del día y el grid determinista de sinergias calculado según isla, Kin Maya y Diseño Humano.
+- **Veredicto Scout**: Componente modular `CreateNewModal.tsx`, simplificación en `DashboardView.tsx` y tokens semánticos del `@theme`.
