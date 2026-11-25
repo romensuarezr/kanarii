@@ -30,12 +30,18 @@ export function useMemberConnection(receiverId?: string, communityId?: string) {
     return () => unsubscribe();
   }, [appUser?.uid, receiverId]);
 
-  const connect = useCallback(async () => {
-    if (!appUser?.uid || !receiverId || !communityId) return;
+  const connect = useCallback(async (options?: {
+    note?: string;
+    senderName?: string;
+    senderAvatar?: string;
+    synergyData?: any;
+  }) => {
+    if (!appUser?.uid || !receiverId) return;
     try {
-      await requestConnection(appUser.uid, receiverId, communityId);
+      await requestConnection(appUser.uid, receiverId, communityId || 'network', options);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Error al conectar'));
+      throw err;
     }
   }, [appUser?.uid, receiverId, communityId]);
 

@@ -32,5 +32,21 @@
     "incompleteProfileTitle": "Complete your Passport to unlock all your synergies",
     "incompleteProfileDesc": "Add your birth date and define your triad (offerings and needs) so the engine can calculate your deterministic network connections.",
     "completePassportBtn": "Complete my Passport"
+  },
+  "connectModal": {
+    "title": "Connect with {{name}}",
+    "tagline": "Connection & Synergy",
+    "inIsland": "on",
+    "inKin": "through Mayan kin",
+    "inNetwork": "in the network",
+    "defaultTemplate": "Hello {{name}}! I saw your profile on Kanarii and our resonance {{context}}. I'd love to connect to explore community synergy and exchanges.",
+    "messageLabel": "Introduction / intention note:",
+    "messagePlaceholder": "Write a few words about what you'd like to share or exchange...",
+    "submitBtn": "Send Request",
+    "sending": "Sending...",
+    "sentTitle": "Connection Requested!",
+    "sentSubtitle": "We have sent a notification to {{name}} to harmonize your community intentions.",
+    "successToast": "Connection request sent!",
+    "errorToast": "Failed to send connection request."
   }
 }

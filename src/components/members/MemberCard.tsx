@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { MapPin, ArrowRight, Sparkles, User, HeartHandshake } from 'lucide-react';
+import { MapPin, ArrowRight, Sparkles, User, HeartHandshake, UserPlus } from 'lucide-react';
 import { ContactActions } from '../perfil/ContactActions';
 import { useTranslation } from 'react-i18next';
+import { ConnectModal } from '../sinergias/ConnectModal';
 
 export interface MemberCardProps {
   id: string;
@@ -37,7 +38,8 @@ export function MemberCard({
   onOpenPassport,
   className = '',
 }: MemberCardProps) {
-  const { t } = useTranslation('passport');
+  const { t } = useTranslation(['passport', 'dashboard']);
+  const [isConnectOpen, setIsConnectOpen] = useState(false);
 
   const initial = name ? name.trim().charAt(0).toUpperCase() : 'M';
 
@@ -173,13 +175,25 @@ export function MemberCard({
         )}
       </div>
 
-      {/* Footer de Tarjeta: Contacto Directo + Ver Pasaporte */}
+      {/* Footer de Tarjeta: Contacto Directo + Conectar + Ver Pasaporte */}
       <div className="pt-3 mt-3 border-t border-border/60 flex items-center justify-between gap-2">
         {/* Acciones de contacto (evitan propagar el click de la tarjeta) */}
         <div
           onClick={(e) => e.stopPropagation()}
           className="flex items-center gap-1.5"
         >
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsConnectOpen(true);
+            }}
+            className="px-2.5 py-1 rounded-xl text-[11px] font-semibold bg-forest-deep text-white hover:bg-forest-deep/90 transition-colors flex items-center gap-1 shadow-2xs"
+          >
+            <UserPlus size={11} />
+            <span>{t('dashboard:card.connect', { defaultValue: 'Conectar' })}</span>
+          </button>
+
           {phone ? (
             <ContactActions
               phone={phone}
@@ -201,6 +215,21 @@ export function MemberCard({
           <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
         </div>
       </div>
+
+      {/* Modal de Conexión de Sinergia */}
+      <ConnectModal
+        isOpen={isConnectOpen}
+        onClose={() => setIsConnectOpen(false)}
+        targetUserId={id}
+        targetName={name}
+        targetAvatar={photoUrl}
+        targetRole={role}
+        targetLocation={location}
+        synergyData={{
+          offerings: allOfferings,
+          needs: necesidades,
+        }}
+      />
     </motion.div>
   );
 }

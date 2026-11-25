@@ -32,5 +32,21 @@
     "incompleteProfileTitle": "Completa tu Pasaporte para desbloquear todas tus sinergias",
     "incompleteProfileDesc": "Añade tu fecha de nacimiento y define tu tríada (lo que ofreces y necesitas) para que el motor calcule tus conexiones deterministas con la red.",
     "completePassportBtn": "Completar mi Pasaporte"
+  },
+  "connectModal": {
+    "title": "Conectar con {{name}}",
+    "tagline": "Conexión & Sinergia",
+    "inIsland": "en",
+    "inKin": "a través del kin",
+    "inNetwork": "en la red",
+    "defaultTemplate": "¡Hola {{name}}! He visto tu perfil en Kanarii y resonamos {{context}}. Me encantaría conectar contigo para explorar intercambios y sinergias en la comunidad.",
+    "messageLabel": "Mensaje de presentación / intención:",
+    "messagePlaceholder": "Escribe unas palabras sobre qué te gustaría compartir o intercambiar...",
+    "submitBtn": "Enviar Solicitud",
+    "sending": "Enviando...",
+    "sentTitle": "¡Conexión solicitada!",
+    "sentSubtitle": "Le hemos enviado una notificación a {{name}} para sincronizar vuestras intenciones comunitarias.",
+    "successToast": "¡Solicitud de conexión enviada!",
+    "errorToast": "Error al enviar la solicitud de conexión."
   }
 }
