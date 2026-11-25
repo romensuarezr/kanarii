@@ -5,7 +5,7 @@
 - **Título**: Rediseño del Dashboard con Sencillez Retribalize (Encontrar Nuevas Conexiones vs Crear Algo)
 - **Sprint**: Sprint 30
 - **Tipo**: UX / Frontend / Dashboard
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-25
 
 ## Diseño macro aprobado en planning
@@ -39,9 +39,9 @@ Tras contrastar directamente la interfaz activa de Retribalize.io (`https://retr
 - `.agents/tasks/task-154.md`
 
 ## Criterios de Aceptación
-- [ ] Cabecera de `DashboardView.tsx` rediseñada con los dos botones de acción primarios: "Encontrar nuevas conexiones" y "Crear algo".
-- [ ] Modal o menú desplegable para "Crear algo" con las 3 opciones de la red: Iniciar un Nodo/Tribu, Organizar un Encuentro y Publicar una Residencia/Estancia.
-- [ ] Filtro por tipo de conexión (Personas, Nodos, Eventos, Residencias) integrado orgánicamente.
-- [ ] Estilo visual sobrio, cálido y minimalista basado en tokens semánticos de `@theme`.
-- [ ] Cadenas traducidas en español e inglés sin valores hardcodeados.
-- [ ] `npm run lint` y `npm run build` pasan limpios sin errores.
+- [x] Cabecera de `DashboardView.tsx` rediseñada con los dos botones de acción primarios: "Encontrar nuevas conexiones" y "Crear algo".
+- [x] Modal o menú desplegable para "Crear algo" con las 3 opciones de la red: Iniciar un Nodo/Tribu, Organizar un Encuentro y Publicar una Residencia/Estancia.
+- [x] Filtro por tipo de conexión (Personas, Nodos, Eventos, Residencias) integrado orgánicamente.
+- [x] Estilo visual sobrio, cálido y minimalista basado en tokens semánticos de `@theme`.
+- [x] Cadenas traducidas en español e inglés sin valores hardcodeados.
+- [x] `npm run lint` y `npm run build` pasan limpios sin errores.
