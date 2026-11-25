@@ -5,8 +5,9 @@
 - **Título**: Homologación de Herramientas de Flota (Hermes, Orca) y Sync Core Agent OS
 - **Sprint**: Sprint 29
 - **Tipo**: DX / Tooling / Mantenimiento
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-25
+- **Fecha fin**: 2026-11-25
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 29 / 2026-11-25
@@ -27,6 +28,6 @@ Mantener la flota de herramientas y el control plane de Agent OS al día según 
 - `.agents/tasks/task-150.md`
 
 ## Criterios de Aceptación
-- [ ] `scripts/agent/sync.sh .` ejecutado limpiamente.
-- [ ] Habilidades y runbooks de tooling actualizados.
-- [ ] `bash scripts/agent/check-tooling-updates.sh` verifica herramientas al día.
+- [x] `scripts/agent/sync.sh .` ejecutado limpiamente.
+- [x] Habilidades y runbooks de tooling actualizados.
+- [x] `bash scripts/agent/check-tooling-updates.sh` verifica herramientas al día.

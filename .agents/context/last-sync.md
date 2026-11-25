@@ -1,1 +1,4 @@
-skipped: 2026-11-24
+2026-11-25
+version: 1.40.0
+tag: v1.40.0
+commit: c21719d5eea1614daa340c3d7c43a2b10218b5f0
