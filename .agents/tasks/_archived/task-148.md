@@ -5,8 +5,9 @@
 - **Título**: Persistencia y Conexión de Convocatorias de Eventos y Residencias Comunitarias
 - **Sprint**: Sprint 29
 - **Tipo**: Feature / Datos / Reactividad
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-25
+- **Fecha fin**: 2026-11-25
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 29 / 2026-11-25
@@ -32,7 +33,7 @@ Las vistas `/eventos` y `/residencias` creadas en T-146 necesitan persistir en c
 - `.agents/tasks/task-148.md`
 
 ## Criterios de Aceptación
-- [ ] Servicios y hooks de eventos y residencias implementados con reactividad en tiempo real.
-- [ ] Conexión en `EventosView.tsx` y `ResidenciasView.tsx` persistiendo inscripciones en Firestore.
-- [ ] Design tokens estrictos del `@theme`.
-- [ ] `npm run lint` y `npm run build` pasan limpios sin errores.
+- [x] Servicios y hooks de eventos y residencias implementados con reactividad en tiempo real.
+- [x] Conexión en `EventosView.tsx` y `ResidenciasView.tsx` persistiendo inscripciones en Firestore.
+- [x] Design tokens estrictos del `@theme`.
+- [x] `npm run lint` y `npm run build` pasan limpios sin errores.
