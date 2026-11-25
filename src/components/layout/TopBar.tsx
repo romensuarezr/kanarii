@@ -9,7 +9,7 @@ export function TopBar() {
       {/* Zona Izquierda: Logo Kanarii y/o Título */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex items-center gap-2 shrink-0">
-          <img src="/icono-palmera.svg" alt="Kanarii" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
+          <img src="/kanarii-logo.svg" alt="Kanarii" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
           <span className="font-serif text-lg text-stone-800 font-bold tracking-tight">Kanarii</span>
         </div>
 

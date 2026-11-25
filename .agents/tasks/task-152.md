@@ -5,7 +5,7 @@
 - **Título**: Unificación de Marca y Enfoque Territorial Canarias (Logo Oficial y Red Viva Canarias)
 - **Sprint**: Sprint 30
 - **Tipo**: Branding / UX / i18n
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-25
 
 ## Diseño macro aprobado en planning
@@ -29,7 +29,7 @@ Homogeneizar el branding visual de Kanarii con su logotipo oficial y clarificar 
 - `.agents/tasks/task-152.md`
 
 ## Criterios de Aceptación
-- [ ] Logo oficial de Kanarii renderizado en `TopBar` y `Sidebar`.
-- [ ] Sustitución completa de "Red Global" por "Red Canarias" / "Red Viva Canarias".
-- [ ] Paridad en español e inglés en `common.json`.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] Logo oficial de Kanarii renderizado en `TopBar` y `Sidebar`.
+- [x] Sustitución completa de "Red Global" por "Red Canarias" / "Red Viva Canarias".
+- [x] Paridad en español e inglés en `common.json`.
+- [x] `npm run lint` y `npm run build` pasan sin errores.

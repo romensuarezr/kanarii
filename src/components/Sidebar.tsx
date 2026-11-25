@@ -207,11 +207,11 @@ export function Sidebar() {
       {/* Header / Logo */}
       <div className="p-6 pb-4">
         <div className="flex items-center gap-3 mb-5">
-          <img src="/icono-palmera.svg" alt="Kanarii" style={{ width: '34px', height: '34px', objectFit: 'contain' }} />
+          <img src="/kanarii-logo.svg" alt="Kanarii" style={{ width: '34px', height: '34px', objectFit: 'contain' }} />
           <div>
             <h1 className="font-serif text-2xl text-forest-deep tracking-tight leading-none">Kanarii</h1>
             <p className="text-[10px] text-stone-400 font-bold tracking-wider uppercase mt-0.5">
-              {isNodeSpace ? t('nav.nodeSpace', { defaultValue: 'Espacio de Nodo' }) : t('nav.globalNetwork', { defaultValue: 'Red Global' })}
+              {isNodeSpace ? t('nav.nodeSpace', { defaultValue: 'Espacio de Nodo' }) : t('nav.globalNetwork', { defaultValue: 'Red Canarias' })}
             </p>
           </div>
         </div>
@@ -345,7 +345,7 @@ export function Sidebar() {
           <>
             <div className="px-3 py-1 mb-1">
               <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
-                {t('nav.globalNetwork', { defaultValue: 'La Red' })}
+                {t('nav.globalNetwork', { defaultValue: 'Red Canarias' })}
               </p>
             </div>
 
