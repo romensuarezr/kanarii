@@ -14,7 +14,7 @@
 | T-146 | Navegación de 2 Capas en Sidebar (Red Global vs. Espacio de Nodo con 'Volver a la Red') | M | ⏳ Pendiente | T-144, T-145 | .agents/tasks/task-146.md |
 
 ## Régimen Operativo del Sprint
-- **Régimen**: Desatendida (A) — ramas aisladas `feat/SPRINT28-<tarea>`, verificación con `npm run lint` y `npm run build` antes de merge a `main` con `--no-ff`.
+- **Régimen**: Desatendida (A) — ramas aisladas `feat/SPRINT28-<tarea>`, verificación con `npm run lint` y `npm run build` antes de merge a `staging` con `--no-ff`. Al completar el conjunto de tareas de UI/UX del sprint, merge consolidado `staging` → `main`.
 - **Orden de Carriles**: Secuencial [T-141 → T-142 → T-143 → T-144 → T-145 → T-146].
 - **Sellado en**: 2026-11-24
 
