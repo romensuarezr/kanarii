@@ -30,8 +30,8 @@ export function KanbanBoard<T>({
   };
 
   return (
-    <div className={`w-full overflow-x-auto pb-4 custom-scrollbar ${className}`}>
-      <div className="flex gap-6 min-h-[600px] px-2">
+    <div className={`w-full md:overflow-x-auto pb-4 custom-scrollbar ${className}`}>
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 md:min-h-[600px] px-0 sm:px-2">
         {columns.map((column) => {
           const columnItems = getItemsForColumn(column.id);
           

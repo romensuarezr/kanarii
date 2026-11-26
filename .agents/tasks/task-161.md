@@ -5,7 +5,7 @@
 - **Título**: Tableros Kanban responsivos sin scroll lateral en móvil
 - **Sprint**: Sprint 32
 - **Tipo**: UX / Responsive / Mobile UI
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -25,6 +25,6 @@
 - `src/pages/PropuestasView.tsx`
 
 ## Criterios de Aceptación
-- [ ] `/proyectos`, `/tareas` y `/gobernanza` apilan columnas verticalmente en `< md` con cero scroll horizontal (`scrollWidth <= innerWidth`).
-- [ ] En desktop (`md:`), mantienen la vista Kanban en columnas intacta.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] `/proyectos`, `/tareas` y `/gobernanza` apilan columnas verticalmente en `< md` con cero scroll horizontal (`scrollWidth <= innerWidth`).
+- [x] En desktop (`md:`), mantienen la vista Kanban en columnas intacta.
+- [x] `npm run lint` y `npm run build` pasan sin errores.

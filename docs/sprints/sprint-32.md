@@ -1,14 +1,14 @@
 # Sprint 32 — 2026-11-26 → 2026-12-03
 
 ## Estado
-🟡 En curso
+✅ Completado
 
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
 |---|---|---|---|---|---|
 | T-159 | Erradicar desbordamiento global en `/perfil`, `/ficha` y `Toaster` móvil | M | 🟢 Completada | — | .agents/tasks/task-159.md |
 | T-160 | Eliminar scroll lateral en barras de filtros y pestañas (`flex-wrap`) | M | 🟢 Completada | — | .agents/tasks/task-160.md |
-| T-161 | Tableros Kanban responsivos sin scroll lateral en móvil | M | ⬜ Pendiente | — | .agents/tasks/task-161.md |
+| T-161 | Tableros Kanban responsivos sin scroll lateral en móvil | M | 🟢 Completada | — | .agents/tasks/task-161.md |
 
 ## Régimen Operativo del Sprint
 - **Régimen**: Desatendida

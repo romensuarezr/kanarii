@@ -19,7 +19,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   className = ''
 }) => {
   return (
-    <div className={`flex flex-col min-w-[300px] w-full max-w-[350px] h-full ${className}`}>
+    <div className={`flex flex-col w-full md:min-w-[300px] md:max-w-[350px] h-full ${className}`}>
       {/* Column Header */}
       <div className="flex items-center justify-between mb-4 px-2">
         <div className="flex items-center gap-2">

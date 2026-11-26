@@ -232,9 +232,9 @@ export function PropuestasView() {
         </div>
 
         {loading ? (
-          <div className="flex gap-6 overflow-x-auto pb-4">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6 pb-4">
             {[1, 2, 3].map(i => (
-              <div key={i} className="min-w-[300px] h-[600px] bg-stone-100/50 rounded-3xl animate-pulse" />
+              <div key={i} className="w-full md:min-w-[300px] h-64 md:h-[600px] bg-stone-100/50 rounded-3xl animate-pulse" />
             ))}
           </div>
         ) : viewMode === 'kanban' ? (
