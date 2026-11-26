@@ -16,8 +16,10 @@ import {
   Briefcase, 
   Handshake, 
   Settings,
-  Layers
+  Layers,
+  Plus
 } from 'lucide-react';
+import { CreateNewModal } from './CreateNewModal';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { listenSolicitudes, listenPropuestasPendientesCount, listenSolicitudesProyectosPendientesCount } from '../lib/appService';
@@ -37,6 +39,7 @@ export function Sidebar() {
   const { comunidad, comunidades, setCommunityId, currentCommunityId, exitCommunitySpace } = useComunidad();
   const { unreadCount } = useNotificaciones(comunidad?.id, appUser?.uid);
   const [pendingCount, setPendingCount] = useState(0);
+  const [isCreateNewOpen, setIsCreateNewOpen] = useState(false);
   const { acuerdosPendingCount, acuerdosSolicitanteCount } = useAcuerdosBadge();
   const [propuestasPendingCount, setPropuestasPendingCount] = useState(0);
   const [proyectosPendingCount, setProyectosPendingCount] = useState(0);
@@ -369,6 +372,18 @@ export function Sidebar() {
               );
             })}
 
+            {/* Botón protagonista estilo Retribalize: + Crear nuevo */}
+            <div className="pt-3">
+              <button
+                type="button"
+                onClick={() => setIsCreateNewOpen(true)}
+                className="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-2xl bg-terracotta/10 text-terracotta-deep hover:bg-terracotta/15 border border-terracotta/30 font-bold text-xs sm:text-sm transition-all shadow-2xs cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>{t('nav.createNew', { defaultValue: 'Crear nuevo' })}</span>
+              </button>
+            </div>
+
             {/* Accesos rápidos a los espacios del usuario si pertenece a alguno */}
             {userComunidades.length > 0 && (
               <div className="pt-4 mt-4 border-t border-border">
@@ -417,6 +432,11 @@ export function Sidebar() {
       <div className="p-3 border-t border-border bg-bg-surface">
         <UserAvatarMenu placement="sidebar-bottom" />
       </div>
+
+      <CreateNewModal
+        isOpen={isCreateNewOpen}
+        onClose={() => setIsCreateNewOpen(false)}
+      />
     </aside>
   );
 }

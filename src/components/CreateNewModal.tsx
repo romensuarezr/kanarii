@@ -7,7 +7,6 @@ import {
   Tent,
   FileText,
   ArrowRight,
-  Sparkles,
   Layers,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +16,10 @@ interface CreateNewModalProps {
   onClose: () => void;
 }
 
+/**
+ * Selector modal unificado para sembrar iniciativas en Red Canarias
+ * (Nodo/Tribu, Encuentro/Evento o Residencia/Estancia) con detección de borradores.
+ */
 export function CreateNewModal({ isOpen, onClose }: CreateNewModalProps) {
   const { t } = useTranslation('dashboard');
   const navigate = useNavigate();
@@ -38,13 +41,11 @@ export function CreateNewModal({ isOpen, onClose }: CreateNewModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-stone-900/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      {/* Modal Container */}
       <div
         className="relative bg-bg-surface w-full sm:max-w-xl rounded-t-3xl sm:rounded-3xl border border-border shadow-2xl p-6 sm:p-8 space-y-6 z-10 max-h-[90vh] overflow-y-auto"
         style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}
@@ -57,7 +58,7 @@ export function CreateNewModal({ isOpen, onClose }: CreateNewModalProps) {
               <span>{t('createNew.badge', { defaultValue: 'Sembrar en Canarias' })}</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-serif font-bold text-text-strong">
-              {t('createNew.title', { defaultValue: 'Crear algo nuevo' })}
+              {t('createNew.title', { defaultValue: 'Crear nuevo' })}
             </h2>
             <p className="text-xs text-stone-500">
               {t('createNew.subtitle', { defaultValue: 'Selecciona cómo deseas convocar o activar a la red comunitaria.' })}
@@ -152,7 +153,7 @@ export function CreateNewModal({ isOpen, onClose }: CreateNewModalProps) {
           </button>
         </div>
 
-        {/* Sección de Borradores (Drafts) estilo Retribalize */}
+        {/* Sección de Borradores */}
         <div className="pt-4 border-t border-border">
           <div className="bg-sand-light/40 border border-border/80 rounded-2xl p-4 flex items-start gap-3">
             <FileText size={18} className="text-stone-400 shrink-0 mt-0.5" />

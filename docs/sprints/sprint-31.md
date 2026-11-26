@@ -6,7 +6,7 @@
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
 |---|---|---|---|---|---|
-| T-155 | Reubicar `CreateNewModal` plano + Mover `"Crear nuevo"` fijo a `Sidebar` y `BottomNav` | S | ⬜ Pendiente | — | .agents/tasks/task-155.md |
+| T-155 | Reubicar `CreateNewModal` plano + Mover `"Crear nuevo"` fijo a `Sidebar` y `BottomNav` | S | 🟢 Completada | — | .agents/tasks/task-155.md |
 | T-156 | Limpieza radical de `DashboardView` (Find New Connections directo + Kin chip) | M | ⬜ Pendiente | T-155 | .agents/tasks/task-156.md |
 | T-157 | Modelo `enabledModules` en `Comunidad` + Hook `useNodeModules` con auto-detección | M | ⬜ Pendiente | — | .agents/tasks/task-157.md |
 | T-158 | Capa 2 progresiva en `Sidebar`/`BottomNav` + `NodeModulesModal` y estado vacío guiado | M | ⬜ Pendiente | T-155, T-157 | .agents/tasks/task-158.md |

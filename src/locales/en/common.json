@@ -35,7 +35,13 @@
     "residencies": "Residencies & Stays",
     "myPassport": "My Passport",
     "nodeTools": "Node Tools",
-    "allNodes": "All Nodes"
+    "allNodes": "All Nodes",
+    "createNew": "Create New",
+    "createNewShort": "New",
+    "exploreShort": "Discover",
+    "nodesShort": "Nodes",
+    "eventsShort": "Events",
+    "activateModules": "Enable Modules"
   },
   "language": {
     "selector": "Language",

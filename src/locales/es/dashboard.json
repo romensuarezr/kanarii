@@ -5,7 +5,7 @@
     "todayKin": "Kin del día",
     "greeting": "Hola, {{name}}",
     "findConnectionsBtn": "Encontrar nuevas conexiones",
-    "createNewBtn": "Crear algo",
+    "createNewBtn": "Crear nuevo",
     "manageEntities": "Explorar en Canarias",
     "entityAll": "Sinergias",
     "entityNodes": "Nodos",
@@ -58,7 +58,7 @@
   },
   "createNew": {
     "badge": "Sembrar en Canarias",
-    "title": "Crear algo nuevo",
+    "title": "Crear nuevo",
     "subtitle": "Selecciona cómo deseas convocar o activar a la red comunitaria.",
     "tribeTitle": "Iniciar un Nodo o Tribu",
     "tribeDesc": "Crea una nueva comunidad, finca, ecoaldea o colectivo en el archipiélago canario.",

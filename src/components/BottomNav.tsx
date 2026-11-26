@@ -18,7 +18,9 @@ import {
   Briefcase,
   Handshake,
   Layers,
+  Plus,
 } from 'lucide-react';
+import { CreateNewModal } from './CreateNewModal';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { SyncIndicator } from './ui/SyncIndicator';
@@ -33,6 +35,7 @@ interface BottomNavItem {
   icon: any;
   badge?: number;
   adminOnly?: boolean;
+  action?: 'createNew';
 }
 
 export function BottomNav() {
@@ -42,6 +45,7 @@ export function BottomNav() {
   const { appUser } = useAuth();
   const { comunidad, comunidades, setCommunityId, currentCommunityId, exitCommunitySpace } = useComunidad();
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+  const [isCreateNewOpen, setIsCreateNewOpen] = useState(false);
   const { acuerdosPendingCount, acuerdosSolicitanteCount } = useAcuerdosBadge();
   const { unreadCount } = useNotificaciones(comunidad?.id, appUser?.uid);
 
@@ -60,35 +64,42 @@ export function BottomNav() {
     return (appUser?.communityIds || []).includes(c.id) || (comunidad?.id === c.id);
   });
 
-  // --- NAVEGACIÓN CAPA 1: RED CANARIAS ---
+  // --- NAVEGACIÓN CAPA 1: RED CANARIAS (etiquetas cortas de 1 palabra + acceso directo + Nuevo) ---
   const networkMainItems: BottomNavItem[] = [
     {
-      label: 'Sinergias',
-      labelKey: 'nav.synergies',
+      label: 'Explorar',
+      labelKey: 'nav.exploreShort',
       href: '/dashboard',
       icon: Sparkles,
     },
     {
       label: 'Nodos',
-      labelKey: 'nav.nodes',
+      labelKey: 'nav.nodesShort',
       href: '/comunidades',
       icon: Compass,
     },
     {
-      label: 'Eventos',
-      labelKey: 'nav.events',
-      href: '/eventos',
-      icon: Calendar,
+      label: 'Nuevo',
+      labelKey: 'nav.createNewShort',
+      href: '#create-new',
+      icon: Plus,
+      action: 'createNew',
     },
     {
-      label: 'Residencias',
-      labelKey: 'nav.residencies',
-      href: '/residencias',
-      icon: Tent,
+      label: 'Eventos',
+      labelKey: 'nav.eventsShort',
+      href: '/eventos',
+      icon: Calendar,
     },
   ];
 
   const networkMoreItems: BottomNavItem[] = [
+    {
+      label: 'Residencias & Estancias',
+      labelKey: 'nav.residencies',
+      href: '/residencias',
+      icon: Tent,
+    },
     {
       label: 'Mi Pasaporte',
       labelKey: 'nav.myPassport',
@@ -220,6 +231,22 @@ export function BottomNav() {
         style={{ paddingBottom: 'env(safe-area-inset-bottom)', minHeight: '56px' }}
       >
         {activeMainItems.map((item, idx) => {
+          if (item.action === 'createNew') {
+            const navLabel = item.labelKey ? t(item.labelKey as any, { defaultValue: item.label }) : item.label;
+            return (
+              <button
+                key={idx}
+                onClick={() => setIsCreateNewOpen(true)}
+                className="flex flex-col items-center justify-center flex-1 h-full min-h-[56px] space-y-1 relative text-terracotta-deep font-bold cursor-pointer"
+              >
+                <div className="w-7 h-7 rounded-xl bg-terracotta/15 border border-terracotta/30 flex items-center justify-center">
+                  <item.icon className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] uppercase tracking-wide">{navLabel}</span>
+              </button>
+            );
+          }
+
           const isReallyActive = item.href === '/dashboard' || item.href === '/'
             ? (location.pathname === '/' || location.pathname === '/dashboard')
             : location.pathname.startsWith(item.href);
@@ -239,7 +266,7 @@ export function BottomNav() {
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-terracotta rounded-full" />
                 )}
               </div>
-              <span className="text-[10px] uppercase tracking-wide truncate max-w-[64px] text-center">
+              <span className="text-[10px] uppercase tracking-wide truncate max-w-[68px] text-center">
                 {navLabel}
               </span>
               {isReallyActive && <div className="w-1 h-1 rounded-full bg-forest-deep absolute bottom-1" />}
@@ -378,6 +405,10 @@ export function BottomNav() {
           </div>
         </div>
       )}
+      <CreateNewModal
+        isOpen={isCreateNewOpen}
+        onClose={() => setIsCreateNewOpen(false)}
+      />
     </>
   );
 }
