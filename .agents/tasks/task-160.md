@@ -5,7 +5,7 @@
 - **Título**: Eliminar scroll lateral en barras de filtros y pestañas (`flex-wrap`)
 - **Sprint**: Sprint 32
 - **Tipo**: UX / Responsive / Mobile UI
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -33,6 +33,6 @@
 - `src/pages/AdminPanel.tsx`
 
 ## Criterios de Aceptación
-- [ ] Cero scroll horizontal en barras de filtros y pestañas de las 7 vistas.
-- [ ] Todas las opciones de filtro visibles sin cortar ni en móvil ni en desktop estrecho.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] Cero scroll horizontal en barras de filtros y pestañas de las 7 vistas.
+- [x] Todas las opciones de filtro visibles sin cortar ni en móvil ni en desktop estrecho.
+- [x] `npm run lint` y `npm run build` pasan sin errores.

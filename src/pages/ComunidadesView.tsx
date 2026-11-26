@@ -359,11 +359,11 @@ export function ComunidadesView() {
         {/* Sección 2: Filtros por tipología de nodo */}
         <section className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => setActiveFilter('all')}
-                className={`px-4 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl text-xs font-semibold transition-all border cursor-pointer ${
                   activeFilter === 'all'
                     ? 'bg-forest-deep text-white border-forest-deep shadow-xs'
                     : 'bg-bg-surface text-stone-600 border-border hover:bg-sand-light'
@@ -375,7 +375,7 @@ export function ComunidadesView() {
               <button
                 type="button"
                 onClick={() => setActiveFilter('finca')}
-                className={`px-4 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl text-xs font-semibold transition-all border cursor-pointer ${
                   activeFilter === 'finca'
                     ? 'bg-forest-deep text-white border-forest-deep shadow-xs'
                     : 'bg-bg-surface text-stone-600 border-border hover:bg-sand-light'
@@ -387,7 +387,7 @@ export function ComunidadesView() {
               <button
                 type="button"
                 onClick={() => setActiveFilter('residencia')}
-                className={`px-4 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl text-xs font-semibold transition-all border cursor-pointer ${
                   activeFilter === 'residencia'
                     ? 'bg-forest-deep text-white border-forest-deep shadow-xs'
                     : 'bg-bg-surface text-stone-600 border-border hover:bg-sand-light'
@@ -399,7 +399,7 @@ export function ComunidadesView() {
               <button
                 type="button"
                 onClick={() => setActiveFilter('online')}
-                className={`px-4 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl text-xs font-semibold transition-all border cursor-pointer ${
                   activeFilter === 'online'
                     ? 'bg-forest-deep text-white border-forest-deep shadow-xs'
                     : 'bg-bg-surface text-stone-600 border-border hover:bg-sand-light'

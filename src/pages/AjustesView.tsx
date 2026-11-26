@@ -89,38 +89,38 @@ export function AjustesView() {
       </header>
 
       {/* Tabs Navigation */}
-      <div className="flex border-b border-[#EAE2D6] gap-2 overflow-x-auto">
+      <div className="flex flex-wrap border-b border-[#EAE2D6] gap-1 sm:gap-2">
         <button
           onClick={() => setActiveTab('privacidad')}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold border-b-2 transition-colors ${
             activeTab === 'privacidad'
               ? 'border-[#6B705C] text-[#6B705C]'
               : 'border-transparent text-stone-500 hover:text-stone-800'
           }`}
         >
-          <Shield className="w-4 h-4" />
+          <Shield className="w-4 h-4 shrink-0" />
           Privacidad y Pasaporte
         </button>
         <button
           onClick={() => setActiveTab('perfil')}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold border-b-2 transition-colors ${
             activeTab === 'perfil'
               ? 'border-[#6B705C] text-[#6B705C]'
               : 'border-transparent text-stone-500 hover:text-stone-800'
           }`}
         >
-          <User className="w-4 h-4" />
+          <User className="w-4 h-4 shrink-0" />
           Ficha e Identidad
         </button>
         <button
           onClick={() => setActiveTab('cuenta')}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold border-b-2 transition-colors ${
             activeTab === 'cuenta'
               ? 'border-[#6B705C] text-[#6B705C]'
               : 'border-transparent text-stone-500 hover:text-stone-800'
           }`}
         >
-          <Settings className="w-4 h-4" />
+          <Settings className="w-4 h-4 shrink-0" />
           Cuenta y Conexiones
         </button>
       </div>

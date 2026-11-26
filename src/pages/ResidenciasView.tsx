@@ -152,7 +152,7 @@ export function ResidenciasView() {
         </div>
 
         {/* Barra de Filtros */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar">
+        <div className="flex flex-wrap items-center gap-2 mb-6">
           {[
             { id: 'all', label: t('residencies.filterAll', { defaultValue: 'Todas las estancias' }) },
             { id: 'volunteer', label: t('residencies.filterVolunteer', { defaultValue: 'Voluntariado & Permacultura' }) },
@@ -162,7 +162,7 @@ export function ResidenciasView() {
             <button
               key={f.id}
               onClick={() => setActiveFilter(f.id as any)}
-              className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 border ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 border ${
                 activeFilter === f.id
                   ? 'bg-forest-deep text-white border-forest-deep shadow-xs'
                   : 'bg-bg-surface text-stone-600 border-border hover:bg-sand-light hover:text-stone-800'
