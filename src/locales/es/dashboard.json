@@ -14,6 +14,7 @@
   },
   "filters": {
     "all": "Todas las sinergias",
+    "searchPlaceholder": "Buscar por nombre, isla, don o saber...",
     "sameIsland": "En mi isla",
     "energetic": "Resonancia energética",
     "triad": "Complementarios de tríada",
