@@ -126,14 +126,14 @@ export default function PasaporteVisual({
     .filter(Boolean) as Comunidad[];
 
   return (
-    <div className="w-full max-w-xl mx-auto bg-[#FDFBF7] text-[#5D4037] font-sans">
+    <div className="w-full max-w-xl min-w-0 mx-auto bg-[#FDFBF7] text-[#5D4037] font-sans">
       
       {/* Container Card */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.98, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-[40px] border border-[#D2B48C]/15 shadow-sm p-8 md:p-10 space-y-10"
+        className="bg-white rounded-[32px] sm:rounded-[40px] border border-[#D2B48C]/15 shadow-sm p-5 sm:p-8 md:p-10 space-y-8 sm:space-y-10 overflow-hidden"
       >
         
         {/* Cabecera / Header Section */}

@@ -5,7 +5,7 @@
 - **Título**: Erradicar desbordamiento global en `/perfil`, `/ficha` y `Toaster` móvil
 - **Sprint**: Sprint 32
 - **Tipo**: Bugfix / Responsive / Mobile UI
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -21,11 +21,12 @@
 ## Caja de archivos
 - `src/pages/PerfilView.tsx`
 - `src/components/perfil/PasaporteVisual.tsx`
+- `src/components/perfil/FichaReadOnly.tsx`
 - `src/pages/FichaView.tsx`
 - `src/components/Toaster.tsx`
 
 ## Criterios de Aceptación
-- [ ] `/perfil` tiene `scrollWidth <= innerWidth` y cero cortes en `PasaporteVisual` en `393px`.
-- [ ] `/ficha` tiene cero desbordamiento en cabecera/acciones.
-- [ ] `Toaster` no desborda el viewport en móvil.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] `/perfil` tiene `scrollWidth <= innerWidth` y cero cortes en `PasaporteVisual` en `393px`.
+- [x] `/ficha` tiene cero desbordamiento en cabecera/acciones.
+- [x] `Toaster` no desborda el viewport en móvil.
+- [x] `npm run lint` y `npm run build` pasan sin errores.

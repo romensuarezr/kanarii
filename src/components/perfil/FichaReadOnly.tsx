@@ -86,7 +86,7 @@ export function FichaReadOnly({
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] p-8 relative overflow-hidden mb-8">
+    <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] p-5 sm:p-8 relative overflow-hidden mb-8">
       {!datos?.fechaNacimiento && (
         <div className="mb-6 p-5 bg-amber-50/70 border border-amber-200/60 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="space-y-1 text-center md:text-left">
@@ -110,10 +110,10 @@ export function FichaReadOnly({
       <div className="absolute top-0 left-0 w-2 h-full bg-[#CB997E]"></div>
 
       <div className="space-y-8">
-        <div className="flex justify-between items-start">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <h2 className="text-3xl font-serif text-[#4A4E4D]">{datos?.nombre}</h2>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+          <div className="flex flex-col gap-2 min-w-0">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <h2 className="text-2xl sm:text-3xl font-serif text-[#4A4E4D] break-words">{datos?.nombre}</h2>
               {comunidadSlug && appUserUid && (
                 <div className="flex items-center gap-1 ml-2">
                   <button
