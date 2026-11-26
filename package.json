@@ -13,7 +13,9 @@
     "test:unit": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:rules": "bash scripts/run-rules-tests.sh",
-    "check:i18n-literals": "tsx scripts/check-i18n-visible-literals.ts"
+    "check:i18n-literals": "tsx scripts/check-i18n-visible-literals.ts",
+    "demo:seed": "tsx scripts/seed-demo.ts --seed",
+    "demo:clean": "tsx scripts/seed-demo.ts --clean"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

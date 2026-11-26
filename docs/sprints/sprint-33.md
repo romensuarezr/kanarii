@@ -1,7 +1,7 @@
 # Sprint 33 — 2026-11-26 → 2026-12-03
 
 ## Estado
-🟡 En curso
+✅ Completado
 
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
@@ -10,7 +10,7 @@
 | T-163 | Sincronizar `adminUids` ↔ `community_members.rol` y gestión de roles/vínculos en `ComunidadSubTab` | M | 🟢 Completada | T-162 | .agents/tasks/task-163.md |
 | T-164 | Limpieza UX de clasificación en `PerfilView`, `FichaView`, `FichaComunidadView` y `MemberCard` | M | 🟢 Completada | T-162 | .agents/tasks/task-164.md |
 | T-165 | Buscador avanzado estilo ReTribalize (`DashboardView` multi-entidad con imágenes) | M | 🟢 Completada | — | .agents/tasks/task-165.md |
-| T-166 | Script reproducible de datos demo con imágenes (`scripts/seed-demo.ts --seed / --clean`) | M | ⬜ Pendiente | T-165 | .agents/tasks/task-166.md |
+| T-166 | Script reproducible de datos demo con imágenes (`scripts/seed-demo.ts --seed / --clean`) | M | 🟢 Completada | T-165 | .agents/tasks/task-166.md |
 
 ## Régimen Operativo del Sprint
 - **Régimen**: Desatendida
