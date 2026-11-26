@@ -2,6 +2,73 @@
 
 Todos los cambios notables en este proyecto serán documentados en este archivo. El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] — sprint-30 — 2026-11-26
+
+### ✨ Features
+
+- feat(dashboard): implement Retribalize 2-action welcome header and CreateNewModal (T-154)
+- feat(mobile): implement 2-layer adaptive navigation in BottomNav (T-153)
+- feat(branding): replace palmera icon with kanarii logo and enforce Canary Network territorial copy (T-152)
+- feat(synergies): implement ConnectModal and connection flow for members (#T-149)
+- feat(events-residencies): connect firestore reactivity for events and residencies (#T-148)
+- feat(navigation): 2-layer sidebar navigation, events and residencies views (T-146)
+- feat(nodos): enhance node directory, node presentation tabs and i18n (T-145)
+- feat(dashboard): implement deterministic synergy matching feed and dashboard view (T-144)
+- feat(members): tarjetas de miembros estilo retribalize con pasaporte modal y conexion rapida (T-143)
+- feat(welcome): home publica retribalizada, enlaces directos a demos y apertura de comunidades (T-142, ADR-027)
+- feat(nav): cohesionar navegacion principal, arreglar marketplace 404, separar tablon de gobernanza y anadir calendario (T-141)
+- feat(ui): limpiar selector idioma, compartir top-right, integrar avatar en sidebar y unificar pasaporte (T-140)
+- feat(share): brand icons centralizados, share modal leaderboard, telegram y contact actions icon-only (T-139)
+- feat(perfil): ux en pestanas, privacidad efectiva, favicon web, whatsapp y selector idioma (T-138)
+- feat(ajustes): crear superficie dedicada y enlace en menu de usuario (T-135)
+- feat(privacidad): selectores de visibilidad para redes sociales y contacto (T-134)
+- feat(contacto): normalizar telefono E.164 y anadir accion directa de WhatsApp (T-137)
+- feat(fichas): persistir y mostrar campos de redes sociales en ficha y pasaporte (T-133)
+- feat(T-132): separar rutas perfil y ficha + guardia de rol y fix de hooks
+- feat(communities): propósito, cuidadores y necesidades en tarjetas de comunidad (T-114)
+- feat(passport): enlaces sociales y contacto rápido en pasaporte y ficha (T-113)
+
+### 🐛 Bug Fixes
+
+- fix(sinergias): deduplicate user matches and enforce unique React keys (T-151)
+- fix(security): sanitize and normalize membership roles in community_members (T-147)
+
+### ♻️ Refactoring
+
+- refactor(perfil): extraer FichaReadOnly para unificar lectura entre perfil y ficha (T-136)
+
+### 📚 Documentación
+
+- docs(sprint-30): mark all sprint 30 tasks completed (T-151, T-152, T-153, T-154)
+- docs(sprint-30): align T-154 with Retribalize Find Connections and Create New core actions
+- docs(sprint-30): formalize sprint 30 planning, research and task files
+- docs(sprint-29): formalize sprint 29 planning, sealed regime and task contracts
+- docs(sprint-28): update operating regime to use staging branch for UI/UX consolidation
+- docs(research): document 2-layer architecture, node network and deterministic synergy engine for sprint 28
+- docs: archive sprint 27 design decisions and ux research
+- docs(research): formalizar research de UI/UX de Retribalize y Hylo para Sprint 28
+- docs(tasks): archivar task-141 completada
+- docs(sprint): actualizar rutas de tareas archivadas en sprint-27
+- docs(tasks): archivar task-140 de Sprint 27
+- docs(sprint-27): marcar sprint 27 como completado
+- docs(sprint-27): consolidar research UX + scout de industria (T-136/T-137)
+- docs(pages-map): sincronizar rutas y completitud del perfil (T-115)
+- docs(plan): update plan-draft for T-115
+- docs(plan): update plan-draft for T-114
+- docs(plan): update plan-draft for T-113
+
+### 🔧 Mantenimiento
+
+- chore: archive sprint-29 [v0.10.0]
+- chore(tooling): sync core Agent OS assets and upgrade hermes to v0.23.4 (#T-150)
+- chore: archive sprint-28 [v0.9.0]
+- chore: archive sprint-27 [v0.8.0]
+- chore(agent-os): sync core assets to v1.40.0
+- chore: sprint-27 planning and task files created
+- chore: archive sprint-24 (closed with pending tasks)
+- chore: archive sprint-25 [v0.7.0]
+- chore(planning): prepare sprint 25 task files and research
+
 ## [0.10.0] — sprint-29 — 2026-11-25
 
 ### ✨ Features
