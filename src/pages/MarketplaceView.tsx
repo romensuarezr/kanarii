@@ -267,37 +267,37 @@ export default function MarketplaceView() {
         <>
           {/* Filters */}
           <div className="flex flex-col gap-4 p-4 bg-white rounded-3xl border border-[#EAE2D6] shadow-sm">
-            <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
-              <div className="flex items-center gap-2 pr-4 border-r border-stone-100">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 sm:pr-4 sm:border-r border-stone-100">
                 <button
                   onClick={() => setFilterTipo(null)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all ${!filterTipo ? 'bg-[#4A4E4D] text-white' : 'bg-stone-100 text-stone-500'}`}
+                  className={`px-3 py-1.5 sm:px-4 rounded-full text-xs font-bold transition-all ${!filterTipo ? 'bg-[#4A4E4D] text-white' : 'bg-stone-100 text-stone-500'}`}
                 >
                   Todo
                 </button>
                 <button
                   onClick={() => setFilterTipo('talento')}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${filterTipo === 'talento' ? 'bg-[#CB997E] text-white' : 'bg-stone-100 text-stone-500'}`}
+                  className={`px-3 py-1.5 sm:px-4 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${filterTipo === 'talento' ? 'bg-[#CB997E] text-white' : 'bg-stone-100 text-stone-500'}`}
                 >
                   <Heart className="w-3 h-3" />
                   Talentos
                 </button>
                 <button
                   onClick={() => setFilterTipo('recurso')}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${filterTipo === 'recurso' ? 'bg-[#A5A58D] text-white' : 'bg-stone-100 text-stone-500'}`}
+                  className={`px-3 py-1.5 sm:px-4 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${filterTipo === 'recurso' ? 'bg-[#A5A58D] text-white' : 'bg-stone-100 text-stone-500'}`}
                 >
                   <Package className="w-3 h-3" />
                   Recursos
                 </button>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Filter size={14} className="text-stone-400" />
                 {CATEGORIAS_MARKET.map(cat => (
                   <button
                     key={cat.id}
                     onClick={() => setFilterCategoria(filterCategoria === cat.id ? null : cat.id)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all ${filterCategoria === cat.id ? 'bg-[#4A4E4D] text-white' : 'bg-stone-50 text-stone-400 border border-stone-100'}`}
+                    className={`px-3 py-1.5 sm:px-4 rounded-full text-xs font-bold transition-all ${filterCategoria === cat.id ? 'bg-[#4A4E4D] text-white' : 'bg-stone-50 text-stone-400 border border-stone-100'}`}
                   >
                     {cat.label}
                   </button>

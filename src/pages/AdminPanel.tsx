@@ -144,7 +144,7 @@ export function AdminPanel() {
         )}
 
         {/* Navigation Tabs */}
-        <div className="flex border-b border-[#EAE2D6] overflow-x-auto whitespace-nowrap scrollbar-none gap-2 md:gap-6 mb-8 scroll-smooth">
+        <div className="flex flex-wrap border-b border-[#EAE2D6] gap-2 md:gap-6 mb-8">
           {tabs.map((tab) => {
             const IconComponent = tab.icon;
             const isActive = currentTab === tab.id;
