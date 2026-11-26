@@ -57,6 +57,18 @@ service cloud.firestore {
              (existsAfter(path) && getAfter(path).data.adminUids.hasAny([userId]));
     }
 
+    // Devuelve true si membershipType no está presente o es uno de los valores permitidos
+    function isValidMembershipType(data) {
+      return !('membershipType' in data) ||
+             data.membershipType in ['custodian', 'resident', 'volunteer', 'collaborator'];
+    }
+
+    // Devuelve true si headline no está presente o es un string de máximo 45 caracteres
+    function isValidHeadline(data) {
+      return !('headline' in data) ||
+             (data.headline is string && data.headline.size() <= 45);
+    }
+
     // ─── USUARIOS GLOBALES ─────────────────────────────────────────────────
     match /users/{uid} {
       allow read:  if request.auth != null;
@@ -74,7 +86,12 @@ service cloud.firestore {
     // ─── PERFILES DE USUARIO ───────────────────────────────────────────────
     match /profiles/{uid} {
       allow read:  if request.auth != null;
-      allow write: if (request.auth != null && request.auth.uid == uid) || isGlobalAdmin();
+      allow write: if ((request.auth != null && request.auth.uid == uid) || isGlobalAdmin()) && (
+        request.resource == null || (
+          isValidHeadline(request.resource.data) &&
+          (!('datosPersona' in request.resource.data) || !(request.resource.data.datosPersona is map) || isValidHeadline(request.resource.data.datosPersona))
+        )
+      );
     }
 
     // ─── COMUNIDADES ───────────────────────────────────────────────────────
@@ -122,9 +139,10 @@ service cloud.firestore {
             )
           )
         )
-      );
+      ) && isValidMembershipType(request.resource.data) && isValidHeadline(request.resource.data);
       // Actualizar: solo admin de la comunidad o admin global
-      allow update: if request.auth != null && (hasRole(resource.data.communityId, 'admin') || isGlobalAdmin());
+      allow update: if request.auth != null && (hasRole(resource.data.communityId, 'admin') || isGlobalAdmin()) &&
+        isValidMembershipType(request.resource.data) && isValidHeadline(request.resource.data);
       // Borrar: Propio usuario que sale de la comunidad o admin de la comunidad que expulsa o admin global
       allow delete: if request.auth != null && (
         resource.data.userId == request.auth.uid ||
@@ -295,12 +313,14 @@ service cloud.firestore {
         request.auth.uid == fichaId || 
         (request.resource.data.communityId != null && hasRole(request.resource.data.communityId, 'admin')) ||
         isGlobalAdmin()
-      );
+      ) && isValidHeadline(request.resource.data) &&
+        (!('datosPersona' in request.resource.data) || !(request.resource.data.datosPersona is map) || isValidHeadline(request.resource.data.datosPersona));
       allow update: if request.auth != null && (
         request.auth.uid == fichaId || 
         (resource.data.communityId != null && hasRole(resource.data.communityId, 'admin')) ||
         isGlobalAdmin()
-      );
+      ) && isValidHeadline(request.resource.data) &&
+        (!('datosPersona' in request.resource.data) || !(request.resource.data.datosPersona is map) || isValidHeadline(request.resource.data.datosPersona));
       allow delete: if request.auth != null && (
         request.auth.uid == fichaId || 
         (resource.data.communityId != null && hasRole(resource.data.communityId, 'admin')) ||

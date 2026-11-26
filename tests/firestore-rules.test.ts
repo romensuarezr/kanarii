@@ -215,6 +215,52 @@ async function runTests() {
     );
     console.log("✓ Miembro (Bob) no puede editar membresías de otros");
 
+    // ==========================================
+    // SECCIÓN 4: VALIDACIÓN DE membershipType Y headline (T-162)
+    // ==========================================
+    console.log("\n--- Probando validación de membershipType y headline (T-162) ---");
+
+    // Admin (Alice) puede asignar membershipType válido y headline <= 45 chars
+    await assertSucceeds(
+      updateDoc(doc(aliceDb, "community_members", "comunidadA_bob"), {
+        membershipType: "custodian",
+        headline: "Bioconstrucción y riego"
+      })
+    );
+    console.log("✓ Admin puede asignar membershipType válido ('custodian') y headline <= 45 chars");
+
+    // Admin NO puede asignar membershipType inválido ('miembro' o 'propietario')
+    await assertFails(
+      updateDoc(doc(aliceDb, "community_members", "comunidadA_bob"), {
+        membershipType: "miembro"
+      })
+    );
+    await assertFails(
+      updateDoc(doc(aliceDb, "community_members", "comunidadA_bob"), {
+        membershipType: "propietario"
+      })
+    );
+    console.log("✓ Se rechazan valores legacy/inválidos ('miembro', 'propietario') en membershipType");
+
+    // Se rechaza headline > 45 chars en community_members y profiles
+    const headlineLargo = "a".repeat(46);
+    await assertFails(
+      updateDoc(doc(aliceDb, "community_members", "comunidadA_bob"), {
+        headline: headlineLargo
+      })
+    );
+    await assertFails(
+      setDoc(doc(aliceDb, "profiles", "alice"), {
+        headline: headlineLargo
+      })
+    );
+    await assertSucceeds(
+      setDoc(doc(aliceDb, "profiles", "alice"), {
+        headline: "Facilitación y huerta"
+      })
+    );
+    console.log("✓ Validación de headline <= 45 chars en community_members y profiles");
+
     console.log("\n==========================================");
     console.log("🎉 ¡TODAS LAS PRUEBAS PASARON EXITOSAMENTE! 🎉");
     console.log("==========================================\n");

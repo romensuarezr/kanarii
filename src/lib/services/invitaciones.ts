@@ -16,7 +16,7 @@ import {
 import { db, handleFirestoreError, OperationType, DEFAULT_LIST_LIMIT } from './_core';
 import { Invitacion, InvitacionError } from './_types';
 import { _writeFichaRaw } from './fichas';
-import { normalizeMemberRole } from './members';
+import { normalizeMemberRole, normalizeMembershipType, normalizeHeadline } from './members';
 import { auth } from '../firebase';
 
 function generateInviteCode(): string {
@@ -207,7 +207,8 @@ export async function useInvitacion(codigo: string, uid: string): Promise<string
         autoridad_hd: profileData.datosBrutos?.diseno_humano?.autoridad || '',
         antiguedad_anos: base.antiguedad_anos || 0,
         rol_comunidad: base.rol_comunidad || '',
-        rolComunitario: base.rol_comunidad || base.rol || 'miembro',
+        headline: normalizeHeadline(base.headline),
+        membershipType: normalizeMembershipType(base.rol),
         rol: normalizeMemberRole(base.rol),
         estado: 'activo',
         photoURL: userData.photoURL || '',
@@ -234,7 +235,10 @@ export async function useInvitacion(codigo: string, uid: string): Promise<string
         elemento_dominante: '',
         autoridad_hd: '',
         antiguedad_anos: 0,
-        rol_comunidad: 'miembro',
+        rol_comunidad: '',
+        headline: '',
+        membershipType: 'resident',
+        rol: 'miembro',
         estado: 'activo',
         photoURL: userData.photoURL || '',
         displayName: resolvedDisplayName,

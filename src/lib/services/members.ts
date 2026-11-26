@@ -19,7 +19,7 @@ import {
   writeBatch, 
   arrayUnion 
 } from 'firebase/firestore';
-import { CommunityMember, FeedbackSalida } from './_types';
+import { CommunityMember, FeedbackSalida, HEADLINE_MAX_LENGTH, MembershipType } from './_types';
 import { _writeFichaRaw } from './fichas';
 import { auth } from '../firebase';
 
@@ -39,6 +39,33 @@ export function normalizeMemberRole(rol?: string | null): CanonicalMemberRole {
     return 'visitante';
   }
   return 'miembro';
+}
+
+/**
+ * Normaliza y migra cualquier valor legacy de vínculo comunitario (propietario, miembro, voluntario, etc.)
+ * al enum estricto MembershipType ('custodian' | 'resident' | 'volunteer' | 'collaborator').
+ */
+export function normalizeMembershipType(raw?: string | null): MembershipType {
+  if (!raw) return 'resident';
+  const clean = raw.trim().toLowerCase();
+  if (clean === 'custodian' || clean === 'custodio' || clean === 'propietario' || clean === 'owner' || clean === 'fundador') {
+    return 'custodian';
+  }
+  if (clean === 'volunteer' || clean === 'voluntario' || clean === 'voluntaria') {
+    return 'volunteer';
+  }
+  if (clean === 'collaborator' || clean === 'colaborador' || clean === 'colaboradora' || clean === 'visitante' || clean === 'visitor') {
+    return 'collaborator';
+  }
+  return 'resident';
+}
+
+/**
+ * Acota el oficio/rol corto (headline) al límite máximo admitido en tipos y firestore.rules.
+ */
+export function normalizeHeadline(raw?: string | null): string {
+  if (!raw) return '';
+  return raw.trim().slice(0, HEADLINE_MAX_LENGTH);
 }
 
 export async function getMemberInfo(uid: string, communityId?: string): Promise<any | null> {
@@ -215,7 +242,8 @@ export async function unirseComunidadDirecto(communityId: string, uid: string): 
         autoridad_hd: profileData.datosBrutos?.diseno_humano?.autoridad || '',
         antiguedad_anos: base.antiguedad_anos || 0,
         rol_comunidad: base.rol_comunidad || '',
-        rolComunitario: base.rol_comunidad || base.rol || 'miembro',
+        headline: normalizeHeadline(base.headline),
+        membershipType: normalizeMembershipType(base.rol),
         rol: normalizeMemberRole(base.rol),
         estado: 'activo',
         photoURL: userData.photoURL || '',
@@ -241,7 +269,10 @@ export async function unirseComunidadDirecto(communityId: string, uid: string): 
         elemento_dominante: '',
         autoridad_hd: '',
         antiguedad_anos: 0,
-        rol_comunidad: 'miembro',
+        rol_comunidad: '',
+        headline: '',
+        membershipType: 'resident',
+        rol: 'miembro',
         estado: 'activo',
         photoURL: userData.photoURL || '',
         displayName: resolvedDisplayName,

@@ -20,7 +20,7 @@ import {
   collection
 } from './_core';
 
-import { Ficha, DatosOnboarding, TriadaComunitaria, FichaDatosBrutos, FichaDatosPersona, FichaPerfilVisual, FichaConfiguracion, AstroPosicion, DisenoHumanoCanal } from './_types';
+import { Ficha, DatosOnboarding, TriadaComunitaria, FichaDatosBrutos, FichaDatosPersona, FichaPerfilVisual, FichaConfiguracion, AstroPosicion, DisenoHumanoCanal, HEADLINE_MAX_LENGTH } from './_types';
 import { handleFirestoreError, OperationType } from '../error-handler';
 import { syncTracker } from './syncTracker';
 
@@ -223,6 +223,7 @@ export async function saveFicha(
       hora: horaVal,
       genero: datosOnboarding.genero,
       saberes: datosOnboarding.saberes,
+      headline: (datosOnboarding.headline || '').trim().slice(0, HEADLINE_MAX_LENGTH),
       rol_comunidad: datosOnboarding.rol_comunidad || (datosOnboarding as any).rol_arteara,
       antiguedad_anos: parseFloat(datosOnboarding.antiguedad_anos as string) || 0,
       tension: datosOnboarding.tension,
@@ -489,9 +490,9 @@ export async function _writeFichaRaw(userId: string, fichaFull: Ficha, isUpdate:
             autoridad_hd: fichaFull.datosBrutos?.diseno_humano?.autoridad || '',
             antiguedad_anos: base.antiguedad_anos || 0,
             rol_comunidad: base.rol_comunidad || '',
-            rolComunitario: base.rol_comunidad || base.rol || 'miembro',
-            // `rol` es un permiso (admin/miembro/visitante), no un dato de presentación.
-            // No se deriva de la ficha para no sobrescribir el rol real de la membresía.
+            headline: (base.headline || '').trim().slice(0, HEADLINE_MAX_LENGTH),
+            // `rol` (RBAC: admin/miembro/visitante) y `membershipType` (vínculo del nodo)
+            // no se derivan ni sobrescriben desde `rol_comunidad` de la ficha.
             estado: fichaFull.estado || 'activo',
             ...(fichaFull.triada !== undefined && fichaFull.triada !== null ? { triada: fichaFull.triada } : {}),
             photoURL: userPhotoURL,
