@@ -35,7 +35,7 @@ export function PerfilView() {
   const mappedUser = {
     name: appUser.displayName || 'Miembro',
     avatarUrl: appUser.photoURL || undefined,
-    roles: [appUser.role || 'user'],
+    roles: [datos?.headline].filter(Boolean) as string[],
     offerings: triada.ofrendas || [],
     knowledges: triada.saberes || [],
     needs: triada.necesidades || [],
@@ -75,14 +75,14 @@ export function PerfilView() {
             </div>
           )}
           <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-serif font-bold text-[#4A4E4D] break-words">
-                {appUser.displayName || 'Miembro Kanarii'}
-              </h1>
-              <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#6B705C] bg-[#EAE2D6] rounded-full shrink-0">
-                {appUser.role || 'miembro'}
-              </span>
-            </div>
+            <h1 className="text-xl sm:text-2xl font-serif font-bold text-[#4A4E4D] break-words">
+              {appUser.displayName || 'Miembro Kanarii'}
+            </h1>
+            {datos?.headline && (
+              <p className="text-sm font-medium text-[#6B705C] mt-0.5 truncate">
+                {datos.headline}
+              </p>
+            )}
             <p className="text-stone-400 text-xs sm:text-sm mt-0.5 truncate">{appUser.email}</p>
           </div>
         </div>
