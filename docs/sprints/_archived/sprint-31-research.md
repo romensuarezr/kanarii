@@ -1,6 +1,6 @@
 # Research Sprint 31
 > Fecha: 2026-11-26
-> Fuentes: Web SearXNG (`http://searxng-lswo0woww0sswwsk0wkcc4o0.158.179.213.240.sslip.io`) + Activos Internos de Kanarii (`src/components/Sidebar.tsx`, `src/components/BottomNav.tsx`, `src/pages/DashboardView.tsx`, `src/lib/services/_types.ts`)
+> Fuentes: Web SearXNG Soberano + Activos Internos de Kanarii (`src/components/Sidebar.tsx`, `src/components/BottomNav.tsx`, `src/pages/DashboardView.tsx`, `src/lib/services/_types.ts`)
 > Estado: ✅ Verificado
 
 ---
