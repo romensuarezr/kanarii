@@ -16,7 +16,15 @@ export function getAccessToken(): string {
     if (!fs.existsSync(CONFIG_PATH)) {
         throw new Error(`No se encontró el archivo de configuración de Firebase en: ${CONFIG_PATH}. Ejecuta 'firebase login' para autenticarte.`);
     }
-    const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+    let config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+    if (config.tokens?.expires_at && Date.now() >= config.tokens.expires_at) {
+        try {
+            execSync('npx firebase projects:list > /dev/null 2>&1');
+            config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+        } catch {
+            // Ignorar fallo de auto-refresh si firebase CLI no está disponible
+        }
+    }
     cachedToken = config.tokens?.access_token;
     if (!cachedToken) {
         throw new Error(`El archivo de configuración de Firebase existe pero no contiene un token de acceso válido. Por favor, vuelve a autenticarte con 'firebase login'.`);
