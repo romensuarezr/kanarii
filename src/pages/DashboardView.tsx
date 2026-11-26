@@ -11,7 +11,7 @@ import { Sparkles, MapPin, Compass, ArrowRight, Users, Loader2, LogIn, Plus } fr
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Ficha } from '../lib/services/_types';
-import { CreateNewModal } from '../components/dashboard/CreateNewModal';
+import { CreateNewModal } from '../components/CreateNewModal';
 
 type FilterType = 'all' | 'sameIsland' | 'energetic' | 'triad';
 

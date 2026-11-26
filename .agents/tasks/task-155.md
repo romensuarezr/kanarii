@@ -5,7 +5,7 @@
 - **Título**: Reubicar `CreateNewModal` plano + Mover `"Crear nuevo"` fijo a `Sidebar` y `BottomNav`
 - **Sprint**: Sprint 31
 - **Tipo**: UX / Navigation / Refactor
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -28,7 +28,7 @@
 - `src/locales/en/dashboard.json`
 
 ## Criterios de Aceptación
-- [ ] `src/components/CreateNewModal.tsx` creado en plano y `src/components/dashboard/` eliminado.
-- [ ] Copy actualizado a `"Crear nuevo"` / `"Create New"`.
-- [ ] Botón `+ Crear nuevo` fijo en `Sidebar.tsx` (Capa 1) y acceso directo `+ Nuevo` en `BottomNav.tsx` sin textos truncados.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] `src/components/CreateNewModal.tsx` creado en plano y `src/components/dashboard/` eliminado.
+- [x] Copy actualizado a `"Crear nuevo"` / `"Create New"`.
+- [x] Botón `+ Crear nuevo` fijo en `Sidebar.tsx` (Capa 1) y acceso directo `+ Nuevo` en `BottomNav.tsx` sin textos truncados.
+- [x] `npm run lint` y `npm run build` pasan sin errores.
