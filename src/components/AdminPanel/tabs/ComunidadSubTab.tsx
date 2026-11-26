@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Search, Filter, RefreshCw, UserMinus, Clock } from 'lucide-react';
-import { CommunityMember, FeedbackSalida, listenBajasRecientes } from '../../../lib/appService';
+import {
+  CommunityMember,
+  FeedbackSalida,
+  listenBajasRecientes,
+  MembershipType,
+  CanonicalMemberRole,
+  normalizeMembershipType,
+  normalizeMemberRole,
+  updateCommunityMemberAccess,
+} from '../../../lib/appService';
+import { useToast } from '../../../hooks/useToast';
 
 interface ComunidadSubTabProps {
   members: CommunityMember[];
@@ -11,7 +21,22 @@ interface ComunidadSubTabProps {
   appUserId?: string;
 }
 
-type RolComunitario = 'propietario' | 'miembro' | 'voluntario';
+const MEMBERSHIP_TYPE_LABELS: Record<MembershipType, string> = {
+  custodian: 'Custodio',
+  resident: 'Residente',
+  volunteer: 'Voluntario',
+  collaborator: 'Colaborador',
+};
+
+const MEMBER_ROLE_LABELS: Record<CanonicalMemberRole, string> = {
+  admin: 'Admin',
+  miembro: 'Miembro',
+  visitante: 'Visitante',
+};
+
+const MEMBERSHIP_FILTER_OPTIONS = ['todos', 'custodian', 'resident', 'volunteer', 'collaborator'] as const;
+const ROLE_OPTIONS: CanonicalMemberRole[] = ['admin', 'miembro', 'visitante'];
+const MEMBERSHIP_OPTIONS: MembershipType[] = ['custodian', 'resident', 'volunteer', 'collaborator'];
 
 export default function ComunidadSubTab({
   members,
@@ -22,8 +47,10 @@ export default function ComunidadSubTab({
   appUserId,
 }: ComunidadSubTabProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState<'todos' | RolComunitario>('todos');
+  const [roleFilter, setRoleFilter] = useState<'todos' | MembershipType>('todos');
   const [bajas, setBajas] = useState<FeedbackSalida[]>([]);
+  const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
+  const toast = useToast();
 
   useEffect(() => {
     if (!currentCommunityId) return;
@@ -33,15 +60,53 @@ export default function ComunidadSubTab({
     return () => unsubscribe();
   }, [currentCommunityId]);
 
+  const adminsCount = members.filter((m) => normalizeMemberRole(m.rol) === 'admin').length;
+
   const filteredMembers = members.filter(m => {
-    // En Firebase el campo es rolComunitario. Fallback a rol para legacy.
-    const level = m.rolComunitario || m.rol;
-    if (roleFilter !== 'todos' && level !== roleFilter) return false;
+    const membership = normalizeMembershipType(m.membershipType || m.rolComunitario || m.rol);
+    if (roleFilter !== 'todos' && membership !== roleFilter) return false;
     return (
       (m.nombre?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (m.rol_comunidad?.toLowerCase() || '').includes(searchTerm.toLowerCase())
     );
   });
+
+  const handleRoleChange = async (member: CommunityMember, nextRole: CanonicalMemberRole) => {
+    if (!currentCommunityId) return;
+    const currentRole = normalizeMemberRole(member.rol);
+    if (currentRole === nextRole) return;
+
+    if (currentRole === 'admin' && nextRole !== 'admin' && adminsCount <= 1 && member.userId === appUserId) {
+      toast.error('No puedes degradarte si eres el último admin del nodo');
+      return;
+    }
+
+    setUpdatingUserId(member.userId);
+    try {
+      await updateCommunityMemberAccess(currentCommunityId, member.userId, { rol: nextRole });
+      toast.success(`Permiso actualizado a ${MEMBER_ROLE_LABELS[nextRole]}`);
+    } catch {
+      toast.error('No se pudo actualizar el permiso del miembro');
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
+
+  const handleMembershipTypeChange = async (member: CommunityMember, nextType: MembershipType) => {
+    if (!currentCommunityId) return;
+    const currentType = normalizeMembershipType(member.membershipType || member.rolComunitario || member.rol);
+    if (currentType === nextType) return;
+
+    setUpdatingUserId(member.userId);
+    try {
+      await updateCommunityMemberAccess(currentCommunityId, member.userId, { membershipType: nextType });
+      toast.success(`Vínculo actualizado a ${MEMBERSHIP_TYPE_LABELS[nextType]}`);
+    } catch {
+      toast.error('No se pudo actualizar el vínculo del miembro');
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -57,9 +122,9 @@ export default function ComunidadSubTab({
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
             <Filter className="w-4 h-4 text-stone-400 shrink-0" />
-            {(['todos', 'propietario', 'miembro', 'voluntario'] as const).map(role => (
+            {MEMBERSHIP_FILTER_OPTIONS.map(role => (
               <button
                 key={role}
                 onClick={() => setRoleFilter(role)}
@@ -69,7 +134,7 @@ export default function ComunidadSubTab({
                     : 'bg-white text-stone-500 border-stone-200 hover:border-stone-300'
                 }`}
               >
-                {role.charAt(0).toUpperCase() + role.slice(1)}
+                {role === 'todos' ? 'Todos' : MEMBERSHIP_TYPE_LABELS[role]}
               </button>
             ))}
           </div>
@@ -80,7 +145,7 @@ export default function ComunidadSubTab({
             <thead className="bg-stone-50 text-stone-400 text-[10px] uppercase font-bold tracking-widest">
               <tr>
                 <th className="px-6 py-4">Nombre / Rol en Comunidad</th>
-                <th className="px-6 py-4">Estado / Rol Comunitario</th>
+                <th className="px-6 py-4">Permiso / Vínculo</th>
                 <th className="px-6 py-4">Antigüedad</th>
                 <th className="px-6 py-4 text-right">Acciones</th>
               </tr>
@@ -100,7 +165,10 @@ export default function ComunidadSubTab({
                 </tr>
               ) : (
                 filteredMembers.map(member => {
-                  const level = member.rolComunitario || member.rol;
+                  const currentRole = normalizeMemberRole(member.rol);
+                  const currentMembershipType = normalizeMembershipType(member.membershipType || member.rolComunitario || member.rol);
+                  const isUpdating = updatingUserId === member.userId;
+                  const isLastAdminSelf = currentRole === 'admin' && adminsCount <= 1 && member.userId === appUserId;
                   return (
                     <tr key={member.userId} className="hover:bg-[#FDFBF7] transition-colors group">
                       <td className="px-6 py-4">
@@ -108,9 +176,36 @@ export default function ComunidadSubTab({
                         <div className="text-xs text-stone-400">{member.rol_comunidad || 'Sin rol definido'}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${member.estado === 'completo' ? 'bg-teal-500' : 'bg-amber-500'}`} />
-                          <span className="text-xs font-medium text-stone-600 capitalize">{level || 'Miembro'}</span>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className={`w-2 h-2 rounded-full shrink-0 ${member.estado === 'completo' ? 'bg-teal-500' : 'bg-amber-500'}`} />
+                          <select
+                            aria-label={`Permiso de ${member.nombre}`}
+                            value={currentRole}
+                            disabled={isUpdating || isLastAdminSelf}
+                            title={isLastAdminSelf ? 'Eres el último admin del nodo' : 'Cambiar permiso'}
+                            onChange={(e) => handleRoleChange(member, e.target.value as CanonicalMemberRole)}
+                            className="bg-stone-50 border border-stone-200 text-stone-700 rounded-lg px-2 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-stone-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                          >
+                            {ROLE_OPTIONS.map((opt) => (
+                              <option key={opt} value={opt}>
+                                {MEMBER_ROLE_LABELS[opt]}
+                              </option>
+                            ))}
+                          </select>
+                          <select
+                            aria-label={`Vínculo de ${member.nombre}`}
+                            value={currentMembershipType}
+                            disabled={isUpdating}
+                            title="Cambiar vínculo"
+                            onChange={(e) => handleMembershipTypeChange(member, e.target.value as MembershipType)}
+                            className="bg-stone-50 border border-stone-200 text-stone-700 rounded-lg px-2 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-stone-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                          >
+                            {MEMBERSHIP_OPTIONS.map((opt) => (
+                              <option key={opt} value={opt}>
+                                {MEMBERSHIP_TYPE_LABELS[opt]}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-stone-500">{member.antiguedad_anos || 0} años</td>

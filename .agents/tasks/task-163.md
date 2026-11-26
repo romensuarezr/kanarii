@@ -5,7 +5,7 @@
 - **Título**: Sincronizar `adminUids` ↔ `community_members.rol` y gestión de roles/vínculos en `ComunidadSubTab`
 - **Sprint**: Sprint 33
 - **Tipo**: Seguridad / RBAC / Admin UI
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -26,7 +26,7 @@
 - `src/pages/AdminPanel.tsx`
 
 ## Criterios de Aceptación
-- [ ] Un admin de nodo puede promover/degradar permisos (`admin`/`miembro`/`visitante`) y vínculo (`propietario`/`miembro`/`voluntario`) desde `AdminPanel`.
-- [ ] El cambio actualiza `community_members.rol` y `comunidades.adminUids` en un mismo batch atómico.
-- [ ] El filtro de `ComunidadSubTab` funciona incluso con fichas editadas.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] Un admin de nodo puede promover/degradar permisos (`admin`/`miembro`/`visitante`) y vínculo (`propietario`/`miembro`/`voluntario`) desde `AdminPanel`.
+- [x] El cambio actualiza `community_members.rol` y `comunidades.adminUids` en un mismo batch atómico.
+- [x] El filtro de `ComunidadSubTab` funciona incluso con fichas editadas.
+- [x] `npm run lint` y `npm run build` pasan sin errores.
