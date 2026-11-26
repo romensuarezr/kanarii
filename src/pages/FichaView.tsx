@@ -37,6 +37,7 @@ const fichaSchema = z.object({
   lugar: z.string().min(1, 'Requerido'),
   genero: z.string().min(1, 'Requerido'),
   saberes: z.string().min(1, 'Requerido'),
+  headline: z.string().max(45, 'Máximo 45 caracteres').optional(),
   rol_comunidad: z.string().min(1, 'Requerido'),
   antiguedad_anos: z.preprocess((val) => Number(val), z.number()),
   tension: z.string().min(1, 'Requerido'),
@@ -534,6 +535,18 @@ export function FichaView() {
                   <label className="text-sm font-medium text-stone-600">Estado de tensión</label>
                   <textarea {...register("tension")} rows={4} placeholder="¿Qué estás sintiendo hoy en la convivencia?" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                   <FieldError error={errors.tension} />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-stone-600">Tu rol u oficio en una frase corta</label>
+                  <input
+                    type="text"
+                    maxLength={45}
+                    {...register("headline")}
+                    placeholder="Oficio o rol corto en la comunidad (máx. 45 caracteres)"
+                    className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]"
+                  />
+                  <FieldError error={errors.headline} />
                 </div>
 
                 <div className="space-y-1">

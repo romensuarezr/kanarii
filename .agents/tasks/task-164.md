@@ -5,7 +5,7 @@
 - **Título**: Limpieza UX de clasificación en `PerfilView`, `FichaView`, `FichaComunidadView` y `MemberCard`
 - **Sprint**: Sprint 33
 - **Tipo**: UX / UI / Claridad de Roles
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -25,7 +25,7 @@
 - `src/components/members/MemberCard.tsx`
 
 ## Criterios de Aceptación
-- [ ] `/perfil` no muestra el badge técnico `USER`.
-- [ ] `MemberCard` muestra vínculo corto + oficio/headline legible sin cortar párrafos.
-- [ ] `FichaView` permite definir `headline` corto sin romper fichas previas.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] `/perfil` no muestra el badge técnico `USER`.
+- [x] `MemberCard` muestra vínculo corto + oficio/headline legible sin cortar párrafos.
+- [x] `FichaView` permite definir `headline` corto sin romper fichas previas.
+- [x] `npm run lint` y `npm run build` pasan sin errores.

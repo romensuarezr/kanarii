@@ -426,6 +426,8 @@ export function FichaComunidadView() {
                                     name={displayName}
                                     photoUrl={member.photoURL}
                                     role={member.rol_comunidad || member.rolComunitario || member.rol}
+                                    membershipType={member.membershipType || member.rolComunitario}
+                                    headline={member.headline || member.rol_comunidad}
                                     bio={member.arquetipo_s3 ? `Arquetipo: ${member.arquetipo_s3}` : undefined}
                                     saberes={member.tipo_hd ? [member.tipo_hd] : undefined}
                                     onOpenPassport={(uid) => {

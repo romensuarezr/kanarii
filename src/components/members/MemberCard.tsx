@@ -4,12 +4,22 @@ import { MapPin, ArrowRight, Sparkles, User, HeartHandshake, UserPlus } from 'lu
 import { ContactActions } from '../perfil/ContactActions';
 import { useTranslation } from 'react-i18next';
 import { ConnectModal } from '../sinergias/ConnectModal';
+import { normalizeMembershipType } from '../../lib/services/members';
+
+const MEMBERSHIP_LABELS: Record<string, string> = {
+  custodian: 'Custodio',
+  resident: 'Residente',
+  volunteer: 'Voluntario',
+  collaborator: 'Colaborador',
+};
 
 export interface MemberCardProps {
   id: string;
   name: string;
   photoUrl?: string;
   role?: string;
+  membershipType?: string;
+  headline?: string;
   location?: string;
   bio?: string;
   saberes?: string[];
@@ -27,6 +37,8 @@ export function MemberCard({
   name,
   photoUrl,
   role,
+  membershipType,
+  headline,
   location,
   bio,
   saberes = [],
@@ -48,6 +60,14 @@ export function MemberCard({
   const displayOfferings = allOfferings.slice(0, 2);
 
   const displayNeeds = necesidades.filter(Boolean).slice(0, 2);
+
+  const membershipLabel = membershipType
+    ? MEMBERSHIP_LABELS[normalizeMembershipType(membershipType)]
+    : undefined;
+
+  // Priorizamos headline explícito; si no hay, usamos role como subtítulo legible (acotado visualmente)
+  const rawSubtitle = (headline || (!membershipType ? role : undefined) || '').trim();
+  const displayHeadline = rawSubtitle || undefined;
 
   const handleCardClick = () => {
     if (onOpenPassport && id) {
@@ -95,16 +115,22 @@ export function MemberCard({
               </h4>
             </div>
 
-            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-              {role ? (
-                <span className="text-[10px] font-bold uppercase tracking-wider text-forest-deep bg-bg-page px-2 py-0.5 rounded-md border border-border">
-                  {role}
+            {displayHeadline && (
+              <p className="text-xs text-text-ink/80 mt-0.5 line-clamp-1">
+                {displayHeadline}
+              </p>
+            )}
+
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
+              {membershipLabel ? (
+                <span className="text-[11px] font-semibold text-forest-deep bg-bg-page px-2 py-0.5 rounded-md border border-border">
+                  {membershipLabel}
                 </span>
-              ) : (
+              ) : !displayHeadline ? (
                 <span className="text-[10px] font-medium text-forest-mid">
                   {t('card.activeMember')}
                 </span>
-              )}
+              ) : null}
 
               {location && (
                 <span className="text-[11px] text-text-ink/70 flex items-center gap-1 truncate">
@@ -223,7 +249,7 @@ export function MemberCard({
         targetUserId={id}
         targetName={name}
         targetAvatar={photoUrl}
-        targetRole={role}
+        targetRole={displayHeadline || membershipLabel || role}
         targetLocation={location}
         synergyData={{
           offerings: allOfferings,

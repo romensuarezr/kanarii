@@ -19,6 +19,7 @@ export function getMergedDatosPersona(ficha: Ficha | null | undefined): Partial<
     lugar: p.lugar || o.lugar || '',
     genero: p.genero || o.genero || '',
     saberes: p.saberes || o.saberes || '',
+    headline: p.headline || o.headline || '',
     rol_comunidad: p.rol_comunidad || o.rol_comunidad || '',
     antiguedad_anos: p.antiguedad_anos !== undefined
       ? p.antiguedad_anos
