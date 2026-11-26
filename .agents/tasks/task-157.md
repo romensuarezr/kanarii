@@ -5,7 +5,7 @@
 - **Título**: Modelo `enabledModules` en `Comunidad` + Hook `useNodeModules` con auto-detección
 - **Sprint**: Sprint 31
 - **Tipo**: Arquitectura / Datos / Hooks
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -28,7 +28,7 @@
 - `src/hooks/useNodeModules.ts` (nuevo)
 
 ## Criterios de Aceptación
-- [ ] `enabledModules?: NodeModuleId[]` tipado en `Comunidad`.
-- [ ] Agrupación Semilla / Coordinación / Madurez definida con activación granular por herramienta.
-- [ ] Auto-detección en nodos veteranos verifica datos existentes en Firestore sin ocultar ningún dato previo.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] `enabledModules?: NodeModuleId[]` tipado en `Comunidad`.
+- [x] Agrupación Semilla / Coordinación / Madurez definida con activación granular por herramienta.
+- [x] Auto-detección en nodos veteranos verifica datos existentes en Firestore sin ocultar ningún dato previo.
+- [x] `npm run lint` y `npm run build` pasan sin errores.

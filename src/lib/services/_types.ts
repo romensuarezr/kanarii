@@ -1,3 +1,13 @@
+export type NodeModuleId =
+  | 'tablon'
+  | 'calendario'
+  | 'miembros'
+  | 'proyectos'
+  | 'tareas'
+  | 'gobernanza'
+  | 'actas'
+  | 'soberania';
+
 export interface Comunidad {
   id: string; // Slug (ej: 'arteara')
   nombre: string;
@@ -21,6 +31,7 @@ export interface Comunidad {
   };
   tipo?: 'finca' | 'ecoaldea' | 'cohousing' | 'urbano' | 'nomada' | 'otro';
   capacidad?: number;
+  enabledModules?: string[];
 }
 
 export interface AppUser {

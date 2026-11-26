@@ -1,7 +1,13 @@
 import { 
   db, 
   colComunidades, 
-  colCommunityMembers, 
+  colCommunityMembers,
+  colProyectos,
+  colTareas,
+  colPropuestas,
+  colActas,
+  colAcuerdos,
+  colServicios,
   doc, 
   getDoc, 
   getDocs, 
@@ -354,4 +360,56 @@ export function listenComunidades(callback: (list: Comunidad[]) => void): () => 
   }, (err) => {
     console.error("Error in listenComunidades:", err);
   });
+}
+
+/**
+ * Actualiza los módulos activos de un nodo en Firestore (Capa 2 progresiva).
+ */
+export async function updateComunidadModules(slug: string, enabledModules: string[]): Promise<void> {
+  try {
+    const comRef = doc(db, 'comunidades', slug);
+    await updateDoc(comRef, {
+      enabledModules,
+      updatedAt: serverTimestamp()
+    });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.UPDATE, 'Actualizar módulos de comunidad');
+    throw error;
+  }
+}
+
+/**
+ * Detecta en Firestore qué módulos progresivos ya tienen datos reales en un nodo
+ * (evita ocultar datos previos en nodos veteranos como Arteara).
+ */
+export async function detectComunidadExistingModules(communityId: string): Promise<string[]> {
+  if (!communityId) return [];
+
+  const checkCollection = async (colRef: any): Promise<boolean> => {
+    try {
+      const q = query(colRef, where('communityId', '==', communityId), limit(1));
+      const snap = await getDocs(q);
+      return !snap.empty;
+    } catch {
+      return false;
+    }
+  };
+
+  const [hasProyectos, hasTareas, hasPropuestas, hasActas, hasAcuerdos, hasServicios] = await Promise.all([
+    checkCollection(colProyectos),
+    checkCollection(colTareas),
+    checkCollection(colPropuestas),
+    checkCollection(colActas),
+    checkCollection(colAcuerdos),
+    checkCollection(colServicios),
+  ]);
+
+  const detected: string[] = [];
+  if (hasProyectos) detected.push('proyectos');
+  if (hasTareas) detected.push('tareas');
+  if (hasPropuestas) detected.push('gobernanza');
+  if (hasActas) detected.push('actas');
+  if (hasAcuerdos || hasServicios) detected.push('soberania');
+
+  return detected;
 }
