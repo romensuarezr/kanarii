@@ -2,17 +2,23 @@ import React, { useState, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useFicha } from '../hooks/useFicha';
 import { useFichas } from '../hooks/useFichas';
+import { useComunidades } from '../hooks/useComunidades';
+import { useEventos } from '../hooks/useEventos';
+import { useResidencias } from '../hooks/useResidencias';
 import { kinDeHoy } from '../lib/kinMaya';
-import { calcularSinergiasMultiples, detectIsland, SynergyMatch } from '../lib/sinergias';
+import { calcularSinergiasMultiples, detectIsland } from '../lib/sinergias';
 import { SynergyCard } from '../components/sinergias/SynergyCard';
+import { ExploreEntityCard } from '../components/dashboard/ExploreEntityCard';
 import { PasaporteModal } from '../components/perfil/PasaporteModal';
 import { AuthGateModal } from '../components/AuthGateModal';
-import { Sparkles, MapPin, Compass, ArrowRight, Users, Loader2, LogIn, Search, X } from 'lucide-react';
+import { Sparkles, MapPin, Compass, ArrowRight, Users, Loader2, LogIn, Search, X, SlidersHorizontal, LayoutGrid } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Ficha } from '../lib/services/_types';
 
 type FilterType = 'all' | 'sameIsland' | 'energetic' | 'triad';
+type SearchTabMode = 'advanced' | 'browse';
+type LookingForType = 'all' | 'people' | 'nodes' | 'events' | 'residencies';
 
 // Perfil de referencia para modo explorador / demo
 const DEMO_CURRENT_USER_FICHA: Ficha = {
@@ -186,7 +192,14 @@ export function DashboardView() {
   const { appUser } = useAuth();
   const { ficha: userFicha, loading: userFichaLoading } = useFicha();
   const { fichas: allFichas, loading: allFichasLoading } = useFichas(appUser ? undefined : 'none');
+  const { items: comunidades } = useComunidades();
+  const { eventos } = useEventos(appUser ? 'network' : undefined);
+  const { residencias } = useResidencias();
 
+  const [searchMode, setSearchMode] = useState<SearchTabMode>('advanced');
+  const [lookingFor, setLookingFor] = useState<LookingForType>('all');
+  const [memberOf, setMemberOf] = useState<string>('all');
+  const [nearOnly, setNearOnly] = useState<boolean>(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -217,8 +230,20 @@ export function DashboardView() {
     return calcularSinergiasMultiples(referenceFicha, activeFichasPool, referenceFicha?.userId);
   }, [referenceFicha, activeFichasPool]);
 
-  // Filtrado de sinergias (categoría + búsqueda textual)
+  // Filtrado de sinergias (categoría + filtros ReTribalize + búsqueda multi-término)
+  const searchTerms = useMemo(
+    () => searchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean),
+    [searchQuery]
+  );
+
+  const matchesTerms = (parts: Array<string | undefined | null>) => {
+    if (searchTerms.length === 0) return true;
+    const haystack = parts.filter(Boolean).join(' ').toLowerCase();
+    return searchTerms.every((term) => haystack.includes(term));
+  };
+
   const filteredMatches = useMemo(() => {
+    if (lookingFor !== 'all' && lookingFor !== 'people') return [];
     let base = allMatches;
     switch (activeFilter) {
       case 'sameIsland':
@@ -239,10 +264,19 @@ export function DashboardView() {
         base = allMatches;
     }
 
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return base;
-    return base.filter((m) => {
-      const haystack = [
+    if (nearOnly) {
+      base = base.filter((m) => m.isSameIsland);
+    }
+
+    if (memberOf !== 'all') {
+      base = base.filter((m) => {
+        const comm = m.targetFicha.communityId || m.targetFicha.datosPersona?.communityId || m.targetFicha.datosOnboarding?.communityId;
+        return comm === memberOf;
+      });
+    }
+
+    return base.filter((m) =>
+      matchesTerms([
         m.targetName,
         m.targetRole,
         m.targetBio,
@@ -251,13 +285,41 @@ export function DashboardView() {
         ...(m.triadSynergy?.complementaryOfferings || []),
         ...(m.triadSynergy?.complementaryNeeds || []),
         ...(m.triadSynergy?.sharedSaberes || []),
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase();
-      return haystack.includes(q);
+      ])
+    );
+  }, [allMatches, activeFilter, lookingFor, nearOnly, memberOf, searchTerms]);
+
+  const filteredNodes = useMemo(() => {
+    if (lookingFor !== 'all' && lookingFor !== 'nodes') return [];
+    return (comunidades || []).filter((c) => {
+      if (memberOf !== 'all' && c.slug !== memberOf && c.id !== memberOf) return false;
+      if (nearOnly && userIsland) {
+        const loc = `${c.ubicacion?.municipio || ''} ${c.ubicacion?.region || ''}`.toLowerCase();
+        if (!loc.includes(userIsland.toLowerCase())) return false;
+      }
+      return matchesTerms([c.nombre, c.descripcion, c.tipo, c.ubicacion?.municipio, c.ubicacion?.region, ...(c.tags || [])]);
     });
-  }, [allMatches, activeFilter, searchQuery]);
+  }, [comunidades, lookingFor, memberOf, nearOnly, userIsland, searchTerms]);
+
+  const filteredEvents = useMemo(() => {
+    if (lookingFor !== 'all' && lookingFor !== 'events') return [];
+    return (eventos || []).filter((ev) => {
+      if (memberOf !== 'all' && ev.communityId !== memberOf) return false;
+      return matchesTerms([ev.titulo, ev.descripcion, ev.tipo, ev.communityId]);
+    });
+  }, [eventos, lookingFor, memberOf, searchTerms]);
+
+  const filteredResidencies = useMemo(() => {
+    if (lookingFor !== 'all' && lookingFor !== 'residencies') return [];
+    return (residencias || []).filter((res) => {
+      if (memberOf !== 'all' && res.nodoSlug !== memberOf) return false;
+      if (nearOnly && userIsland && res.isla.toLowerCase() !== userIsland.toLowerCase()) return false;
+      return matchesTerms([res.titulo, res.descripcion, res.tipo, res.isla, res.municipio, res.nodoNombre, ...(res.ofrece || []), ...(res.busca || [])]);
+    });
+  }, [residencias, lookingFor, memberOf, nearOnly, userIsland, searchTerms]);
+
+  const totalResultsCount =
+    filteredMatches.length + filteredNodes.length + filteredEvents.length + filteredResidencies.length;
 
   const handleOpenPassport = (userId: string) => {
     if (userId.startsWith('demo-')) {
@@ -361,27 +423,136 @@ export function DashboardView() {
           </div>
         )}
 
-        {/* Buscador directo estilo Find New Connections */}
-        <div className="relative">
-          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t('filters.searchPlaceholder', { defaultValue: 'Buscar por nombre, isla, don o saber...' })}
-            className="w-full pl-11 pr-10 py-3 rounded-2xl bg-bg-surface border border-border text-sm text-text-strong placeholder:text-stone-400 focus:outline-none focus:border-forest-deep shadow-2xs transition-colors"
-          />
-          {searchQuery && (
+        {/* Buscador Avanzado estilo ReTribalize */}
+        <section className="space-y-4">
+          {/* Tabs superiores de modo */}
+          <div className="flex flex-wrap items-center gap-4 border-b border-border pb-2.5 text-xs font-semibold">
             <button
               type="button"
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 cursor-pointer"
-              aria-label="Limpiar búsqueda"
+              onClick={() => setSearchMode('advanced')}
+              className={`inline-flex items-center gap-1.5 pb-1.5 -mb-[11px] border-b-2 transition-colors cursor-pointer ${
+                searchMode === 'advanced'
+                  ? 'border-forest-deep text-forest-deep'
+                  : 'border-transparent text-stone-500 hover:text-text-strong'
+              }`}
             >
-              <X size={15} />
+              <SlidersHorizontal size={14} />
+              <span>Búsqueda avanzada</span>
             </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchMode('browse');
+                setSearchQuery('');
+                setLookingFor('all');
+                setMemberOf('all');
+                setNearOnly(false);
+              }}
+              className={`inline-flex items-center gap-1.5 pb-1.5 -mb-[11px] border-b-2 transition-colors cursor-pointer ${
+                searchMode === 'browse'
+                  ? 'border-forest-deep text-forest-deep'
+                  : 'border-transparent text-stone-500 hover:text-text-strong'
+              }`}
+            >
+              <LayoutGrid size={14} />
+              <span>Explorar todo</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/ficha?edit=1')}
+              className="inline-flex items-center gap-1.5 pb-1.5 -mb-[11px] border-b-2 border-transparent text-stone-500 hover:text-forest-deep transition-colors cursor-pointer"
+            >
+              <Sparkles size={14} />
+              <span>Mejorar sinergias</span>
+            </button>
+          </div>
+
+          {searchMode === 'advanced' && (
+            <div className="bg-bg-surface border border-border rounded-3xl p-4 sm:p-5 shadow-2xs space-y-4">
+              <div className="relative">
+                <textarea
+                  rows={2}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Describe a quién o qué buscas (ej: permacultura en Gran Canaria, talleres de bioconstrucción, residencia de verano)..."
+                  className="w-full resize-none rounded-2xl bg-bg-page border border-border px-4 py-3 pr-10 text-sm text-text-strong placeholder:text-stone-400 focus:outline-none focus:border-forest-deep transition-colors"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-3 p-1 text-stone-400 hover:text-stone-700 cursor-pointer"
+                    aria-label="Limpiar búsqueda"
+                  >
+                    <X size={15} />
+                  </button>
+                )}
+              </div>
+
+              {/* Barra inline de filtros estilo ReTribalize */}
+              <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-stone-600">
+                  <label className="inline-flex items-center gap-1.5">
+                    <span className="text-stone-400">Buscando</span>
+                    <select
+                      value={lookingFor}
+                      onChange={(e) => setLookingFor(e.target.value as LookingForType)}
+                      className="font-semibold text-text-strong bg-transparent border-b border-dashed border-stone-400 pb-0.5 focus:outline-none focus:border-forest-deep cursor-pointer"
+                    >
+                      <option value="all">Todo</option>
+                      <option value="people">Personas</option>
+                      <option value="nodes">Nodos</option>
+                      <option value="events">Eventos</option>
+                      <option value="residencies">Estancias</option>
+                    </select>
+                  </label>
+
+                  <label className="inline-flex items-center gap-1.5">
+                    <span className="text-stone-400">Nodo</span>
+                    <select
+                      value={memberOf}
+                      onChange={(e) => setMemberOf(e.target.value)}
+                      className="font-semibold text-text-strong bg-transparent border-b border-dashed border-stone-400 pb-0.5 max-w-[160px] focus:outline-none focus:border-forest-deep cursor-pointer"
+                    >
+                      <option value="all">Cualquier nodo</option>
+                      {comunidades.map((c) => (
+                        <option key={c.id || c.slug} value={c.slug || c.id}>
+                          {c.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={nearOnly}
+                    onClick={() => setNearOnly((prev) => !prev)}
+                    className="inline-flex items-center gap-2 cursor-pointer"
+                  >
+                    <span className="text-stone-400">Cerca</span>
+                    <span
+                      className={`w-8 h-4.5 rounded-full transition-colors p-0.5 flex items-center ${
+                        nearOnly ? 'bg-forest-deep justify-end' : 'bg-stone-300 justify-start'
+                      }`}
+                    >
+                      <span className="w-3.5 h-3.5 rounded-full bg-white shadow-2xs" />
+                    </span>
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('sinergias-section')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-forest-deep hover:bg-forest-deep/90 text-white font-semibold transition-all shadow-xs cursor-pointer"
+                >
+                  <span>Buscar</span>
+                  <Search size={13} />
+                </button>
+              </div>
+            </div>
           )}
-        </div>
+        </section>
 
         {/* Barra de Filtros y Cuadrícula de Sinergias */}
         <div id="sinergias-section" className="space-y-6 pt-2">
@@ -450,17 +621,17 @@ export function DashboardView() {
           </div>
 
           <div className="text-xs text-stone-500 font-medium shrink-0">
-            {t('filters.count', { count: filteredMatches.length })}
+            {totalResultsCount} {totalResultsCount === 1 ? 'resultado' : 'resultados'}
           </div>
         </div>
 
-        {/* Feed de Sinergias */}
+        {/* Feed Unificado (Personas + Nodos + Eventos + Estancias) */}
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-stone-400">
             <Loader2 className="w-8 h-8 animate-spin text-forest-deep" />
             <p className="text-sm font-medium">Calculando sinergias de la red...</p>
           </div>
-        ) : filteredMatches.length === 0 ? (
+        ) : totalResultsCount === 0 ? (
           <div className="bg-bg-surface border border-border rounded-3xl p-12 text-center space-y-4 max-w-lg mx-auto shadow-xs">
             <div className="w-14 h-14 rounded-2xl bg-sand-light border border-border flex items-center justify-center mx-auto text-stone-500">
               <Users size={24} />
@@ -473,10 +644,16 @@ export function DashboardView() {
                 {t('empty.noMatchesDesc')}
               </p>
             </div>
-            {activeFilter !== 'all' && (
+            {(activeFilter !== 'all' || lookingFor !== 'all' || memberOf !== 'all' || nearOnly || searchQuery) && (
               <button
                 type="button"
-                onClick={() => setActiveFilter('all')}
+                onClick={() => {
+                  setActiveFilter('all');
+                  setLookingFor('all');
+                  setMemberOf('all');
+                  setNearOnly(false);
+                  setSearchQuery('');
+                }}
                 className="px-4 py-2 rounded-xl text-xs font-semibold bg-sand-dark text-stone-800 hover:bg-sand-dark/80 transition-colors cursor-pointer"
               >
                 {t('empty.resetFilter')}
@@ -490,6 +667,55 @@ export function DashboardView() {
                 key={match.targetUserId || `match-${idx}`}
                 match={match}
                 onOpenPassport={handleOpenPassport}
+              />
+            ))}
+
+            {filteredNodes.map((nodo) => (
+              <ExploreEntityCard
+                key={`node-${nodo.id || nodo.slug}`}
+                kind="node"
+                id={nodo.id || nodo.slug}
+                title={nodo.nombre}
+                subtitle={nodo.tipo ? `Espacio ${nodo.tipo}` : 'Comunidad Kanarii'}
+                description={nodo.descripcion}
+                location={[nodo.ubicacion?.municipio, nodo.ubicacion?.region].filter(Boolean).join(', ')}
+                imageUrl={nodo.bannerUrl || nodo.logoUrl}
+                metaPrimary={nodo.ubicacion?.region || undefined}
+                metaSecondary={nodo.capacidad ? `Cap. ${nodo.capacidad}` : undefined}
+                tags={nodo.tags || []}
+                href={`/c/${nodo.slug || nodo.id}`}
+              />
+            ))}
+
+            {filteredEvents.map((ev) => (
+              <ExploreEntityCard
+                key={`event-${ev.id}`}
+                kind="event"
+                id={ev.id || ev.titulo}
+                title={ev.titulo}
+                subtitle={ev.communityId ? `Nodo ${ev.communityId}` : 'Evento comunitario'}
+                description={ev.descripcion}
+                imageUrl={ev.imageUrl}
+                metaPrimary={ev.inicio instanceof Date ? ev.inicio.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : undefined}
+                metaSecondary={ev.tipo}
+                href="/eventos"
+              />
+            ))}
+
+            {filteredResidencies.map((res) => (
+              <ExploreEntityCard
+                key={`res-${res.id}`}
+                kind="residency"
+                id={res.id || res.titulo}
+                title={res.titulo}
+                subtitle={res.nodoNombre}
+                description={res.descripcion}
+                location={[res.municipio, res.isla].filter(Boolean).join(', ')}
+                imageUrl={res.imageUrl}
+                metaPrimary={res.duracion}
+                metaSecondary={`${res.plazas} plazas`}
+                tags={res.ofrece || []}
+                href="/residencias"
               />
             ))}
           </div>

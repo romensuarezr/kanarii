@@ -93,6 +93,7 @@ export interface Evento {
   participantes: string[];
   communityId: string;
   vinculado_a?: { tipo: 'proyecto' | 'acta'; id: string };
+  imageUrl?: string;
   creadoEn: any;
   creadoPor: string;
 }

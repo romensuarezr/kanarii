@@ -30,6 +30,7 @@ export interface ConvocatoriaResidencia {
   ofrece: string[];
   busca: string[];
   solicitantes?: string[];
+  imageUrl?: string;
   activo?: boolean;
   creadoEn?: any;
   updatedAt?: any;
