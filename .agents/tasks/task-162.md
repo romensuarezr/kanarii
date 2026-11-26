@@ -5,7 +5,7 @@
 - **Título**: Separar capas de rol (`rol` RBAC, `membershipType`, `headline`) y corregir colisión `rolComunitario`
 - **Sprint**: Sprint 33
 - **Tipo**: Arquitectura / Modelo de Datos / Bugfix
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -30,7 +30,7 @@
 - Tests de `firestore.rules`
 
 ## Criterios de Aceptación
-- [ ] `MembershipType` es `'custodian' | 'resident' | 'volunteer' | 'collaborator'` con migración `propietario → custodian`.
-- [ ] Editar ficha no sobrescribe `membershipType` ni `rol` con `rol_comunidad`.
-- [ ] `firestore.rules` valida el enum `membershipType` y `headline.size() <= 45` con tests pasando.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] `MembershipType` es `'custodian' | 'resident' | 'volunteer' | 'collaborator'` con migración `propietario → custodian`.
+- [x] Editar ficha no sobrescribe `membershipType` ni `rol` con `rol_comunidad`.
+- [x] `firestore.rules` valida el enum `membershipType` y `headline.size() <= 45` con tests pasando.
+- [x] `npm run lint` y `npm run build` pasan sin errores.

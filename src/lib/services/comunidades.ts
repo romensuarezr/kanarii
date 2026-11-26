@@ -181,7 +181,8 @@ export async function createComunidad(data: {
       autoridad_hd: autoridadHd,
       antiguedad_anos: 0,
       rol_comunidad: 'Fundador/a',
-      rolComunitario: 'propietario',
+      headline: 'Fundador/a del nodo',
+      membershipType: 'custodian',
       rol: 'admin', // el creador es admin
       estado: 'activo',
       photoURL: userData.photoURL || '',

@@ -118,6 +118,9 @@ export interface Respuesta {
   creadoEn: any;
 }
 
+export type MembershipType = 'custodian' | 'resident' | 'volunteer' | 'collaborator';
+export const HEADLINE_MAX_LENGTH = 45;
+
 export interface DatosOnboarding {
   nombre: string;
   fechaNacimiento: string;
@@ -125,6 +128,7 @@ export interface DatosOnboarding {
   lugar: string;
   genero: string;
   saberes: string;
+  headline?: string;
   rol_comunidad: string;
   antiguedad_anos: number | string;
   tension: string;
@@ -191,6 +195,7 @@ export interface FichaDatosPersona extends Omit<Partial<DatosOnboarding>, 'antig
   genero: string;
   saberes: string;
   rol_comunidad: string;
+  headline?: string;
   antiguedad_anos: number;
   tension: string;
   lugar: string;
@@ -369,8 +374,11 @@ export interface CommunityMember {
   autoridad_hd?: string;
   antiguedad_anos?: number;
   rol_comunidad?: string;
-  rolComunitario?: string; // Nivel de membresía (propietario, miembro, voluntario)
-  rol?: string; // Deprecated: usar rolComunitario
+  headline?: string;
+  membershipType?: MembershipType;
+  /** @deprecated Usar membershipType */
+  rolComunitario?: string;
+  rol?: string; // RBAC: 'admin' | 'miembro' | 'visitante'
   estado?: string;
   creadoEn?: any;
   updatedAt?: any;
