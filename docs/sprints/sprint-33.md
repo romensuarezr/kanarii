@@ -1,14 +1,14 @@
 # Sprint 33 — 2026-11-26 → 2026-12-03
 
 ## Estado
-🟡 En curso
+✅ Completado
 
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
 |---|---|---|---|---|---|
 | T-162 | Separar capas de rol (`rol` RBAC, `membershipType`, `headline`) y corregir colisión `rolComunitario` | M | 🟢 Completada | — | .agents/tasks/task-162.md |
-| T-163 | Sincronizar `adminUids` ↔ `community_members.rol` y gestión de roles/vínculos en `ComunidadSubTab` | M | ⬜ Pendiente | T-162 | .agents/tasks/task-163.md |
-| T-164 | Limpieza UX de clasificación en `PerfilView`, `FichaView`, `FichaComunidadView` y `MemberCard` | M | ⬜ Pendiente | T-162 | .agents/tasks/task-164.md |
+| T-163 | Sincronizar `adminUids` ↔ `community_members.rol` y gestión de roles/vínculos en `ComunidadSubTab` | M | 🟢 Completada | T-162 | .agents/tasks/task-163.md |
+| T-164 | Limpieza UX de clasificación en `PerfilView`, `FichaView`, `FichaComunidadView` y `MemberCard` | M | 🟢 Completada | T-162 | .agents/tasks/task-164.md |
 
 ## Régimen Operativo del Sprint
 - **Régimen**: Desatendida
