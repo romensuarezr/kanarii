@@ -14,6 +14,8 @@ import { es } from 'date-fns/locale';
 import { PageHeader } from '../components/ui/PageHeader';
 import { PageContainer } from '../components/ui/PageContainer';
 import { useTopBarActions } from '../hooks/useTopBarActions';
+import { NodeModulesModal } from '../components/NodeModulesModal';
+import { useNodeModules } from '../hooks/useNodeModules';
 
 const CATEGORIAS = [
   { id: 'habilidad', label: 'Habilidad' },
@@ -31,13 +33,15 @@ const ESTADOS = [
 
 export default function Tablon() {
   const { appUser } = useAuth();
-  const { currentCommunityId } = useComunidad();
+  const { currentCommunityId, comunidad } = useComunidad();
+  const { hasOnlySeedModules } = useNodeModules(comunidad);
   const { posts, loading } = usePosts(currentCommunityId || 'arteara');
   const { members } = useCommunityMembers(currentCommunityId || 'arteara');
   const { addPost, isExecuting: isSubmitting } = usePostActions();
   const location = useLocation();
 
   const [activeTab, setActiveTab] = useState<'necesidad' | 'oferta'>('necesidad');
+  const [isModulesModalOpen, setIsModulesModalOpen] = useState(false);
   const [filterCategoria, setFilterCategoria] = useState<string | null>(null);
   const [filterEstado, setFilterEstado] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -176,12 +180,26 @@ export default function Tablon() {
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#A5A58D]"></div>
         </div>
       ) : filteredPosts.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center p-12 text-center bg-white rounded-3xl border border-dashed border-[#EAE2D6]">
-          <div className="w-16 h-16 bg-[#FDFBF7] rounded-full flex items-center justify-center mb-4 text-stone-300">
-            <Search size={32} />
+        <div className="flex-1 flex flex-col items-center justify-center p-10 sm:p-12 text-center bg-bg-surface rounded-3xl border border-dashed border-border space-y-4">
+          <div className="w-14 h-14 bg-bg-page rounded-full flex items-center justify-center text-stone-400">
+            <Search size={28} />
           </div>
-          <h3 className="text-xl font-serif text-stone-600">No hay {activeTab}s que coincidan</h3>
-          <p className="text-stone-400 mt-2">Prueba a cambiar los filtros o sé el primero en publicar.</p>
+          <div className="space-y-1">
+            <h3 className="text-xl font-serif text-text-strong">No hay {activeTab}s que coincidan</h3>
+            <p className="text-stone-500 text-sm">Prueba a cambiar los filtros o sé el primero en publicar.</p>
+          </div>
+          {hasOnlySeedModules && (
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setIsModulesModalOpen(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-sand-light hover:bg-sand-dark/60 text-forest-deep text-xs font-bold border border-border transition-colors cursor-pointer"
+              >
+                <Plus size={14} className="text-terracotta" />
+                <span>Añadir herramientas al nodo</span>
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -267,6 +285,11 @@ export default function Tablon() {
         );
       })()}
       </div>
+      <NodeModulesModal
+        isOpen={isModulesModalOpen}
+        onClose={() => setIsModulesModalOpen(false)}
+        comunidad={comunidad}
+      />
     </PageContainer>
   );
 }

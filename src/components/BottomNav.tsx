@@ -21,6 +21,9 @@ import {
   Plus,
 } from 'lucide-react';
 import { CreateNewModal } from './CreateNewModal';
+import { NodeModulesModal } from './NodeModulesModal';
+import { useNodeModules } from '../hooks/useNodeModules';
+import { NodeModuleId } from '../lib/services/_types';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { SyncIndicator } from './ui/SyncIndicator';
@@ -46,6 +49,8 @@ export function BottomNav() {
   const { comunidad, comunidades, setCommunityId, currentCommunityId, exitCommunitySpace } = useComunidad();
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const [isCreateNewOpen, setIsCreateNewOpen] = useState(false);
+  const [isModulesModalOpen, setIsModulesModalOpen] = useState(false);
+  const { isModuleEnabled } = useNodeModules(comunidad);
   const { acuerdosPendingCount, acuerdosSolicitanteCount } = useAcuerdosBadge();
   const { unreadCount } = useNotificaciones(comunidad?.id, appUser?.uid);
 
@@ -115,9 +120,10 @@ export function BottomNav() {
     }] : []),
   ];
 
-  // --- NAVEGACIÓN CAPA 2: ESPACIO OPERATIVO DEL NODO ---
-  const nodeSpaceMainItems: BottomNavItem[] = [
+  // --- NAVEGACIÓN CAPA 2: ESPACIO OPERATIVO DEL NODO (progresiva por módulos activos) ---
+  const allNodeSpaceItems: (BottomNavItem & { moduleId?: NodeModuleId })[] = [
     {
+      moduleId: 'tablon',
       label: 'Tablón',
       labelKey: 'nav.board',
       href: '/tablon',
@@ -125,51 +131,64 @@ export function BottomNav() {
       badge: unreadCount > 0 ? unreadCount : undefined,
     },
     {
+      moduleId: 'calendario',
+      label: 'Agenda',
+      labelKey: 'nav.agenda',
+      href: '/calendario',
+      icon: Calendar,
+    },
+    ...(comunidad?.slug ? [{
+      moduleId: 'miembros' as NodeModuleId,
+      label: 'Miembros',
+      labelKey: 'nav.members',
+      href: `/c/${comunidad.slug}`,
+      icon: User,
+    }] : []),
+    {
+      moduleId: 'proyectos',
+      label: 'Proyectos',
+      labelKey: 'nav.projects',
+      href: '/proyectos',
+      icon: Briefcase,
+    },
+    {
+      moduleId: 'tareas',
       label: 'Tareas',
       labelKey: 'nav.tasks',
       href: '/tareas',
       icon: CheckSquare,
     },
     {
+      moduleId: 'gobernanza',
       label: 'Gobernanza',
       labelKey: 'nav.governance',
       href: '/gobernanza',
       icon: Vote,
     },
     {
-      label: 'Proyectos',
-      labelKey: 'nav.projects',
-      href: '/proyectos',
-      icon: Briefcase,
-    },
-  ];
-
-  const nodeSpaceMoreItems: BottomNavItem[] = [
-    ...(comunidad?.slug ? [{
-      label: 'Ficha del Nodo',
-      labelKey: 'nav.nodeSpace',
-      href: `/c/${comunidad.slug}`,
-      icon: Compass,
-    }] : []),
-    {
+      moduleId: 'actas',
       label: 'Actas',
       labelKey: 'nav.minutes',
       href: '/actas',
       icon: FileText,
     },
     {
-      label: 'Soberanía / Almacén',
+      moduleId: 'soberania',
+      label: 'Soberanía',
       labelKey: 'nav.marketplace',
       href: '/soberania',
       icon: Handshake,
       badge: (acuerdosPendingCount + acuerdosSolicitanteCount) > 0 ? (acuerdosPendingCount + acuerdosSolicitanteCount) : undefined,
     },
-    {
-      label: 'Calendario',
-      labelKey: 'nav.calendar',
-      href: '/calendario',
-      icon: Calendar,
-    },
+  ];
+
+  const enabledNodeItems = allNodeSpaceItems.filter(
+    (item) => !item.moduleId || isModuleEnabled(item.moduleId)
+  );
+
+  const nodeSpaceMainItems: BottomNavItem[] = enabledNodeItems.slice(0, 4);
+  const nodeSpaceMoreItems: BottomNavItem[] = [
+    ...enabledNodeItems.slice(4),
     ...(isCommunityAdmin ? [{
       label: 'Solicitudes',
       labelKey: 'nav.requests',
@@ -395,6 +414,19 @@ export function BottomNav() {
                 );
               })}
 
+              {isNodeSpace && (
+                <button
+                  onClick={() => {
+                    setIsMoreMenuOpen(false);
+                    setIsModulesModalOpen(true);
+                  }}
+                  className="w-full text-left px-4 py-3 rounded-2xl font-semibold text-forest-deep hover:bg-sand-light transition-colors flex items-center gap-3 border border-dashed border-border cursor-pointer"
+                >
+                  <Plus className="w-5 h-5 text-terracotta" />
+                  <span className="text-sm">{t('nav.activateModules', { defaultValue: 'Activar módulos' })}</span>
+                </button>
+              )}
+
               <button
                 onClick={() => setIsMoreMenuOpen(false)}
                 className="w-full text-center mt-3 px-4 py-3 rounded-2xl font-medium text-stone-500 hover:bg-stone-100 transition-colors cursor-pointer"
@@ -408,6 +440,12 @@ export function BottomNav() {
       <CreateNewModal
         isOpen={isCreateNewOpen}
         onClose={() => setIsCreateNewOpen(false)}
+      />
+
+      <NodeModulesModal
+        isOpen={isModulesModalOpen}
+        onClose={() => setIsModulesModalOpen(false)}
+        comunidad={comunidad}
       />
     </>
   );
