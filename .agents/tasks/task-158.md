@@ -5,7 +5,7 @@
 - **Título**: Capa 2 progresiva en `Sidebar`/`BottomNav` + `NodeModulesModal` y estado vacío guiado
 - **Sprint**: Sprint 31
 - **Tipo**: UX / Capa 2 / Progressive Disclosure
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -27,8 +27,8 @@
 - `src/locales/en/common.json`
 
 ## Criterios de Aceptación
-- [ ] Capa 2 muestra solo `Tablón`, `Agenda`, `Miembros` + módulos activos + `+ Activar módulos` (sin tabs horizontales duplicadas).
-- [ ] `← Volver a Red Canarias` siempre visible en `Sidebar.tsx` y `BottomNav.tsx`.
-- [ ] `NodeModulesModal.tsx` permite activar herramientas de Coordinación y Madurez individualmente.
-- [ ] Estado vacío guiado en `Tablon.tsx` incluye `+ Añadir herramientas al nodo`.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] Capa 2 muestra solo `Tablón`, `Agenda`, `Miembros` + módulos activos + `+ Activar módulos` (sin tabs horizontales duplicadas).
+- [x] `← Volver a Red Canarias` siempre visible en `Sidebar.tsx` y `BottomNav.tsx`.
+- [x] `NodeModulesModal.tsx` permite activar herramientas de Coordinación y Madurez individualmente.
+- [x] Estado vacío guiado en `Tablon.tsx` incluye `+ Añadir herramientas al nodo`.
+- [x] `npm run lint` y `npm run build` pasan sin errores.

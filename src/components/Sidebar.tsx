@@ -30,6 +30,9 @@ import NotifBadge from './ui/NotifBadge';
 import { useAcuerdosBadge } from '../hooks/useAcuerdosBadge';
 import { useTranslation } from 'react-i18next';
 import { UserAvatarMenu } from './layout/UserAvatarMenu';
+import { NodeModulesModal } from './NodeModulesModal';
+import { useNodeModules } from '../hooks/useNodeModules';
+import { NodeModuleId } from '../lib/services/_types';
 
 export function Sidebar() {
   const { t } = useTranslation('common');
@@ -40,6 +43,8 @@ export function Sidebar() {
   const { unreadCount } = useNotificaciones(comunidad?.id, appUser?.uid);
   const [pendingCount, setPendingCount] = useState(0);
   const [isCreateNewOpen, setIsCreateNewOpen] = useState(false);
+  const [isModulesModalOpen, setIsModulesModalOpen] = useState(false);
+  const { isModuleEnabled } = useNodeModules(comunidad);
   const { acuerdosPendingCount, acuerdosSolicitanteCount } = useAcuerdosBadge();
   const [propuestasPendingCount, setPropuestasPendingCount] = useState(0);
   const [proyectosPendingCount, setProyectosPendingCount] = useState(0);
@@ -155,9 +160,17 @@ export function Sidebar() {
     },
   ];
 
-  // Ítems de la Capa 2 (Espacio Operativo del Nodo)
-  const nodeSpaceNavItems = [
+  // Ítems de la Capa 2 (Espacio Operativo del Nodo — orden progresivo: Semilla → Coordinación → Madurez)
+  const allNodeSpaceNavItems: {
+    moduleId: NodeModuleId;
+    labelKey: string;
+    label: string;
+    href: string;
+    icon: any;
+    badge?: number;
+  }[] = [
     {
+      moduleId: 'tablon',
       labelKey: 'nav.board',
       label: 'Tablón',
       href: '/tablon',
@@ -165,25 +178,21 @@ export function Sidebar() {
       badge: unreadCount > 0 ? unreadCount : undefined,
     },
     {
-      labelKey: 'nav.tasks',
-      label: 'Círculos & Tareas',
-      href: '/tareas',
-      icon: CheckSquare,
+      moduleId: 'calendario',
+      labelKey: 'nav.agenda',
+      label: 'Agenda',
+      href: '/calendario',
+      icon: Calendar,
     },
+    ...(comunidad?.slug ? [{
+      moduleId: 'miembros' as NodeModuleId,
+      labelKey: 'nav.members',
+      label: 'Miembros',
+      href: `/c/${comunidad.slug}`,
+      icon: User,
+    }] : []),
     {
-      labelKey: 'nav.governance',
-      label: 'Gobernanza S3',
-      href: '/gobernanza',
-      icon: Vote,
-      badge: propuestasPendingCount > 0 ? propuestasPendingCount : undefined,
-    },
-    {
-      labelKey: 'nav.minutes',
-      label: 'Actas',
-      href: '/actas',
-      icon: FileText,
-    },
-    {
+      moduleId: 'proyectos',
       labelKey: 'nav.projects',
       label: 'Proyectos',
       href: '/proyectos',
@@ -191,12 +200,29 @@ export function Sidebar() {
       badge: proyectosPendingCount > 0 ? proyectosPendingCount : undefined,
     },
     {
-      labelKey: 'nav.calendar',
-      label: 'Calendario',
-      href: '/calendario',
-      icon: Calendar,
+      moduleId: 'tareas',
+      labelKey: 'nav.tasks',
+      label: 'Círculos & Tareas',
+      href: '/tareas',
+      icon: CheckSquare,
     },
     {
+      moduleId: 'gobernanza',
+      labelKey: 'nav.governance',
+      label: 'Gobernanza S3',
+      href: '/gobernanza',
+      icon: Vote,
+      badge: propuestasPendingCount > 0 ? propuestasPendingCount : undefined,
+    },
+    {
+      moduleId: 'actas',
+      labelKey: 'nav.minutes',
+      label: 'Actas',
+      href: '/actas',
+      icon: FileText,
+    },
+    {
+      moduleId: 'soberania',
       labelKey: 'nav.marketplace',
       label: 'Soberanía / Almacén',
       href: '/soberania',
@@ -204,6 +230,8 @@ export function Sidebar() {
       badge: (acuerdosPendingCount + acuerdosSolicitanteCount) > 0 ? (acuerdosPendingCount + acuerdosSolicitanteCount) : undefined,
     },
   ];
+
+  const nodeSpaceNavItems = allNodeSpaceNavItems.filter(item => isModuleEnabled(item.moduleId));
 
   return (
     <aside className="hidden md:flex flex-col w-[250px] h-screen sticky top-0 bg-bg-surface border-r border-border overflow-y-auto">
@@ -342,6 +370,18 @@ export function Sidebar() {
                 )}
               </button>
             )}
+
+            {/* Botón discreto de descubrimiento progresivo en Capa 2 */}
+            <div className="pt-3 mt-2 border-t border-border/70">
+              <button
+                type="button"
+                onClick={() => setIsModulesModalOpen(true)}
+                className="w-full flex items-center gap-2.5 px-3.5 py-2 rounded-2xl text-xs font-semibold text-forest-deep hover:bg-sand-light transition-colors border border-dashed border-border cursor-pointer"
+              >
+                <Plus className="w-4 h-4 text-terracotta" />
+                <span>{t('nav.activateModules', { defaultValue: 'Activar módulos' })}</span>
+              </button>
+            </div>
           </>
         ) : (
           /* ENLACES DE CAPA 1: Red Global */
@@ -436,6 +476,12 @@ export function Sidebar() {
       <CreateNewModal
         isOpen={isCreateNewOpen}
         onClose={() => setIsCreateNewOpen(false)}
+      />
+
+      <NodeModulesModal
+        isOpen={isModulesModalOpen}
+        onClose={() => setIsModulesModalOpen(false)}
+        comunidad={comunidad}
       />
     </aside>
   );
