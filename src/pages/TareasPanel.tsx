@@ -203,14 +203,14 @@ export function TareasPanel() {
         }
       />
 
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-           <div className="flex bg-[#EAE2D6] p-1 rounded-xl w-fit overflow-x-auto">
+           <div className="flex flex-wrap gap-1 bg-[#EAE2D6] p-1 rounded-xl w-full sm:w-fit">
              {(['todas', 'mis_tareas', 'sin_asignar', 'archivadas'] as const).map(f => (
                <button
                  key={f}
                  onClick={() => setFilter(f)}
-                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                 className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                    filter === f ? 'bg-white text-stone-800 shadow-sm' : 'text-stone-500 hover:text-stone-700'
                  }`}
                >
@@ -224,9 +224,9 @@ export function TareasPanel() {
         </div>
 
         {loading ? (
-          <div className="flex gap-6 overflow-x-auto pb-4">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6 pb-4">
             {[1, 2, 3].map(i => (
-              <div key={i} className="min-w-[300px] h-[600px] bg-stone-100/50 rounded-3xl animate-pulse" />
+              <div key={i} className="w-full md:min-w-[300px] h-64 md:h-[600px] bg-stone-100/50 rounded-3xl animate-pulse" />
             ))}
           </div>
         ) : (
