@@ -687,16 +687,16 @@ export function FichaView() {
             </div>
           </div>
         ) : displayFicha?.resumenManual ? (
-          <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] p-8 relative overflow-hidden">
+          <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] p-5 sm:p-8 relative overflow-hidden">
              <div className="absolute top-0 left-0 w-2 h-full bg-[#8A817C]"></div>
              
-             <div className="flex justify-between items-start mb-6">
+             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
                 <div className="flex items-center gap-3 text-[#4A4E4D]">
-                  <Sparkles className="w-7 h-7 text-[#8A817C]" />
-                  <h2 className="text-2xl font-serif">Manual de Usuario Humano</h2>
+                  <Sparkles className="w-7 h-7 text-[#8A817C] shrink-0" />
+                  <h2 className="text-xl sm:text-2xl font-serif">Manual de Usuario Humano</h2>
                 </div>
                 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5">
                   {todasGeneradas && (
                     <button
                       type="button"
@@ -739,10 +739,10 @@ export function FichaView() {
              )}
           </div>
         ) : contenidoManual ? (
-          <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] p-8 relative overflow-hidden">
+          <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] p-5 sm:p-8 relative overflow-hidden">
              <div className="absolute top-0 left-0 w-2 h-full bg-[#8A817C]"></div>
              
-             <div className="flex justify-between items-start mb-6">
+             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
                 <div className="flex items-center gap-3 text-[#4A4E4D]">
                   <Sparkles className="w-7 h-7 text-[#8A817C]" />
                   <h2 className="text-2xl font-serif">Manual de Usuario Humano (Legacy)</h2>

@@ -6,7 +6,7 @@
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
 |---|---|---|---|---|---|
-| T-159 | Erradicar desbordamiento global en `/perfil`, `/ficha` y `Toaster` móvil | M | ⬜ Pendiente | — | .agents/tasks/task-159.md |
+| T-159 | Erradicar desbordamiento global en `/perfil`, `/ficha` y `Toaster` móvil | M | 🟢 Completada | — | .agents/tasks/task-159.md |
 | T-160 | Eliminar scroll lateral en barras de filtros y pestañas (`flex-wrap`) | M | ⬜ Pendiente | — | .agents/tasks/task-160.md |
 | T-161 | Tableros Kanban responsivos sin scroll lateral en móvil | M | ⬜ Pendiente | — | .agents/tasks/task-161.md |
 

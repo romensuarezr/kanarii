@@ -58,36 +58,36 @@ export function PerfilView() {
   const avatarUrl = appUser.photoURL;
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6 pb-20">
+    <div className="w-full max-w-4xl min-w-0 mx-auto p-4 md:p-6 space-y-6 pb-24 md:pb-10 overflow-x-hidden">
       {/* Header Compacto del Perfil */}
-      <header className="bg-white rounded-3xl p-6 md:p-8 border border-[#EAE2D6] shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
+      <header className="bg-white rounded-3xl p-5 sm:p-6 md:p-8 border border-[#EAE2D6] shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
+        <div className="flex items-center gap-4 min-w-0">
           {avatarUrl ? (
             <img
               src={avatarUrl}
               alt={appUser.displayName || ''}
-              className="w-16 h-16 rounded-2xl object-cover border-2 border-[#EAE2D6] shadow-xs"
+              className="w-16 h-16 rounded-2xl object-cover border-2 border-[#EAE2D6] shadow-xs shrink-0"
               referrerPolicy="no-referrer"
             />
           ) : (
-            <div className="w-16 h-16 rounded-2xl bg-[#EAE2D6] flex items-center justify-center text-[#6B705C] border-2 border-[#EAE2D6]">
+            <div className="w-16 h-16 rounded-2xl bg-[#EAE2D6] flex items-center justify-center text-[#6B705C] border-2 border-[#EAE2D6] shrink-0">
               <User className="w-8 h-8" />
             </div>
           )}
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-serif font-bold text-[#4A4E4D]">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-serif font-bold text-[#4A4E4D] break-words">
                 {appUser.displayName || 'Miembro Kanarii'}
               </h1>
-              <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#6B705C] bg-[#EAE2D6] rounded-full">
+              <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#6B705C] bg-[#EAE2D6] rounded-full shrink-0">
                 {appUser.role || 'miembro'}
               </span>
             </div>
-            <p className="text-stone-400 text-xs sm:text-sm mt-0.5">{appUser.email}</p>
+            <p className="text-stone-400 text-xs sm:text-sm mt-0.5 truncate">{appUser.email}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           <Link
             to="/ficha?edit=1"
             className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#6B705C] hover:bg-[#5A5A40] text-white rounded-xl text-xs font-bold transition-all shadow-xs"
@@ -106,45 +106,45 @@ export function PerfilView() {
         </div>
       </header>
 
-      {/* Navegación por Tabs (Segmented Controls) */}
-      <div className="flex border-b border-[#EAE2D6] gap-2 overflow-x-auto">
+      {/* Navegación por Tabs (Segmented Controls sin scroll lateral) */}
+      <div className="flex flex-wrap border-b border-[#EAE2D6] gap-1 sm:gap-2">
         <button
           type="button"
           onClick={() => setActiveTab('pasaporte')}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${
+          className={`flex items-center gap-1.5 px-3 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold border-b-2 transition-colors cursor-pointer ${
             activeTab === 'pasaporte'
               ? 'border-[#6B705C] text-[#6B705C]'
               : 'border-transparent text-stone-500 hover:text-stone-800'
           }`}
         >
-          <Sparkles className="w-4 h-4" />
-          Pasaporte Cósmico
+          <Sparkles className="w-4 h-4 shrink-0" />
+          <span>Pasaporte Cósmico</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('ficha')}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${
+          className={`flex items-center gap-1.5 px-3 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold border-b-2 transition-colors cursor-pointer ${
             activeTab === 'ficha'
               ? 'border-[#6B705C] text-[#6B705C]'
               : 'border-transparent text-stone-500 hover:text-stone-800'
           }`}
         >
-          <FileText className="w-4 h-4" />
-          Ficha Comunitaria
+          <FileText className="w-4 h-4 shrink-0" />
+          <span>Ficha Comunitaria</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('comunidades')}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${
+          className={`flex items-center gap-1.5 px-3 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold border-b-2 transition-colors cursor-pointer ${
             activeTab === 'comunidades'
               ? 'border-[#6B705C] text-[#6B705C]'
               : 'border-transparent text-stone-500 hover:text-stone-800'
           }`}
         >
-          <Users className="w-4 h-4" />
-          Mis Comunidades ({userComunidades.length})
+          <Users className="w-4 h-4 shrink-0" />
+          <span>Mis Comunidades ({userComunidades.length})</span>
         </button>
       </div>
 
