@@ -17,7 +17,8 @@ import {
 } from './_core';
 import { 
   writeBatch, 
-  arrayUnion 
+  arrayUnion,
+  arrayRemove
 } from 'firebase/firestore';
 import { CommunityMember, FeedbackSalida, HEADLINE_MAX_LENGTH, MembershipType } from './_types';
 import { _writeFichaRaw } from './fichas';
@@ -159,6 +160,50 @@ export async function updateCommunityMember(id: string, cambios: Partial<Communi
     });
   } catch (err) {
     handleFirestoreError(err, OperationType.UPDATE, `community_members/${id}`);
+    throw err;
+  }
+}
+
+/**
+ * Actualiza el permiso RBAC (`rol`) y/o el vínculo comunitario (`membershipType`) de un miembro,
+ * sincronizando atómicamente `comunidades/{communityId}.adminUids` cuando cambia `rol`.
+ */
+export async function updateCommunityMemberAccess(
+  communityId: string,
+  targetUserId: string,
+  updates: { rol?: CanonicalMemberRole; membershipType?: MembershipType }
+): Promise<void> {
+  if (!updates.rol && !updates.membershipType) return;
+
+  try {
+    const batch = writeBatch(db);
+    const memberRef = doc(db, 'community_members', `${communityId}_${targetUserId}`);
+    const communityRef = doc(db, 'comunidades', communityId);
+
+    const memberUpdates: Record<string, any> = {
+      updatedAt: serverTimestamp()
+    };
+    if (updates.rol !== undefined) {
+      memberUpdates.rol = updates.rol;
+    }
+    if (updates.membershipType !== undefined) {
+      memberUpdates.membershipType = updates.membershipType;
+    }
+
+    batch.update(memberRef, memberUpdates);
+
+    if (updates.rol !== undefined) {
+      batch.update(communityRef, {
+        adminUids: updates.rol === 'admin'
+          ? arrayUnion(targetUserId)
+          : arrayRemove(targetUserId),
+        updatedAt: serverTimestamp()
+      });
+    }
+
+    await batch.commit();
+  } catch (err) {
+    handleFirestoreError(err, OperationType.UPDATE, `community_members/${communityId}_${targetUserId}`);
     throw err;
   }
 }
