@@ -7,11 +7,10 @@ import { calcularSinergiasMultiples, detectIsland, SynergyMatch } from '../lib/s
 import { SynergyCard } from '../components/sinergias/SynergyCard';
 import { PasaporteModal } from '../components/perfil/PasaporteModal';
 import { AuthGateModal } from '../components/AuthGateModal';
-import { Sparkles, MapPin, Compass, ArrowRight, Users, Loader2, LogIn, Plus } from 'lucide-react';
+import { Sparkles, MapPin, Compass, ArrowRight, Users, Loader2, LogIn, Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Ficha } from '../lib/services/_types';
-import { CreateNewModal } from '../components/CreateNewModal';
 
 type FilterType = 'all' | 'sameIsland' | 'energetic' | 'triad';
 
@@ -189,10 +188,10 @@ export function DashboardView() {
   const { fichas: allFichas, loading: allFichasLoading } = useFichas(appUser ? undefined : 'none');
 
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [isPassportOpen, setIsPassportOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isCreateNewOpen, setIsCreateNewOpen] = useState(false);
 
   const todayKin = useMemo(() => kinDeHoy(), []);
 
@@ -218,24 +217,47 @@ export function DashboardView() {
     return calcularSinergiasMultiples(referenceFicha, activeFichasPool, referenceFicha?.userId);
   }, [referenceFicha, activeFichasPool]);
 
-  // Filtrado de sinergias
+  // Filtrado de sinergias (categoría + búsqueda textual)
   const filteredMatches = useMemo(() => {
+    let base = allMatches;
     switch (activeFilter) {
       case 'sameIsland':
-        return allMatches.filter((m) => m.isSameIsland);
+        base = allMatches.filter((m) => m.isSameIsland);
+        break;
       case 'energetic':
-        return allMatches.filter((m) => m.kinMayaRelation || m.humanDesignRelation?.highlight);
+        base = allMatches.filter((m) => m.kinMayaRelation || m.humanDesignRelation?.highlight);
+        break;
       case 'triad':
-        return allMatches.filter(
+        base = allMatches.filter(
           (m) =>
             m.triadSynergy &&
             (m.triadSynergy.complementaryOfferings.length > 0 ||
               m.triadSynergy.complementaryNeeds.length > 0)
         );
+        break;
       default:
-        return allMatches;
+        base = allMatches;
     }
-  }, [allMatches, activeFilter]);
+
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return base;
+    return base.filter((m) => {
+      const haystack = [
+        m.targetName,
+        m.targetRole,
+        m.targetBio,
+        m.targetLocation,
+        m.targetIsland,
+        ...(m.triadSynergy?.complementaryOfferings || []),
+        ...(m.triadSynergy?.complementaryNeeds || []),
+        ...(m.triadSynergy?.sharedSaberes || []),
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [allMatches, activeFilter, searchQuery]);
 
   const handleOpenPassport = (userId: string) => {
     if (userId.startsWith('demo-')) {
@@ -292,139 +314,72 @@ export function DashboardView() {
           </div>
         )}
 
-        {/* Cabecera Principal */}
-        <div className="bg-bg-surface border border-border rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-forest-light text-forest-deep border border-forest-deep/20">
-                <Sparkles size={13} className="text-forest-deep" />
-                <span>{t('header.title')}</span>
-                {userIsland && (
-                  <>
-                    <span className="text-border">•</span>
-                    <span className="flex items-center gap-1">
-                      <MapPin size={11} /> {userIsland}
-                    </span>
-                  </>
-                )}
-              </div>
-
-              <h1 className="font-serif font-bold text-2xl sm:text-3xl text-text-strong">
-                {t('header.greeting', {
-                  name: appUser?.displayName || userFicha?.datosPersona?.nombre || 'Tribu',
-                })}
-              </h1>
-
-              <p className="text-sm text-stone-600 leading-relaxed">
-                {t('header.subtitle')}
-              </p>
-            </div>
-
-            {/* Widget del Kin del Día */}
-            <div className="bg-sand-light/60 border border-border/80 rounded-2xl p-4 sm:p-5 shrink-0 flex items-center gap-4 shadow-2xs">
-              <div className="w-12 h-12 rounded-xl bg-forest-deep/10 text-forest-deep flex items-center justify-center text-2xl shrink-0">
-                {todayKin.emoji}
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500">
-                  {t('header.todayKin')}
-                </span>
-                <p className="text-xs font-bold text-text-strong font-serif">
-                  {todayKin.descripcionCorta}
-                </p>
-                <p className="text-[11px] text-stone-500 line-clamp-1 max-w-[220px]">
-                  {todayKin.rolComunitario}
-                </p>
-              </div>
-            </div>
+        {/* Cabecera ligera + Chip compacto del Kin del día */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="font-serif font-bold text-xl sm:text-2xl text-text-strong flex items-center gap-2">
+              <Sparkles size={18} className="text-forest-deep shrink-0" />
+              <span>{t('header.title')}</span>
+            </h1>
+            {userIsland && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sand-light text-stone-700 border border-border">
+                <MapPin size={11} className="text-terracotta-deep" />
+                {userIsland}
+              </span>
+            )}
           </div>
 
-          {/* Dos Acciones Claras de Arranque Estilo Retribalize */}
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => {
-                const el = document.getElementById('sinergias-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="px-5 py-3 rounded-2xl bg-forest-deep text-white text-xs sm:text-sm font-bold hover:bg-forest-deep/90 transition-all shadow-xs flex items-center gap-2 cursor-pointer group"
-            >
-              <Sparkles size={16} className="text-sand-light group-hover:rotate-12 transition-transform" />
-              <span>{t('header.findConnectionsBtn')}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsCreateNewOpen(true)}
-              className="px-5 py-3 rounded-2xl bg-sand-light border border-border text-forest-deep text-xs sm:text-sm font-bold hover:bg-sand-dark/60 transition-all shadow-xs flex items-center gap-2 cursor-pointer"
-            >
-              <Plus size={16} className="text-terracotta" />
-              <span>{t('header.createNewBtn')}</span>
-            </button>
+          {/* Chip compacto del Kin del Día */}
+          <div
+            title={todayKin.rolComunitario}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-bg-surface border border-border text-xs shadow-2xs self-start sm:self-auto"
+          >
+            <span className="text-base leading-none">{todayKin.emoji}</span>
+            <span className="font-semibold text-text-strong">{todayKin.descripcionCorta}</span>
           </div>
+        </div>
 
-          {/* Barra de Entidades / Navegación Rápida Estilo Retribalize */}
-          <div className="pt-2 border-t border-border/80 flex items-center gap-2 overflow-x-auto pb-1">
-            <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider shrink-0 mr-1 hidden sm:inline">
-              {t('header.manageEntities')}:
-            </span>
-            <button
-              type="button"
-              onClick={() => {
-                const el = document.getElementById('sinergias-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-forest-deep text-white border border-forest-deep shadow-2xs shrink-0 cursor-pointer"
-            >
-              {t('header.entityAll')}
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/comunidades')}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-bg-surface text-stone-600 border border-border hover:bg-sand-light transition-colors shrink-0 cursor-pointer"
-            >
-              {t('header.entityNodes')}
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/eventos')}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-bg-surface text-stone-600 border border-border hover:bg-sand-light transition-colors shrink-0 cursor-pointer"
-            >
-              {t('header.entityEvents')}
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/residencias')}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-bg-surface text-stone-600 border border-border hover:bg-sand-light transition-colors shrink-0 cursor-pointer"
-            >
-              {t('header.entityResidencies')}
-            </button>
-          </div>
-
-          {/* Banner de perfil incompleto (si falta fecha o tríada) */}
-          {hasIncompletePassport && (
-            <div className="bg-sand-light/50 border border-border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2.5 text-stone-700">
-                <Compass className="w-5 h-5 text-forest-deep shrink-0" />
-                <div>
-                  <span className="font-bold text-text-strong">
-                    {t('empty.incompleteProfileTitle')}.
-                  </span>{' '}
-                  <span className="text-stone-600">
-                    {t('empty.incompleteProfileDesc')}
-                  </span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => navigate('/ficha')}
-                className="shrink-0 px-4 py-2 bg-forest-deep hover:bg-forest-deep/90 text-white font-semibold rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span>{t('empty.completePassportBtn')}</span>
-                <ArrowRight size={13} />
-              </button>
+        {/* Banner discreto si el pasaporte está incompleto */}
+        {hasIncompletePassport && (
+          <div className="bg-sand-light/60 border border-border rounded-2xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5 text-stone-700">
+              <Compass className="w-4 h-4 text-forest-deep shrink-0" />
+              <span>
+                <strong className="text-text-strong">{t('empty.incompleteProfileTitle')}.</strong>{' '}
+                {t('empty.incompleteProfileDesc')}
+              </span>
             </div>
+
+            <button
+              type="button"
+              onClick={() => navigate('/ficha')}
+              className="shrink-0 px-3.5 py-1.5 bg-forest-deep hover:bg-forest-deep/90 text-white font-semibold rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>{t('empty.completePassportBtn')}</span>
+              <ArrowRight size={13} />
+            </button>
+          </div>
+        )}
+
+        {/* Buscador directo estilo Find New Connections */}
+        <div className="relative">
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t('filters.searchPlaceholder', { defaultValue: 'Buscar por nombre, isla, don o saber...' })}
+            className="w-full pl-11 pr-10 py-3 rounded-2xl bg-bg-surface border border-border text-sm text-text-strong placeholder:text-stone-400 focus:outline-none focus:border-forest-deep shadow-2xs transition-colors"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 cursor-pointer"
+              aria-label="Limpiar búsqueda"
+            >
+              <X size={15} />
+            </button>
           )}
         </div>
 
@@ -557,12 +512,6 @@ export function DashboardView() {
         isOpen={isAuthModalOpen}
         mode="login"
         onClose={() => setIsAuthModalOpen(false)}
-      />
-
-      {/* Modal "Crear algo" Estilo Retribalize */}
-      <CreateNewModal
-        isOpen={isCreateNewOpen}
-        onClose={() => setIsCreateNewOpen(false)}
       />
     </div>
   );

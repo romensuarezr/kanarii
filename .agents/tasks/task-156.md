@@ -5,7 +5,7 @@
 - **Título**: Limpieza radical de `DashboardView` (Find New Connections directo + Kin chip)
 - **Sprint**: Sprint 31
 - **Tipo**: UX / Frontend / Dashboard
-- **Estado**: Pendiente
+- **Estado**: Completada
 - **Fecha inicio**: 2026-11-26
 
 ## Diseño macro aprobado en planning
@@ -26,7 +26,7 @@
 - `src/locales/en/dashboard.json`
 
 ## Criterios de Aceptación
-- [ ] Caja hero gigante y barra duplicada de entidades eliminadas de `DashboardView.tsx`.
-- [ ] Kin del día conservado únicamente como chip compacto.
-- [ ] Buscador/filtros y tarjetas `SynergyCard` visibles de inmediato al entrar.
-- [ ] `npm run lint` y `npm run build` pasan sin errores.
+- [x] Caja hero gigante y barra duplicada de entidades eliminadas de `DashboardView.tsx`.
+- [x] Kin del día conservado únicamente como chip compacto.
+- [x] Buscador/filtros y tarjetas `SynergyCard` visibles de inmediato al entrar.
+- [x] `npm run lint` y `npm run build` pasan sin errores.
