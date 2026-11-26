@@ -9,6 +9,7 @@ import {
   registrarSalidaComunidad,
   createComunidad,
   updateComunidad,
+  updateComunidadModules,
   deleteComunidad,
   unirseComunidadDirecto,
   Invitacion
@@ -117,6 +118,17 @@ export function useComunidadActions() {
     });
   };
 
+  const actualizarModulosComunidad = async (
+    slug: string,
+    enabledModules: string[],
+    options?: Parameters<typeof perform>[1]
+  ) => {
+    return perform(updateComunidadModules(slug, enabledModules), {
+      successMessage: 'Herramientas del nodo actualizadas',
+      ...options
+    });
+  };
+
   return {
     redeemInvitacion,
     solicitarAcceso,
@@ -127,6 +139,7 @@ export function useComunidadActions() {
     expulsarMiembro,
     registrarNuevaComunidad,
     actualizarComunidad,
+    actualizarModulosComunidad,
     eliminarComunidad,
     unirseComunidad,
     isExecuting
