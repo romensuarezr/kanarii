@@ -21,6 +21,36 @@
     "count_one": "{{count}} conexión sugerida",
     "count_other": "{{count}} conexiones sugeridas"
   },
+  "banner": {
+    "badge": "Red de Sinergias Abierta",
+    "title": "Descubre conexiones y afinidades deterministas en Canarias",
+    "subtitle": "Mostrando perfiles de ejemplo. Inicia sesión para cruzar tu fecha natal, isla y dones con la comunidad real.",
+    "login": "Iniciar sesión"
+  },
+  "search": {
+    "tabs": {
+      "advanced": "Búsqueda avanzada",
+      "browseAll": "Explorar todo",
+      "improveSynergies": "Mejorar sinergias"
+    },
+    "placeholder": "Describe a quién o qué buscas (ej: permacultura en Gran Canaria, talleres de bioconstrucción, residencia de verano)...",
+    "clear": "Limpiar búsqueda",
+    "lookingForLabel": "Buscando",
+    "options": {
+      "all": "Todo",
+      "people": "Personas",
+      "nodes": "Nodos",
+      "events": "Eventos",
+      "residencies": "Estancias"
+    },
+    "nodeLabel": "Nodo",
+    "anyNode": "Cualquier nodo",
+    "nearLabel": "Cerca",
+    "submitBtn": "Buscar",
+    "resultsCount_one": "{{count}} resultado",
+    "resultsCount_other": "{{count}} resultados",
+    "calculating": "Calculando sinergias de la red..."
+  },
   "card": {
     "synergyScore": "{{score}}% Sinergia",
     "viewPassport": "Ver Pasaporte",

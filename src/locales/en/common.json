@@ -81,6 +81,30 @@
     "syncing_other": "Syncing ({{count}} changes)",
     "online": "Connected & up to date"
   },
+  "entities": {
+    "node": "NODE",
+    "event": "EVENT",
+    "residency": "STAY",
+    "exploreNode": "Explore node",
+    "viewEvent": "View event",
+    "viewResidency": "View stay"
+  },
+  "emptyStates": {
+    "marketplaceTitle": "The marketplace of abundance",
+    "marketplaceDesc": "Beyond our 'Profile Match' algorithm, this is your open space to offer what you love doing or request support for what you need today. From tool sharing to crop swaps, community economy thrives through real reciprocity.",
+    "marketplaceCta": "Publish my first listing",
+    "historyTitle": "The memory of our tribe",
+    "historyDesc": "In Kanarii there are no secrets. Here your circle's secretary records agreements and decisions made by consent, keeping our community transparent and accountable.",
+    "historyCtaCreate": "Draft new minutes",
+    "historyCtaView": "View archive",
+    "ideasTitle": "From idea to reality",
+    "ideasDesc": "Here we organize our long-term initiatives. A project is the shared container where we channel energy toward common goals.",
+    "ideasCta": "Propose a new project",
+    "tasksTitle": "Concrete steps, real impact",
+    "tasksDesc": "Ideas need hands to take shape. Here we break projects into manageable actions. If you have energy and time, pick a task and help your circle move forward.",
+    "tasksCta": "Create a task",
+    "startSomething": "Start something new in your community"
+  },
   "userMenu": {
     "title": "User Menu",
     "myProfile": "My Profile",

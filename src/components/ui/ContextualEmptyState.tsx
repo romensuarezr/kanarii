@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { LucideIcon, ArrowRight, Sparkles } from 'lucide-react';
 import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ContextualEmptyStateProps {
   title: string;
@@ -23,6 +24,8 @@ export default function ContextualEmptyState({
   bgColor = "bg-[#FAF9F6]",
   illustration
 }: ContextualEmptyStateProps) {
+  const { t } = useTranslation('common');
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -81,7 +84,7 @@ export default function ContextualEmptyState({
       </motion.button>
       
       <p className="mt-8 text-xs font-bold uppercase tracking-widest text-[#5D4037]/30">
-        Comienza algo nuevo en tu comunidad
+        {t('emptyStates.startSomething')}
       </p>
     </motion.div>
   );

@@ -1,15 +1,17 @@
-import { Store, Scroll, Leaf, Settings, Handshake, ShieldCheck, Map, CheckCircle2, Sparkles, Zap, Users } from 'lucide-react';
+import { Store, Scroll, Leaf, Settings, Handshake, ShieldCheck, Map, CheckCircle2, Zap } from 'lucide-react';
 import ContextualEmptyState from './ContextualEmptyState';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 // 1. Marketplace Empty State
 export function MarketplaceEmptyState({ onAction }: { onAction: () => void }) {
+  const { t } = useTranslation('common');
   return (
     <ContextualEmptyState
-      title="El mercado de la abundancia"
-      description="Más allá de nuestro algoritmo de 'Cruce de Perfiles', este es tu espacio libre para ofrecer lo que amas hacer o pedir apoyo en lo que necesitas hoy. Desde un trueque de herramientas hasta compartir una cosecha. La economía comunitaria se construye intercambiando valor real."
+      title={t('emptyStates.marketplaceTitle')}
+      description={t('emptyStates.marketplaceDesc')}
       icon={Store}
-      ctaText="Publicar mi primer anuncio"
+      ctaText={t('emptyStates.marketplaceCta')}
       onAction={onAction}
       illustration={
         <div className="relative flex items-center justify-center">
@@ -30,13 +32,14 @@ export function MarketplaceEmptyState({ onAction }: { onAction: () => void }) {
 }
 
 // 2. Actas (Minutes) Empty State
-export function ActasEmptyState({ onAction, canCreate = true }: { onAction: () => void, canCreate?: boolean }) {
+export function ActasEmptyState({ onAction, canCreate = true }: { onAction: () => void; canCreate?: boolean }) {
+  const { t } = useTranslation('common');
   return (
     <ContextualEmptyState
-      title="La memoria de nuestra tribu"
-      description="En Kanarii no hay secretos. Aquí el Secretario de tu círculo guarda los registros y las decisiones que hemos tomado por consentimiento. Mantener esta información accesible para todos garantiza que seamos una comunidad transparente, equitativa y responsable."
+      title={t('emptyStates.historyTitle')}
+      description={t('emptyStates.historyDesc')}
       icon={Scroll}
-      ctaText={canCreate ? "Redactar nueva acta" : "Ver archivo histórico"}
+      ctaText={canCreate ? t('emptyStates.historyCtaCreate') : t('emptyStates.historyCtaView')}
       onAction={onAction}
       iconColor="text-indigo-600"
       illustration={
@@ -60,12 +63,13 @@ export function ActasEmptyState({ onAction, canCreate = true }: { onAction: () =
 
 // 3. Proyectos Empty State
 export function ProjectsEmptyState({ onAction }: { onAction: () => void }) {
+  const { t } = useTranslation('common');
   return (
     <ContextualEmptyState
-      title="De la idea a la realidad"
-      description="Aquí agrupamos nuestras iniciativas a largo plazo. Un proyecto es el contenedor donde organizamos nuestras energías para lograr un objetivo común."
+      title={t('emptyStates.ideasTitle')}
+      description={t('emptyStates.ideasDesc')}
       icon={Map}
-      ctaText="Proponer un nuevo proyecto"
+      ctaText={t('emptyStates.ideasCta')}
       iconColor="text-emerald-600"
       onAction={onAction}
       illustration={
@@ -92,12 +96,13 @@ export function ProjectsEmptyState({ onAction }: { onAction: () => void }) {
 
 // 4. Tareas (Tasks) Empty State
 export function TasksEmptyState({ onAction }: { onAction: () => void }) {
+  const { t } = useTranslation('common');
   return (
     <ContextualEmptyState
-      title="Pasos concretos, impacto real"
-      description="Las ideas necesitan manos que las ejecuten. Aquí desglosamos los proyectos en acciones pequeñas y manejables. Si tienes tiempo y energía, elige una tarea y ayuda a tu círculo a avanzar. Cada pequeño paso cuenta."
+      title={t('emptyStates.tasksTitle')}
+      description={t('emptyStates.tasksDesc')}
       icon={Settings}
-      ctaText="Crear una tarea"
+      ctaText={t('emptyStates.tasksCta')}
       iconColor="text-[#8B4513]"
       onAction={onAction}
       illustration={

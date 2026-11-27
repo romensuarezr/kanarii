@@ -19,6 +19,11 @@ const ALLOWED_VISIBLE_LITERALS = new Set([
   '🌱',
   '✨',
   '❤️',
+  '🌴',
+  '⚡',
+  '🤝',
+  '✓',
+  '★',
 ]);
 
 const IGNORED_PROPS = new Set([
