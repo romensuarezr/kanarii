@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
 
 interface KanbanColumnProps {
@@ -18,6 +19,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   onActionClick,
   className = ''
 }) => {
+  const { t } = useTranslation('projects');
   return (
     <div className={`flex flex-col w-full md:min-w-[300px] md:max-w-[350px] h-full ${className}`}>
       {/* Column Header */}
@@ -41,7 +43,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           <button 
             onClick={onActionClick}
             className="p-1 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-md transition-all active:scale-90"
-            title="Añadir nuevo"
+            title={t('projects.addNew')}
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -55,7 +57,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         {/* Empty state visual anchor */}
         {count === 0 && (
           <div className="h-24 border-2 border-dashed border-stone-100 rounded-xl flex items-center justify-center text-stone-300 text-xs italic">
-            Sin elementos
+            {t('projects.emptyItems')}
           </div>
         )}
       </div>

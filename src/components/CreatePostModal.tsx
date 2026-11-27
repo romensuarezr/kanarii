@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Post } from '../lib/appService';
+import { X } from 'lucide-react';
 
 interface CreatePostModalProps {
   isSubmitting: boolean;
@@ -14,6 +16,7 @@ export function CreatePostModal({
   onSubmit, 
   initialDescription 
 }: CreatePostModalProps) {
+  const { t } = useTranslation('marketplace');
   const [formData, setFormData] = useState({
     tipo: 'necesidad' as Post['tipo'],
     titulo: '',
@@ -43,12 +46,13 @@ export function CreatePostModal({
     <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl w-full max-w-md shadow-xl overflow-hidden">
         <div className="p-6 border-b border-[#EAE2D6] flex justify-between items-center bg-[#FDFBF7]">
-          <h2 className="text-xl font-serif text-[#4A4E4D]">Nueva Publicación</h2>
+          <h2 className="text-xl font-serif text-[#4A4E4D]">{t('createPost.title')}</h2>
           <button 
             onClick={onClose}
-            className="text-stone-400 hover:text-stone-600 transition-colors"
+            className="text-stone-400 hover:text-stone-600 transition-colors p-1 rounded-full"
+            aria-label={t('createPost.cancel')}
           >
-            ✕
+            <X className="w-5 h-5" />
           </button>
         </div>
         
@@ -63,7 +67,7 @@ export function CreatePostModal({
                   : 'text-stone-500 hover:text-stone-700'
               }`}
             >
-              Necesidad
+              {t('createPost.need')}
             </button>
             <button
               type="button"
@@ -74,47 +78,47 @@ export function CreatePostModal({
                   : 'text-stone-500 hover:text-stone-700'
               }`}
             >
-              Oferta
+              {t('createPost.offer')}
             </button>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Título *</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">{t('createPost.postTitle')}</label>
             <input
               required
               type="text"
               value={formData.titulo}
               onChange={e => setFormData({ ...formData, titulo: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors"
-              placeholder={formData.tipo === 'necesidad' ? "Ej. Necesito transporte a la ciudad" : "Ej. Ofrezco herramientas de carpintería"}
+              placeholder={formData.tipo === 'necesidad' ? t('createPost.placeholderNeed') : t('createPost.placeholderOffer')}
               disabled={isSubmitting}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Categoría</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">{t('createPost.category')}</label>
             <select
               value={formData.categoria}
               onChange={e => setFormData({ ...formData, categoria: e.target.value as Post['categoria'] })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors bg-white"
               disabled={isSubmitting}
             >
-              <option value="habilidad">Habilidad / Conocimiento</option>
-              <option value="recurso">Recurso / Objeto</option>
-              <option value="espacio">Espacio</option>
-              <option value="apoyo_emocional">Apoyo Emocional</option>
-              <option value="otro">Otro</option>
+              <option value="habilidad">{t('createPost.catSkill')}</option>
+              <option value="recurso">{t('createPost.catResource')}</option>
+              <option value="espacio">{t('createPost.catSpace')}</option>
+              <option value="apoyo_emocional">{t('createPost.catSupport')}</option>
+              <option value="otro">{t('createPost.catOther')}</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Descripción</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">{t('createPost.description')}</label>
             <textarea
               rows={4}
               value={formData.descripcion}
               onChange={e => setFormData({ ...formData, descripcion: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors resize-none"
-              placeholder="Explica los detalles..."
+              placeholder={t('createPost.descPlaceholder')}
               disabled={isSubmitting}
             />
           </div>
@@ -126,7 +130,7 @@ export function CreatePostModal({
               className="px-4 py-2 text-stone-500 hover:bg-[#FDFBF7] rounded-xl font-medium transition-colors"
               disabled={isSubmitting}
             >
-              Cancelar
+              {t('createPost.cancel')}
             </button>
             <button
               type="submit"
@@ -135,7 +139,7 @@ export function CreatePostModal({
                 formData.tipo === 'necesidad' ? 'bg-[#CB997E] hover:bg-[#B58368]' : 'bg-[#A5A58D] hover:bg-[#6B705C]'
               } text-white px-6 py-2 rounded-xl font-medium transition-all shadow-sm disabled:opacity-50`}
             >
-              {isSubmitting ? 'Publicando...' : 'Publicar'}
+              {isSubmitting ? t('createPost.publishing') : t('createPost.submit')}
             </button>
           </div>
         </form>

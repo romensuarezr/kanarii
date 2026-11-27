@@ -5,8 +5,9 @@
 - **Título**: Internacionalización de Gobernanza, Actas, Proyectos, Tareas y Soberanía (`governance`, `projects`, `marketplace`)
 - **Sprint**: Sprint 34
 - **Tipo**: Feature / i18n / Core Modules
-- **Estado**: ⬜ Pendiente
+- **Estado**: 🟢 Completada
 - **Fecha inicio**: 2026-11-27
+- **Fecha fin**: 2026-11-27
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 34 / 2026-11-27
@@ -41,6 +42,6 @@
 - `i18n-baseline.json`
 
 ## Criterios de Aceptación
-- [ ] `/gobernanza`, `/actas`, `/proyectos`, `/tareas` y `/soberania` se muestran 100% en inglés al seleccionar `en`.
-- [ ] Títulos de propuestas/proyectos creados por usuarios conservan su texto original.
-- [ ] `npm run test:i18n` pasa con el baseline reducido.
+- [x] `/gobernanza`, `/actas`, `/proyectos`, `/tareas` y `/soberania` se muestran 100% en inglés al seleccionar `en`.
+- [x] Títulos de propuestas/proyectos creados por usuarios conservan su texto original.
+- [x] `npm run test:i18n` pasa con el baseline reducido.

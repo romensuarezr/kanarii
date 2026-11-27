@@ -1,5 +1,6 @@
 // TODO: Fase Posterior - Arreglar bug de validación de formulario (error al procesar solicitud) cuando la descripción está vacía
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, ArrowRight, ArrowLeft, Send, User, Calendar, Info, Gavel } from 'lucide-react';
 import { Propuesta } from '../lib/appService';
 import { usePropuestaActions } from '../hooks/usePropuestaActions';
@@ -21,6 +22,7 @@ export function CreateProposalWizard({
   onSuccess,
   initialTitle
 }: CreateProposalWizardProps) {
+  const { t } = useTranslation('governance');
   const { addPropuesta, editPropuesta } = usePropuestaActions();
   const { members } = useCommunityMembers(communityId);
 
@@ -102,7 +104,7 @@ export function CreateProposalWizard({
     setIsSubmitting(true);
     try {
       await editPropuesta(proposalId, { status: 'abierta' }, {
-        successMessage: 'Propuesta publicada a la comunidad 🕊️',
+        successMessage: t('governance.modal.publishedSuccess'),
         onSuccess: () => {
           onSuccess();
           onClose();
@@ -134,7 +136,7 @@ export function CreateProposalWizard({
         <div className="bg-[#4A4E4D] p-8 text-white flex justify-between items-center shrink-0">
           <div className="flex items-center gap-3">
             <Gavel className="w-6 h-6 text-[#D4C3A3]" />
-            <h3 className="font-serif text-2xl">Nueva Propuesta</h3>
+            <h3 className="font-serif text-2xl">{t('governance.modal.newProposalTitle')}</h3>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
             <X className="w-6 h-6" />
@@ -153,22 +155,22 @@ export function CreateProposalWizard({
           {step === 1 && (
             <div className="space-y-6 animate-in slide-in-from-right-4">
               <div>
-                <h4 className="text-xl font-serif text-stone-800 mb-2">¿Cuál es el propósito o tensión que motiva esta propuesta?</h4>
+                <h4 className="text-xl font-serif text-stone-800 mb-2">{t('governance.modal.step1Title')}</h4>
                 <p className="text-xs text-stone-500 leading-relaxed">
-                  Describe la situación actual o necesidad, no la solución. La propuesta viene después. Esto ayuda a la comunidad a entender el "por qué".
+                  {t('governance.modal.step1Desc')}
                 </p>
               </div>
               <textarea
                 value={purpose}
                 onChange={(e) => setPurpose(e.target.value)}
-                placeholder="Ej: Resolver las dificultades de concentración y facilitar el trabajo remoto mediante la regulación del ruido en el salón común los martes..."
+                placeholder={t('governance.modal.step1Placeholder')}
                 className="w-full min-h-[150px] p-6 rounded-3xl border-2 border-[#EAE2D6] bg-white focus:border-[#6B705C] outline-none transition-all text-stone-700"
               />
               <FieldError message={errors.purpose} />
               <FieldError message={errors.form} />
               <div className="flex justify-between items-center">
                 <span className={`text-[10px] font-bold uppercase ${purpose.length < 30 ? 'text-rose-400' : 'text-teal-600'}`}>
-                  {purpose.length < 30 ? `Faltan ${30 - purpose.length} caracteres` : 'Propósito bien formulado ✓'}
+                  {purpose.length < 30 ? t('governance.modal.missingChars', { count: 30 - purpose.length }) : t('governance.modal.purposeWellFormulated')}
                 </span>
               </div>
             </div>
@@ -177,32 +179,32 @@ export function CreateProposalWizard({
           {step === 2 && (
             <div className="space-y-6 animate-in slide-in-from-right-4">
               <div>
-                <h4 className="text-xl font-serif text-stone-800 mb-2">¿Qué propones hacer concretamente?</h4>
+                <h4 className="text-xl font-serif text-stone-800 mb-2">{t('governance.modal.step2Title')}</h4>
                 <p className="text-xs text-stone-500 leading-relaxed">
-                  Define el título y los detalles de la acción propuesta.
+                  {t('governance.modal.step2Desc')}
                 </p>
               </div>
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between items-center mb-2 px-1">
-                    <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Título de la propuesta</label>
+                    <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest">{t('governance.modal.proposalTitle')}</label>
                     <span className={`text-[10px] font-bold ${title.length > 80 ? 'text-rose-500' : 'text-stone-400'}`}>{title.length}/80</span>
                   </div>
                   <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Ej: Implementar zona de silencio los martes"
+                    placeholder={t('governance.modal.titlePlaceholder')}
                     className="w-full p-4 rounded-2xl border-2 border-[#EAE2D6] bg-white focus:border-[#6B705C] outline-none transition-all"
                   />
                   <FieldError message={errors.title} />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 ml-1">Descripción detallada</label>
+                  <label className="block text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 ml-1">{t('governance.modal.detailedDescription')}</label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Detalla cómo se implementará, recursos necesarios, horarios..."
+                    placeholder={t('governance.modal.descPlaceholder')}
                     className="w-full min-h-[150px] p-6 rounded-3xl border-2 border-[#EAE2D6] bg-white focus:border-[#6B705C] outline-none transition-all text-stone-700"
                   />
                   <FieldError message={errors.description} />
@@ -214,16 +216,16 @@ export function CreateProposalWizard({
           {step === 3 && (
             <div className="space-y-6 animate-in slide-in-from-right-4">
               <div>
-                <h4 className="text-xl font-serif text-stone-800 mb-2">Ejecución y Revisión</h4>
+                <h4 className="text-xl font-serif text-stone-800 mb-2">{t('governance.modal.step3Title')}</h4>
                 <p className="text-xs text-stone-500 leading-relaxed">
-                  ¿Quién se encarga y cuándo revisamos si funcionó?
+                  {t('governance.modal.step3Desc')}
                 </p>
               </div>
 
               <div className="space-y-4">
                 {/* Responsables */}
                 <div>
-                  <label className="block text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 ml-1">Responsables de ejecución</label>
+                  <label className="block text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 ml-1">{t('governance.modal.responsibleParties')}</label>
                   <div className="flex flex-wrap gap-2 p-4 bg-white rounded-2xl border-2 border-[#EAE2D6]">
                     {members.map(m => (
                       <button
@@ -249,7 +251,7 @@ export function CreateProposalWizard({
                 {/* Fechas */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 ml-1">Fecha Límite (Opcional)</label>
+                    <label className="block text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 ml-1">{t('governance.modal.deadlineOptional')}</label>
                     <div className="relative">
                       <input 
                         type="date" 
@@ -261,7 +263,7 @@ export function CreateProposalWizard({
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 ml-1">Fecha de Revisión</label>
+                    <label className="block text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 ml-1">{t('governance.modal.reviewDate')}</label>
                     <div className="relative">
                       <input 
                         type="date" 
@@ -283,14 +285,14 @@ export function CreateProposalWizard({
                         onClick={() => addDays(days)}
                         className="flex-1 py-2 rounded-xl border border-stone-200 text-[10px] font-bold text-stone-500 hover:bg-stone-100 uppercase tracking-widest transition-colors"
                       >
-                        +{days} días
+                        {t('governance.modal.plusDays', { count: days })}
                       </button>
                     ))}
                   </div>
                   <div className="bg-amber-50 p-4 rounded-2xl border border-amber-100 flex gap-3 items-start">
                     <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                     <p className="text-[10px] text-amber-700 font-medium leading-relaxed">
-                      <span className="font-bold">Recomendado:</span> los acuerdos S3 son experimentos, no leyes permanentes. Pon una fecha de revisión para evaluar si el acuerdo sigue siendo útil.
+                      <span className="font-bold">{t('governance.modal.recommended')}</span> {t('governance.modal.recommendedS3')}
                     </p>
                   </div>
                 </div>
@@ -306,7 +308,7 @@ export function CreateProposalWizard({
               onClick={() => setStep(step - 1)}
               className="px-6 py-4 text-stone-500 font-bold text-xs uppercase tracking-widest hover:bg-stone-200 rounded-2xl transition-all flex items-center gap-2"
             >
-              <ArrowLeft className="w-4 h-4" /> Atrás
+              <ArrowLeft className="w-4 h-4" /> {t('governance.modal.back')}
             </button>
           )}
           
@@ -315,7 +317,7 @@ export function CreateProposalWizard({
               onClick={handleNext}
               className="flex-1 py-4 bg-[#6B705C] text-white font-black uppercase tracking-widest rounded-2xl hover:bg-[#4A4E4D] shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2"
             >
-              Siguiente <ArrowRight className="w-4 h-4" />
+              {t('governance.modal.next')} <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
             <button 
@@ -323,7 +325,7 @@ export function CreateProposalWizard({
               disabled={isSubmitting}
               className="flex-1 py-4 bg-[#4A4E4D] text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-black shadow-xl transition-all active:scale-95 flex justify-center items-center gap-3"
             >
-              {isSubmitting ? 'Publicando...' : 'Publicar a la comunidad'} <Send className="w-5 h-5 text-[#D4C3A3]" />
+              {isSubmitting ? t('governance.modal.publishing') : t('governance.modal.publishToCommunity')} <Send className="w-5 h-5 text-[#D4C3A3]" />
             </button>
           )}
         </div>

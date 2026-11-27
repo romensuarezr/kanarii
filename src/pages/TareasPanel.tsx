@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useTareas } from '../hooks/useTareas';
 import { useProyectos } from '../hooks/useProyectos';
@@ -34,10 +35,17 @@ const COLUMNS: KanbanColumnDef[] = [
 ];
 
 export function TareasPanel() {
+  const { t } = useTranslation('projects');
   const { appUser } = useAuth();
   const { currentCommunityId } = useComunidad();
   const { startDelete, pendingId } = useUndoableDelete();
   const { addTarea, editTarea, removeTarea, updateEstado, isExecuting: isSubmitting } = useTareaActions();
+
+  const columns: KanbanColumnDef[] = useMemo(() => [
+    { id: 'pendiente', title: t('tasks.columns.pending'), accentColor: 'var(--color-info)' },
+    { id: 'en_progreso', title: t('tasks.columns.inProgress'), accentColor: 'var(--color-warning)' },
+    { id: 'completada', title: t('tasks.columns.completed'), accentColor: 'var(--color-success)' }
+  ], [t]);
   
   // Hooks de Entidad
   const { items: tareas, loading: loadingTareas } = useTareas(currentCommunityId || 'arteara');
@@ -57,13 +65,13 @@ export function TareasPanel() {
     <button
       onClick={() => openCreateModal()}
       className="bg-[#2C4C3B] hover:bg-[#1E3529] text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-      title="Nueva Tarea"
+      title={t('tasks.newTask')}
     >
       <Plus className="w-4 h-4 text-emerald-300" />
-      <span className="hidden sm:inline">Nueva Tarea</span>
-      <span className="sm:hidden">Nueva</span>
+      <span className="hidden sm:inline">{t('tasks.newTask')}</span>
+      <span className="sm:hidden">{t('tasks.newTaskShort')}</span>
     </button>
-  ), [openCreateModal]);
+  ), [openCreateModal, t]);
 
   // Registrar el boton de + Nueva Tarea en la TopBar unificada
   useTopBarActions(topBarActionBtn, [topBarActionBtn]);
@@ -175,15 +183,15 @@ export function TareasPanel() {
   return (
     <PageContainer>
       <PageHeader
-        title="Tareas Comunitarias"
-        subtitle="Organización y asignación del trabajo diario del espacio común"
+        title={t('tasks.title')}
+        subtitle={t('tasks.subtitle')}
         icon={CheckSquare}
         hideRightActions={true}
         actions={
           <button
             onClick={() => openCreateModal()}
             className="p-3 bg-[#D4C3A3] text-[#4A4E4D] rounded-full hover:scale-110 transition-all shadow-lg active:scale-95"
-            title="Crear tarea"
+            title={t('tasks.createTask')}
           >
             <Plus className="w-6 h-6" />
           </button>
@@ -191,11 +199,11 @@ export function TareasPanel() {
         helpNode={
           <SectionHelp
             inline={true}
-            title="Tareas de la Comunidad"
+            title={t('tasks.communityTasks')}
             description={
               <div className="space-y-4">
-                <p>El panel de Tareas Comunitarias organiza el trabajo del día a día de nuestro espacio común.</p>
-                <p>Aquí gestionamos las labores pendientes, en progreso y completadas. Cualquier miembro puede autoasignarse responsabilidades o proponer nuevas tareas necesarias para el bienestar y mantenimiento del grupo.</p>
+                <p>{t('tasks.desc1')}</p>
+                <p>{t('tasks.desc2')}</p>
               </div>
             }
             animationNode={<TareasUISimulation />}
@@ -214,10 +222,7 @@ export function TareasPanel() {
                    filter === f ? 'bg-white text-stone-800 shadow-sm' : 'text-stone-500 hover:text-stone-700'
                  }`}
                >
-                 {f === 'todas' && 'Todas'}
-                 {f === 'mis_tareas' && 'Mis tareas'}
-                 {f === 'sin_asignar' && 'Sin asignar'}
-                 {f === 'archivadas' && 'Archivadas'}
+                 {t(`tasks.filters.${f}` as any)}
                </button>
              ))}
            </div>
@@ -237,7 +242,7 @@ export function TareasPanel() {
               </div>
             ) : (
               <KanbanBoard
-                columns={COLUMNS}
+                columns={columns}
                 items={filteredTareas}
                 getGroupKey={(t) => t.estado}
                 renderCard={renderTareaCard}
@@ -246,7 +251,7 @@ export function TareasPanel() {
             )}
             {filteredTareas.length === 0 && (
               <div className="p-20 text-center text-stone-400 border border-dashed border-[#EAE2D6] rounded-3xl bg-white/50">
-                No hay tareas que coincidan con el filtro
+                {t('tasks.noTasksMatchFilter')}
               </div>
             )}
           </div>

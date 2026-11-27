@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { usePosts } from '../hooks/usePosts';
 import { useCommunityMembers } from '../hooks/useCommunityMembers';
@@ -32,6 +33,7 @@ const ESTADOS = [
 ];
 
 export default function Tablon() {
+  const { t } = useTranslation('marketplace');
   const { appUser } = useAuth();
   const { currentCommunityId, comunidad } = useComunidad();
   const { hasOnlySeedModules } = useNodeModules(comunidad);
@@ -54,13 +56,13 @@ export default function Tablon() {
     <button
       onClick={openCreateModal}
       className="bg-[#2C4C3B] hover:bg-[#1E3529] text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-      title="Publicar algo"
+      title={t('tablon.publishSomething')}
     >
       <Plus className="w-4 h-4 text-emerald-300" />
-      <span className="hidden sm:inline">Publicar</span>
+      <span className="hidden sm:inline">{t('tablon.publishShort')}</span>
       <span className="sm:hidden">+</span>
     </button>
-  ), [openCreateModal]);
+  ), [openCreateModal, t]);
 
   useTopBarActions(topBarActionBtn, [topBarActionBtn]);
 
@@ -102,8 +104,8 @@ export default function Tablon() {
   return (
     <PageContainer>
       <PageHeader
-        title="Tablón Comunitario"
-        subtitle="Colaboración asíncrona y apoyo mutuo"
+        title={t('tablon.title')}
+        subtitle={t('tablon.subtitle')}
         icon={MessageSquare}
         hideRightActions={true}
       />
@@ -120,7 +122,7 @@ export default function Tablon() {
               : 'text-stone-500 hover:text-stone-700'
           }`}
         >
-          Necesidades
+          {t('tablon.needs')}
         </button>
         <button
           onClick={() => setActiveTab('oferta')}
@@ -130,7 +132,7 @@ export default function Tablon() {
               : 'text-stone-500 hover:text-stone-700'
           }`}
         >
-          Ofertas
+          {t('tablon.offers')}
         </button>
       </div>
 
@@ -142,7 +144,7 @@ export default function Tablon() {
             onClick={() => setFilterCategoria(null)}
             className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${!filterCategoria ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
           >
-            Todas
+            {t('tablon.all')}
           </button>
           {CATEGORIAS.map(cat => (
             <button
@@ -150,7 +152,7 @@ export default function Tablon() {
               onClick={() => setFilterCategoria(cat.id)}
               className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${filterCategoria === cat.id ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
             >
-              {cat.label}
+              {t(`tablon.categories.${cat.id}` as any)}
             </button>
           ))}
         </div>
@@ -168,7 +170,7 @@ export default function Tablon() {
                   : 'border-stone-200 text-stone-400 hover:border-stone-300'
               }`}
             >
-              {est.label}
+              {t(`tablon.states.${est.id}` as any)}
             </button>
           ))}
         </div>
@@ -185,8 +187,8 @@ export default function Tablon() {
             <Search size={28} />
           </div>
           <div className="space-y-1">
-            <h3 className="text-xl font-serif text-text-strong">No hay {activeTab}s que coincidan</h3>
-            <p className="text-stone-500 text-sm">Prueba a cambiar los filtros o sé el primero en publicar.</p>
+            <h3 className="text-xl font-serif text-text-strong">{activeTab === 'necesidad' ? t('tablon.noNeedsMatching') : t('tablon.noOffersMatching')}</h3>
+            <p className="text-stone-500 text-sm">{t('tablon.tryChangingFilters')}</p>
           </div>
           {hasOnlySeedModules && (
             <div className="pt-2">
@@ -196,7 +198,7 @@ export default function Tablon() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-sand-light hover:bg-sand-dark/60 text-forest-deep text-xs font-bold border border-border transition-colors cursor-pointer"
               >
                 <Plus size={14} className="text-terracotta" />
-                <span>Añadir herramientas al nodo</span>
+                <span>{t('tablon.addToolsToNode')}</span>
               </button>
             </div>
           )}

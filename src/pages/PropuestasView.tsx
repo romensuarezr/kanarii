@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { usePropuestas } from '../hooks/usePropuestas';
@@ -24,9 +25,18 @@ const COLUMNS: KanbanColumnDef[] = [
 ];
 
 export function PropuestasView() {
+  const { t } = useTranslation('governance');
   const { appUser } = useAuth();
   const { currentCommunityId } = useComunidad();
   const communityId = currentCommunityId || 'arteara';
+  
+  const columns: KanbanColumnDef[] = useMemo(() => [
+    { id: 'abierta', title: t('governance.columns.abierta'), accentColor: 'var(--color-info)' },
+    { id: 'en_objeciones', title: t('governance.columns.en_objeciones'), accentColor: 'var(--color-warning)' },
+    { id: 'integrando', title: t('governance.columns.integrando'), accentColor: 'var(--color-primary)' },
+    { id: 'acordada', title: t('governance.columns.acordada'), accentColor: 'var(--color-success)' },
+    { id: 'caducada', title: t('governance.columns.caducada'), accentColor: 'var(--color-text-faint)' }
+  ], [t]);
   
   const { items: propuestas, loading } = usePropuestas(communityId);
   const { members } = useCommunityMembers(communityId);
@@ -51,14 +61,14 @@ export function PropuestasView() {
       <button
         onClick={openCreateWizard}
         className="bg-[#2C4C3B] hover:bg-[#1E3529] text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-        title="Nueva Propuesta"
+        title={t('governance.newProposal')}
       >
         <Plus className="w-4 h-4 text-emerald-300" />
-        <span className="hidden sm:inline">Nueva Propuesta</span>
-        <span className="sm:hidden">Nueva</span>
+        <span className="hidden sm:inline">{t('governance.newProposal')}</span>
+        <span className="sm:hidden">{t('governance.newProposalShort')}</span>
       </button>
     ) : null
-  ), [appUser, openCreateWizard]);
+  ), [appUser, openCreateWizard, t]);
 
   useTopBarActions(topBarActionBtn, [topBarActionBtn]);
 
@@ -129,8 +139,8 @@ export function PropuestasView() {
   return (
     <PageContainer>
       <PageHeader
-        title="Gobernanza"
-        subtitle="Consentimiento y Sociocracia S3"
+        title={t('governance.title')}
+        subtitle={t('governance.subtitle')}
         icon={Scale}
         hideRightActions={true}
       />
@@ -141,7 +151,7 @@ export function PropuestasView() {
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             {/* Selector de Vista */}
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-stone-400 uppercase tracking-wider mr-2">Vista</span>
+              <span className="text-xs font-bold text-stone-400 uppercase tracking-wider mr-2">{t('governance.view')}</span>
               <div className="bg-stone-100 p-0.5 rounded-xl flex gap-1">
                 <button
                   onClick={() => handleViewModeChange('kanban')}
@@ -152,7 +162,7 @@ export function PropuestasView() {
                   }`}
                 >
                   <LayoutGrid size={14} />
-                  Kanban
+                  {t('governance.kanban')}
                 </button>
                 <button
                   onClick={() => handleViewModeChange('list')}
@@ -163,7 +173,7 @@ export function PropuestasView() {
                   }`}
                 >
                   <List size={14} />
-                  Lista
+                  {t('governance.list')}
                 </button>
               </div>
             </div>
@@ -183,7 +193,7 @@ export function PropuestasView() {
                   }`}
                 >
                   <AlertCircle size={14} className={viewMode !== 'kanban' && attentionOnly ? 'text-red-500' : ''} />
-                  <span>Atención requerida</span>
+                  <span>{t('governance.attentionRequired')}</span>
                   {pendingAttentionCount > 0 && (
                     <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
                       viewMode === 'kanban'
@@ -197,7 +207,7 @@ export function PropuestasView() {
 
                 {viewMode === 'kanban' && (
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-[#4A4E4D] text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-center shadow-lg z-30">
-                    Cambia a vista Lista para filtrar
+                    {t('governance.switchToListView')}
                     <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#4A4E4D]" />
                   </div>
                 )}
@@ -209,11 +219,11 @@ export function PropuestasView() {
           {viewMode === 'list' && (
             <div className="flex flex-wrap gap-2 pt-3 border-t border-stone-100">
               <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest w-full mb-1">
-                Filtrar por estado
+                {t('governance.filterByStatus')}
               </span>
               {[
-                { id: 'todas', title: 'Todas' },
-                ...COLUMNS.map(c => ({ id: c.id, title: c.title }))
+                { id: 'todas', title: t('governance.all') },
+                ...columns.map(c => ({ id: c.id, title: c.title }))
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -239,7 +249,7 @@ export function PropuestasView() {
           </div>
         ) : viewMode === 'kanban' ? (
           <KanbanBoard
-            columns={COLUMNS}
+            columns={columns}
             items={propuestas}
             getGroupKey={(p) => p.status}
             renderCard={renderPropuestaCard}
@@ -254,7 +264,7 @@ export function PropuestasView() {
               ))
             ) : (
               <div className="col-span-full py-16 text-center text-stone-400 text-sm bg-stone-50 rounded-3xl border border-dashed border-[#EAE2D6]">
-                No se encontraron propuestas con los filtros seleccionados.
+                {t('governance.noProposalsFound')}
               </div>
             )}
           </div>

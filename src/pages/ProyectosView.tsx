@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { Proyecto } from '../lib/appService';
 import { useProyectoActions } from '../hooks/useProyectoActions';
@@ -29,6 +30,7 @@ const COLUMNS: KanbanColumnDef[] = [
 ];
 
 export function ProyectosView() {
+  const { t } = useTranslation('projects');
   const { appUser } = useAuth();
   const { currentCommunityId } = useComunidad();
   const { items: proyectos, loading: loadingProyectos } = useProyectos(currentCommunityId || 'arteara');
@@ -54,19 +56,26 @@ export function ProyectosView() {
 
   const openCreateModal = useCallback(() => setShowCreateModal(true), []);
 
+  const columns: KanbanColumnDef[] = useMemo(() => [
+    { id: 'buscando_colaboradores', title: t('projects.columns.seeking'), accentColor: 'var(--color-info)' },
+    { id: 'en_marcha', title: t('projects.columns.inProgress'), accentColor: 'var(--color-success)' },
+    { id: 'pausado', title: t('projects.columns.paused'), accentColor: 'var(--color-warning)' },
+    { id: 'completado', title: t('projects.columns.completed'), accentColor: 'var(--color-neutral)' }
+  ], [t]);
+
   const topBarActionBtn = useMemo(() => (
     appUser ? (
       <button
         onClick={openCreateModal}
         className="bg-[#2C4C3B] hover:bg-[#1E3529] text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-        title="Nuevo Proyecto"
+        title={t('projects.newProject')}
       >
         <Plus className="w-4 h-4 text-emerald-300" />
-        <span className="hidden sm:inline">Nuevo Proyecto</span>
-        <span className="sm:hidden">Nuevo</span>
+        <span className="hidden sm:inline">{t('projects.newProject')}</span>
+        <span className="sm:hidden">{t('projects.newProjectShort')}</span>
       </button>
     ) : null
-  ), [appUser, openCreateModal]);
+  ), [appUser, openCreateModal, t]);
 
   useTopBarActions(topBarActionBtn, [topBarActionBtn]);
 
@@ -131,10 +140,10 @@ export function ProyectosView() {
 
   const renderProjectCard = (proyecto: Proyecto) => {
     const statusMap: Record<string, { label: string, variant: EntityVariant, icon: any }> = {
-      'buscando_colaboradores': { label: 'Buscando Ayuda', variant: 'warning', icon: Search },
-      'en_marcha': { label: 'En Marcha', variant: 'primary', icon: Play },
-      'pausado': { label: 'Pausado', variant: 'neutral', icon: Pause },
-      'completado': { label: 'Completado', variant: 'success', icon: CheckCircle2 }
+      'buscando_colaboradores': { label: t('projects.columns.seeking'), variant: 'warning', icon: Search },
+      'en_marcha': { label: t('projects.columns.inProgress'), variant: 'primary', icon: Play },
+      'pausado': { label: t('projects.columns.paused'), variant: 'neutral', icon: Pause },
+      'completado': { label: t('projects.columns.completed'), variant: 'success', icon: CheckCircle2 }
     };
 
     const status = statusMap[proyecto.estado] || { label: proyecto.estado, variant: 'neutral' as const };
@@ -147,21 +156,21 @@ export function ProyectosView() {
         subtitle={proyecto.descripcion}
         status={status}
         metadata={[
-          { icon: Star, text: isLider ? 'Tú (Líder)' : getMemberName(proyecto.lider_uid), tooltip: "Líder del proyecto" },
-          { icon: Users, text: `${proyecto.colaboradores_uid?.length || 0} colab.`, tooltip: "Equipo" },
+          { icon: Star, text: isLider ? t('projects.youLeader') : getMemberName(proyecto.lider_uid), tooltip: t('projects.leader') },
+          { icon: Users, text: t('projects.collabShort', { count: proyecto.colaboradores_uid?.length || 0 }), tooltip: t('projects.team') },
           ...(isLider && (proyecto.solicitudes_uid?.length || 0) > 0 ? [
             { 
               icon: UserPlus, 
-              text: `${proyecto.solicitudes_uid?.length} solicitudes`, 
+              text: t('projects.solicitudesShort', { count: proyecto.solicitudes_uid?.length }), 
               className: "text-amber-600 font-bold animate-pulse bg-amber-50 border border-amber-200",
-              tooltip: "Hay personas queriendo ayudar" 
+              tooltip: t('projects.peopleWantToHelp') 
             }
           ] : [])
         ]}
         tags={(proyecto.habilidadesNecesarias || []).map(h => ({ label: h, variant: 'neutral' }))}
         onStateChange={{
           next: () => setSelectedProject(proyecto),
-          nextLabel: 'Gestionar',
+          nextLabel: t('projects.manage'),
           isCompleted: proyecto.estado === 'completado'
         }}
         onClick={() => setSelectedProject(proyecto)}
@@ -172,17 +181,17 @@ export function ProyectosView() {
   return (
     <PageContainer>
       <PageHeader
-        title="Proyectos"
-        subtitle="Gestiona las iniciativas estratégicas de Kanarii"
+        title={t('projects.title')}
+        subtitle={t('projects.subtitle')}
         icon={Briefcase}
         helpNode={
           <SectionHelp 
             inline={true}
-            title="Proyectos Comunitarios" 
+            title={t('projects.communityProjects')} 
             description={
               <div className="space-y-4">
-                <p>Los Proyectos representan las iniciativas a mediano y largo plazo desarrolladas colectivamente en la comunidad.</p>
-                <p>Cualquier miembro puede crear un proyecto o solicitar unirse a uno existente aportando sus talentos. El tablero Kanban permite visualizar el estado del proyecto: desde la búsqueda de ayuda inicial hasta su completa realización.</p>
+                <p>{t('projects.desc1')}</p>
+                <p>{t('projects.desc2')}</p>
               </div>
             } 
             animationNode={<ProyectosUISimulation />} 
@@ -200,7 +209,7 @@ export function ProyectosView() {
           </div>
         ) : (
           <KanbanBoard
-            columns={COLUMNS}
+            columns={columns}
             items={proyectos}
             getGroupKey={(p) => p.estado}
             renderCard={renderProjectCard}

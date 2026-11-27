@@ -1,0 +1,14 @@
+{
+  "taskId": "T-170",
+  "taskTitle": "Internacionalización de Gobernanza, Actas, Proyectos, Tareas y Soberanía (governance, projects, marketplace)",
+  "date": "2026-11-27",
+  "status": "APPROVED",
+  "macroDesignVerdict": "APROBADO_EN_PLANNING",
+  "architecturalDecisions": [
+    "Crear namespaces dedicados governance, projects y marketplace en src/locales/{es,en}/",
+    "Registrar namespaces en src/i18n/index.ts y src/types/i18next.d.ts",
+    "Preservar ADR-027: nombres de propuestas, descripciones de proyectos y acuerdos creados por usuarios permanecen intactos",
+    "Erradicar todos los literales visibles en páginas y componentes modales asociados",
+    "Actualizar baseline de i18n al finalizar la tarea"
+  ]
+}
