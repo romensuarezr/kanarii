@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Share2, Mail, Link2, Check, Download, X as CloseIcon } from 'lucide-react';
 import { WhatsAppIcon, TelegramIcon, LinkedInIcon, XIcon } from '../ui/BrandIcons';
 import { useToast } from '../../hooks/useToast';
@@ -21,6 +22,7 @@ export function PasaporteShareModal({
   role = 'Miembro',
   kinDesc,
 }: PasaporteShareModalProps) {
+  const { t } = useTranslation(['passport', 'common']);
   const [copied, setCopied] = useState(false);
   const toast = useToast();
   const firstButtonRef = useRef<HTMLButtonElement>(null);
@@ -175,7 +177,7 @@ export function PasaporteShareModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Compartir Pasaporte"
+        aria-label={t('shareModal.title', { defaultValue: 'Compartir Pasaporte' })}
         className="w-full max-w-md bg-[#FDFBF7] rounded-[28px] border border-[#EAE2D6] shadow-2xl p-6 space-y-6 animate-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
@@ -186,14 +188,18 @@ export function PasaporteShareModal({
               <Share2 size={18} />
             </div>
             <div>
-              <h3 className="font-serif font-bold text-base text-[#4A4E4D]">Compartir Pasaporte</h3>
-              <p className="text-xs text-stone-500">Muestra tu ficha y saberes al mundo</p>
+              <h3 className="font-serif font-bold text-base text-[#4A4E4D]">
+                {t('shareModal.title', { defaultValue: 'Compartir Pasaporte' })}
+              </h3>
+              <p className="text-xs text-stone-500">
+                {t('shareModal.subtitle', { defaultValue: 'Muestra tu ficha y saberes al mundo' })}
+              </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Cerrar modal"
+            aria-label={t('common:actions.closeModal', { defaultValue: 'Cerrar modal' })}
             className="p-1.5 rounded-full hover:bg-stone-200/60 text-stone-400 hover:text-stone-600 transition-colors"
           >
             <CloseIcon size={18} />
@@ -210,7 +216,7 @@ export function PasaporteShareModal({
               className="w-full flex items-center justify-center gap-2.5 py-3 px-4 bg-[#6B705C] hover:bg-[#5A5A40] text-white rounded-2xl font-bold text-xs transition-all shadow-xs active:scale-98"
             >
               <Share2 size={16} />
-              <span>Compartir con aplicaciones de tu dispositivo</span>
+              <span>{t('shareModal.shareWithApps', { defaultValue: 'Compartir con aplicaciones de tu dispositivo' })}</span>
             </button>
           )}
 
@@ -245,10 +251,10 @@ export function PasaporteShareModal({
               type="button"
               onClick={handleCopy}
               className="px-3.5 py-2 bg-[#EAE2D6] hover:bg-[#D2B48C]/60 text-[#4A4E4D] rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0"
-              title="Copiar enlace"
+              title={t('shareModal.copyLink', { defaultValue: 'Copiar enlace' })}
             >
               {copied ? <Check size={14} className="text-emerald-600" /> : <Link2 size={14} />}
-              <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
+              <span>{copied ? t('shareModal.copied', { defaultValue: '¡Copiado!' }) : t('shareModal.copy', { defaultValue: 'Copiar' })}</span>
             </button>
           </div>
 
@@ -259,7 +265,7 @@ export function PasaporteShareModal({
             className="w-full flex items-center justify-center gap-2 py-2 px-3 text-stone-500 hover:text-stone-800 text-xs font-semibold hover:bg-[#EAE2D6]/40 rounded-xl transition-colors"
           >
             <Download size={14} />
-            <span>Descargar tarjeta de presentación (PNG)</span>
+            <span>{t('shareModal.downloadCard', { defaultValue: 'Descargar tarjeta de presentación (PNG)' })}</span>
           </button>
         </div>
       </div>

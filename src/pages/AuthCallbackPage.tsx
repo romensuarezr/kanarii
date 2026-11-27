@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { isSignInWithEmailLink } from 'firebase/auth';
 import { auth } from '../lib/firebase';
@@ -7,6 +8,7 @@ import { useAuth, getMemoryEmail } from '../contexts/AuthContext';
 import { Loader2, Mail, ArrowRight, AlertTriangle } from 'lucide-react';
 
 export function AuthCallbackPage() {
+  const { t } = useTranslation('auth');
   const navigate = useNavigate();
   const { completeMagicLinkLogin } = useAuth();
   const [status, setStatus] = useState<'verifying' | 'need_email' | 'error'>('verifying');
@@ -77,8 +79,12 @@ export function AuthCallbackPage() {
         {status === 'verifying' && (
           <div className="space-y-6">
             <Loader2 className="w-12 h-12 text-[#6B705C] animate-spin mx-auto" />
-            <h2 className="text-2xl font-serif text-[#4A4E4D]">Verificando tu identidad...</h2>
-            <p className="text-stone-500">Estamos conectando con la red galáctica para validar tu acceso.</p>
+            <h2 className="text-2xl font-serif text-[#4A4E4D]">
+              {t('callback.verifyingIdentity', { defaultValue: 'Verificando tu identidad...' })}
+            </h2>
+            <p className="text-stone-500">
+              {t('callback.connectingNetwork', { defaultValue: 'Estamos conectando con la red galáctica para validar tu acceso.' })}
+            </p>
           </div>
         )}
 
@@ -88,10 +94,11 @@ export function AuthCallbackPage() {
               <Mail className="w-8 h-8 text-[#CB997E]" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-serif text-[#4A4E4D]">Confirma tu email</h2>
+              <h2 className="text-2xl font-serif text-[#4A4E4D]">
+                {t('callback.confirmEmailTitle', { defaultValue: 'Confirma tu email' })}
+              </h2>
               <p className="text-stone-500 text-sm">
-                Parece que has abierto el enlace en un dispositivo o pestaña diferente. 
-                Por seguridad, reintroduce el email donde recibiste el enlace.
+                {t('callback.confirmEmailDesc', { defaultValue: 'Parece que has abierto el enlace en un dispositivo o pestaña diferente. Por seguridad, reintroduce el email donde recibiste el enlace.' })}
               </p>
             </div>
 
@@ -102,7 +109,7 @@ export function AuthCallbackPage() {
                 autoFocus
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu@email.com"
+                placeholder={t('callback.emailPlaceholder', { defaultValue: 'tu@email.com' })}
                 className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-2xl py-4 px-6 text-stone-800 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]"
               />
               {errorMessage && (
@@ -116,7 +123,7 @@ export function AuthCallbackPage() {
                 disabled={isSubmitting || !email.trim()}
                 className="w-full bg-[#6B705C] hover:bg-[#4A4E4D] text-white py-4 px-6 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Continuar <ArrowRight className="w-4 h-4" /></>}
+                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <>{t('callback.continue', { defaultValue: 'Continuar' })} <ArrowRight className="w-4 h-4" /></>}
               </button>
             </form>
           </div>
@@ -128,14 +135,16 @@ export function AuthCallbackPage() {
               <AlertTriangle className="w-8 h-8" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-serif text-[#4A4E4D]">Algo no ha salido bien</h2>
+              <h2 className="text-2xl font-serif text-[#4A4E4D]">
+                {t('callback.somethingWentWrong', { defaultValue: 'Algo no ha salido bien' })}
+              </h2>
               <p className="text-stone-500 text-sm">{errorMessage}</p>
             </div>
             <button
               onClick={() => navigate('/')}
               className="w-full bg-[#EAE2D6] text-[#4A4E4D] py-4 px-6 rounded-2xl font-bold hover:bg-[#DED2C1] transition-colors"
             >
-              Volver al inicio
+              {t('callback.backHome', { defaultValue: 'Volver al inicio' })}
             </button>
           </div>
         )}

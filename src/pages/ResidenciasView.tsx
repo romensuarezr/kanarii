@@ -264,7 +264,7 @@ export function ResidenciasView() {
                       {hasApplied ? (
                         <>
                           <CheckCircle2 className="w-4 h-4 text-status-success-text" />
-                          <span>Solicitud Enviada</span>
+                          <span>{t('residencies.requestSent', { defaultValue: 'Solicitud Enviada' })}</span>
                         </>
                       ) : (
                         <span>{t('residencies.applyResidency', { defaultValue: 'Solicitar Estancia' })}</span>
@@ -283,7 +283,7 @@ export function ResidenciasView() {
       <AuthGateModal
         isOpen={showAuthGate}
         onClose={() => setShowAuthGate(false)}
-        title="Inicia Sesión para Solicitar Estancia"
+        title={t('residencies.loginToApply', { defaultValue: 'Inicia Sesión para Solicitar Estancia' })}
         subtitle="Para conectar con las residencias y estancias de los nodos, tu pasaporte universal y datos de reciprocidad serán compartidos con los guardianes."
       />
     </div>

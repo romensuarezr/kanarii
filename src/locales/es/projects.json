@@ -38,7 +38,21 @@
     "noTasksYet": "Sin tareas asignadas aún",
     "milestonesCompleted": "{{completed}} de {{total}} hitos completados",
     "addNew": "Añadir nuevo",
-    "emptyItems": "Sin elementos"
+    "emptyItems": "Sin elementos",
+    "modal": {
+      "launchInitiative": "Lanzar Iniciativa",
+      "titleLabel": "Título del Proyecto",
+      "titlePlaceholder": "Ej: Huerto Comunitario",
+      "descLabel": "Descripción",
+      "descPlaceholder": "Describe el propósito y lo que se espera lograr...",
+      "initialState": "Estado Inicial",
+      "stateSeeking": "Buscando Ayuda",
+      "stateInProgress": "En marcha",
+      "skillsLabel": "Habilidades Buscadas",
+      "skillsPlaceholder": "Ej: Fontanería",
+      "launching": "Lanzando...",
+      "closeAria": "Cerrar modal"
+    }
   },
   "tasks": {
     "title": "Tareas Comunitarias",

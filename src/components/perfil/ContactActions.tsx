@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Phone } from 'lucide-react';
 import { formatPhoneDisplay, toTelUrl, toWhatsAppUrl } from '../../lib/phone';
 import { WhatsAppIcon } from '../ui/BrandIcons';
@@ -24,6 +25,7 @@ export function ContactActions({
   whatsappLabel = 'WhatsApp',
   iconOnly = false,
 }: ContactActionsProps) {
+  const { t } = useTranslation('passport');
   if (!phone || !phone.trim()) return null;
 
   const telUrl = toTelUrl(phone);
@@ -74,10 +76,10 @@ export function ContactActions({
         <a
           href={telUrl}
           className={`inline-flex items-center gap-1.5 font-medium bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-full border border-emerald-200 transition-colors shadow-2xs ${paddingClass}`}
-          title={`Llamar a ${formattedDisplay}`}
+          title={t('contactActions.callTo', { name: formattedDisplay, defaultValue: `Llamar a ${formattedDisplay}` })}
         >
           <Phone size={iconSize} className="text-emerald-600" />
-          <span>Llamar</span>
+          <span>{t('contactActions.call', { defaultValue: 'Llamar' })}</span>
         </a>
       )}
 
@@ -87,7 +89,7 @@ export function ContactActions({
           target="_blank"
           rel="noopener noreferrer"
           className={`inline-flex items-center gap-1.5 font-semibold bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#075E54] rounded-full border border-[#25D366]/40 transition-colors shadow-2xs ${paddingClass}`}
-          title={`Abrir chat de WhatsApp con ${formattedDisplay}`}
+          title={t('contactActions.openWhatsApp', { name: formattedDisplay, defaultValue: `Abrir chat de WhatsApp con ${formattedDisplay}` })}
         >
           <WhatsAppIcon size={iconSize} className="text-[#25D366]" />
           <span>{whatsappLabel}</span>

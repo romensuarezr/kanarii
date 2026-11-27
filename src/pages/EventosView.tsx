@@ -263,7 +263,7 @@ export function EventosView() {
                       {isInscribed ? (
                         <>
                           <CheckCircle2 className="w-4 h-4 text-status-success-text" />
-                          <span>Inscrito</span>
+                          <span>{t('events.registered', { defaultValue: 'Inscrito' })}</span>
                         </>
                       ) : (
                         <span>{t('events.joinEvent', { defaultValue: 'Inscribirme / Asistir' })}</span>
@@ -282,7 +282,7 @@ export function EventosView() {
       <AuthGateModal
         isOpen={showAuthGate}
         onClose={() => setShowAuthGate(false)}
-        title="Únete a la Red para Participar"
+        title={t('events.joinNetworkToParticipate', { defaultValue: 'Únete a la Red para Participar' })}
         subtitle="Para inscribirte en eventos comunitarios y conectar con los guardianes del nodo, crea tu pasaporte o inicia sesión."
       />
     </div>

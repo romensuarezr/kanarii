@@ -38,7 +38,21 @@
     "noTasksYet": "No tasks assigned yet",
     "milestonesCompleted": "{{completed}} of {{total}} milestones completed",
     "addNew": "Add new",
-    "emptyItems": "No items"
+    "emptyItems": "No items",
+    "modal": {
+      "launchInitiative": "Launch Initiative",
+      "titleLabel": "Project Title",
+      "titlePlaceholder": "E.g.: Community Garden",
+      "descLabel": "Description",
+      "descPlaceholder": "Describe the purpose and expected outcome...",
+      "initialState": "Initial State",
+      "stateSeeking": "Seeking Help",
+      "stateInProgress": "In Progress",
+      "skillsLabel": "Skills Sought",
+      "skillsPlaceholder": "E.g.: Plumbing",
+      "launching": "Launching...",
+      "closeAria": "Close modal"
+    }
   },
   "tasks": {
     "title": "Community Tasks",

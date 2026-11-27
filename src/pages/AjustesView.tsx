@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { Settings, Shield, User, Globe, Send, LogOut, ArrowLeft, Eye, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -9,6 +10,7 @@ import { saveFicha, PRIVACIDAD_DEFAULT, getTriadaFromFicha } from '../lib/appSer
 import { getMergedDatosPersona } from '../components/perfil/FichaReadOnly';
 
 export function AjustesView() {
+  const { t } = useTranslation(['settings', 'common']);
   const navigate = useNavigate();
   const { appUser, logout } = useAuth();
   const { ficha, loading: loadingFicha } = useFicha();
@@ -23,7 +25,7 @@ export function AjustesView() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-[#8A817C]">
         <Loader2 className="w-8 h-8 animate-spin mb-4" />
-        <p className="text-sm font-medium">Cargando configuración...</p>
+        <p className="text-sm font-medium">{t('settings:loading')}</p>
       </div>
     );
   }
@@ -61,10 +63,10 @@ export function AjustesView() {
 
       const { sincronizarPasaporte } = await import('../lib/pasaporte');
       await sincronizarPasaporte(updatedFicha, appUser.uid, appUser.displayName || undefined, appUser.photoURL || undefined);
-      toast.success("Ajuste de visibilidad guardado y sincronizado");
+      toast.success(t('settings:privacy.toastSuccess'));
     } catch (e) {
       console.error("Error al guardar privacidad en Ajustes:", e);
-      toast.error("Error al actualizar la visibilidad");
+      toast.error(t('settings:privacy.toastError'));
     } finally {
       setSavingKey(null);
     }
@@ -81,10 +83,10 @@ export function AjustesView() {
             </Link>
             <h1 className="text-2xl font-bold font-serif text-[#4A4E4D] flex items-center gap-2">
               <Settings className="w-6 h-6 text-[#6B705C]" />
-              Ajustes y Configuración
+              {t('settings:title')}
             </h1>
           </div>
-          <p className="text-stone-500 text-sm">Gestiona la privacidad de tu pasaporte, visibilidad de contacto y opciones de tu cuenta.</p>
+          <p className="text-stone-500 text-sm">{t('settings:subtitle')}</p>
         </div>
       </header>
 
@@ -99,7 +101,7 @@ export function AjustesView() {
           }`}
         >
           <Shield className="w-4 h-4 shrink-0" />
-          Privacidad y Pasaporte
+          {t('settings:tabs.privacy')}
         </button>
         <button
           onClick={() => setActiveTab('perfil')}
@@ -110,7 +112,7 @@ export function AjustesView() {
           }`}
         >
           <User className="w-4 h-4 shrink-0" />
-          Ficha e Identidad
+          {t('settings:tabs.profile')}
         </button>
         <button
           onClick={() => setActiveTab('cuenta')}
@@ -121,7 +123,7 @@ export function AjustesView() {
           }`}
         >
           <Settings className="w-4 h-4 shrink-0" />
-          Cuenta y Conexiones
+          {t('settings:tabs.account')}
         </button>
       </div>
 
@@ -132,18 +134,18 @@ export function AjustesView() {
             <div className="flex items-center gap-3">
               <Eye className="w-6 h-6 text-[#6B705C]" />
               <div>
-                <h2 className="text-lg font-bold font-serif text-[#4A4E4D]">Dimensiones Galácticas y Astrales</h2>
-                <p className="text-xs text-stone-500">Elige qué facetas de tu diseño humano, astrología y manual son visibles comunitariamente.</p>
+                <h2 className="text-lg font-bold font-serif text-[#4A4E4D]">{t('settings:privacy.title')}</h2>
+                <p className="text-xs text-stone-500">{t('settings:privacy.desc')}</p>
               </div>
             </div>
 
             <div className="space-y-3">
               {[
-                { key: 'arquetipo', label: 'Arquetipo y Perfil', desc: 'Muestra tu arquetipo de personalidad, fortalezas, sombras y rol sociocrático sugerido.' },
-                { key: 'disenoHumano', label: 'Diseño Humano', desc: 'Muestra tu tipo de diseño humano, autoridad y perfil.' },
-                { key: 'kinMaya', label: 'Kin Maya / Firma Galáctica', desc: 'Muestra tu Kin Maya, sello galáctico y rol comunitario maya.' },
-                { key: 'datosAstrologicos', label: 'Datos Astrológicos', desc: 'Muestra tu Sol, Luna, Ascendente y elementos dominantes.' },
-                { key: 'manualCompleto', label: 'Manual de Usuario Humano', desc: 'Muestra el manual de convivencia autogenerado con tus 5 secciones.' }
+                { key: 'arquetipo', label: t('settings:privacy.archetypeLabel'), desc: t('settings:privacy.archetypeDesc') },
+                { key: 'disenoHumano', label: t('settings:privacy.hdLabel'), desc: t('settings:privacy.hdDesc') },
+                { key: 'kinMaya', label: t('settings:privacy.kinLabel'), desc: t('settings:privacy.kinDesc') },
+                { key: 'datosAstrologicos', label: t('settings:privacy.astroLabel'), desc: t('settings:privacy.astroDesc') },
+                { key: 'manualCompleto', label: t('settings:privacy.manualLabel'), desc: t('settings:privacy.manualDesc') }
               ].map(({ key, label, desc }) => {
                 const privacidad = displayFicha?.privacidad || PRIVACIDAD_DEFAULT;
                 const isEnabled = privacidad[key as keyof typeof privacidad] ?? true;
@@ -180,19 +182,19 @@ export function AjustesView() {
             <div className="flex items-center gap-3">
               <Globe className="w-6 h-6 text-[#CB997E]" />
               <div>
-                <h2 className="text-lg font-bold font-serif text-[#4A4E4D]">Redes Sociales y Canales de Contacto</h2>
-                <p className="text-xs text-stone-500">Configura qué datos de contacto directo se muestran en tu pasaporte público.</p>
+                <h2 className="text-lg font-bold font-serif text-[#4A4E4D]">{t('settings:privacy.contactTitle')}</h2>
+                <p className="text-xs text-stone-500">{t('settings:privacy.contactDesc')}</p>
               </div>
             </div>
 
             <div className="space-y-3">
               {[
-                { key: 'instagram', label: 'Instagram', desc: 'Muestra tu handle de Instagram y enlace directo a tu perfil.' },
-                { key: 'linkedin', label: 'LinkedIn', desc: 'Muestra tu perfil profesional de LinkedIn en el pasaporte.' },
-                { key: 'telegram', label: 'Telegram', desc: 'Muestra tu usuario o enlace de Telegram para mensajería directa.' },
-                { key: 'website', label: 'Sitio Web', desc: 'Enlace directo a tu web personal o proyecto.' },
-                { key: 'phone', label: 'Teléfono y WhatsApp', desc: 'Muestra los botones de llamada nativa y apertura directa en WhatsApp.' },
-                { key: 'email', label: 'Correo Electrónico', desc: 'Muestra tu dirección de email pública para contacto comunitario.' }
+                { key: 'instagram', label: 'Instagram', desc: t('settings:privacy.instagramDesc') },
+                { key: 'linkedin', label: 'LinkedIn', desc: t('settings:privacy.linkedinDesc') },
+                { key: 'telegram', label: 'Telegram', desc: t('settings:privacy.telegramDesc') },
+                { key: 'website', label: t('settings:privacy.websiteLabel'), desc: t('settings:privacy.websiteDesc') },
+                { key: 'phone', label: t('settings:privacy.phoneLabel'), desc: t('settings:privacy.phoneDesc') },
+                { key: 'email', label: t('settings:privacy.emailLabel'), desc: t('settings:privacy.emailDesc') }
               ].map(({ key, label, desc }) => {
                 const privacidad = displayFicha?.privacidad || PRIVACIDAD_DEFAULT;
                 const isEnabled = privacidad[key as keyof typeof privacidad] ?? (key === 'phone' || key === 'email' ? false : true);
@@ -231,17 +233,17 @@ export function AjustesView() {
       {activeTab === 'perfil' && (
         <div className="space-y-6 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#EAE2D6] shadow-sm space-y-6">
-            <h2 className="text-lg font-bold font-serif text-[#4A4E4D]">Acciones Rápidas de tu Identidad</h2>
+            <h2 className="text-lg font-bold font-serif text-[#4A4E4D]">{t('settings:identityActions.title')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Link
                 to="/ficha?edit=1"
                 className="p-5 rounded-2xl bg-[#F9F7F1] border border-[#EAE2D6] hover:bg-[#EAE2D6]/40 transition-colors flex items-center justify-between"
               >
                 <div>
-                  <h3 className="font-bold text-[#4A4E4D] text-sm">Editar mi Ficha</h3>
-                  <p className="text-xs text-stone-500 mt-0.5">Modifica tus saberes, ofrendas, rol y datos personales</p>
+                  <h3 className="font-bold text-[#4A4E4D] text-sm">{t('settings:identityActions.editFicha')}</h3>
+                  <p className="text-xs text-stone-500 mt-0.5">{t('settings:identityActions.editFichaDesc')}</p>
                 </div>
-                <span className="text-[#6B705C] font-bold text-xs">Ir →</span>
+                <span className="text-[#6B705C] font-bold text-xs">{t('settings:identityActions.go')}</span>
               </Link>
 
               {appUser.uid && (
@@ -250,10 +252,10 @@ export function AjustesView() {
                   className="p-5 rounded-2xl bg-[#F9F7F1] border border-[#EAE2D6] hover:bg-[#EAE2D6]/40 transition-colors flex items-center justify-between"
                 >
                   <div>
-                    <h3 className="font-bold text-[#4A4E4D] text-sm">Mi Pasaporte Universal</h3>
-                    <p className="text-xs text-stone-500 mt-0.5">Visualiza tu carta de presentación tal como la ve la comunidad</p>
+                    <h3 className="font-bold text-[#4A4E4D] text-sm">{t('settings:identityActions.passport')}</h3>
+                    <p className="text-xs text-stone-500 mt-0.5">{t('settings:identityActions.passportDesc')}</p>
                   </div>
-                  <span className="text-[#6B705C] font-bold text-xs">Ver →</span>
+                  <span className="text-[#6B705C] font-bold text-xs">{t('settings:identityActions.view')}</span>
                 </Link>
               )}
 
@@ -262,10 +264,10 @@ export function AjustesView() {
                 className="p-5 rounded-2xl bg-[#F9F7F1] border border-[#EAE2D6] hover:bg-[#EAE2D6]/40 transition-colors flex items-center justify-between"
               >
                 <div>
-                  <h3 className="font-bold text-[#4A4E4D] text-sm">Mi Perfil Completo</h3>
-                  <p className="text-xs text-stone-500 mt-0.5">Revisa la vista unificada de perfil y pasaporte</p>
+                  <h3 className="font-bold text-[#4A4E4D] text-sm">{t('settings:identityActions.fullProfile')}</h3>
+                  <p className="text-xs text-stone-500 mt-0.5">{t('settings:identityActions.fullProfileDesc')}</p>
                 </div>
-                <span className="text-[#6B705C] font-bold text-xs">Ir →</span>
+                <span className="text-[#6B705C] font-bold text-xs">{t('settings:identityActions.go')}</span>
               </Link>
             </div>
           </div>
@@ -276,24 +278,24 @@ export function AjustesView() {
       {activeTab === 'cuenta' && (
         <div className="space-y-6 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#EAE2D6] shadow-sm space-y-6">
-            <h2 className="text-lg font-bold font-serif text-[#4A4E4D]">Datos de Cuenta y Sesión</h2>
+            <h2 className="text-lg font-bold font-serif text-[#4A4E4D]">{t('settings:account.title')}</h2>
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2.5 border-b border-stone-50">
-                <span className="text-sm text-stone-500">Nombre de usuario</span>
+                <span className="text-sm text-stone-500">{t('settings:account.userName')}</span>
                 <span className="text-sm font-medium text-[#4A4E4D]">{appUser.displayName || '—'}</span>
               </div>
               <div className="flex justify-between items-center py-2.5 border-b border-stone-50">
-                <span className="text-sm text-stone-500">Correo Electrónico</span>
+                <span className="text-sm text-stone-500">{t('settings:account.email')}</span>
                 <span className="text-sm font-medium text-[#4A4E4D]">{appUser.email || '—'}</span>
               </div>
               <div className="flex justify-between items-center py-2.5 border-b border-stone-50">
-                <span className="text-sm text-stone-500">Rol Global</span>
+                <span className="text-sm text-stone-500">{t('settings:account.globalRole')}</span>
                 <span className="inline-block px-2.5 py-0.5 text-xs font-bold text-[#6B705C] bg-[#EAE2D6] rounded-full uppercase">
                   {appUser.role}
                 </span>
               </div>
               <div className="flex justify-between items-center py-2.5 border-b border-stone-50">
-                <span className="text-sm text-stone-500">ID de Usuario</span>
+                <span className="text-sm text-stone-500">{t('settings:account.userId')}</span>
                 <span className="text-xs font-mono text-stone-400">{appUser.uid}</span>
               </div>
             </div>
@@ -305,7 +307,7 @@ export function AjustesView() {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#CB997E]/10 hover:bg-[#CB997E]/20 text-[#CB997E] border border-[#CB997E]/30 rounded-xl text-sm font-bold transition-colors"
               >
                 <Send className="w-4 h-4" />
-                Vincular con Telegram
+                {t('settings:account.linkTelegram')}
               </button>
 
               <button
@@ -314,7 +316,7 @@ export function AjustesView() {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-sm font-bold transition-colors"
               >
                 <LogOut className="w-4 h-4" />
-                Cerrar Sesión
+                {t('settings:account.logout')}
               </button>
             </div>
           </div>

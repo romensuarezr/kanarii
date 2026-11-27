@@ -1,4 +1,5 @@
 import { useState, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { Info, X, Sparkles } from 'lucide-react';
 
@@ -10,6 +11,7 @@ interface SectionHelpProps {
 }
 
 export default function SectionHelp({ title, description, animationNode, inline }: SectionHelpProps) {
+  const { t } = useTranslation('common');
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -22,7 +24,7 @@ export default function SectionHelp({ title, description, animationNode, inline 
         whileTap={{ scale: 0.9 }}
         onClick={toggle}
         className={`${inline ? 'relative' : 'fixed bottom-20 right-6 md:static'} w-10 h-10 rounded-full bg-white border border-[#D2B48C]/30 shadow-md flex items-center justify-center text-[#5A5A40] hover:bg-[#FAF9F6] transition-colors z-[60]`}
-        aria-label="Ayuda contextual"
+        aria-label={t('help.contextualHelp', { defaultValue: 'Ayuda contextual' })}
       >
         <Info size={20} strokeWidth={2.5} />
       </motion.button>
@@ -89,7 +91,7 @@ export default function SectionHelp({ title, description, animationNode, inline 
                     onClick={toggle}
                     className="bg-[#5A5A40] text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-[#4A4A35] shadow-xl shadow-[#5A5A40]/10 transition-all active:scale-95"
                   >
-                    Entendido
+                    {t('actions.understood', { defaultValue: 'Entendido' })}
                   </button>
                 </div>
               </div>

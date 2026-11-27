@@ -163,7 +163,9 @@ export default function PasaporteVisual({
             <div className="space-y-1">
               <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-amber-50/60 rounded-full border border-amber-100">
                 <Sparkles size={11} className="text-[#A5A58D]" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A5A58D]">Tribu Kanarii</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A5A58D]">
+                  {t('tribeKanarii', { defaultValue: 'Tribu Kanarii' })}
+                </span>
               </div>
               <h1 className="text-3xl font-serif font-bold text-[#3E2723] tracking-tight">
                 {user.name}

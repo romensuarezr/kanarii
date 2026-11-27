@@ -1,4 +1,5 @@
 import React, { useState, KeyboardEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, X } from 'lucide-react';
 
 interface TagArrayEditorProps {
@@ -20,6 +21,7 @@ export function TagArrayEditor({
   disabled = false,
   helperText
 }: TagArrayEditorProps) {
+  const { t } = useTranslation('common');
   const [inputValue, setInputValue] = useState('');
 
   // Estilos basados en el esquema de color
@@ -103,7 +105,7 @@ export function TagArrayEditor({
           className={`flex items-center justify-center px-4 py-2 text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${scheme.addBtn}`}
         >
           <Plus className="h-4 w-4 mr-1" />
-          Añadir
+          {t('actions.add', { defaultValue: 'Añadir' })}
         </button>
       </div>
 
@@ -111,7 +113,7 @@ export function TagArrayEditor({
       <div className="flex flex-wrap gap-2 pt-1">
         {value.length === 0 ? (
           <span className="text-xs italic text-slate-400 dark:text-slate-500 py-1">
-            Ningún elemento añadido todavía.
+            {t('empty.noItemsYet', { defaultValue: 'Ningún elemento añadido todavía.' })}
           </span>
         ) : (
           value.map((tag, idx) => (

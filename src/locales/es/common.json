@@ -4,7 +4,15 @@
     "cancel": "Cancelar",
     "close": "Cerrar",
     "back": "Volver",
+    "goBack": "Retroceder",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "understood": "Entendido",
+    "add": "Añadir",
+    "archive": "Archivar",
+    "unarchive": "Desarchivar",
     "continue": "Continuar",
+    "closeModal": "Cerrar modal",
     "login": "Iniciar sesión",
     "signup": "Registrarse",
     "logout": "Cerrar sesión"
@@ -44,7 +52,25 @@
     "nodesShort": "Nodos",
     "eventsShort": "Eventos",
     "activateModules": "Activar módulos",
-    "addNodeTools": "Añadir herramientas al nodo"
+    "addNodeTools": "Añadir herramientas al nodo",
+    "mobileNavigation": "Navegación móvil"
+  },
+  "placeholders": {
+    "cityOrRegion": "Escribe tu ciudad o región..."
+  },
+  "help": {
+    "contextualHelp": "Ayuda contextual"
+  },
+  "empty": {
+    "noItemsYet": "Ningún elemento añadido todavía."
+  },
+  "status": {
+    "completed": "✓ Completado"
+  },
+  "pwa": {
+    "newVersionAvailable": "🔄 Nueva versión disponible",
+    "update": "Actualizar",
+    "close": "Cerrar aviso"
   },
   "modules": {
     "modalTitle": "Herramientas del nodo",

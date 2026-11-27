@@ -1,0 +1,15 @@
+{
+  "taskId": "T-171",
+  "taskTitle": "Internacionalización de AdminPanel y Ajustes + Sellado de Baseline a 0",
+  "date": "2026-11-27",
+  "status": "APPROVED",
+  "macroDesignVerdict": "APROBADO_EN_PLANNING",
+  "architecturalDecisions": [
+    "Crear namespaces dedicados admin y settings en src/locales/{es,en}/",
+    "Registrar namespaces en src/i18n/index.ts",
+    "Internacionalizar AdminPanel, sus tabs, AdminSolicitudesView, ConfiguracionComunidadPanel, AjustesView y KanariiTourPage",
+    "Internacionalizar componentes residuales de UI con warnings",
+    "Regenerar i18n-baseline.json hasta alcanzar exactamente 0 violaciones en toda la aplicación",
+    "Validar paridad, linting y trinquete test:i18n en verde (código 0)"
+  ]
+}

@@ -24,6 +24,10 @@ import esProjects from '../locales/es/projects.json';
 import enProjects from '../locales/en/projects.json';
 import esMarketplace from '../locales/es/marketplace.json';
 import enMarketplace from '../locales/en/marketplace.json';
+import esAdmin from '../locales/es/admin.json';
+import enAdmin from '../locales/en/admin.json';
+import esSettings from '../locales/es/settings.json';
+import enSettings from '../locales/en/settings.json';
 
 i18n
   .use(LanguageDetector)
@@ -42,6 +46,8 @@ i18n
         governance: esGovernance,
         projects: esProjects,
         marketplace: esMarketplace,
+        admin: esAdmin,
+        settings: esSettings,
       },
       en: {
         common: enCommon,
@@ -55,12 +61,14 @@ i18n
         governance: enGovernance,
         projects: enProjects,
         marketplace: enMarketplace,
+        admin: enAdmin,
+        settings: enSettings,
       },
     },
     supportedLngs: ['es', 'en'],
     fallbackLng: 'es',
     debug: import.meta.env.DEV,
-    ns: ['common', 'welcome', 'auth', 'communities', 'passport', 'astrology', 'dashboard', 'events', 'governance', 'projects', 'marketplace'],
+    ns: ['common', 'welcome', 'auth', 'communities', 'passport', 'astrology', 'dashboard', 'events', 'governance', 'projects', 'marketplace', 'admin', 'settings'],
     defaultNS: 'common',
     detection: {
       order: ['localStorage', 'navigator'],

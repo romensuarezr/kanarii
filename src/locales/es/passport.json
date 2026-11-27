@@ -369,5 +369,36 @@
     "continue": "Continuar →",
     "confirmLeave": "Confirmar salida",
     "leaving": "Saliendo..."
+  },
+  "shareModal": {
+    "title": "Compartir Pasaporte",
+    "subtitle": "Muestra tu ficha y saberes al mundo",
+    "shareWithApps": "Compartir con aplicaciones de tu dispositivo",
+    "copyLink": "Copiar enlace",
+    "downloadCard": "Descargar tarjeta de presentación (PNG)",
+    "copied": "¡Copiado!",
+    "copy": "Copiar"
+  },
+  "contactActions": {
+    "call": "Llamar",
+    "callTo": "Llamar a {{name}}",
+    "openWhatsApp": "Abrir chat de WhatsApp con {{name}}"
+  },
+  "fichaReadOnly": {
+    "viewPassport": "Ver Pasaporte Comunitario",
+    "copyPassportLink": "Copiar enlace del Pasaporte",
+    "socialAndContact": "Redes Sociales y Contacto",
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "website": "Sitio Web",
+    "phoneWa": "Teléfono / WhatsApp",
+    "email": "Correo Electrónico",
+    "copied": "¡Copiado!"
+  },
+  "tribeKanarii": "Tribu Kanarii",
+  "manual": {
+    "pageOf": "{{current}} de {{total}}",
+    "sectionNotGenerated": "Esta sección aún no ha sido generada por el miembro.",
+    "noContentAvailable": "No hay contenido disponible para esta sección."
   }
 }

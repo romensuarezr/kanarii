@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Users, LayoutList } from 'lucide-react';
 import { CommunityMember, Tarea } from '../../../lib/appService';
 import ComunidadSubTab from './ComunidadSubTab';
@@ -29,6 +30,7 @@ export default function ComunidadTab({
   currentCommunityId,
   appUserId,
 }: ComunidadTabProps) {
+  const { t } = useTranslation(['admin', 'common']);
   const [activeTab, setActiveTab] = useState<'comunidad' | 'tareas'>('comunidad');
 
   const stats = useMemo(() => {
@@ -69,19 +71,19 @@ export default function ComunidadTab({
     <>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-white p-4 rounded-2xl border border-[#EAE2D6] shadow-sm">
-          <div className="text-stone-400 text-xs font-bold uppercase tracking-wider mb-1">Tareas Totales</div>
+          <div className="text-stone-400 text-xs font-bold uppercase tracking-wider mb-1">{t('admin:communityTab.totalTasks')}</div>
           <div className="text-2xl font-serif text-[#4A4E4D]">{stats.total}</div>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-[#EAE2D6] shadow-sm">
-          <div className="text-stone-400 text-xs font-bold uppercase tracking-wider mb-1">Progreso Global</div>
+          <div className="text-stone-400 text-xs font-bold uppercase tracking-wider mb-1">{t('admin:communityTab.globalProgress')}</div>
           <div className="text-2xl font-serif text-teal-600">{stats.completedPct}%</div>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-[#EAE2D6] shadow-sm">
-          <div className="text-stone-400 text-xs font-bold uppercase tracking-wider mb-1">Top Colaborador</div>
+          <div className="text-stone-400 text-xs font-bold uppercase tracking-wider mb-1">{t('admin:communityTab.topCollaborator')}</div>
           <div className="text-lg font-medium text-[#4A4E4D] truncate">{stats.topMember}</div>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-[#EAE2D6] shadow-sm">
-          <div className="text-stone-400 text-xs font-bold uppercase tracking-wider mb-1">Cerradas (7d)</div>
+          <div className="text-stone-400 text-xs font-bold uppercase tracking-wider mb-1">{t('admin:communityTab.closed7d')}</div>
           <div className="text-2xl font-serif text-[#CB997E]">+{stats.weeklyCompleted}</div>
         </div>
       </div>
@@ -94,7 +96,7 @@ export default function ComunidadTab({
           }`}
         >
           <div className="flex items-center gap-2">
-            <Users className="w-4 h-4" /> Comunidad
+            <Users className="w-4 h-4" /> {t('admin:communityTab.subtabCommunity')}
           </div>
         </button>
         <button
@@ -104,7 +106,7 @@ export default function ComunidadTab({
           }`}
         >
           <div className="flex items-center gap-2">
-            <LayoutList className="w-4 h-4" /> Tareas Globales
+            <LayoutList className="w-4 h-4" /> {t('admin:communityTab.subtabGlobalTasks')}
           </div>
         </button>
       </div>

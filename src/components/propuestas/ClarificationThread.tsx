@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PropuestaHilo, CommunityMember, createHiloMessage } from '../../lib/appService';
 import { Send, User } from 'lucide-react';
 import { format } from 'date-fns';
@@ -23,6 +24,7 @@ export function ClarificationThread({
   members,
   responseType = 'duda'
 }: ClarificationThreadProps) {
+  const { t } = useTranslation('governance');
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
 
@@ -79,7 +81,7 @@ export function ClarificationThread({
       <div className="space-y-3 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
         {hilos.length === 0 ? (
           <p className="text-xs text-stone-400 italic py-2 text-center">
-            No hay aclaraciones en este hilo todavía.
+            {t('clarificationThread.noMessagesYet', { defaultValue: 'No hay aclaraciones en este hilo todavía.' })}
           </p>
         ) : (
           hilos.map((h, idx) => {
@@ -159,7 +161,10 @@ export function ClarificationThread({
       ) : (
         <div className="pt-2 border-t border-stone-200/40 text-center">
           <p className="text-[9px] text-stone-400 italic">
-            Solo el autor de la propuesta y quien planteó la {responseType === 'objecion' ? 'objeción' : 'duda'} pueden responder en este hilo.
+            {t('clarificationThread.onlyAuthorCanReply', {
+              type: responseType === 'objecion' ? t('responseTypes.objecion', { defaultValue: 'objeción' }) : t('responseTypes.duda', { defaultValue: 'duda' }),
+              defaultValue: `Solo el autor de la propuesta y quien planteó la ${responseType === 'objecion' ? 'objeción' : 'duda'} pueden responder en este hilo.`
+            })}
           </p>
         </div>
       )}

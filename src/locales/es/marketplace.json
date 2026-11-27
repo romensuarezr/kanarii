@@ -151,5 +151,64 @@
     "noHistory": "No hay historial registrado para este acuerdo.",
     "proposeAmendment": "Proponer Enmienda",
     "close": "Cerrar"
+  },
+  "agreementModal": {
+    "title": "Propuesta de Acuerdo",
+    "for": "Para:",
+    "exchangeType": "Tipo de Intercambio",
+    "types": {
+      "tiempo": "Intercambio de Tiempo (Horas)",
+      "especie": "Intercambio por Especie",
+      "economico": "Aportación Económica",
+      "regalo": "Regalo / Donación"
+    },
+    "terms": "Términos de la propuesta *",
+    "termsPlaceholder": "Ej. Te propongo cambiar 2h de clases de yoga por 1 caja de verduras de mi huerto...",
+    "proposedDate": "Fecha propuesta (opcional)",
+    "cancel": "Cancelar",
+    "sending": "Enviando...",
+    "sendProposal": "Enviar Propuesta",
+    "closeAria": "Cerrar modal"
+  },
+  "tablonModal": {
+    "titlePlaceholder": "Título de la publicación",
+    "by": "Por",
+    "member": "Miembro",
+    "manage": "Gestionar:",
+    "markActive": "Marcar como Activo",
+    "markInProgress": "Marcar En Proceso",
+    "markResolved": "Marcar como Resuelto",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "descPlaceholder": "Describe lo que necesitas u ofreces...",
+    "responses": "Respuestas",
+    "noResponses": "Sin respuestas aún. ¡Sé el primero en participar!",
+    "writeResponsePlaceholder": "Escribe una respuesta...",
+    "closeAria": "Cerrar modal",
+    "categories": {
+      "habilidad": "Habilidad",
+      "recurso": "Recurso",
+      "espacio": "Espacio",
+      "apoyo_emocional": "Apoyo",
+      "otro": "Otro"
+    }
+  },
+  "serviceDetail": {
+    "paused": "Pausado",
+    "talent": "Talento",
+    "resource": "Recurso",
+    "offeredBy": "Ofrecido por",
+    "location": "Ubicación",
+    "availability": "Disponibilidad / Horario",
+    "pause": "Pausar",
+    "resume": "Reactivar",
+    "edit": "Editar",
+    "delete": "Eliminar servicio",
+    "proposeAgreement": "Proponer Acuerdo / Solicitar",
+    "pausedNotice": "Este servicio está temporalmente pausado y no admite nuevas solicitudes de acuerdo.",
+    "cancel": "Cancelar",
+    "closeAria": "Cerrar modal"
   }
 }

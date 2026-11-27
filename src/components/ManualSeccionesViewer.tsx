@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Markdown from 'react-markdown';
 import { normalizarSecciones, SeccionId, SECCIONES_META } from '../lib/manualNormalizer';
 import { Loader2 } from 'lucide-react';
@@ -18,6 +19,7 @@ export function ManualSeccionesViewer({
   generarSeccionLazy,
   modoAdmin = false
 }: ManualSeccionesViewerProps) {
+  const { t } = useTranslation('passport');
   const [activeTab, setActiveTab] = useState<SeccionId>('adn_astral');
 
   const seccionesNormalizadas = normalizarSecciones(ficha);
@@ -107,11 +109,11 @@ export function ManualSeccionesViewer({
           </div>
         ) : modoAdmin ? (
           <div className="text-center py-12 text-stone-400 italic text-sm bg-stone-50/50 rounded-2xl border border-dashed border-[#EAE2D6] w-full">
-            Esta sección aún no ha sido generada por el miembro.
+            {t('manual.sectionNotGenerated', { defaultValue: 'Esta sección aún no ha sido generada por el miembro.' })}
           </div>
         ) : (
           <div className="text-center py-12 text-stone-400 italic text-sm bg-stone-50/50 rounded-2xl border border-dashed border-[#EAE2D6] w-full">
-            No hay contenido disponible para esta sección.
+            {t('manual.noContentAvailable', { defaultValue: 'No hay contenido disponible para esta sección.' })}
           </div>
         )}
       </div>

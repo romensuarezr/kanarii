@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { useComunidadActions } from '../hooks/useComunidadActions';
 import { LocationAutocomplete } from './LocationAutocomplete';
@@ -63,6 +64,7 @@ function TagChip({ tag, onRemove }: { tag: string; onRemove?: () => void }) {
 }
 
 export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated?: () => void; onCancel?: () => void } = {}) {
+  const { t } = useTranslation(['settings', 'common']);
   const { comunidad, setCommunityId } = useComunidad();
   const { actualizarComunidad, eliminarComunidad, isExecuting } = useComunidadActions();
   const toast = useToast();
@@ -122,7 +124,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
     return (
       <div className="flex flex-col items-center justify-center py-20 text-stone-500">
         <Info className="w-12 h-12 mb-4 text-[#6B705C]" />
-        <p className="text-lg font-serif">Cargando datos de la comunidad...</p>
+        <p className="text-lg font-serif">{t('settings:communityConfig.loading')}</p>
       </div>
     );
   }
@@ -139,12 +141,12 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
     e.preventDefault();
 
     if (!nombre.trim()) {
-      toast.error('El nombre de la comunidad es obligatorio.');
+      toast.error(t('settings:communityConfig.nameRequired'));
       return;
     }
 
     if (!municipio.trim() || !region.trim() || !pais.trim()) {
-      toast.error('La ubicación (municipio, región/isla y país) es obligatoria.');
+      toast.error(t('settings:communityConfig.locationRequired'));
       return;
     }
 
@@ -178,7 +180,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
 
   const handleDeleteCommunity = async () => {
     if (confirmSlugInput !== comunidad.slug) {
-      toast.error('El slug no coincide. Introduce el slug exacto.');
+      toast.error(t('settings:communityConfig.slugMismatch'));
       return;
     }
 
@@ -195,7 +197,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
       navigate('/');
     } catch (err) {
       console.error('Error al eliminar comunidad:', err);
-      toast.error('No se ha podido eliminar la comunidad.');
+      toast.error(t('settings:communityConfig.deleteError'));
     } finally {
       setIsDeleting(false);
     }
@@ -208,10 +210,10 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
       <div className="flex items-center justify-between border-b border-[#EAE2D6] pb-6">
         <div>
           <h2 className="text-2xl font-serif font-bold text-[#4A4E4D] flex items-center gap-2">
-            <Settings className="w-6 h-6 text-[#6B705C]" /> Configuración de la Comunidad
+            <Settings className="w-6 h-6 text-[#6B705C]" /> {t('settings:communityConfig.title')}
           </h2>
           <p className="text-sm text-stone-500 mt-1">
-            Modifica la identidad, ubicación, visibilidad y accesos de /{comunidad.slug}.
+            {t('settings:communityConfig.subtitle', { slug: comunidad.slug })}
           </p>
         </div>
         {onCancel && (
@@ -220,7 +222,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
             onClick={onCancel}
             className="flex items-center gap-1.5 px-4 py-2 border border-[#EAE2D6] rounded-xl hover:bg-stone-50 text-stone-600 font-semibold text-sm transition-all"
           >
-            <ArrowLeft className="w-4 h-4" /> Volver
+            <ArrowLeft className="w-4 h-4" /> {t('settings:communityConfig.back')}
           </button>
         )}
       </div>
@@ -234,26 +236,26 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
               1
             </div>
             <div>
-              <h3 className="text-lg font-serif font-semibold text-[#4A4E4D]">Identidad</h3>
-              <p className="text-xs text-stone-400">Cómo se presenta la comunidad ante el público y los miembros.</p>
+              <h3 className="text-lg font-serif font-semibold text-[#4A4E4D]">{t('settings:communityConfig.section1Title')}</h3>
+              <p className="text-xs text-stone-400">{t('settings:communityConfig.section1Desc')}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-stone-700">Nombre de la comunidad <span className="text-red-400">*</span></label>
+              <label className="block text-sm font-semibold text-stone-700">{t('settings:communityConfig.nameLabel')} <span className="text-red-400">*</span></label>
               <input 
                 type="text" 
                 value={nombre} 
                 onChange={e => setNombre(e.target.value)} 
-                placeholder="Ej: Ecoaldea Granja Verde" 
+                placeholder={t('settings:communityConfig.namePlaceholder')} 
                 className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-stone-800"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-stone-700">URL del Logo / Avatar <span className="text-stone-400 font-normal">(opcional)</span></label>
+              <label className="block text-sm font-semibold text-stone-700">{t('settings:communityConfig.logoLabel')} <span className="text-stone-400 font-normal">{t('settings:communityConfig.optional')}</span></label>
               <input 
                 type="url" 
                 value={logoUrl} 
@@ -264,7 +266,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-stone-700">URL de la Portada / Banner <span className="text-stone-400 font-normal">(opcional)</span></label>
+              <label className="block text-sm font-semibold text-stone-700">{t('settings:communityConfig.bannerLabel')} <span className="text-stone-400 font-normal">{t('settings:communityConfig.optional')}</span></label>
               <input 
                 type="url" 
                 value={bannerUrl} 
@@ -276,22 +278,22 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-stone-700">Descripción breve</label>
+            <label className="block text-sm font-semibold text-stone-700">{t('settings:communityConfig.descLabel')}</label>
             <textarea 
               value={descripcion} 
               onChange={e => setDescripcion(e.target.value)} 
-              placeholder="Una breve explicación de qué es esta comunidad..." 
+              placeholder={t('settings:communityConfig.descPlaceholder')} 
               rows={3}
               className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-stone-800"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-stone-700">Manifiesto / Principios <span className="text-stone-400 font-normal">(Markdown soportado)</span></label>
+            <label className="block text-sm font-semibold text-stone-700">{t('settings:communityConfig.manifestoLabel')} <span className="text-stone-400 font-normal">{t('settings:communityConfig.markdownSupported')}</span></label>
             <textarea 
               value={manifiesto} 
               onChange={e => setManifiesto(e.target.value)} 
-              placeholder="Describe los principios, acuerdos fundamentales o visión de la comunidad..." 
+              placeholder={t('settings:communityConfig.manifestoPlaceholder')} 
               rows={6}
               className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-stone-800 font-mono text-sm"
             />
@@ -305,13 +307,13 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
               2
             </div>
             <div>
-              <h3 className="text-lg font-serif font-semibold text-[#4A4E4D]">Ubicación</h3>
-              <p className="text-xs text-stone-400">Dónde se encuentra geográficamente vuestro espacio.</p>
+              <h3 className="text-lg font-serif font-semibold text-[#4A4E4D]">{t('settings:communityConfig.section2Title')}</h3>
+              <p className="text-xs text-stone-400">{t('settings:communityConfig.section2Desc')}</p>
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-stone-700">Buscar ubicación en el mapa</label>
+            <label className="block text-sm font-semibold text-stone-700">{t('settings:communityConfig.searchLocation')}</label>
             <LocationAutocomplete
               onSelect={(data) => {
                 const addr = data.address || {};
@@ -326,36 +328,36 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
                 setLng(data.longitud);
               }}
             />
-            <p className="text-xs text-stone-400">Escribe para geocodificar y actualizar las coordenadas de forma automática.</p>
+            <p className="text-xs text-stone-400">{t('settings:communityConfig.searchLocationHint')}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-stone-700 mb-1.5">Municipio <span className="text-red-400">*</span></label>
+              <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('settings:communityConfig.municipality')} <span className="text-red-400">*</span></label>
               <input 
                 value={municipio} 
                 onChange={e => setMunicipio(e.target.value)} 
-                placeholder="San Bartolomé" 
+                placeholder={t('settings:communityConfig.placeholders.municipality')} 
                 className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-stone-800" 
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-stone-700 mb-1.5">Región / Isla <span className="text-red-400">*</span></label>
+              <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('settings:communityConfig.region')} <span className="text-red-400">*</span></label>
               <input 
                 value={region} 
                 onChange={e => setRegion(e.target.value)} 
-                placeholder="Gran Canaria" 
+                placeholder={t('settings:communityConfig.placeholders.region')} 
                 className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-stone-800" 
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-stone-700 mb-1.5">País <span className="text-red-400">*</span></label>
+              <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('settings:communityConfig.country')} <span className="text-red-400">*</span></label>
               <input 
                 value={pais} 
                 onChange={e => setPais(e.target.value)} 
-                placeholder="España" 
+                placeholder={t('settings:communityConfig.placeholders.country')} 
                 className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-stone-800" 
                 required
               />
@@ -365,7 +367,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
           {(lat !== undefined && lng !== undefined) && (
             <div className="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs text-stone-500 font-mono flex items-center gap-2">
               <MapPin className="w-4 h-4 text-[#6B705C]" />
-              Coordenadas guardadas: Lat {lat.toFixed(6)}, Lng {lng.toFixed(6)}
+              {t('settings:communityConfig.coordsSaved', { lat: lat.toFixed(6), lng: lng.toFixed(6) })}
             </div>
           )}
         </section>
@@ -377,8 +379,8 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
               3
             </div>
             <div>
-              <h3 className="text-lg font-serif font-semibold text-[#4A4E4D]">Cultura y Acceso</h3>
-              <p className="text-xs text-stone-400">Define cómo se entra y las características fundamentales de la comunidad.</p>
+              <h3 className="text-lg font-serif font-semibold text-[#4A4E4D]">{t('settings:communityConfig.section3Title')}</h3>
+              <p className="text-xs text-stone-400">{t('settings:communityConfig.section3Desc')}</p>
             </div>
           </div>
 
@@ -386,40 +388,40 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
             <Toggle 
               checked={esPublica} 
               onChange={v => setEsPublica(v)}
-              label="Comunidad pública" 
-              desc="Visible en el directorio público de comunidades de Kanarii." 
+              label={t('settings:communityConfig.publicCommunity')} 
+              desc={t('settings:communityConfig.publicCommunityDesc')} 
             />
 
             {esPublica ? (
               <Toggle 
                 checked={requiereAprobacion} 
                 onChange={v => setRequiereAprobacion(v)}
-                label="Requiere aprobación" 
-                desc="Los administradores deben revisar y aprobar cada solicitud de acceso." 
+                label={t('settings:communityConfig.requiresApproval')} 
+                desc={t('settings:communityConfig.requiresApprovalDesc')} 
               />
             ) : (
               <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-sm text-amber-700 flex items-start gap-2.5">
                 <Lock className="w-5 h-5 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold">Comunidad privada</p>
-                  <p className="text-xs mt-0.5">Invisible en el directorio. La entrada de miembros requiere obligatoriamente aprobación de un admin.</p>
+                  <p className="font-semibold">{t('settings:communityConfig.privateCommunity')}</p>
+                  <p className="text-xs mt-0.5">{t('settings:communityConfig.privateCommunityDesc')}</p>
                 </div>
               </div>
             )}
           </div>
 
           <div className="space-y-3">
-            <label className="block text-sm font-semibold text-stone-700">Tipo de espacio</label>
+            <label className="block text-sm font-semibold text-stone-700">{t('settings:communityConfig.spaceType')}</label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {TIPOS.map(t => (
+              {TIPOS.map(tipoItem => (
                 <button 
-                  key={t.value} 
+                  key={tipoItem.value} 
                   type="button" 
-                  onClick={() => setTipo(t.value)}
-                  className={`p-4 rounded-2xl border-2 text-center transition-all hover:scale-[1.02] ${tipo === t.value ? 'border-[#6B705C] bg-[#6B705C]/5 shadow-sm font-bold text-stone-850' : 'border-[#EAE2D6] hover:border-[#CB997E]/40 bg-white text-stone-600'}`}
+                  onClick={() => setTipo(tipoItem.value)}
+                  className={`p-4 rounded-2xl border-2 text-center transition-all hover:scale-[1.02] ${tipo === tipoItem.value ? 'border-[#6B705C] bg-[#6B705C]/5 shadow-sm font-bold text-stone-850' : 'border-[#EAE2D6] hover:border-[#CB997E]/40 bg-white text-stone-600'}`}
                 >
-                  <span className="text-2xl block mb-1">{t.icon}</span>
-                  <span className="text-sm font-semibold">{t.label}</span>
+                  <span className="text-2xl block mb-1">{tipoItem.icon}</span>
+                  <span className="text-sm font-semibold">{t(`settings:communityConfig.types.${tipoItem.value}`)}</span>
                 </button>
               ))}
             </div>
@@ -427,23 +429,23 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-stone-700">Capacidad estimada <span className="text-stone-400 font-normal">(personas, opcional)</span></label>
+              <label className="block text-sm font-semibold text-stone-700">{t('settings:communityConfig.capacityLabel')} <span className="text-stone-400 font-normal">{t('settings:communityConfig.capacityUnit')}</span></label>
               <input 
                 type="number" 
                 min="1" 
                 value={capacidad} 
                 onChange={e => setCapacidad(e.target.value)} 
-                placeholder="Ej: 15"
+                placeholder={t('settings:communityConfig.placeholders.capacity')}
                 className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-stone-800" 
               />
             </div>
           </div>
 
           <div className="space-y-3">
-            <label className="block text-sm font-semibold text-stone-700">Etiquetas / Tags</label>
+            <label className="block text-sm font-semibold text-stone-700">{t('settings:communityConfig.tagsLabel')}</label>
             <div className="flex flex-wrap gap-2 min-h-[38px] p-2 bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl">
               {tags.length === 0 ? (
-                <span className="text-stone-400 text-sm italic px-2">No hay etiquetas seleccionadas.</span>
+                <span className="text-stone-400 text-sm italic px-2">{t('settings:communityConfig.noTags')}</span>
               ) : (
                 tags.map(tag => (
                   <TagChip 
@@ -465,13 +467,13 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
                     addTag(tagInput); 
                   } 
                 }}
-                placeholder="Escribe una etiqueta y pulsa Enter..." 
+                placeholder={t('settings:communityConfig.tagPlaceholder')} 
                 className="flex-1 rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-sm text-stone-800" 
               />
             </div>
 
             <div className="space-y-1.5">
-              <span className="block text-xs font-semibold text-stone-450">Sugerencias:</span>
+              <span className="block text-xs font-semibold text-stone-450">{t('settings:communityConfig.suggestions')}</span>
               <div className="flex flex-wrap gap-1.5">
                 {TAG_SUGGESTIONS.filter(s => !tags.includes(s)).map(s => (
                   <button 
@@ -496,7 +498,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
             className="px-6 py-3 bg-[#6B705C] text-white rounded-2xl font-semibold shadow hover:bg-[#5A5E4E] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isExecuting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
-            Guardar cambios
+            {t('settings:communityConfig.saveChanges')}
           </button>
         </div>
       </form>
@@ -504,16 +506,16 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
       {/* ZONA DE PELIGRO */}
       <section className="bg-red-50/50 rounded-3xl p-6 border border-red-200 shadow-sm space-y-4 mt-12">
         <h3 className="text-lg font-serif font-bold text-red-800 flex items-center gap-2">
-          <ShieldAlert className="w-5 h-5" /> Zona de Peligro
+          <ShieldAlert className="w-5 h-5" /> {t('settings:communityConfig.dangerZoneTitle')}
         </h3>
         <p className="text-sm text-red-700">
-          Las siguientes acciones son irreversibles. Ten cuidado al ejecutarlas.
+          {t('settings:communityConfig.dangerZoneDesc')}
         </p>
 
         <div className="border-t border-red-200/50 pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <p className="font-semibold text-red-900 text-sm">Eliminar esta comunidad</p>
-            <p className="text-xs text-red-700/80 mt-0.5">Se eliminará permanentemente el perfil de esta comunidad. Todos los miembros perderán el acceso y sus membresías serán desvinculadas, pero sus perfiles personales no se borrarán.</p>
+            <p className="font-semibold text-red-900 text-sm">{t('settings:communityConfig.deleteTitle')}</p>
+            <p className="text-xs text-red-700/80 mt-0.5">{t('settings:communityConfig.deleteDesc')}</p>
           </div>
           <button 
             type="button" 
@@ -521,7 +523,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
             className="px-5 py-2.5 bg-red-600 text-white rounded-2xl font-semibold hover:bg-red-750 transition-all flex items-center justify-center gap-2 self-start sm:self-center"
           >
             <Trash2 className="w-4 h-4" />
-            Eliminar Comunidad
+            {t('settings:communityConfig.deleteBtn')}
           </button>
         </div>
       </section>
@@ -535,20 +537,28 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
               <div className="p-2 bg-red-50 rounded-xl">
                 <ShieldAlert className="w-6 h-6 text-red-600" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-red-900">¿Estás absolutamente seguro?</h3>
+              <h3 className="text-xl font-serif font-bold text-red-900">{t('settings:communityConfig.deleteModalTitle')}</h3>
             </div>
 
             <div className="space-y-3 text-sm text-stone-600">
               <p>
-                Esta acción es <strong>irreversible</strong>. Al eliminar la comunidad <strong>{comunidad.nombre}</strong> (<code>{comunidad.slug}</code>), se borrará toda la información relacionada:
+                <Trans
+                  i18nKey="settings:communityConfig.deleteModalWarning"
+                  values={{ name: comunidad.nombre, slug: comunidad.slug }}
+                  components={{ 1: <strong />, 3: <strong /> }}
+                />
               </p>
               <ul className="list-disc pl-5 space-y-1">
-                <li>El perfil e identidad de la comunidad.</li>
-                <li>Todas las vinculaciones de miembros.</li>
-                <li>Tareas, proyectos, acuerdos y ofertas del marketplace de este espacio.</li>
+                <li>{t('settings:communityConfig.deleteModalItem1')}</li>
+                <li>{t('settings:communityConfig.deleteModalItem2')}</li>
+                <li>{t('settings:communityConfig.deleteModalItem3')}</li>
               </ul>
               <p className="pt-2">
-                Para confirmar la eliminación, introduce el <strong>slug</strong> de la comunidad (<strong><code>{comunidad.slug}</code></strong>):
+                <Trans
+                  i18nKey="settings:communityConfig.deleteModalConfirmPrompt"
+                  values={{ slug: comunidad.slug }}
+                  components={{ 1: <strong />, 3: <strong /> }}
+                />
               </p>
             </div>
 
@@ -570,7 +580,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
                 }}
                 className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-xl font-semibold transition-colors disabled:opacity-50"
               >
-                Cancelar
+                {t('settings:communityConfig.cancel')}
               </button>
               <button 
                 type="button" 
@@ -579,7 +589,7 @@ export function ConfiguracionComunidadPanel({ onUpdated, onCancel }: { onUpdated
                 className="px-5 py-2 bg-red-600 hover:bg-red-750 text-white rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
               >
                 {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
-                Confirmar eliminación
+                {t('settings:communityConfig.confirmDeleteBtn')}
               </button>
             </div>
           </div>

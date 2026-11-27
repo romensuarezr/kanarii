@@ -6,7 +6,14 @@ const BASELINE_PATH = path.resolve(process.cwd(), 'i18n-baseline.json');
 
 const ALLOWED_VISIBLE_LITERALS = new Set([
   'Kanarii',
+  'KanariiLab',
+  'Kanarii / Tawăzawazt',
   'S3',
+  'WhatsApp',
+  'Telegram',
+  'Tawăzawazt',
+  'Tawazawazt',
+  'ℹ️',
   '→',
   '←',
   '×',
@@ -15,6 +22,12 @@ const ALLOWED_VISIBLE_LITERALS = new Set([
   'ID',
   'UID',
   '•',
+  '—',
+  '–',
+  'v',
+  '🎯',
+  '📖',
+  '✕',
   '🔮',
   '🌱',
   '✨',
@@ -80,6 +93,8 @@ function isNumericOrSymbolic(text: string): boolean {
   if (!trimmed) return true;
   // Solo números, signos de puntuación o emojis aislados
   if (/^[\d\s.,:;+\-*/%()#@!&<>='"]+$/.test(trimmed)) return true;
+  // URLs técnicas
+  if (/^https?:\/\//i.test(trimmed)) return true;
   return false;
 }
 
@@ -347,6 +362,11 @@ function runCLI() {
           console.warn(`⚠️ [WARNING] ${file}:${f.line}:${f.column} (${f.type}) → "${f.literal}"`);
         }
       }
+    }
+  } else {
+    const sorted = Object.entries(currentViolationsByFile).sort((a, b) => b[1].count - a[1].count);
+    for (const [file, data] of sorted) {
+      console.log(`  ${data.count.toString().padStart(3)} violaciones: ${file}`);
     }
   }
 

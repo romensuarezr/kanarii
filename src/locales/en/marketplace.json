@@ -151,5 +151,64 @@
     "noHistory": "No history recorded for this agreement.",
     "proposeAmendment": "Propose Amendment",
     "close": "Close"
+  },
+  "agreementModal": {
+    "title": "Agreement Proposal",
+    "for": "For:",
+    "exchangeType": "Exchange Type",
+    "types": {
+      "tiempo": "Time Exchange (Hours)",
+      "especie": "In-kind Exchange",
+      "economico": "Financial Contribution",
+      "regalo": "Gift / Donation"
+    },
+    "terms": "Proposal terms *",
+    "termsPlaceholder": "E.g. I propose exchanging 2h of yoga classes for 1 box of vegetables...",
+    "proposedDate": "Proposed date (optional)",
+    "cancel": "Cancel",
+    "sending": "Sending...",
+    "sendProposal": "Send Proposal",
+    "closeAria": "Close modal"
+  },
+  "tablonModal": {
+    "titlePlaceholder": "Post title",
+    "by": "By",
+    "member": "Member",
+    "manage": "Manage:",
+    "markActive": "Mark as Active",
+    "markInProgress": "Mark In Progress",
+    "markResolved": "Mark as Resolved",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "descPlaceholder": "Describe what you need or offer...",
+    "responses": "Responses",
+    "noResponses": "No responses yet. Be the first to participate!",
+    "writeResponsePlaceholder": "Write a response...",
+    "closeAria": "Close modal",
+    "categories": {
+      "habilidad": "Skill",
+      "recurso": "Resource",
+      "espacio": "Space",
+      "apoyo_emocional": "Support",
+      "otro": "Other"
+    }
+  },
+  "serviceDetail": {
+    "paused": "Paused",
+    "talent": "Talent",
+    "resource": "Resource",
+    "offeredBy": "Offered by",
+    "location": "Location",
+    "availability": "Availability / Schedule",
+    "pause": "Pause",
+    "resume": "Resume",
+    "edit": "Edit",
+    "delete": "Delete service",
+    "proposeAgreement": "Propose Agreement / Request",
+    "pausedNotice": "This service is temporarily paused and does not accept new agreement requests.",
+    "cancel": "Cancel",
+    "closeAria": "Close modal"
   }
 }

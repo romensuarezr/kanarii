@@ -37,6 +37,10 @@
     "accessError": "Access error",
     "proposalNotFound": "The proposal does not exist or does not belong to your active community.",
     "close": "Close",
+    "pulseOfCommunity": "Community Pulse",
+    "socraticJourney": "Socratic Journey",
+    "integrated": "integrated",
+    "discardedProposal": "Discarded Proposal",
     "proposalEvolvedSuccess": "Proposal evolved successfully",
     "responseTypes": {
       "objecion": "Objection",
@@ -148,5 +152,43 @@
       "updateActa": "Update Minutes",
       "createActa": "Create Minutes"
     }
+  },
+  "socraticResponse": {
+    "title": "Your Socratic Response",
+    "modifying": "Modifying previous response",
+    "participating": "Community participation",
+    "s3Note": "In S3, we look for proposals good enough for now and safe enough to try. An objection is not a personal preference, it is a gift to the community to prevent real harm.",
+    "options": {
+      "consentimiento": {
+        "label": "Consent",
+        "desc": "I see no reason why this would be harmful."
+      },
+      "preocupacion": {
+        "label": "Concern",
+        "desc": "I consent, but wish to record this potential risk."
+      },
+      "duda": {
+        "label": "Question / Clarification",
+        "desc": "I need more information to decide."
+      },
+      "objecion": {
+        "label": "Objection",
+        "desc": "I have an argument for why this will cause harm."
+      }
+    },
+    "damageLabel": "Harm argument (Required)",
+    "damagePlaceholder": "Explain why this proposal will cause harm to the community...",
+    "questionLabel": "Question / Clarification (Required)",
+    "questionPlaceholder": "What do you need to understand better?",
+    "contextLabel": "Additional context",
+    "contextPlaceholder": "Write your concerns here...",
+    "cancel": "Cancel",
+    "send": "Submit Response",
+    "closeAria": "Close modal"
+  },
+  "authorRole": "Author",
+  "clarificationThread": {
+    "noMessagesYet": "No clarifications in this thread yet.",
+    "onlyAuthorCanReply": "Only the proposal author and whoever raised the {{type}} can reply in this thread."
   }
 }

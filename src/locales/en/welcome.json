@@ -299,5 +299,26 @@
   "publicFooter": {
     "quote": "Alone we can achieve great things, but together we are invincible.",
     "rights": "Kanarii • Free & Open Source for Community Autonomy"
+  },
+  "contextConsent": {
+    "backHome": "Back to home",
+    "title": "Our Commitment and Intention",
+    "p1": "Welcome, dear tribe. You are about to create your community profile. Far from being a mere formality, this is a step to recognize each other, knowing where we support and care for each other.",
+    "p2": "is the reflection of a deep intention. This is not a specific event, it is a channel to gather from time to time and unite even more as a tribe. It is a way and experience of life guided by values such as community sovereignty, love for life, for nature and the search for balances between our energies.",
+    "p3": "Being part of this community requires commitment and involvement over time. The information we share in the following steps is essential to map our life cycles, wisdom, needs and current energy. It will help us trace the \"cosmic spider web\" that integrates and connects everything.",
+    "p4": "\"People alone can become powerful, but together we are invincible.\"",
+    "p5": "We will treat your information with community security. Everything created here is nourished by the tribe and for the tribe.",
+    "acceptBtn": "I feel the call and it resonates"
+  },
+  "onboardingChat": {
+    "welcomeTitle": "Welcome Conversation",
+    "backPrevious": "Back to previous step"
+  },
+  "tourAnimations": {
+    "liaName": "Lia Arana",
+    "liaLocation": "Aran Valley",
+    "liaQuote": "\"I seek a slow life connected to the rhythm of the earth and care.\"",
+    "goodEnoughTagline": "\"Good enough for now, safe enough to try.\"",
+    "recordedBadge": "Recorded"
   }
 }

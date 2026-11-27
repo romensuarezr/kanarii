@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RefreshCw, LayoutList, Users, Clock, ChevronUp, ChevronDown } from 'lucide-react';
 import { Tarea } from '../../../lib/appService';
 
@@ -15,6 +16,7 @@ export default function TareasGlobalesSubTab({
   getMemberName,
   onReload,
 }: TareasGlobalesSubTabProps) {
+  const { t } = useTranslation(['admin', 'common']);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
 
   const requestSort = (key: string) => {
@@ -48,7 +50,7 @@ export default function TareasGlobalesSubTab({
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] overflow-hidden">
       <div className="p-6 border-b border-stone-100 bg-stone-50/50 flex justify-between items-center">
-        <h2 className="font-serif text-xl text-[#4A4E4D]">Todas las Tareas</h2>
+        <h2 className="font-serif text-xl text-[#4A4E4D]">{t('admin:globalTasks.title')}</h2>
         <button onClick={onReload} className="p-2 text-stone-400 hover:text-[#4A4E4D] transition-colors">
           <RefreshCw className={`w-4 h-4 ${loadingTareas ? 'animate-spin' : ''}`} />
         </button>
@@ -59,33 +61,33 @@ export default function TareasGlobalesSubTab({
             <tr>
               <th className="px-6 py-4 cursor-pointer hover:text-stone-600 group" onClick={() => requestSort('titulo')}>
                 <div className="flex items-center gap-1">
-                  Título {sortConfig?.key === 'titulo' ? (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />) : <LayoutList className="w-3 h-3 opacity-0 group-hover:opacity-100" />}
+                  {t('admin:globalTasks.colTitle')} {sortConfig?.key === 'titulo' ? (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />) : <LayoutList className="w-3 h-3 opacity-0 group-hover:opacity-100" />}
                 </div>
               </th>
               <th className="px-6 py-4 cursor-pointer hover:text-stone-600 group" onClick={() => requestSort('asignadaA')}>
                 <div className="flex items-center gap-1">
-                  Responsable {sortConfig?.key === 'asignadaA' ? (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />) : <Users className="w-3 h-3 opacity-0 group-hover:opacity-100" />}
+                  {t('admin:globalTasks.colAssignee')} {sortConfig?.key === 'asignadaA' ? (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />) : <Users className="w-3 h-3 opacity-0 group-hover:opacity-100" />}
                 </div>
               </th>
               <th className="px-6 py-4 cursor-pointer hover:text-stone-600 group" onClick={() => requestSort('estado')}>
                 <div className="flex items-center gap-1">
-                  Estado {sortConfig?.key === 'estado' ? (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />) : <Clock className="w-3 h-3 opacity-0 group-hover:opacity-100" />}
+                  {t('admin:globalTasks.colStatus')} {sortConfig?.key === 'estado' ? (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />) : <Clock className="w-3 h-3 opacity-0 group-hover:opacity-100" />}
                 </div>
               </th>
-              <th className="px-6 py-4">Prioridad</th>
+              <th className="px-6 py-4">{t('admin:globalTasks.colPriority')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-stone-100">
             {loadingTareas ? (
               <tr>
                 <td colSpan={4} className="px-6 py-12 text-center text-stone-400">
-                  <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" /> Cargando...
+                  <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" /> {t('admin:globalTasks.loading')}
                 </td>
               </tr>
             ) : sortedTareas.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-12 text-center text-stone-400 italic">
-                  No hay tareas registradas
+                  {t('admin:globalTasks.empty')}
                 </td>
               </tr>
             ) : (
@@ -93,7 +95,7 @@ export default function TareasGlobalesSubTab({
                 <tr key={tarea.id} className="hover:bg-[#FDFBF7] transition-colors">
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-stone-800">{tarea.titulo}</div>
-                    {tarea.proyectoId && <div className="text-[10px] text-teal-600 font-bold uppercase tracking-tighter mt-0.5">Proyecto vinculado</div>}
+                    {tarea.proyectoId && <div className="text-[10px] text-teal-600 font-bold uppercase tracking-tighter mt-0.5">{t('admin:globalTasks.linkedProject')}</div>}
                   </td>
                   <td className="px-6 py-4 text-sm text-stone-600">
                     {getMemberName(tarea.asignadaA)}
@@ -113,7 +115,7 @@ export default function TareasGlobalesSubTab({
                       tarea.prioridad === 'media' ? 'text-amber-500' : 
                       'text-stone-400'
                     }`}>
-                      {tarea.prioridad?.toUpperCase() || 'NORMAL'}
+                      {tarea.prioridad?.toUpperCase() || t('admin:globalTasks.priorityNormal')}
                     </span>
                   </td>
                 </tr>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { Ficha, ensureSeedData, getUserFicha, Acuerdo, Servicio } from '../lib/appService';
 import { Leaf, Users, X, Activity, FolderKanban, Handshake, Scale, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -23,6 +24,7 @@ import TareasProyectosTab from '../components/AdminPanel/tabs/TareasProyectosTab
 import GobernanzaTab from '../components/AdminPanel/tabs/GobernanzaTab';
 
 export function AdminPanel() {
+  const { t } = useTranslation(['admin', 'common']);
   const { appUser, logout } = useAuth();
   const { currentCommunityId, comunidad } = useComunidad();
   const navigate = useNavigate();
@@ -39,11 +41,11 @@ export function AdminPanel() {
   const isCommunityAdmin = !!(isAdmin || (comunidad?.adminUids && Array.isArray(comunidad.adminUids) && comunidad.adminUids.includes(appUser?.uid || '')));
 
   const tabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: Activity },
-    { id: 'comunidad', label: 'Comunidad', icon: Users },
-    { id: 'tareas-proyectos', label: 'Tareas & Proyectos', icon: FolderKanban },
-    { id: 'marketplace-acuerdos', label: 'Marketplace & Acuerdos', icon: Handshake },
-    { id: 'gobernanza', label: 'Gobernanza', icon: Scale },
+    { id: 'dashboard', label: t('admin:tabs.dashboard'), icon: Activity },
+    { id: 'comunidad', label: t('admin:tabs.comunidad'), icon: Users },
+    { id: 'tareas-proyectos', label: t('admin:tabs.tareasProyectos'), icon: FolderKanban },
+    { id: 'marketplace-acuerdos', label: t('admin:tabs.marketplaceAcuerdos'), icon: Handshake },
+    { id: 'gobernanza', label: t('admin:tabs.gobernanza'), icon: Scale },
   ];
 
   const { members, loading: loadingMembers, getMemberName } = useCommunityMembers(currentCommunityId);
@@ -86,7 +88,7 @@ export function AdminPanel() {
       const fullProfile = await getUserFicha(userId);
       setSelectedFicha(fullProfile);
     } catch (err) {
-      toast.error('No se pudo cargar el perfil completo');
+      toast.error(t('admin:toasts.profileError'));
     }
   };
   return (
@@ -95,11 +97,11 @@ export function AdminPanel() {
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-3">
             <Leaf className="text-[#6B705C] w-8 h-8" />
-            <h1 className="text-3xl font-serif text-text-heading">Panel de Control Admin</h1>
+            <h1 className="text-3xl font-serif text-text-heading">{t('admin:title')}</h1>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <button onClick={() => navigate('/cruce')} className="px-4 py-2 bg-white border border-[#CB997E] hover:bg-[#F9F7F1] text-[#CB997E] rounded-xl text-sm font-medium transition-colors">
-              Cruce de Perfiles
+              {t('admin:cruce')}
             </button>
           </div>
         </div>
@@ -112,9 +114,13 @@ export function AdminPanel() {
               <CheckCircle2 className="w-6 h-6" />
             </div>
             <div className="flex-1 space-y-1">
-              <h3 className="text-lg font-serif font-bold text-[#E07A5F]">¡Comunidad creada con éxito!</h3>
+              <h3 className="text-lg font-serif font-bold text-[#E07A5F]">{t('admin:welcomeBanner.title')}</h3>
               <p className="text-stone-600 text-sm leading-relaxed font-sans">
-                Te damos la bienvenida a <strong>{searchParams.get('nombre') || comunidad?.nombre || 'tu nueva comunidad'}</strong>. Ya eres el/la fundador/a de este espacio. Puedes empezar a invitar a miembros, configurar proyectos, gestionar el tablón y la economía local.
+                <Trans
+                  i18nKey="admin:welcomeBanner.body"
+                  values={{ name: searchParams.get('nombre') || comunidad?.nombre || 'tu nueva comunidad' }}
+                  components={{ 1: <strong /> }}
+                />
               </p>
               <div className="pt-2 flex gap-4">
                 <a
@@ -123,7 +129,7 @@ export function AdminPanel() {
                   rel="noopener noreferrer"
                   className="text-sm font-bold text-[#E07A5F] hover:text-[#C55A3F] flex items-center gap-1 transition-colors"
                 >
-                  Ver ficha pública <ArrowRight className="w-4 h-4" />
+                  {t('admin:welcomeBanner.viewPublic')} <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
             </div>
@@ -136,7 +142,7 @@ export function AdminPanel() {
                 setSearchParams(newParams);
               }}
               className="text-stone-400 hover:text-stone-600 p-1.5 rounded-lg hover:bg-stone-100 transition-all shrink-0 font-sans"
-              aria-label="Cerrar banner"
+              aria-label={t('admin:welcomeBanner.close')}
             >
               <X className="w-5 h-5" />
             </button>
@@ -220,9 +226,9 @@ export function AdminPanel() {
           setServicioToDeactivate(null);
           try {
             await editServicio(target.id, { isActive: false });
-            toast.success('Servicio desactivado correctamente');
+            toast.success(t('admin:toasts.serviceDeactivated'));
           } catch (err) {
-            toast.error('No se pudo desactivar el servicio');
+            toast.error(t('admin:toasts.serviceDeactivateError'));
           }
         }}
         members={members}

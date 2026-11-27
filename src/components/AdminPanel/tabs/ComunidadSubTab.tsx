@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Search, Filter, RefreshCw, UserMinus, Clock } from 'lucide-react';
 import {
   CommunityMember,
@@ -46,6 +47,7 @@ export default function ComunidadSubTab({
   currentCommunityId,
   appUserId,
 }: ComunidadSubTabProps) {
+  const { t } = useTranslation(['admin', 'common']);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<'todos' | MembershipType>('todos');
   const [bajas, setBajas] = useState<FeedbackSalida[]>([]);
@@ -116,7 +118,7 @@ export default function ComunidadSubTab({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="Buscar por nombre o rol..."
+              placeholder={t('admin:membersTable.searchPlaceholder')}
               className="w-full pl-10 pr-4 py-2 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:ring-2 focus:ring-[#EAE2D6] outline-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -134,7 +136,7 @@ export default function ComunidadSubTab({
                     : 'bg-white text-stone-500 border-stone-200 hover:border-stone-300'
                 }`}
               >
-                {role === 'todos' ? 'Todos' : MEMBERSHIP_TYPE_LABELS[role]}
+                {role === 'todos' ? t('admin:membersTable.filterAll') : MEMBERSHIP_TYPE_LABELS[role]}
               </button>
             ))}
           </div>
@@ -144,23 +146,23 @@ export default function ComunidadSubTab({
           <table className="w-full text-left">
             <thead className="bg-stone-50 text-stone-400 text-[10px] uppercase font-bold tracking-widest">
               <tr>
-                <th className="px-6 py-4">Nombre / Rol en Comunidad</th>
-                <th className="px-6 py-4">Permiso / Vínculo</th>
-                <th className="px-6 py-4">Antigüedad</th>
-                <th className="px-6 py-4 text-right">Acciones</th>
+                <th className="px-6 py-4">{t('admin:membersTable.colNameRole')}</th>
+                <th className="px-6 py-4">{t('admin:membersTable.colPermissionBond')}</th>
+                <th className="px-6 py-4">{t('admin:membersTable.colTenure')}</th>
+                <th className="px-6 py-4 text-right">{t('admin:membersTable.colActions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
               {loadingMembers ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-stone-400">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" /> Cargando comunidad...
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" /> {t('admin:membersTable.loading')}
                   </td>
                 </tr>
               ) : filteredMembers.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-stone-400 italic">
-                    No se encontraron miembros
+                    {t('admin:membersTable.empty')}
                   </td>
                 </tr>
               ) : (
@@ -173,7 +175,7 @@ export default function ComunidadSubTab({
                     <tr key={member.userId} className="hover:bg-[#FDFBF7] transition-colors group">
                       <td className="px-6 py-4">
                         <div className="font-medium text-stone-800">{member.nombre}</div>
-                        <div className="text-xs text-stone-400">{member.rol_comunidad || 'Sin rol definido'}</div>
+                        <div className="text-xs text-stone-400">{member.rol_comunidad || t('admin:membersTable.noRole')}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap items-center gap-2">
@@ -182,7 +184,7 @@ export default function ComunidadSubTab({
                             aria-label={`Permiso de ${member.nombre}`}
                             value={currentRole}
                             disabled={isUpdating || isLastAdminSelf}
-                            title={isLastAdminSelf ? 'Eres el último admin del nodo' : 'Cambiar permiso'}
+                            title={isLastAdminSelf ? t('admin:membersTable.lastAdminSelf') : t('admin:membersTable.changePermission')}
                             onChange={(e) => handleRoleChange(member, e.target.value as CanonicalMemberRole)}
                             className="bg-stone-50 border border-stone-200 text-stone-700 rounded-lg px-2 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-stone-300 disabled:opacity-60 disabled:cursor-not-allowed"
                           >
@@ -196,7 +198,7 @@ export default function ComunidadSubTab({
                             aria-label={`Vínculo de ${member.nombre}`}
                             value={currentMembershipType}
                             disabled={isUpdating}
-                            title="Cambiar vínculo"
+                            title={t('admin:membersTable.changeBond')}
                             onChange={(e) => handleMembershipTypeChange(member, e.target.value as MembershipType)}
                             className="bg-stone-50 border border-stone-200 text-stone-700 rounded-lg px-2 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-stone-300 disabled:opacity-60 disabled:cursor-not-allowed"
                           >
@@ -208,13 +210,13 @@ export default function ComunidadSubTab({
                           </select>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-stone-500">{member.antiguedad_anos || 0} años</td>
+                      <td className="px-6 py-4 text-sm text-stone-500">{member.antiguedad_anos || 0} {t('admin:membersTable.years')}</td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-1">
                           <button
                             onClick={() => onSelectFicha(member.userId)}
                             className="p-2 hover:bg-[#EAE2D6]/30 text-stone-400 hover:text-[#4A4E4D] rounded-lg transition-all"
-                            title="Ver Ficha"
+                            title={t('admin:membersTable.viewFicha')}
                           >
                             <Search className="w-4 h-4" />
                           </button>
@@ -222,7 +224,7 @@ export default function ComunidadSubTab({
                             <button
                               onClick={() => onExpelMember(member)}
                               className="p-2 hover:bg-red-50 text-stone-400 hover:text-red-600 rounded-lg transition-all"
-                              title="Expulsar Miembro"
+                              title={t('admin:membersTable.expelMember')}
                             >
                               <UserMinus className="w-4 h-4" />
                             </button>
@@ -243,7 +245,7 @@ export default function ComunidadSubTab({
         <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] overflow-hidden p-6">
           <div className="flex items-center gap-2 mb-4">
             <Clock className="w-5 h-5 text-red-500" />
-            <h2 className="font-serif text-xl text-[#4A4E4D]">Bajas Recientes</h2>
+            <h2 className="font-serif text-xl text-[#4A4E4D]">{t('admin:membersTable.recentDepartures')}</h2>
           </div>
           <div className="space-y-4">
             {bajas.map((baja) => (
