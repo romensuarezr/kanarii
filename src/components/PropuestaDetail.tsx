@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Propuesta, PropuestaRespuesta, PropuestaHilo } from '../lib/appService';
 import { usePropuestaDetail } from '../hooks/usePropuestaDetail';
 import { useCommunityMembers } from '../hooks/useCommunityMembers';
@@ -25,6 +26,7 @@ export function PropuestaDetail({
   onClose,
   onResponseClick
 }: PropuestaDetailProps) {
+  const { t, i18n } = useTranslation('governance');
   const { propuesta, respuestas, hilos, loading, error, isAuthor } = usePropuestaDetail(propuestaId);
   const { participantes } = usePresenciaEnSala(propuestaId);
   const { members } = useCommunityMembers(propuesta?.communityId ?? null);
@@ -36,7 +38,7 @@ export function PropuestaDetail({
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
         <div className="bg-white p-8 rounded-3xl animate-pulse text-stone-500 font-medium">
-          Cargando deliberación...
+          {t('governance.loadingDeliberation')}
         </div>
       </div>
     );
@@ -54,16 +56,16 @@ export function PropuestaDetail({
         >
           <div className="flex items-center gap-3 text-rose-600">
             <AlertCircle className="w-8 h-8" />
-            <h3 className="font-serif text-2xl text-stone-800">Error de acceso</h3>
+            <h3 className="font-serif text-2xl text-stone-800">{t('governance.accessError')}</h3>
           </div>
           <p className="text-stone-600 text-sm text-center leading-relaxed">
-            {error?.message || 'La propuesta no existe o no pertenece a tu comunidad activa.'}
+            {error?.message || t('governance.proposalNotFound')}
           </p>
           <button 
             onClick={onClose} 
             className="w-full py-4 bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold text-xs uppercase tracking-widest rounded-2xl transition-all shadow-sm active:scale-95"
           >
-            Cerrar
+            {t('governance.close')}
           </button>
         </div>
       </div>
@@ -75,18 +77,18 @@ export function PropuestaDetail({
   const handleIntegrate = async (newDescription: string, note: string) => {
     if (!isAuthor) return;
     await integrateObjeciones(propuestaId, newDescription, note, {
-      successMessage: 'Propuesta evolucionada con éxito'
+      successMessage: t('governance.proposalEvolvedSuccess')
     });
     setShowIntegrationModal(false);
   };
 
   const getResponseStyle = (type: string) => {
     switch (type) {
-      case 'objecion': return { icon: AlertCircle, bg: 'bg-rose-50', border: 'border-rose-100', text: 'text-rose-700', iconColor: 'text-rose-600', label: 'Objeción' };
-      case 'duda': return { icon: HelpCircle, bg: 'bg-sky-50', border: 'border-sky-100', text: 'text-sky-700', iconColor: 'text-sky-600', label: 'Duda' };
-      case 'preocupacion': return { icon: MessageSquare, bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-700', iconColor: 'text-amber-600', label: 'Preocupación' };
-      case 'consentimiento': return { icon: CheckCircle2, bg: 'bg-emerald-50', border: 'border-emerald-100', text: 'text-emerald-700', iconColor: 'text-emerald-600', label: 'Consentimiento' };
-      default: return { icon: MessageSquare, bg: 'bg-stone-50', border: 'border-stone-100', text: 'text-stone-700', iconColor: 'text-stone-600', label: 'Comentario' };
+      case 'objecion': return { icon: AlertCircle, bg: 'bg-rose-50', border: 'border-rose-100', text: 'text-rose-700', iconColor: 'text-rose-600', label: t('governance.responseTypes.objecion') };
+      case 'duda': return { icon: HelpCircle, bg: 'bg-sky-50', border: 'border-sky-100', text: 'text-sky-700', iconColor: 'text-sky-600', label: t('governance.responseTypes.duda') };
+      case 'preocupacion': return { icon: MessageSquare, bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-700', iconColor: 'text-amber-600', label: t('governance.responseTypes.preocupacion') };
+      case 'consentimiento': return { icon: CheckCircle2, bg: 'bg-emerald-50', border: 'border-emerald-100', text: 'text-emerald-700', iconColor: 'text-emerald-600', label: t('governance.responseTypes.consentimiento') };
+      default: return { icon: MessageSquare, bg: 'bg-stone-50', border: 'border-stone-100', text: 'text-stone-700', iconColor: 'text-stone-600', label: t('governance.responseTypes.comentario') };
     }
   };
 
@@ -108,12 +110,12 @@ export function PropuestaDetail({
               {propuesta.status === 'acordada' ? (
                 <>
                   <CheckCircle2 className="w-6 h-6 text-emerald-300" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-emerald-200">Acuerdo Cálido</span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-emerald-200">{t('governance.warmAgreement')}</span>
                 </>
               ) : (
                 <>
                   <Gavel className="w-6 h-6 text-[#D4C3A3]" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-[#D4C3A3]">Proceso de Consentimiento</span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-[#D4C3A3]">{t('governance.consentProcess')}</span>
                 </>
               )}
             </div>
@@ -125,16 +127,16 @@ export function PropuestaDetail({
           <div className="flex flex-wrap gap-4 items-center">
              <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/20">
                <User className={`w-4 h-4 ${propuesta.status === 'acordada' ? 'text-emerald-300' : 'text-[#D4C3A3]'}`} />
-               <span className="text-xs font-medium">Propuesto por {isAuthor ? 'ti' : 'un miembro'}</span>
+               <span className="text-xs font-medium">{t('governance.proposedBy', { author: isAuthor ? t('governance.you') : t('governance.aMember') })}</span>
              </div>
              <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/20">
                <Clock className={`w-4 h-4 ${propuesta.status === 'acordada' ? 'text-emerald-300' : 'text-[#D4C3A3]'}`} />
-               <span className="text-xs font-medium">Creado el {format(propuesta.createdAt.toDate(), "d 'de' MMMM", { locale: es })}</span>
+               <span className="text-xs font-medium">{t('governance.createdOn', { date: format(propuesta.createdAt.toDate(), "d 'de' MMMM", { locale: es }) })}</span>
              </div>
              {propuesta.status === 'acordada' && (
                <div className="flex items-center gap-2 bg-emerald-500/20 px-3 py-1.5 rounded-full border border-emerald-500/30 text-emerald-200 animate-in fade-in duration-300">
                  <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                 <span className="text-xs font-semibold uppercase tracking-wider">Acuerdo Cálido</span>
+                 <span className="text-xs font-semibold uppercase tracking-wider">{t('governance.warmAgreement')}</span>
                </div>
              )}
           </div>
@@ -148,13 +150,13 @@ export function PropuestaDetail({
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div className="space-y-1">
-                <h4 className="text-sm font-bold text-emerald-950">Acuerdo Cálido Activo</h4>
+                <h4 className="text-sm font-bold text-emerald-950">{t('governance.activeAgreement')}</h4>
                 <p className="text-xs text-stone-600 leading-relaxed">
-                  Esta propuesta ha sido adoptada formalmente por consentimiento de la comunidad. Es un Acuerdo Cálido vivo que guía nuestra convivencia y decisiones.
+                  {t('governance.activeAgreementDesc')}
                 </p>
                 {propuesta.reviewDate && (
                   <p className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider pt-2">
-                    Próxima revisión: {format(propuesta.reviewDate.toDate ? propuesta.reviewDate.toDate() : new Date(propuesta.reviewDate), "d 'de' MMMM 'de' yyyy", { locale: es })}
+                    {t('governance.nextReview')}: {format(propuesta.reviewDate.toDate ? propuesta.reviewDate.toDate() : new Date(propuesta.reviewDate), "d 'de' MMMM 'de' yyyy", { locale: es })}
                   </p>
                 )}
               </div>
@@ -163,18 +165,18 @@ export function PropuestaDetail({
           {/* Driver & Reason */}
           <section className="space-y-4">
             <div>
-              <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2">Propósito (Purpose)</h4>
+              <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2">{t('governance.purpose')}</h4>
               <p className="text-stone-700 leading-relaxed text-lg italic">"{propuesta.purpose}"</p>
             </div>
             <div>
-              <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2">La Propuesta v{propuesta.version || 1}</h4>
+              <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2">{`${t('governance.theProposal')} v${propuesta.version || 1}`}</h4>
               <p className="text-stone-700 leading-relaxed bg-white p-6 rounded-3xl border border-[#EAE2D6] shadow-sm whitespace-pre-wrap">
                 {propuesta.description}
               </p>
             </div>
             {propuesta.integrationNote && (
               <div className="bg-teal-50/50 p-4 rounded-2xl border border-teal-100/50">
-                <h4 className="text-[9px] font-black text-teal-700 uppercase tracking-[0.2em] mb-1 text-teal-800">Nota de Integración</h4>
+                <h4 className="text-[9px] font-black text-teal-700 uppercase tracking-[0.2em] mb-1 text-teal-800">{t('governance.integrationNote')}</h4>
                 <p className="text-stone-600 text-xs italic">"{propuesta.integrationNote}"</p>
               </div>
             )}
@@ -192,7 +194,7 @@ export function PropuestaDetail({
             {respuestasConTexto.length > 0 && (
               <div className="space-y-4 pt-4">
                 <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] ml-1">
-                  Posiciones registradas
+                  {t('governance.registeredPositions')}
                 </h4>
                 <div className="grid grid-cols-1 gap-4">
                   {respuestasConTexto.map((r, idx) => {
@@ -211,7 +213,7 @@ export function PropuestaDetail({
                             <div className="flex items-center gap-2">
                               <Icon className={`w-4 h-4 ${style.iconColor}`} />
                               <span className={`text-[10px] font-black ${style.text} uppercase tracking-widest`}>
-                                {style.label} · {member?.nombre || 'Miembro'}
+                                {`${style.label} · ${member?.nombre || t('governance.aMember')}`}
                               </span>
                             </div>
                             <span className="text-[9px] font-medium text-stone-400 uppercase">{dateLabel}</span>
@@ -242,13 +244,13 @@ export function PropuestaDetail({
                         {r.type === 'duda' && r.memberId === currentUserId && (
                           <div className="mt-2 p-4 bg-sky-50 border border-sky-100 rounded-2xl flex justify-between items-center gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
                             <p className="text-xs text-sky-700">
-                              ¿Se aclaró tu duda? Recuerda actualizar tu posición para que la propuesta pueda avanzar.
+                              {t('governance.clarifiedQuestion')}
                             </p>
                             <button
                               onClick={() => setShowResponseModal(true)}
                               className="text-xs font-black text-sky-600 hover:text-sky-700 uppercase tracking-widest hover:underline shrink-0"
                             >
-                              Actualizar postura
+                              {t('governance.updateStance')}
                             </button>
                           </div>
                         )}
@@ -261,7 +263,7 @@ export function PropuestaDetail({
 
             {participantes.length > 0 && (
               <div className="flex items-center gap-3 bg-white/50 border border-[#EAE2D6] p-3 rounded-2xl animate-in fade-in duration-300">
-                <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">En sala ahora:</span>
+                <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">{t('governance.inRoomNow')}</span>
                 <div className="flex -space-x-2 overflow-hidden">
                   {participantes.map((p) => (
                     <div key={p.uid} className="relative inline-block" title={p.nombre}>
@@ -300,22 +302,22 @@ export function PropuestaDetail({
                   onClick={() => setShowResponseModal(true)}
                   className="w-full py-5 bg-[#4A4E4D] text-white font-black uppercase tracking-widest rounded-[1.5rem] hover:bg-black transition-all shadow-xl active:scale-95 flex justify-center items-center gap-3"
                 >
-                  Dar mi respuesta socrática <Send className="w-5 h-5" />
+                  {t('governance.giveSocraticResponse')} <Send className="w-5 h-5" />
                 </button>
               ) : (
                 <div className="flex items-center justify-between p-4 bg-teal-50 border border-teal-100 rounded-2xl">
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-teal-600" />
                     <div>
-                      <p className="text-xs font-bold text-teal-800 uppercase tracking-widest">Ya has participado</p>
-                      <p className="text-[10px] text-teal-600 uppercase">Tu posición: {userResponse.type}</p>
+                      <p className="text-xs font-bold text-teal-800 uppercase tracking-widest">{t('governance.alreadyParticipated')}</p>
+                      <p className="text-[10px] text-teal-600 uppercase">{t('governance.yourPosition')} {userResponse.type}</p>
                     </div>
                   </div>
                   <button 
                     onClick={() => setShowResponseModal(true)}
                     className="text-[10px] font-black text-teal-700 uppercase tracking-widest hover:underline"
                   >
-                    Cambiar posición
+                    {t('governance.changePosition')}
                   </button>
                 </div>
               )}
@@ -327,13 +329,13 @@ export function PropuestaDetail({
               onClick={() => setShowIntegrationModal(true)}
               className="w-full mt-4 py-4 bg-amber-50 text-amber-700 border border-amber-200 font-bold text-xs uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 transition-all hover:bg-amber-100 shadow-sm active:scale-95"
             >
-              <AlertCircle className="w-4 h-4" /> Integrar objeciones activas
+              <AlertCircle className="w-4 h-4" /> {t('governance.integrateActiveObjections')}
             </button>
           )}
 
           {propuesta.status === 'acordada' && (
             <div className="w-full py-5 bg-teal-600 text-white font-black uppercase tracking-widest rounded-[1.5rem] flex justify-center items-center gap-3 shadow-lg">
-              <CheckCircle2 className="w-6 h-6" /> Propuesta Acordada por Consentimiento
+              <CheckCircle2 className="w-6 h-6" /> {t('governance.agreedByConsent')}
             </div>
           )}
         </div>
@@ -368,6 +370,7 @@ interface IntegrationModalProps {
 }
 
 function IntegrationModal({ initialDescription, onClose, onConfirm }: IntegrationModalProps) {
+  const { t } = useTranslation('governance');
   const [description, setDescription] = useState(initialDescription);
   const [note, setNote] = useState('');
 
@@ -380,7 +383,7 @@ function IntegrationModal({ initialDescription, onClose, onConfirm }: Integratio
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <RefreshCw className="w-6 h-6 text-amber-600" />
-            <h3 className="font-serif text-2xl text-stone-800">Integrar Objeciones</h3>
+            <h3 className="font-serif text-2xl text-stone-800">{t('governance.modal.integrateTitle')}</h3>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-stone-200 rounded-full transition-colors">
             <X className="w-5 h-5 text-stone-400" />
@@ -388,28 +391,28 @@ function IntegrationModal({ initialDescription, onClose, onConfirm }: Integratio
         </div>
 
         <p className="text-xs text-stone-500 leading-relaxed">
-          Edita la propuesta para resolver las objeciones planteadas. Al publicar esta versión, se resetearán todas las respuestas anteriores para iniciar un nuevo ciclo de consentimiento.
+          {t('governance.modal.integrateDesc')}
         </p>
 
         <div className="space-y-4">
           <div>
-            <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 block">Nueva Propuesta</label>
+            <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 block">{t('governance.modal.newProposalVersion')}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full h-40 p-4 bg-white border border-stone-200 rounded-2xl text-sm text-stone-700 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all resize-none"
-              placeholder="Describe la versión mejorada..."
+              placeholder={t('governance.modal.versionPlaceholder')}
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 block">Nota de Integración (Opcional)</label>
+            <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-2 block">{t('governance.modal.integrationNoteOptional')}</label>
             <input
               type="text"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               className="w-full p-4 bg-white border border-stone-200 rounded-2xl text-sm text-stone-700 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all"
-              placeholder="Ej: He ajustado el punto 3 según lo hablado..."
+              placeholder={t('governance.modal.integrationPlaceholder')}
             />
           </div>
         </div>
@@ -419,14 +422,14 @@ function IntegrationModal({ initialDescription, onClose, onConfirm }: Integratio
             onClick={onClose}
             className="flex-1 py-4 text-stone-500 font-bold text-xs uppercase tracking-widest rounded-2xl hover:bg-stone-100 transition-all"
           >
-            Cancelar
+            {t('governance.modal.cancel')}
           </button>
           <button 
             onClick={() => onConfirm(description, note)}
             disabled={!description.trim()}
             className="flex-2 py-4 px-8 bg-amber-600 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-amber-700 transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:active:scale-100"
           >
-            Publicar v-integrada
+            {t('governance.modal.publishIntegrated')}
           </button>
         </div>
       </div>

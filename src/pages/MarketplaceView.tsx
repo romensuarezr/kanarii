@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useComunidad } from '../contexts/ComunidadContext';
@@ -32,6 +33,7 @@ const CATEGORIAS_MARKET = [
 ];
 
 export default function MarketplaceView() {
+  const { t } = useTranslation('marketplace');
   const { appUser } = useAuth();
   const { currentCommunityId } = useComunidad();
   const { servicios, loading: loadingServicios } = useServicios(currentCommunityId || '');
@@ -67,13 +69,13 @@ export default function MarketplaceView() {
     <button
       onClick={openCreateServicio}
       className="bg-[#2C4C3B] hover:bg-[#1E3529] text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-      title="Publicar oferta"
+      title={t('marketplace.publishOffer')}
     >
       <Plus className="w-4 h-4 text-emerald-300" />
-      <span className="hidden sm:inline">Publicar oferta</span>
-      <span className="sm:hidden">Publicar</span>
+      <span className="hidden sm:inline">{t('marketplace.publishOffer')}</span>
+      <span className="sm:hidden">{t('marketplace.publishShort')}</span>
     </button>
-  ), [openCreateServicio]);
+  ), [openCreateServicio, t]);
 
   useTopBarActions(topBarActionBtn, [topBarActionBtn]);
 
@@ -216,17 +218,17 @@ export default function MarketplaceView() {
   return (
     <PageContainer>
       <PageHeader
-        title="Marketplace de Soberanía"
-        subtitle="Intercambio de talentos y recursos comunitarios"
+        title={t('marketplace.title')}
+        subtitle={t('marketplace.subtitle')}
         icon={Handshake}
         helpNode={
           <SectionHelp 
-            title="Soberanía de Recursos" 
+            title={t('marketplace.resourceSovereignty')} 
             inline={true}
             description={
               <div className="space-y-4">
-                <p>En Kanarii, la soberanía económica no se basa en el dinero, sino en las relaciones de confianza y el intercambio de talentos y recursos.</p>
-                <p>Aquí puedes ofrecer tus habilidades o recursos materiales a la comunidad y proponer acuerdos colaborativos con otros miembros. Las propuestas de acuerdos pueden ser aceptadas, declinadas o contraofertadas para encontrar el equilibrio perfecto.</p>
+                <p>{t('marketplace.desc1')}</p>
+                <p>{t('marketplace.desc2')}</p>
               </div>
             } 
             animationNode={<MarketplaceUISimulation />} 
@@ -248,7 +250,7 @@ export default function MarketplaceView() {
           }`}
         >
           <Package className="w-4 h-4" />
-          Catálogo
+          {t('marketplace.catalog')}
         </button>
         <button
           onClick={() => setActiveTab('mis_acuerdos')}
@@ -259,7 +261,7 @@ export default function MarketplaceView() {
           }`}
         >
           <Handshake className="w-4 h-4" />
-          Mis Acuerdos
+          {t('marketplace.myAgreements')}
         </button>
       </div>
 
@@ -273,21 +275,21 @@ export default function MarketplaceView() {
                   onClick={() => setFilterTipo(null)}
                   className={`px-3 py-1.5 sm:px-4 rounded-full text-xs font-bold transition-all ${!filterTipo ? 'bg-[#4A4E4D] text-white' : 'bg-stone-100 text-stone-500'}`}
                 >
-                  Todo
+                  {t('marketplace.all')}
                 </button>
                 <button
                   onClick={() => setFilterTipo('talento')}
                   className={`px-3 py-1.5 sm:px-4 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${filterTipo === 'talento' ? 'bg-[#CB997E] text-white' : 'bg-stone-100 text-stone-500'}`}
                 >
                   <Heart className="w-3 h-3" />
-                  Talentos
+                  {t('marketplace.talents')}
                 </button>
                 <button
                   onClick={() => setFilterTipo('recurso')}
                   className={`px-3 py-1.5 sm:px-4 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${filterTipo === 'recurso' ? 'bg-[#A5A58D] text-white' : 'bg-stone-100 text-stone-500'}`}
                 >
                   <Package className="w-3 h-3" />
-                  Recursos
+                  {t('marketplace.resources')}
                 </button>
               </div>
 
@@ -299,7 +301,7 @@ export default function MarketplaceView() {
                     onClick={() => setFilterCategoria(filterCategoria === cat.id ? null : cat.id)}
                     className={`px-3 py-1.5 sm:px-4 rounded-full text-xs font-bold transition-all ${filterCategoria === cat.id ? 'bg-[#4A4E4D] text-white' : 'bg-stone-50 text-stone-400 border border-stone-100'}`}
                   >
-                    {cat.label}
+                    {t(`marketplace.categories.${cat.id}` as any)}
                   </button>
                 ))}
               </div>
@@ -314,8 +316,8 @@ export default function MarketplaceView() {
           ) : filteredServicios.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-12 text-center bg-white rounded-3xl border border-dashed border-[#EAE2D6]">
               <Search className="w-12 h-12 text-stone-200 mb-4" />
-              <h3 className="text-lg font-serif text-stone-600">No se encontraron resultados</h3>
-              <p className="text-stone-400 text-sm mt-1">Prueba a ajustar los filtros o publica tu primera oferta.</p>
+              <h3 className="text-lg font-serif text-stone-600">{t('marketplace.noResults')}</h3>
+              <p className="text-stone-400 text-sm mt-1">{t('marketplace.noResultsDesc')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -345,8 +347,8 @@ export default function MarketplaceView() {
           ) : acuerdos.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-12 text-center bg-white rounded-3xl border border-dashed border-[#EAE2D6]">
               <Handshake className="w-12 h-12 text-stone-200 mb-4" />
-              <h3 className="text-lg font-serif text-stone-600">Aún no tienes acuerdos</h3>
-              <p className="text-stone-400 text-sm mt-1">Explora el catálogo y propón tu primer intercambio.</p>
+              <h3 className="text-lg font-serif text-stone-600">{t('marketplace.noAgreementsYet')}</h3>
+              <p className="text-stone-400 text-sm mt-1">{t('marketplace.noAgreementsDesc')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
@@ -406,8 +408,8 @@ export default function MarketplaceView() {
                         <Handshake className="w-6 h-6" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-stone-800 truncate">{servicio?.title ?? 'Servicio eliminado'}</h4>
-                        <p className="text-sm text-stone-500 mt-1">Con {getMemberName(otroUsuarioUid)}</p>
+                        <h4 className="font-bold text-stone-800 truncate">{servicio?.title ?? t('marketplace.serviceDeleted')}</h4>
+                        <p className="text-sm text-stone-500 mt-1">{t('marketplace.withMember')} {getMemberName(otroUsuarioUid)}</p>
                         
                         <div className="text-xs text-stone-600 mt-2 bg-stone-50 p-2.5 rounded-xl border border-stone-100 whitespace-pre-line max-w-xl">
                           {acuerdo.terms}
@@ -415,19 +417,19 @@ export default function MarketplaceView() {
 
                         <div className="flex items-center gap-2 mt-2 flex-wrap">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${badgeClass}`}>
-                            {statusLabel}
+                            {acuerdo.status === 'contraoferta' ? t('marketplace.statusLabels.contraoferta') : statusLabel}
                           </span>
                           {isExpired && (
                             <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-50 text-red-700 border border-red-200">
-                              Fecha vencida
+                              {t('marketplace.expiredDate')}
                             </span>
                           )}
                           <span className="text-[10px] text-stone-400 italic">
-                            Tipo: {acuerdo.exchangeType}
+                            {t('marketplace.typeLabel')} {acuerdo.exchangeType}
                           </span>
                           {acuerdo.fechaPropuesta && (
                             <span className="text-[10px] text-stone-400">
-                              Fecha: {(() => {
+                              {t('marketplace.dateLabel')} {(() => {
                                 const fp = acuerdo.fechaPropuesta as any;
                                 const f = fp.toDate ? fp.toDate() : new Date(fp);
                                 return f.toLocaleDateString();
@@ -457,11 +459,11 @@ export default function MarketplaceView() {
                                       fechaPropuesta: acuerdo.fechaPropuesta || null
                                     }
                                   })
-                                }, { successMessage: "¡Acuerdo aceptado! 🤝" });
+                                }, { successMessage: t('marketplace.agreementAccepted') });
                               }}
                               className="px-4 py-2 bg-[#6B705C] text-white rounded-xl text-xs font-bold hover:bg-[#4A4E4D] transition-all"
                             >
-                              Aceptar
+                              {t('marketplace.accept')}
                             </button>
                             <button 
                               onClick={(e) => {
@@ -470,7 +472,7 @@ export default function MarketplaceView() {
                               }}
                               className="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold hover:bg-purple-700 transition-all"
                             >
-                              Contraofertar
+                              {t('marketplace.counterOffer')}
                             </button>
                             <button 
                               onClick={(e) => {
@@ -479,12 +481,12 @@ export default function MarketplaceView() {
                               }}
                               className="px-4 py-2 bg-stone-100 text-stone-500 rounded-xl text-xs font-bold hover:bg-stone-200 transition-all"
                             >
-                              Declinar
+                              {t('marketplace.decline')}
                             </button>
                           </>
                         ) : (
                           <span className="text-xs text-stone-400 italic px-3 py-1 bg-stone-50 rounded-lg">
-                            Esperando respuesta del otro miembro...
+                            {t('marketplace.waitingOtherMember')}
                           </span>
                         )}
                       </div>
@@ -495,11 +497,11 @@ export default function MarketplaceView() {
                         <button 
                           onClick={(e) => {
                             e.stopPropagation();
-                            editAcuerdo(acuerdo.id!, { status: 'completada' }, { successMessage: "¡Intercambio finalizado! ✨" });
+                            editAcuerdo(acuerdo.id!, { status: 'completada' }, { successMessage: t('marketplace.exchangeFinished') });
                           }}
                           className="px-4 py-2 border-2 border-[#C1E1C1] text-[#2C4C3B] rounded-xl text-xs font-bold hover:bg-[#C1E1C1] transition-all"
                         >
-                          Marcar Completado
+                          {t('marketplace.markCompleted')}
                         </button>
                         <button 
                           onClick={(e) => {
@@ -508,7 +510,7 @@ export default function MarketplaceView() {
                           }}
                           className="px-4 py-2 bg-stone-100 text-stone-500 rounded-xl text-xs font-bold hover:bg-stone-200 transition-all"
                         >
-                          Cancelar
+                          {t('marketplace.cancel')}
                         </button>
                       </div>
                     )}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Acuerdo } from '../lib/appService';
 import { Handshake, X, Calendar } from 'lucide-react';
 
@@ -11,6 +12,7 @@ interface ContraofertaModalProps {
 }
 
 export function ContraofertaModal({ acuerdo, currentUserId, onClose, onSubmit, isSubmitting }: ContraofertaModalProps) {
+  const { t } = useTranslation('marketplace');
   const getInitialDateStr = () => {
     if (!acuerdo.fechaPropuesta) return '';
     let d: Date;
@@ -52,8 +54,8 @@ export function ContraofertaModal({ acuerdo, currentUserId, onClose, onSubmit, i
               <Handshake className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-serif text-[#4A4E4D]">Enviar Contraoferta</h2>
-              <p className="text-xs text-stone-500">Propón nuevos términos para el acuerdo</p>
+              <h2 className="text-lg font-serif text-[#4A4E4D]">{t('counterOfferModal.title')}</h2>
+              <p className="text-xs text-stone-500">{t('counterOfferModal.subtitle')}</p>
             </div>
           </div>
           <button 
@@ -67,29 +69,29 @@ export function ContraofertaModal({ acuerdo, currentUserId, onClose, onSubmit, i
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Tipo de Intercambio</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">{t('counterOfferModal.exchangeType')}</label>
             <select
               value={formData.exchangeType}
               onChange={e => setFormData({ ...formData, exchangeType: e.target.value as Acuerdo['exchangeType'] })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors bg-white text-sm"
               disabled={isSubmitting}
             >
-              <option value="tiempo">Intercambio de Tiempo (Horas)</option>
-              <option value="especie">Intercambio por Especie</option>
-              <option value="economico">Aportación Económica</option>
-              <option value="regalo">Regalo / Donación</option>
+              <option value="tiempo">{t('counterOfferModal.typeTime')}</option>
+              <option value="especie">{t('counterOfferModal.typeGoods')}</option>
+              <option value="economico">{t('counterOfferModal.typeEconomic')}</option>
+              <option value="regalo">{t('counterOfferModal.typeGift')}</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Términos de tu contraoferta *</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">{t('counterOfferModal.terms')}</label>
             <textarea
               required
               rows={4}
               value={formData.terms}
               onChange={e => setFormData({ ...formData, terms: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors resize-none text-sm"
-              placeholder="Describe detalladamente los nuevos términos del intercambio..."
+              placeholder={t('counterOfferModal.termsPlaceholder')}
               disabled={isSubmitting}
             />
           </div>
@@ -97,7 +99,7 @@ export function ContraofertaModal({ acuerdo, currentUserId, onClose, onSubmit, i
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1 flex items-center gap-2">
               <Calendar className="w-4 h-4 text-stone-400" />
-              Nueva fecha propuesta (opcional)
+              {t('counterOfferModal.newDateOptional')}
             </label>
             <input
               type="date"
@@ -115,14 +117,14 @@ export function ContraofertaModal({ acuerdo, currentUserId, onClose, onSubmit, i
               className="px-4 py-2 text-stone-500 hover:bg-[#FDFBF7] rounded-xl font-medium transition-colors text-sm"
               disabled={isSubmitting}
             >
-              Cancelar
+              {t('counterOfferModal.cancel')}
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !formData.terms.trim()}
               className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl font-medium transition-all shadow-sm disabled:opacity-50 text-sm"
             >
-              {isSubmitting ? 'Enviando...' : 'Enviar Contraoferta'}
+              {isSubmitting ? t('counterOfferModal.sending') : t('counterOfferModal.submit')}
             </button>
           </div>
         </form>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Servicio } from '../lib/appService';
 import { Heart, Package, X } from 'lucide-react';
 
@@ -10,6 +11,7 @@ interface CreateServicioModalProps {
 }
 
 export function CreateServicioModal({ servicioToEdit, isSubmitting, onClose, onSubmit }: CreateServicioModalProps) {
+  const { t } = useTranslation('marketplace');
   const [formData, setFormData] = useState({
     tipo: servicioToEdit?.type || 'talento',
     titulo: servicioToEdit?.title || '',
@@ -36,7 +38,7 @@ export function CreateServicioModal({ servicioToEdit, isSubmitting, onClose, onS
     <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl w-full max-w-md shadow-xl overflow-hidden">
         <div className="p-6 border-b border-[#EAE2D6] flex justify-between items-center bg-[#FDFBF7]">
-          <h2 className="text-xl font-serif text-[#4A4E4D]">Compartir Talento o Recurso</h2>
+          <h2 className="text-xl font-serif text-[#4A4E4D]">{t('createService.title')}</h2>
           <button 
             onClick={onClose}
             className="text-stone-400 hover:text-stone-600 transition-colors"
@@ -57,7 +59,7 @@ export function CreateServicioModal({ servicioToEdit, isSubmitting, onClose, onS
               }`}
             >
               <Heart className="w-4 h-4" />
-              Talento
+              {t('createService.talent')}
             </button>
             <button
               type="button"
@@ -69,73 +71,73 @@ export function CreateServicioModal({ servicioToEdit, isSubmitting, onClose, onS
               }`}
             >
               <Package className="w-4 h-4" />
-              Recurso
+              {t('createService.resource')}
             </button>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">¿Qué quieres ofrecer? *</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">{t('createService.whatToOffer')}</label>
             <input
               required
               type="text"
               value={formData.titulo}
               onChange={e => setFormData({ ...formData, titulo: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors"
-              placeholder={formData.tipo === 'talento' ? "Ej. Clases de yoga, Taller de barro" : "Ej. Motosierra, Furgoneta para mudanzas"}
+              placeholder={formData.tipo === 'talento' ? t('createService.placeholderTalent') : t('createService.placeholderResource')}
               disabled={isSubmitting}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Categoría</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">{t('createService.category')}</label>
             <select
               value={formData.categoria}
               onChange={e => setFormData({ ...formData, categoria: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors bg-white"
               disabled={isSubmitting}
             >
-              <option value="artesanía">Artesanía / Manualidades</option>
-              <option value="agricultura">Agricultura / Huerto</option>
-              <option value="herramientas">Herramientas / Maquinaria</option>
-              <option value="transporte">Transporte / Logística</option>
-              <option value="cuidados">Cuidados / Bienestar</option>
-              <option value="tecnología">Tecnología / Digital</option>
-              <option value="otro">Otro</option>
+              <option value="artesanía">{t('createService.catCraft')}</option>
+              <option value="agricultura">{t('createService.catAgri')}</option>
+              <option value="herramientas">{t('createService.catTools')}</option>
+              <option value="transporte">{t('createService.catTransport')}</option>
+              <option value="cuidados">{t('createService.catCare')}</option>
+              <option value="tecnología">{t('createService.catTech')}</option>
+              <option value="otro">{t('createService.catOther')}</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Descripción y detalles</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">{t('createService.descriptionAndDetails')}</label>
             <textarea
               rows={3}
               value={formData.descripcion}
               onChange={e => setFormData({ ...formData, descripcion: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors resize-none"
-              placeholder="Cuéntanos más sobre lo que ofreces..."
+              placeholder={t('createService.descPlaceholder')}
               disabled={isSubmitting}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Ubicación</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">{t('createService.location')}</label>
               <input
                 type="text"
                 value={formData.ubicacion}
                 onChange={e => setFormData({ ...formData, ubicacion: e.target.value })}
                 className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors text-sm"
-                placeholder="Ej. Barrio Norte"
+                placeholder={t('createService.locationPlaceholder')}
                 disabled={isSubmitting}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Disponibilidad</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">{t('createService.availability')}</label>
               <input
                 type="text"
                 value={formData.disponibilidad}
                 onChange={e => setFormData({ ...formData, disponibilidad: e.target.value })}
                 className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors text-sm"
-                placeholder="Ej. Fines de semana"
+                placeholder={t('createService.availPlaceholder')}
                 disabled={isSubmitting}
               />
             </div>
@@ -148,7 +150,7 @@ export function CreateServicioModal({ servicioToEdit, isSubmitting, onClose, onS
               className="px-4 py-2 text-stone-500 hover:bg-[#FDFBF7] rounded-xl font-medium transition-colors"
               disabled={isSubmitting}
             >
-              Cancelar
+              {t('createService.cancel')}
             </button>
             <button
               type="submit"
@@ -157,7 +159,7 @@ export function CreateServicioModal({ servicioToEdit, isSubmitting, onClose, onS
                 formData.tipo === 'talento' ? 'bg-[#CB997E] hover:bg-[#B58368]' : 'bg-[#A5A58D] hover:bg-[#6B705C]'
               } text-white px-6 py-2 rounded-xl font-medium transition-all shadow-sm disabled:opacity-50`}
             >
-              {isSubmitting ? 'Guardando...' : 'Catalogar'}
+              {isSubmitting ? t('createService.saving') : t('createService.catalog')}
             </button>
           </div>
         </form>

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useActas } from '../hooks/useActas';
 import { useTareas } from '../hooks/useTareas';
@@ -21,6 +22,7 @@ import { PageHeader } from '../components/ui/PageHeader';
 import { useTopBarActions } from '../hooks/useTopBarActions';
 
 export function ActasPanel() {
+  const { t } = useTranslation('governance');
   const { appUser } = useAuth();
   const { currentCommunityId } = useComunidad();
   const { items: actas, loading, reload } = useActas(currentCommunityId || 'arteara');
@@ -61,14 +63,14 @@ export function ActasPanel() {
       <button
         onClick={openNuevaActa}
         className="bg-[#2C4C3B] hover:bg-[#1E3529] text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-        title="Nueva Acta"
+        title={t('actas.newActa')}
       >
         <Plus className="w-4 h-4 text-emerald-300" />
-        <span className="hidden sm:inline">Nueva Acta</span>
-        <span className="sm:hidden">Nueva</span>
+        <span className="hidden sm:inline">{t('actas.newActa')}</span>
+        <span className="sm:hidden">{t('actas.newActaShort')}</span>
       </button>
     ) : null
-  ), [appUser?.role, openNuevaActa]);
+  ), [appUser?.role, openNuevaActa, t]);
 
   useTopBarActions(topBarActionBtn, [topBarActionBtn]);
 
@@ -101,17 +103,17 @@ export function ActasPanel() {
   return (
     <PageContainer>
       <PageHeader
-        title="Biblioteca de Actas"
-        subtitle="La memoria viva y el registro histórico de las decisiones de nuestra comunidad."
+        title={t('actas.title')}
+        subtitle={t('actas.subtitle')}
         icon={FileText}
         helpNode={
           <SectionHelp 
-            title="Biblioteca de Actas" 
+            title={t('actas.title')} 
             inline={true}
             description={
               <div className="space-y-4">
-                <p>La Biblioteca de Actas es la memoria viva de nuestra comunidad. Aquí se registran las decisiones colectivas que guían el rumbo del espacio común.</p>
-                <p>Cada acta incluye el facilitador, los participantes, los temas abordados y las tareas resultantes, asegurando transparencia y continuidad en la gobernanza.</p>
+                <p>{t('actas.modal.contextDesc')}</p>
+                <p>{t('actas.subtitle')}</p>
               </div>
             } 
             animationNode={<ActasUISimulation />} 
@@ -125,12 +127,12 @@ export function ActasPanel() {
         <div className={`w-full ${actaSeleccionada ? 'hidden md:block md:w-[400px] lg:w-[500px] border-r border-[#EAE2D6]' : 'max-w-4xl mx-auto'} h-full overflow-y-auto px-4 md:px-8 py-8 shrink-0 transition-all duration-500`}>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
             <div className="flex-1 w-full">
-              <h1 className="text-3xl font-serif text-[#4A4E4D] mb-4">Registro Histórico</h1>
+              <h1 className="text-3xl font-serif text-[#4A4E4D] mb-4">{t('actas.historicalRecord')}</h1>
               <div className="relative group max-w-md">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-[#CB997E] transition-colors" />
                 <input 
                   type="text"
-                  placeholder="Buscar en actas o contexto..."
+                  placeholder={t('actas.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full bg-white border-[#EAE2D6] rounded-2xl pl-11 pr-4 py-2.5 text-sm focus:ring-1 focus:ring-[#CB997E] focus:border-[#CB997E] transition-all placeholder:text-stone-400 shadow-sm"
@@ -145,7 +147,7 @@ export function ActasPanel() {
                  <div className="w-16 h-16 bg-[#EAE2D6] rounded-full flex items-center justify-center mx-auto mb-4">
                    <FileText className="w-8 h-8 text-[#A5A58D]" />
                  </div>
-                 <p className="text-lg">{searchTerm ? 'No hay coincidencias.' : 'No hay actas registradas.'}</p>
+                 <p className="text-lg">{searchTerm ? t('actas.noMatches') : t('actas.noActasRegistered')}</p>
               </div>
             ) : (
               filteredActas.map(acta => {
@@ -158,12 +160,12 @@ export function ActasPanel() {
                       id={acta.id!}
                       title={acta.titulo}
                       subtitle={acta.contexto}
-                      status={recent ? { label: 'Reciente', variant: 'info', icon: Clock } : { label: 'Registrada', variant: 'neutral', icon: FileText }}
+                      status={recent ? { label: t('actas.recent'), variant: 'info', icon: Clock } : { label: t('actas.registered'), variant: 'neutral', icon: FileText }}
                       metadata={[
-                        { icon: UserIcon, text: getMemberName(acta.facilitador), tooltip: "Facilitador" },
-                        { icon: Calendar, text: dateTs.toLocaleDateString(), tooltip: "Fecha" },
-                        { icon: Users, text: `${acta.participantes.length} Asistentes`, tooltip: "Participantes" },
-                        { icon: CheckSquare, text: `${acta.decisiones.length} Decisiones`, tooltip: "Acuerdos" }
+                        { icon: UserIcon, text: getMemberName(acta.facilitador), tooltip: t('actas.facilitator') },
+                        { icon: Calendar, text: dateTs.toLocaleDateString(), tooltip: t('actas.date') },
+                        { icon: Users, text: t('actas.attendeesCount', { count: acta.participantes.length }), tooltip: t('actas.participants') },
+                        { icon: CheckSquare, text: t('actas.decisionsCount', { count: acta.decisiones.length }), tooltip: t('actas.decisions') }
                       ]}
                       className={actaSeleccionada?.id === acta.id ? 'border-stone-800 bg-stone-50/50 shadow-md ring-1 ring-stone-800/10' : ''}
                     />

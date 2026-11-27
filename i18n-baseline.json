@@ -1,26 +1,8 @@
 {
-  "generatedAt": "2026-11-27T17:53:21.563Z",
-  "totalViolations": 703,
-  "totalFilesWithViolations": 68,
+  "generatedAt": "2026-11-27T18:13:55.327Z",
+  "totalViolations": 454,
+  "totalFilesWithViolations": 51,
   "files": {
-    "src/components/ActaDetailOverlay.tsx": {
-      "count": 13,
-      "literals": [
-        "Facilitada por",
-        "Participantes",
-        "No se registraron participantes.",
-        "Contexto",
-        "Decisiones",
-        "No se registraron decisiones.",
-        "Tareas Derivadas",
-        "A:",
-        "Próxima Reunión",
-        "Última edición por",
-        "el",
-        "Editar Acta",
-        "Eliminar Acta"
-      ]
-    },
     "src/components/AdminPanel/AdminPanelModals.tsx": {
       "count": 35,
       "literals": [
@@ -276,51 +258,6 @@
         "Pulso de la Comunidad"
       ]
     },
-    "src/components/ContraofertaModal.tsx": {
-      "count": 11,
-      "literals": [
-        "Enviar Contraoferta",
-        "Propón nuevos términos para el acuerdo",
-        "Tipo de Intercambio",
-        "Intercambio de Tiempo (Horas)",
-        "Intercambio por Especie",
-        "Aportación Económica",
-        "Regalo / Donación",
-        "Términos de tu contraoferta *",
-        "Describe detalladamente los nuevos términos del intercambio...",
-        "Nueva fecha propuesta (opcional)",
-        "Cancelar"
-      ]
-    },
-    "src/components/CreateActaModal.tsx": {
-      "count": 24,
-      "literals": [
-        "Paso",
-        "de 4",
-        "Detalles Básicos",
-        "Título de la reunión *",
-        "Fecha *",
-        "Facilitador *",
-        "Seleccionar...",
-        "Participantes (",
-        "Contexto",
-        "¿Cuál fue el motivo principal de la reunión? Resume brevemente el contexto y los temas tratados.",
-        "La reunión se convocó para discutir...",
-        "Decisiones",
-        "Registra los acuerdos a los que se llegaron.",
-        "Acuerdo...",
-        "Añadir otra decisión",
-        "Tareas y Próximos Pasos (Opcional)",
-        "Tareas Derivadas",
-        "Añadir Tarea",
-        "No hay tareas derivadas de esta reunión.",
-        "Título de la tarea",
-        "A asignar después...",
-        "Próxima Reunión (Opcional)",
-        "Atrás",
-        "Siguiente"
-      ]
-    },
     "src/components/CreateAcuerdoModal.tsx": {
       "count": 11,
       "literals": [
@@ -366,25 +303,6 @@
         "Cerrar modal"
       ]
     },
-    "src/components/CreatePostModal.tsx": {
-      "count": 14,
-      "literals": [
-        "Nueva Publicación",
-        "✕",
-        "Necesidad",
-        "Oferta",
-        "Título *",
-        "Categoría",
-        "Habilidad / Conocimiento",
-        "Recurso / Objeto",
-        "Espacio",
-        "Apoyo Emocional",
-        "Otro",
-        "Descripción",
-        "Explica los detalles...",
-        "Cancelar"
-      ]
-    },
     "src/components/CreateProjectModal.tsx": {
       "count": 10,
       "literals": [
@@ -398,72 +316,6 @@
         "En marcha",
         "Habilidades Buscadas",
         "Ej: Fontanería"
-      ]
-    },
-    "src/components/CreateProposalWizard.tsx": {
-      "count": 20,
-      "literals": [
-        "Nueva Propuesta",
-        "¿Cuál es el propósito o tensión que motiva esta propuesta?",
-        "Describe la situación actual o necesidad, no la solución. La propuesta viene después. Esto ayuda a la comunidad a entender el \"por qué\".",
-        "Ej: Resolver las dificultades de concentración y facilitar el trabajo remoto mediante la regulación del ruido en el salón común los martes...",
-        "¿Qué propones hacer concretamente?",
-        "Define el título y los detalles de la acción propuesta.",
-        "Título de la propuesta",
-        "Ej: Implementar zona de silencio los martes",
-        "Descripción detallada",
-        "Detalla cómo se implementará, recursos necesarios, horarios...",
-        "Ejecución y Revisión",
-        "¿Quién se encarga y cuándo revisamos si funcionó?",
-        "Responsables de ejecución",
-        "Fecha Límite (Opcional)",
-        "Fecha de Revisión",
-        "días",
-        "Recomendado:",
-        "los acuerdos S3 son experimentos, no leyes permanentes. Pon una fecha de revisión para evaluar si el acuerdo sigue siendo útil.",
-        "Atrás",
-        "Siguiente"
-      ]
-    },
-    "src/components/CreateServicioModal.tsx": {
-      "count": 19,
-      "literals": [
-        "Compartir Talento o Recurso",
-        "Talento",
-        "Recurso",
-        "¿Qué quieres ofrecer? *",
-        "Categoría",
-        "Artesanía / Manualidades",
-        "Agricultura / Huerto",
-        "Herramientas / Maquinaria",
-        "Transporte / Logística",
-        "Cuidados / Bienestar",
-        "Tecnología / Digital",
-        "Otro",
-        "Descripción y detalles",
-        "Cuéntanos más sobre lo que ofreces...",
-        "Ubicación",
-        "Ej. Barrio Norte",
-        "Disponibilidad",
-        "Ej. Fines de semana",
-        "Cancelar"
-      ]
-    },
-    "src/components/CreateTareaModal.tsx": {
-      "count": 12,
-      "literals": [
-        "✕",
-        "Título *",
-        "Ej. Arreglar riego huerta norte",
-        "Descripción",
-        "Detalles sobre la tarea...",
-        "Asignar a",
-        "-- Sin asignar --",
-        "Fecha Límite",
-        "Vincular a Proyecto",
-        "-- Sin vincular --",
-        "Solo aparecen proyectos donde eres líder o colaborador.",
-        "Cancelar"
       ]
     },
     "src/components/LocationAutocomplete.tsx": {
@@ -515,64 +367,6 @@
         "Escribe una respuesta..."
       ]
     },
-    "src/components/ProjectDetailOverlay.tsx": {
-      "count": 15,
-      "literals": [
-        "Detalle del Proyecto",
-        "Liderado por",
-        "Colaboradores",
-        "Manifiesto e Intención",
-        "Salud de la Iniciativa",
-        "Hoja de Ruta",
-        "No hay hitos definidos.",
-        "Comunidad",
-        "Estado del Proyecto",
-        "Solicitudes Pendientes",
-        "Sin colaboradores todavía",
-        "Sumar mi energía al proyecto",
-        "Petición en revisión de la comunidad",
-        "Energía sincronizada con éxito",
-        "Detener esta iniciativa permanentemente"
-      ]
-    },
-    "src/components/PropuestaDetail.tsx": {
-      "count": 33,
-      "literals": [
-        "Cargando deliberación...",
-        "Error de acceso",
-        "Cerrar",
-        "Acuerdo Cálido",
-        "Proceso de Consentimiento",
-        "Propuesto por",
-        "Creado el",
-        "Acuerdo Cálido",
-        "Acuerdo Cálido Activo",
-        "Esta propuesta ha sido adoptada formalmente por consentimiento de la comunidad. Es un Acuerdo Cálido vivo que guía nuestra convivencia y decisiones.",
-        "Próxima revisión:",
-        "Propósito (Purpose)",
-        "La Propuesta v",
-        "Nota de Integración",
-        "Posiciones registradas",
-        "·",
-        "¿Se aclaró tu duda? Recuerda actualizar tu posición para que la propuesta pueda avanzar.",
-        "Actualizar postura",
-        "En sala ahora:",
-        "Dar mi respuesta socrática",
-        "Ya has participado",
-        "Tu posición:",
-        "Cambiar posición",
-        "Integrar objeciones activas",
-        "Propuesta Acordada por Consentimiento",
-        "Integrar Objeciones",
-        "Edita la propuesta para resolver las objeciones planteadas. Al publicar esta versión, se resetearán todas las respuestas anteriores para iniciar un nuevo ciclo de consentimiento.",
-        "Nueva Propuesta",
-        "Describe la versión mejorada...",
-        "Nota de Integración (Opcional)",
-        "Ej: He ajustado el punto 3 según lo hablado...",
-        "Cancelar",
-        "Publicar v-integrada"
-      ]
-    },
     "src/components/PwaUpdatePrompt.tsx": {
       "count": 4,
       "literals": [
@@ -615,25 +409,6 @@
         "Proponer Acuerdo / Solicitar",
         "Este servicio está temporalmente pausado y no admite nuevas solicitudes de acuerdo.",
         "Cancelar"
-      ]
-    },
-    "src/components/acuerdos/AcuerdoDetailModal.tsx": {
-      "count": 14,
-      "literals": [
-        "Acuerdo de Intercambio",
-        "Términos del Acuerdo",
-        "Tipo de Intercambio",
-        "Fecha Propuesta",
-        "Miembros Involucrados",
-        "Proveedor",
-        "Solicitante",
-        "Historial de Cambios",
-        "Por",
-        "Tipo:",
-        "Fecha:",
-        "No hay historial registrado para este acuerdo.",
-        "Proponer Enmienda",
-        "Cerrar"
       ]
     },
     "src/components/help/ActasUISimulation.tsx": {
@@ -741,32 +516,11 @@
         "Archivar"
       ]
     },
-    "src/components/ui/KanbanColumn.tsx": {
-      "count": 2,
-      "literals": [
-        "Añadir nuevo",
-        "Sin elementos"
-      ]
-    },
     "src/components/ui/TagArrayEditor.tsx": {
       "count": 2,
       "literals": [
         "Añadir",
         "Ningún elemento añadido todavía."
-      ]
-    },
-    "src/pages/ActasPanel.tsx": {
-      "count": 9,
-      "literals": [
-        "Nueva Acta",
-        "Nueva Acta",
-        "Nueva",
-        "Biblioteca de Actas",
-        "Biblioteca de Actas",
-        "La Biblioteca de Actas es la memoria viva de nuestra comunidad. Aquí se registran las decisiones colectivas que guían el rumbo del espacio común.",
-        "Cada acta incluye el facilitador, los participantes, los temas abordados y las tareas resultantes, asegurando transparencia y continuidad en la gobernanza.",
-        "Registro Histórico",
-        "Buscar en actas o contexto..."
       ]
     },
     "src/pages/AdminPanel.tsx": {
@@ -929,37 +683,6 @@
         "ℹ️"
       ]
     },
-    "src/pages/MarketplaceView.tsx": {
-      "count": 26,
-      "literals": [
-        "Publicar oferta",
-        "Publicar oferta",
-        "Publicar",
-        "Marketplace de Soberanía",
-        "Soberanía de Recursos",
-        "En Kanarii, la soberanía económica no se basa en el dinero, sino en las relaciones de confianza y el intercambio de talentos y recursos.",
-        "Aquí puedes ofrecer tus habilidades o recursos materiales a la comunidad y proponer acuerdos colaborativos con otros miembros. Las propuestas de acuerdos pueden ser aceptadas, declinadas o contraofertadas para encontrar el equilibrio perfecto.",
-        "Catálogo",
-        "Mis Acuerdos",
-        "Todo",
-        "Talentos",
-        "Recursos",
-        "No se encontraron resultados",
-        "Prueba a ajustar los filtros o publica tu primera oferta.",
-        "Aún no tienes acuerdos",
-        "Explora el catálogo y propón tu primer intercambio.",
-        "Con",
-        "Fecha vencida",
-        "Tipo:",
-        "Fecha:",
-        "Aceptar",
-        "Contraofertar",
-        "Declinar",
-        "Esperando respuesta del otro miembro...",
-        "Marcar Completado",
-        "Cancelar"
-      ]
-    },
     "src/pages/OnboardingChat.tsx": {
       "count": 4,
       "literals": [
@@ -976,68 +699,11 @@
         "Telegram"
       ]
     },
-    "src/pages/PropuestasView.tsx": {
-      "count": 11,
-      "literals": [
-        "Nueva Propuesta",
-        "Nueva Propuesta",
-        "Nueva",
-        "Gobernanza",
-        "Vista",
-        "Kanban",
-        "Lista",
-        "Atención requerida",
-        "Cambia a vista Lista para filtrar",
-        "Filtrar por estado",
-        "No se encontraron propuestas con los filtros seleccionados."
-      ]
-    },
-    "src/pages/ProyectosView.tsx": {
-      "count": 7,
-      "literals": [
-        "Nuevo Proyecto",
-        "Nuevo Proyecto",
-        "Nuevo",
-        "Proyectos",
-        "Proyectos Comunitarios",
-        "Los Proyectos representan las iniciativas a mediano y largo plazo desarrolladas colectivamente en la comunidad.",
-        "Cualquier miembro puede crear un proyecto o solicitar unirse a uno existente aportando sus talentos. El tablero Kanban permite visualizar el estado del proyecto: desde la búsqueda de ayuda inicial hasta su completa realización."
-      ]
-    },
     "src/pages/ResidenciasView.tsx": {
       "count": 2,
       "literals": [
         "Solicitud Enviada",
         "Inicia Sesión para Solicitar Estancia"
-      ]
-    },
-    "src/pages/Tablon.tsx": {
-      "count": 10,
-      "literals": [
-        "Publicar algo",
-        "Publicar",
-        "Tablón Comunitario",
-        "Necesidades",
-        "Ofertas",
-        "Todas",
-        "No hay",
-        "s que coincidan",
-        "Prueba a cambiar los filtros o sé el primero en publicar.",
-        "Añadir herramientas al nodo"
-      ]
-    },
-    "src/pages/TareasPanel.tsx": {
-      "count": 9,
-      "literals": [
-        "Nueva Tarea",
-        "Nueva Tarea",
-        "Nueva",
-        "Tareas Comunitarias",
-        "Crear tarea",
-        "Tareas de la Comunidad",
-        "El panel de Tareas Comunitarias organiza el trabajo del día a día de nuestro espacio común.",
-        "Aquí gestionamos las labores pendientes, en progreso y completadas. Cualquier miembro puede autoasignarse responsabilidades o proponer nuevas tareas necesarias para el bienestar y mantenimiento del grupo.",
-        "No hay tareas que coincidan con el filtro"
       ]
     },
     "src/pages/Welcome.tsx": {

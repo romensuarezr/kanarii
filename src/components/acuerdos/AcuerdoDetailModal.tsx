@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, User, Calendar, Handshake, History, ArrowRight, Sparkles } from 'lucide-react';
 import { Acuerdo, Servicio } from '../../lib/appService';
@@ -20,6 +21,7 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
   getMemberName,
   onProposeEnmienda
 }) => {
+  const { t } = useTranslation('marketplace');
   // Convierte marcas de tiempo de Firestore o fechas JS a string formateado
   const formatFecha = (f: any) => {
     if (!f) return '';
@@ -123,11 +125,11 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                   {statusInfo.label}
                 </span>
                 <span className="text-xs text-[#8A817C] uppercase tracking-widest font-bold">
-                  Acuerdo de Intercambio
+                  {t('agreementDetail.title')}
                 </span>
               </div>
               <h3 className="text-2xl font-serif text-stone-800 leading-tight pr-8">
-                {servicio?.title ?? 'Servicio no disponible'}
+                {servicio?.title ?? t('agreementDetail.serviceNotAvailable')}
               </h3>
             </div>
 
@@ -137,7 +139,7 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
               <div className="bg-[#F9F7F1]/60 border border-[#EAE2D6]/40 rounded-2xl p-5 space-y-4">
                 <div>
                   <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-1">
-                    Términos del Acuerdo
+                    {t('agreementDetail.terms')}
                   </h4>
                   <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-wrap font-sans">
                     {acuerdo.terms}
@@ -147,16 +149,16 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                 <div className="grid grid-cols-2 gap-4 pt-3 border-t border-[#EAE2D6]/30">
                   <div>
                     <h5 className="text-[9px] font-bold text-stone-400 uppercase tracking-widest leading-none mb-1">
-                      Tipo de Intercambio
+                      {t('agreementDetail.exchangeType')}
                     </h5>
                     <span className="text-xs font-bold text-stone-600 capitalize">
-                      {acuerdo.exchangeType || 'No especificado'}
+                      {acuerdo.exchangeType || t('agreementDetail.notSpecified')}
                     </span>
                   </div>
                   {acuerdo.fechaPropuesta && (
                     <div>
                       <h5 className="text-[9px] font-bold text-stone-400 uppercase tracking-widest leading-none mb-1">
-                        Fecha Propuesta
+                        {t('agreementDetail.proposedDate')}
                       </h5>
                       <span className="text-xs font-bold text-stone-600">
                         {formatFechaPropuesta(acuerdo.fechaPropuesta)}
@@ -169,7 +171,7 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
               {/* Miembros Involucrados */}
               <div className="space-y-3">
                 <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-widest">
-                  Miembros Involucrados
+                  {t('agreementDetail.involvedMembers')}
                 </h4>
                 <div className="flex items-center justify-between bg-stone-50 border border-stone-100 rounded-2xl p-4">
                   <div className="flex items-center gap-2.5">
@@ -178,7 +180,7 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                     </div>
                     <div>
                       <div className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">
-                        Proveedor
+                        {t('agreementDetail.provider')}
                       </div>
                       <div className="text-xs font-bold text-stone-700">
                         {getMemberName(acuerdo.providerId)}
@@ -191,7 +193,7 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                   <div className="flex items-center gap-2.5 text-right">
                     <div>
                       <div className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">
-                        Solicitante
+                        {t('agreementDetail.requester')}
                       </div>
                       <div className="text-xs font-bold text-stone-700">
                         {getMemberName(acuerdo.solicitanteId)}
@@ -209,7 +211,7 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                 <div className="flex items-center gap-2">
                   <History className="w-4 h-4 text-stone-400" />
                   <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-widest">
-                    Historial de Cambios
+                    {t('agreementDetail.changeHistory')}
                   </h4>
                 </div>
 
@@ -227,9 +229,9 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                           
                           <div className="flex items-baseline justify-between gap-2">
                             <span className="text-xs font-bold text-stone-700 capitalize">
-                              {entry.tipo === 'propuesta' ? 'Propuesta Inicial' :
-                               entry.tipo === 'contraoferta' ? 'Contraoferta' :
-                               entry.tipo === 'aceptacion' ? 'Aceptado' : 'Cancelado'}
+                              {entry.tipo === 'propuesta' ? t('agreementDetail.initialProposal') :
+                               entry.tipo === 'contraoferta' ? t('agreementDetail.counterOffer') :
+                               entry.tipo === 'aceptacion' ? t('agreementDetail.accepted') : t('agreementDetail.cancelled')}
                             </span>
                             <span className="text-[9px] text-stone-400">
                               {formatFecha(entry.fecha)}
@@ -237,16 +239,16 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                           </div>
                           
                           <div className="text-[10px] text-stone-500 mt-0.5">
-                            Por {getMemberName(entry.autorId)}
+                            {t('agreementDetail.byAuthor', { name: getMemberName(entry.autorId) })}
                           </div>
 
                           {entry.terminos && (
                             <div className="mt-2 bg-stone-50/50 p-3 rounded-xl border border-stone-100/80 text-xs text-stone-600">
                               <p className="whitespace-pre-wrap">{entry.terminos.terms}</p>
                               <div className="flex gap-3 mt-1.5 pt-1.5 border-t border-stone-100 text-[10px] text-stone-400">
-                                <span>Tipo: <strong className="font-semibold text-stone-500 capitalize">{entry.terminos.exchangeType}</strong></span>
+                                <span>{t('agreementDetail.typeLabel')} <strong className="font-semibold text-stone-500 capitalize">{entry.terminos.exchangeType}</strong></span>
                                 {entry.terminos.fechaPropuesta && (
-                                  <span>Fecha: <strong className="font-semibold text-stone-500">{formatFechaPropuesta(entry.terminos.fechaPropuesta)}</strong></span>
+                                  <span>{t('agreementDetail.dateLabel')} <strong className="font-semibold text-stone-500">{formatFechaPropuesta(entry.terminos.fechaPropuesta)}</strong></span>
                                 )}
                               </div>
                             </div>
@@ -257,7 +259,7 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                   </div>
                 ) : (
                   <div className="text-xs text-stone-400 italic bg-stone-50 border border-stone-100 rounded-xl p-3 text-center">
-                    No hay historial registrado para este acuerdo.
+                    {t('agreementDetail.noHistory')}
                   </div>
                 )}
               </div>
@@ -271,7 +273,7 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                   className="w-full bg-[#A5A58D] hover:bg-[#6B705C] text-white py-3.5 rounded-2xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 active:scale-95"
                 >
                   <Sparkles className="w-4 h-4 text-[#F9F7F1]" />
-                  Proponer Enmienda
+                  {t('agreementDetail.proposeAmendment')}
                 </button>
               )}
               
@@ -279,7 +281,7 @@ export const AcuerdoDetailModal: React.FC<AcuerdoDetailModalProps> = ({
                 onClick={onClose}
                 className="w-full py-2.5 text-[#8A817C] font-bold hover:bg-[#F9F7F1] rounded-xl transition-colors text-center text-sm"
               >
-                Cerrar
+                {t('agreementDetail.close')}
               </button>
             </div>
           </motion.div>

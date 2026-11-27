@@ -18,6 +18,12 @@ import esDashboard from '../locales/es/dashboard.json';
 import enDashboard from '../locales/en/dashboard.json';
 import esEvents from '../locales/es/events.json';
 import enEvents from '../locales/en/events.json';
+import esGovernance from '../locales/es/governance.json';
+import enGovernance from '../locales/en/governance.json';
+import esProjects from '../locales/es/projects.json';
+import enProjects from '../locales/en/projects.json';
+import esMarketplace from '../locales/es/marketplace.json';
+import enMarketplace from '../locales/en/marketplace.json';
 
 i18n
   .use(LanguageDetector)
@@ -33,6 +39,9 @@ i18n
         astrology: esAstrology,
         dashboard: esDashboard,
         events: esEvents,
+        governance: esGovernance,
+        projects: esProjects,
+        marketplace: esMarketplace,
       },
       en: {
         common: enCommon,
@@ -43,12 +52,15 @@ i18n
         astrology: enAstrology,
         dashboard: enDashboard,
         events: enEvents,
+        governance: enGovernance,
+        projects: enProjects,
+        marketplace: enMarketplace,
       },
     },
     supportedLngs: ['es', 'en'],
     fallbackLng: 'es',
     debug: import.meta.env.DEV,
-    ns: ['common', 'welcome', 'auth', 'communities', 'passport', 'astrology', 'dashboard', 'events'],
+    ns: ['common', 'welcome', 'auth', 'communities', 'passport', 'astrology', 'dashboard', 'events', 'governance', 'projects', 'marketplace'],
     defaultNS: 'common',
     detection: {
       order: ['localStorage', 'navigator'],

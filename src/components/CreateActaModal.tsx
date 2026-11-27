@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, CheckSquare, Plus, Trash2, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../hooks/useToast';
@@ -14,6 +15,7 @@ interface CreateActaModalProps {
 }
 
 export function CreateActaModal({ onClose, members, actaToEdit, communityId }: CreateActaModalProps) {
+  const { t } = useTranslation('governance');
   const { appUser } = useAuth();
   const toast = useToast();
   const { addActa, editActa } = useActaActions();
@@ -103,8 +105,8 @@ export function CreateActaModal({ onClose, members, actaToEdit, communityId }: C
       <div className="bg-white rounded-3xl w-full max-w-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
         <div className="p-6 border-b border-[#EAE2D6] flex justify-between items-center bg-[#FDFBF7] shrink-0">
           <div>
-            <h2 className="text-xl font-serif text-[#4A4E4D]">{actaToEdit ? 'Editar Acta' : 'Nueva Acta'}</h2>
-            <p className="text-sm text-stone-500">Paso {step} de 4</p>
+            <h2 className="text-xl font-serif text-[#4A4E4D]">{actaToEdit ? t('actas.modal.editTitle') : t('actas.modal.newTitle')}</h2>
+            <p className="text-sm text-stone-500">{t('actas.modal.step', { current: step })}</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-[#EAE2D6] rounded-full transition-colors">
             <X className="w-5 h-5 text-stone-500" />
@@ -114,26 +116,26 @@ export function CreateActaModal({ onClose, members, actaToEdit, communityId }: C
         <form onSubmit={step === 4 ? handleSubmit : (e) => { e.preventDefault(); setStep(s => s + 1); }} className="p-6 overflow-y-auto flex-1">
           {step === 1 && (
             <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
-              <h3 className="text-lg font-medium text-stone-800">Detalles Básicos</h3>
+              <h3 className="text-lg font-medium text-stone-800">{t('actas.modal.basicDetails')}</h3>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Título de la reunión *</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">{t('actas.modal.meetingTitle')}</label>
                 <input required type="text" value={formData.titulo} onChange={e => setFormData({...formData, titulo: e.target.value})} className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E]" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">Fecha *</label>
+                  <label className="block text-sm font-medium text-stone-700 mb-1">{t('actas.modal.dateLabel')}</label>
                   <input required type="date" value={formData.fecha} onChange={e => setFormData({...formData, fecha: e.target.value})} className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E]" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">Facilitador *</label>
+                  <label className="block text-sm font-medium text-stone-700 mb-1">{t('actas.modal.facilitatorLabel')}</label>
                   <select required value={formData.facilitador} onChange={e => setFormData({...formData, facilitador: e.target.value})} className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] bg-white">
-                    <option value="">Seleccionar...</option>
+                    <option value="">{t('actas.modal.selectPlaceholder')}</option>
                     {members.map(m => <option key={m.userId} value={m.userId}>{m.nombre}</option>)}
                   </select>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-2">Participantes ({formData.participantes.length})</label>
+                <label className="block text-sm font-medium text-stone-700 mb-2">{t('actas.modal.participantsLabel', { count: formData.participantes.length })}</label>
                 <div className="max-h-40 overflow-y-auto border border-[#EAE2D6] rounded-xl p-2 bg-[#FDFBF7] space-y-1">
                   {members.map(m => {
                     const isSelected = formData.participantes.includes(m.userId);
@@ -155,22 +157,22 @@ export function CreateActaModal({ onClose, members, actaToEdit, communityId }: C
 
           {step === 2 && (
             <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300 h-full flex flex-col">
-              <h3 className="text-lg font-medium text-stone-800">Contexto</h3>
-              <p className="text-sm text-stone-500">¿Cuál fue el motivo principal de la reunión? Resume brevemente el contexto y los temas tratados.</p>
+              <h3 className="text-lg font-medium text-stone-800">{t('actas.modal.contextTitle')}</h3>
+              <p className="text-sm text-stone-500">{t('actas.modal.contextDesc')}</p>
               <textarea
                 required rows={8}
                 value={formData.contexto}
                 onChange={e => setFormData({...formData, contexto: e.target.value})}
                 className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] resize-none flex-1"
-                placeholder="La reunión se convocó para discutir..."
+                placeholder={t('actas.modal.contextPlaceholder')}
               />
             </div>
           )}
 
           {step === 3 && (
             <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-              <h3 className="text-lg font-medium text-stone-800">Decisiones</h3>
-              <p className="text-sm text-stone-500">Registra los acuerdos a los que se llegaron.</p>
+              <h3 className="text-lg font-medium text-stone-800">{t('actas.modal.decisionsTitle')}</h3>
+              <p className="text-sm text-stone-500">{t('actas.modal.decisionsDesc')}</p>
               
               <div className="space-y-3">
                 {formData.decisiones.map((dec, i) => (
@@ -184,7 +186,7 @@ export function CreateActaModal({ onClose, members, actaToEdit, communityId }: C
                         setFormData({...formData, decisiones: newDecisiones});
                       }}
                       className="flex-1 rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E]" 
-                      placeholder="Acuerdo..."
+                      placeholder={t('actas.modal.agreementPlaceholder')}
                     />
                     <button type="button" onClick={() => setFormData({...formData, decisiones: formData.decisiones.filter((_, idx) => idx !== i)})} className="p-2 text-stone-400 hover:text-red-500 transition-colors">
                       <Trash2 className="w-5 h-5" />
@@ -194,25 +196,25 @@ export function CreateActaModal({ onClose, members, actaToEdit, communityId }: C
               </div>
               
               <button type="button" onClick={() => setFormData({...formData, decisiones: [...formData.decisiones, '']})} className="text-sm font-medium text-[#CB997E] hover:text-[#B58368] flex items-center gap-1 mt-2">
-                <Plus className="w-4 h-4" /> Añadir otra decisión
+                <Plus className="w-4 h-4" /> {t('actas.modal.addAnotherDecision')}
               </button>
             </div>
           )}
 
           {step === 4 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <h3 className="text-lg font-medium text-stone-800">Tareas y Próximos Pasos (Opcional)</h3>
+              <h3 className="text-lg font-medium text-stone-800">{t('actas.modal.tasksAndNextSteps')}</h3>
               
               <div className="space-y-4 border-b border-[#EAE2D6] pb-6">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium text-stone-700">Tareas Derivadas</span>
+                  <span className="font-medium text-stone-700">{t('actas.modal.derivedTasksLabel')}</span>
                   <button type="button" onClick={() => setFormData({...formData, tareasDerivadas: [...formData.tareasDerivadas, { titulo: '' }]})} className="text-xs font-medium bg-[#A5A58D] text-white px-3 py-1.5 rounded-lg flex items-center gap-1">
-                    <Plus className="w-3 h-3" /> Añadir Tarea
+                    <Plus className="w-3 h-3" /> {t('actas.modal.addTask')}
                   </button>
                 </div>
                 
                 {formData.tareasDerivadas.length === 0 ? (
-                  <p className="text-sm text-stone-500 italic">No hay tareas derivadas de esta reunión.</p>
+                  <p className="text-sm text-stone-500 italic">{t('actas.modal.noDerivedTasks')}</p>
                 ) : (
                   <div className="space-y-3">
                     {formData.tareasDerivadas.map((tarea, i) => (
@@ -221,13 +223,13 @@ export function CreateActaModal({ onClose, members, actaToEdit, communityId }: C
                           <X className="w-4 h-4" />
                         </button>
                         <div className="grid gap-3">
-                          <input type="text" placeholder="Título de la tarea" value={tarea.titulo} onChange={e => {
+                          <input type="text" placeholder={t('actas.modal.taskTitlePlaceholder')} value={tarea.titulo} onChange={e => {
                             const newT = [...formData.tareasDerivadas]; newT[i].titulo = e.target.value; setFormData({...formData, tareasDerivadas: newT});
                           }} className="w-full text-sm rounded-lg border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E]" />
                           <select value={tarea.asignadaA || ''} onChange={e => {
                             const newT = [...formData.tareasDerivadas]; newT[i].asignadaA = e.target.value; setFormData({...formData, tareasDerivadas: newT});
                           }} className="w-full text-sm rounded-lg border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] bg-white">
-                            <option value="">A asignar después...</option>
+                            <option value="">{t('actas.modal.assignLater')}</option>
                             {members.map(m => <option key={m.userId} value={m.userId}>{m.nombre}</option>)}
                           </select>
                         </div>
@@ -238,7 +240,7 @@ export function CreateActaModal({ onClose, members, actaToEdit, communityId }: C
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Próxima Reunión (Opcional)</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">{t('actas.modal.nextMeetingOptional')}</label>
                 <input type="date" value={formData.proximaReunion} onChange={e => setFormData({...formData, proximaReunion: e.target.value})} className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E]" />
               </div>
             </div>
@@ -247,7 +249,7 @@ export function CreateActaModal({ onClose, members, actaToEdit, communityId }: C
           <div className="pt-6 mt-6 border-t border-[#EAE2D6] flex justify-between items-center">
             {step > 1 ? (
                <button type="button" onClick={() => setStep(s => s - 1)} className="flex items-center gap-1 text-stone-500 hover:text-stone-800 font-medium px-4 py-2">
-                 <ArrowLeft className="w-4 h-4" /> Atrás
+                 <ArrowLeft className="w-4 h-4" /> {t('actas.modal.back')}
                </button>
             ) : <div />}
             
@@ -256,7 +258,7 @@ export function CreateActaModal({ onClose, members, actaToEdit, communityId }: C
               disabled={isSubmitting || (step === 1 && !formData.titulo.trim()) || (step === 2 && !formData.contexto.trim())}
               className="bg-[#A5A58D] hover:bg-[#6B705C] text-white px-6 py-2.5 rounded-xl font-medium transition-colors disabled:opacity-50 flex items-center gap-2 shadow-sm"
             >
-              {step < 4 ? <>Siguiente <ArrowRight className="w-4 h-4" /></> : (isSubmitting ? 'Guardando...' : (actaToEdit ? 'Actualizar Acta' : 'Crear Acta'))}
+              {step < 4 ? <>{t('actas.modal.next')} <ArrowRight className="w-4 h-4" /></> : (isSubmitting ? t('actas.modal.saving') : (actaToEdit ? t('actas.modal.updateActa') : t('actas.modal.createActa')))}
             </button>
           </div>
         </form>
