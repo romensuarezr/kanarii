@@ -53,8 +53,17 @@ Solo contiene trabajo pendiente REAL. Lo marcado ✅ ya está implementado.
 
 ## 🎯 Foco activo
 
-### Sprint 29 / Sprint 33 — Sanitización de Roles, Convocatorias y Sinergias (🟡 En curso)
-- [ ] [ALTO] **T-147 → Desglosada en Sprint 33 (T-162, T-163, T-164)**: Blindaje y Sanitización de Roles de Membresía, RBAC y UX.
+### Sprint 34 — Blindaje Determinista de Internacionalización y Baseline Cero (🟡 En curso)
+- [ ] [ALTO] **T-167**: Motor determinista de blindaje i18n con baseline y trinquete (`test:i18n`).
+- [ ] [ALTO] **T-168**: Internacionalización de Dashboard, Buscador ReTribalize y Navegación Global.
+- [ ] [ALTO] **T-169**: Internacionalización de Identidad, Perfil y Fichas (`FichaView`, `PerfilView`, `RegistroComunidadView`).
+- [ ] [ALTO] **T-170**: Internacionalización de Gobernanza, Actas, Proyectos, Tareas y Soberanía (`governance`, `projects`, `marketplace`).
+- [ ] [ALTO] **T-171**: Internacionalización de AdminPanel y Ajustes + Sellado de Baseline a 0.
+
+### Sprint 33 — Sanitización de Roles, Convocatorias y Sinergias (✅ Completado)
+- [x] [ALTO] **T-162 / T-163 / T-164**: Blindaje y Sanitización de Roles de Membresía, RBAC y UX.
+- [x] [ALTO] **T-165**: Buscador avanzado estilo ReTribalize en `DashboardView`.
+- [x] [ALTO] **T-166**: Script reproducible de seed y clean para datos demo con imágenes.
 - [ ] [ALTO] **T-148**: Persistencia y Conexión de Convocatorias de Eventos y Residencias Comunitarias.
 - [ ] [ALTO] **T-149**: Flujo de Solicitud y Conexión de Sinergias entre Miembros de la Red.
 - [ ] [MEDIO] **T-150**: Homologación de Herramientas de Flota (Hermes, Orca) y Sync Core Agent OS.
