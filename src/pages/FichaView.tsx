@@ -374,7 +374,7 @@ export function FichaView() {
             className="inline-flex items-center gap-2 text-sm font-medium text-[#6B705C] hover:text-[#4A4E4D] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Mi perfil
+            {t('labels.myProfile')}
           </Link>
         </div>
 
@@ -393,7 +393,7 @@ export function FichaView() {
             <div className="absolute top-0 left-0 w-2 h-full bg-[#CB997E]"></div>
             <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-serif text-[#4A4E4D]">Editar Ficha</h2>
+                <h2 className="text-xl font-serif text-[#4A4E4D]">{t('form.editFichaTitle')}</h2>
                 <button type="button" onClick={() => setEditing(false)} className="text-stone-500 hover:text-stone-800">
                   <X className="w-6 h-6" />
                 </button>
@@ -401,24 +401,24 @@ export function FichaView() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-stone-600">Nombre</label>
+                  <label className="text-sm font-medium text-stone-600">{t('form.name')}</label>
                   <input {...register("nombre")} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                   <FieldError error={errors.nombre} />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-stone-600">Fecha de Nacimiento</label>
+                  <label className="text-sm font-medium text-stone-600">{t('form.birthDate')}</label>
                   <input type="date" {...register("fechaNacimiento")} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                   <FieldError error={errors.fechaNacimiento} />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-stone-600">Hora de Nacimiento</label>
+                  <label className="text-sm font-medium text-stone-600">{t('form.birthTime')}</label>
                   <input type="time" {...register("hora")} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                   <FieldError error={errors.hora} />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-stone-600">Lugar de Nacimiento</label>
+                  <label className="text-sm font-medium text-stone-600">{t('form.birthPlace')}</label>
                   <div className="relative">
-                    <input type="text" placeholder="Ej: Las Palmas de Gran Canaria, España" {...register("lugar", { onBlur: handleVerificarUbicacion })} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 pr-12 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                    <input type="text" placeholder={t('form.birthPlacePlaceholder')} {...register("lugar", { onBlur: handleVerificarUbicacion })} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 pr-12 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                     <button type="button" onClick={handleVerificarUbicacion} disabled={geoStatus === 'loading'} className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-stone-400 hover:text-stone-600 bg-transparent rounded-lg">
                       {geoStatus === 'loading' ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
                     </button>
@@ -432,142 +432,141 @@ export function FichaView() {
                 </div>
                 
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-stone-600">Género</label>
+                  <label className="text-sm font-medium text-stone-600">{t('form.gender')}</label>
                   <select {...register("genero")} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]">
-                    <option value="hombre">hombre</option>
-                    <option value="mujer">mujer</option>
-                    <option value="no binario">no binario</option>
-                    <option value="prefiero no decirlo">prefiero no decirlo</option>
+                    <option value="hombre">{t('form.genders.male')}</option>
+                    <option value="mujer">{t('form.genders.female')}</option>
+                    <option value="no binario">{t('form.genders.nonBinary')}</option>
+                    <option value="prefiero no decirlo">{t('form.genders.preferNotToSay')}</option>
                   </select>
                   <FieldError error={errors.genero} />
                 </div>
                 
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-stone-600">Antigüedad (años)</label>
+                  <label className="text-sm font-medium text-stone-600">{t('form.antiquity')}</label>
                   <select {...register("antiguedad_anos", { valueAsNumber: true })} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]">
-                    <option value={0}>Recién llegado/a (menos de 3 meses)</option>
-                    <option value={0.5}>Menos de 1 año</option>
-                    <option value={1}>1 año</option>
-                    <option value={2}>2 años</option>
-                    <option value={3}>3 años</option>
-                    <option value={4}>4 años</option>
-                    <option value={5}>5 años o más</option>
+                    <option value={0}>{t('form.antiquities.recent')}</option>
+                    <option value={0.5}>{t('form.antiquities.under1Year')}</option>
+                    <option value={1}>{t('form.antiquities.year1')}</option>
+                    <option value={2}>{t('form.antiquities.years2')}</option>
+                    <option value={3}>{t('form.antiquities.years3')}</option>
+                    <option value={4}>{t('form.antiquities.years4')}</option>
+                    <option value={5}>{t('form.antiquities.years5Plus')}</option>
                   </select>
                   <FieldError error={errors.antiguedad_anos} />
                 </div>
 
                 <div className="space-y-1 md:col-span-2">
-                  <label className="text-sm font-medium text-stone-600">Saberes y recorrido vital</label>
-                  <textarea {...register("saberes")} rows={4} placeholder="Tu formación, experiencias, oficios, proyectos... todo cuenta" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                  <label className="text-sm font-medium text-stone-600">{t('form.skillsJourney')}</label>
+                  <textarea {...register("saberes")} rows={4} placeholder={t('form.skillsJourneyPlaceholder')} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                   <FieldError error={errors.saberes} />
                 </div>
 
                 <div className="space-y-4 md:col-span-2 border-t border-[#EAE2D6] pt-4 mt-2">
-                  <h3 className="text-lg font-serif text-[#4A4E4D]">Tríada Comunitaria (Estructurada)</h3>
+                  <h3 className="text-lg font-serif text-[#4A4E4D]">{t('form.structuredTriad')}</h3>
                   <p className="text-xs text-stone-500">
-                    Define tags específicos para facilitar la ayuda y colaboración en la comunidad. Presiona enter o introduce una coma para añadir cada elemento.
+                    {t('form.structuredTriadDesc')}
                   </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <TagArrayEditor
                       value={ofrendasState.tags}
                       onChange={ofrendasState.setTags}
-                      label="Ofrendas (Lo que aportas)"
-                      placeholder="Ej: diseño web, carpintería, cuidado..."
+                      label={t('form.offers')}
+                      placeholder={t('form.offersPlaceholder')}
                       colorScheme="green"
                     />
                     
                     <TagArrayEditor
                       value={saberesState.tags}
                       onChange={saberesState.setTags}
-                      label="Saberes y Habilidades"
-                      placeholder="Ej: agroecología, facilitación..."
+                      label={t('form.skills')}
+                      placeholder={t('form.skillsPlaceholder')}
                       colorScheme="blue"
-                      helperText="Habilidades o saberes específicos."
+                      helperText={t('form.skills')}
                     />
                     
                     <TagArrayEditor
                       value={necesidadesState.tags}
-                      onChange={necesidadesState.setTags
-                      }
-                      label="Necesidades (Lo que requieres)"
-                      placeholder="Ej: transporte, programar, herramientas..."
+                      onChange={necesidadesState.setTags}
+                      label={t('form.needs')}
+                      placeholder={t('form.needsPlaceholder')}
                       colorScheme="orange"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-4 md:col-span-2 border-t border-[#EAE2D6] pt-4 mt-2">
-                  <h3 className="text-lg font-serif text-[#4A4E4D]">Redes Sociales y Contacto Rápido</h3>
+                  <h3 className="text-lg font-serif text-[#4A4E4D]">{t('form.socialAndContact')}</h3>
                   <p className="text-xs text-stone-500">
-                    Facilita que otros miembros conecten contigo a través de tus perfiles públicos o canales directos.
+                    {t('form.socialAndContactDesc')}
                   </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div className="space-y-1">
-                      <label className="text-xs font-medium text-stone-600">Instagram</label>
-                      <input {...register("instagram")} placeholder="@usuario" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                      <label className="text-xs font-medium text-stone-600">{t('form.social.instagram')}</label>
+                      <input {...register("instagram")} placeholder={t('form.social.instagramPlaceholder')} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-medium text-stone-600">LinkedIn</label>
-                      <input {...register("linkedin")} placeholder="URL o perfil" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                      <label className="text-xs font-medium text-stone-600">{t('form.social.linkedin')}</label>
+                      <input {...register("linkedin")} placeholder={t('form.social.linkedinPlaceholder')} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-medium text-stone-600">Telegram</label>
-                      <input {...register("telegram")} placeholder="@usuario o t.me/..." className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                      <label className="text-xs font-medium text-stone-600">{t('form.social.telegram')}</label>
+                      <input {...register("telegram")} placeholder={t('form.social.telegramPlaceholder')} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-medium text-stone-600">Sitio Web / Blog</label>
-                      <input {...register("website")} placeholder="https://..." className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                      <label className="text-xs font-medium text-stone-600">{t('form.social.website')}</label>
+                      <input {...register("website")} placeholder={t('form.social.websitePlaceholder')} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-medium text-stone-600">Teléfono / WhatsApp</label>
-                      <input {...register("phone")} placeholder="+34..." className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                      <label className="text-xs font-medium text-stone-600">{t('form.social.phone')}</label>
+                      <input {...register("phone")} placeholder={t('form.social.phonePlaceholder')} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-medium text-stone-600">Correo Electrónico</label>
-                      <input {...register("email")} placeholder="correo@ejemplo.com" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                      <label className="text-xs font-medium text-stone-600">{t('form.social.email')}</label>
+                      <input {...register("email")} placeholder={t('form.social.emailPlaceholder')} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-2.5 px-3 text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-1 md:col-span-2">
-                  <label className="text-sm font-medium text-stone-600">Estado de tensión</label>
-                  <textarea {...register("tension")} rows={4} placeholder="¿Qué estás sintiendo hoy en la convivencia?" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                  <label className="text-sm font-medium text-stone-600">{t('form.tensionTitle')}</label>
+                  <textarea {...register("tension")} rows={4} placeholder={t('form.tensionPlaceholder')} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                   <FieldError error={errors.tension} />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-stone-600">Tu rol u oficio en una frase corta</label>
+                  <label className="text-sm font-medium text-stone-600">{t('form.headlineTitle')}</label>
                   <input
                     type="text"
                     maxLength={45}
                     {...register("headline")}
-                    placeholder="Oficio o rol corto en la comunidad (máx. 45 caracteres)"
+                    placeholder={t('form.headlinePlaceholder')}
                     className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]"
                   />
                   <FieldError error={errors.headline} />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-stone-600">Participación en Kanarii</label>
-                  <textarea {...register("rol_comunidad")} rows={4} placeholder="¿Cómo contribuyes o te gustaría contribuir al proyecto?" className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
+                  <label className="text-sm font-medium text-stone-600">{t('form.kanariiRoleTitle')}</label>
+                  <textarea {...register("rol_comunidad")} rows={4} placeholder={t('form.kanariiRolePlaceholder')} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                   <FieldError error={errors.rol_comunidad} />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-stone-600">Rol</label>
+                  <label className="text-sm font-medium text-stone-600">{t('form.roleTitle')}</label>
                   <select {...register("rol")} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]">
-                    <option value="propietario">Propietario / Núcleo</option>
-                    <option value="miembro">Miembro</option>
-                    <option value="voluntario">Voluntario</option>
+                    <option value="propietario">{t('form.roles.owner')}</option>
+                    <option value="miembro">{t('form.roles.member')}</option>
+                    <option value="voluntario">{t('form.roles.volunteer')}</option>
                   </select>
                   <FieldError error={errors.rol} />
                 </div>
 
                 {watchRol === 'voluntario' && (
                   <div className="space-y-1">
-                    <label className="text-sm font-medium text-stone-600">Fecha de salida (opcional)</label>
+                    <label className="text-sm font-medium text-stone-600">{t('form.departureDate')}</label>
                     <input type="date" {...register("fechaSalida")} className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]" />
                   </div>
                 )}
@@ -579,7 +578,7 @@ export function FichaView() {
                   disabled={isSubmitting}
                   className="bg-[#A5A58D] hover:bg-[#6B705C] text-white py-3 px-8 rounded-xl font-medium transition-colors flex items-center gap-2"
                 >
-                  {isSubmitting ? 'Guardando...' : <><Check className="w-5 h-5"/> Guardar Cambios</>}
+                  {isSubmitting ? t('preview.saving') : <><Check className="w-5 h-5"/> {t('form.saveChanges')}</>}
                 </button>
               </div>
             </form>
@@ -593,20 +592,20 @@ export function FichaView() {
             
             <div className="flex items-center gap-3 mb-6">
               <Eye className="text-[#6B705C] w-6 h-6" />
-              <h3 className="text-xl font-serif text-[#4A4E4D]">Privacidad del Pasaporte Comunitario</h3>
+              <h3 className="text-xl font-serif text-[#4A4E4D]">{t('privacy.title')}</h3>
             </div>
             
             <p className="text-stone-500 text-sm mb-6 leading-relaxed">
-              El Pasaporte Comunitario es tu carta de presentación social y pública en Kanarii. Elige qué dimensiones de tu perfil deseas compartir públicamente con la comunidad.
+              {t('privacy.desc')}
             </p>
             
             <div className="space-y-4">
               {[
-                { key: 'arquetipo', label: 'Arquetipo y Perfil', desc: 'Muestra tu arquetipo de personalidad, fortalezas, sombras y rol sociocrático sugerido.' },
-                { key: 'disenoHumano', label: 'Diseño Humano', desc: 'Muestra tu tipo de diseño humano, autoridad y perfil.' },
-                { key: 'kinMaya', label: 'Kin Maya / Firma Galáctica', desc: 'Muestra tu Kin Maya, sello galáctico y rol comunitario maya.' },
-                { key: 'datosAstrologicos', label: 'Datos Astrológicos', desc: 'Muestra tu Sol, Luna, Ascendente y elementos dominantes.' },
-                { key: 'manualCompleto', label: 'Manual de Usuario Humano', desc: 'Muestra el manual de convivencia autogenerado con tus 5 secciones.' }
+                { key: 'arquetipo', label: t('privacy.dimensions.arquetipo.label'), desc: t('privacy.dimensions.arquetipo.desc') },
+                { key: 'disenoHumano', label: t('privacy.dimensions.disenoHumano.label'), desc: t('privacy.dimensions.disenoHumano.desc') },
+                { key: 'kinMaya', label: t('privacy.dimensions.kinMaya.label'), desc: t('privacy.dimensions.kinMaya.desc') },
+                { key: 'datosAstrologicos', label: t('privacy.dimensions.datosAstrologicos.label'), desc: t('privacy.dimensions.datosAstrologicos.desc') },
+                { key: 'manualCompleto', label: t('privacy.dimensions.manualCompleto.label'), desc: t('privacy.dimensions.manualCompleto.desc') }
               ].map(({ key, label, desc }) => {
                 const privacidad = displayFicha?.privacidad || PRIVACIDAD_DEFAULT;
                 const isEnabled = privacidad[key as keyof typeof privacidad] ?? true;
@@ -638,20 +637,20 @@ export function FichaView() {
             <div className="mt-8 pt-6 border-t border-[#EAE2D6]">
               <div className="flex items-center gap-2 mb-2">
                 <Globe className="text-[#CB997E] w-5 h-5" />
-                <h4 className="text-base font-serif font-bold text-[#4A4E4D]">Redes Sociales y Canales de Contacto</h4>
+                <h4 className="text-base font-serif font-bold text-[#4A4E4D]">{t('privacy.socialChannelsTitle')}</h4>
               </div>
               <p className="text-stone-500 text-xs mb-4">
-                Elige qué canales de contacto directo son visibles en tu pasaporte para otros miembros de la comunidad.
+                {t('privacy.socialChannelsDesc')}
               </p>
               
               <div className="space-y-3">
                 {[
-                  { key: 'instagram', label: 'Instagram', desc: 'Permite que otros miembros vean tu usuario de Instagram y accedan a tu perfil.' },
-                  { key: 'linkedin', label: 'LinkedIn', desc: 'Muestra tu perfil profesional de LinkedIn en el pasaporte.' },
-                  { key: 'telegram', label: 'Telegram', desc: 'Muestra tu usuario o enlace de Telegram para mensajería directa.' },
-                  { key: 'website', label: 'Sitio Web', desc: 'Muestra el enlace directo a tu web personal o proyecto.' },
-                  { key: 'phone', label: 'Teléfono y WhatsApp', desc: 'Muestra los botones de llamada y apertura de chat en WhatsApp.' },
-                  { key: 'email', label: 'Correo Electrónico', desc: 'Muestra tu dirección de email de contacto directo.' }
+                  { key: 'instagram', label: t('privacy.channels.instagram.label'), desc: t('privacy.channels.instagram.desc') },
+                  { key: 'linkedin', label: t('privacy.channels.linkedin.label'), desc: t('privacy.channels.linkedin.desc') },
+                  { key: 'telegram', label: t('privacy.channels.telegram.label'), desc: t('privacy.channels.telegram.desc') },
+                  { key: 'website', label: t('privacy.channels.website.label'), desc: t('privacy.channels.website.desc') },
+                  { key: 'phone', label: t('privacy.channels.phone.label'), desc: t('privacy.channels.phone.desc') },
+                  { key: 'email', label: t('privacy.channels.email.label'), desc: t('privacy.channels.email.desc') }
                 ].map(({ key, label, desc }) => {
                   const privacidad = displayFicha?.privacidad || PRIVACIDAD_DEFAULT;
                   const isEnabled = privacidad[key as keyof typeof privacidad] ?? (key === 'phone' || key === 'email' ? false : true);
@@ -690,13 +689,13 @@ export function FichaView() {
             <div className="w-16 h-16 bg-[#F9F7F1] rounded-full flex items-center justify-center mb-4">
               <Sparkles className="w-8 h-8 text-[#8A817C] animate-pulse" />
             </div>
-            <h2 className="text-2xl font-serif text-[#4A4E4D] mb-2">Estructurando tu Manual Galáctico</h2>
+            <h2 className="text-2xl font-serif text-[#4A4E4D] mb-2">{t('manual.structuring')}</h2>
             <p className="text-stone-500 max-w-md mx-auto mb-6">
-              El Facilitador Galáctico está analizando tus tránsitos y diseño para estructurar las 5 secciones de tu manual...
+              {t('manual.structuringDesc')}
             </p>
             <div className="flex items-center gap-3 px-6 py-3 bg-[#F9F7F1] text-stone-500 rounded-full font-medium">
               <Loader2 className="w-5 h-5 animate-spin text-[#8A817C]" />
-              <span>Tejiendo la estructura inicial...</span>
+              <span>{t('manual.weavingStructure')}</span>
             </div>
           </div>
         ) : displayFicha?.resumenManual ? (
@@ -706,7 +705,7 @@ export function FichaView() {
              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
                 <div className="flex items-center gap-3 text-[#4A4E4D]">
                   <Sparkles className="w-7 h-7 text-[#8A817C] shrink-0" />
-                  <h2 className="text-xl sm:text-2xl font-serif">Manual de Usuario Humano</h2>
+                  <h2 className="text-xl sm:text-2xl font-serif">{t('manual.title')}</h2>
                 </div>
                 
                 <div className="flex flex-wrap items-center gap-2.5">
@@ -719,7 +718,7 @@ export function FichaView() {
                     >
                       {isGeneratingPdf ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                       <span className="text-sm font-medium">
-                        {isGeneratingPdf ? 'Generando PDF...' : 'Descargar mi Manual'}
+                        {isGeneratingPdf ? t('manual.generatingPdf') : t('manual.downloadPdf')}
                       </span>
                     </button>
                   )}
@@ -730,7 +729,7 @@ export function FichaView() {
                     className="flex items-center gap-2 px-4 py-2 bg-[#F9F7F1] text-stone-700 rounded-full hover:bg-[#EAE2D6] transition-colors shadow-sm disabled:opacity-50"
                   >
                     {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-                    <span className="text-sm font-medium">Regenerar mi manual</span>
+                    <span className="text-sm font-medium">{t('manual.regenerate')}</span>
                   </button>
                 </div>
              </div>
@@ -744,9 +743,9 @@ export function FichaView() {
              
              {displayFicha.fechaGeneracion && (
                 <div className="mt-8 pt-6 border-t border-[#EAE2D6] flex justify-between items-center text-sm text-stone-400">
-                  <span>Generado por el Facilitador Galáctico</span>
+                  <span>{t('manual.generatedBy')}</span>
                   <span>
-                    El {new Date(displayFicha.fechaGeneracion.toDate ? displayFicha.fechaGeneracion.toDate() : displayFicha.fechaGeneracion).toLocaleDateString()}
+                    {t('manual.onDate')} {new Date(displayFicha.fechaGeneracion.toDate ? displayFicha.fechaGeneracion.toDate() : displayFicha.fechaGeneracion).toLocaleDateString()}
                   </span>
                 </div>
              )}
@@ -758,7 +757,7 @@ export function FichaView() {
              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
                 <div className="flex items-center gap-3 text-[#4A4E4D]">
                   <Sparkles className="w-7 h-7 text-[#8A817C]" />
-                  <h2 className="text-2xl font-serif">Manual de Usuario Humano (Legacy)</h2>
+                  <h2 className="text-2xl font-serif">{t('manual.legacyTitle')}</h2>
                 </div>
                 
                 <button
@@ -767,7 +766,7 @@ export function FichaView() {
                   className="flex items-center gap-2 px-4 py-2 bg-[#F9F7F1] text-stone-700 rounded-full hover:bg-[#EAE2D6] transition-colors shadow-sm disabled:opacity-50"
                 >
                   {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-                  <span className="text-sm font-medium">Actualizar al nuevo formato en capas</span>
+                  <span className="text-sm font-medium">{t('manual.updateFormat')}</span>
                 </button>
              </div>
 
@@ -779,9 +778,9 @@ export function FichaView() {
              
              {displayFicha.fechaGeneracion && (
                 <div className="mt-8 pt-6 border-t border-[#EAE2D6] flex justify-between items-center text-sm text-stone-400">
-                  <span>Generado por el Facilitador Galáctico</span>
+                  <span>{t('manual.generatedBy')}</span>
                   <span>
-                    El {new Date(displayFicha.fechaGeneracion.toDate ? displayFicha.fechaGeneracion.toDate() : displayFicha.fechaGeneracion).toLocaleDateString()}
+                    {t('manual.onDate')} {new Date(displayFicha.fechaGeneracion.toDate ? displayFicha.fechaGeneracion.toDate() : displayFicha.fechaGeneracion).toLocaleDateString()}
                   </span>
                 </div>
              )}
@@ -794,22 +793,22 @@ export function FichaView() {
               <Sparkles className="w-8 h-8 text-[#8A817C]" />
             </div>
             
-            <h2 className="text-2xl font-serif text-[#4A4E4D] mb-2">Tu Manual Galáctico está listo para nacer</h2>
+            <h2 className="text-2xl font-serif text-[#4A4E4D] mb-2">{t('manual.readyTitle')}</h2>
             <p className="text-stone-500 max-w-md mx-auto mb-8">
-              El Facilitador Galáctico analizará tu carta astral y creará tu Manual de Usuario personalizado.
+              {t('manual.readyDesc')}
             </p>
             
             {isGenerating ? (
               <div className="flex items-center gap-3 px-6 py-3 bg-[#F9F7F1] text-stone-500 rounded-full font-medium">
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span>El Facilitador Galáctico está tejiendo tu manual...</span>
+                <span>{t('manual.weaving')}</span>
               </div>
             ) : (
               <button
                 onClick={handleRegenerateManual}
                 className="bg-[#A5A58D] hover:bg-[#6B705C] text-white py-3 px-8 rounded-xl font-medium transition-colors flex items-center gap-2 shadow-sm"
               >
-                <span>✨ Generar mi Manual</span>
+                <span>{t('manual.generateBtn')}</span>
               </button>
             )}
           </div>
@@ -824,8 +823,8 @@ export function FichaView() {
             {/* Header del modal */}
             <div className="flex justify-between items-center mb-6 border-b border-stone-100 pb-4">
               <div>
-                <h3 className="text-xl font-serif text-stone-900">Salir de la Comunidad</h3>
-                <p className="text-xs text-stone-400 font-bold uppercase tracking-wider mt-1">Paso {leaveStep} de 3</p>
+                <h3 className="text-xl font-serif text-stone-900">{t('leave.title')}</h3>
+                <p className="text-xs text-stone-400 font-bold uppercase tracking-wider mt-1">{t('leave.stepOf', { current: leaveStep, total: 3 })}</p>
               </div>
               <button 
                 onClick={() => {
@@ -845,12 +844,12 @@ export function FichaView() {
               {leaveStep === 1 && (
                 <div className="space-y-4">
                   <div className="text-sm text-stone-600 mb-2">
-                    Perteneces a múltiples comunidades. ¿De cuál de ellas deseas salir?
+                    {t('leave.whichCommunity')}
                   </div>
                   {loadingCommunities ? (
                     <div className="flex flex-col items-center justify-center py-12 text-stone-400">
                       <Loader2 className="w-8 h-8 animate-spin mb-2" />
-                      <span className="text-sm">Cargando tus comunidades...</span>
+                      <span className="text-sm">{t('leave.loadingCommunities')}</span>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -887,21 +886,14 @@ export function FichaView() {
                 <div className="space-y-5">
                   <div>
                     <p className="text-sm text-stone-600">
-                      Para ayudarnos a cuidar y mejorar la convivencia en Kanarii, por favor comparte el motivo principal de tu baja.
+                      {t('leave.motiveExplanation')}
                     </p>
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-1">Motivo (Obligatorio)</label>
+                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-1">{t('leave.motiveRequired')}</label>
                     <div className="grid grid-cols-1 gap-2.5">
-                      {[
-                        "Me voy a vivir a otro lugar",
-                        "No tengo tiempo",
-                        "No me siento alineado/a",
-                        "Conflicto no resuelto",
-                        "Motivo personal",
-                        "Otro"
-                      ].map((motivo) => (
+                      {((t('leave.motives', { returnObjects: true }) as string[]) || []).map((motivo) => (
                         <button
                           key={motivo}
                           type="button"
@@ -919,12 +911,12 @@ export function FichaView() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-1">Comentario libre (Opcional)</label>
+                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-1">{t('leave.commentOptional')}</label>
                     <textarea
                       value={leaveComentario}
                       onChange={(e) => setLeaveComentario(e.target.value)}
                       rows={3}
-                      placeholder="Comparte cualquier detalle, sugerencia de mejora o agradecimiento..."
+                      placeholder={t('leave.commentPlaceholder')}
                       className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl py-3 px-4 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D] text-sm resize-none"
                     />
                   </div>
@@ -937,9 +929,9 @@ export function FichaView() {
                     <LogOut className="w-8 h-8 text-red-500" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-serif text-stone-900 mb-2">¿Confirmas que quieres salir?</h4>
+                    <h4 className="text-lg font-serif text-stone-900 mb-2">{t('leave.confirmTitle')}</h4>
                     <p className="text-sm text-stone-500 max-w-sm mx-auto">
-                      Esta acción eliminará tu acceso a la comunidad. Podrás volver a unirte en el futuro si lo deseas.
+                      {t('leave.confirmDesc')}
                     </p>
                   </div>
                 </div>
@@ -954,7 +946,7 @@ export function FichaView() {
                   onClick={() => setLeaveStep(prev => (prev - 1) as 1 | 2 | 3)}
                   className="px-4 py-2 text-stone-500 hover:text-stone-800 text-sm font-medium transition-colors"
                 >
-                  ← Atrás
+                  {t('leave.back')}
                 </button>
               ) : (
                 <div />
@@ -970,7 +962,7 @@ export function FichaView() {
                   disabled={leaveStep === 2 && !leaveMotivo}
                   className="px-6 py-2 bg-[#4A4E4D] text-white rounded-xl text-sm font-medium hover:bg-[#363a39] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  Continuar →
+                  {t('leave.continue')}
                 </button>
               ) : (
                 <button
@@ -978,7 +970,7 @@ export function FichaView() {
                   onClick={handleLeaveCommunity}
                   className="px-6 py-2 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 transition-colors"
                 >
-                  Confirmar salida
+                  {t('leave.confirmLeave')}
                 </button>
               )}
             </div>

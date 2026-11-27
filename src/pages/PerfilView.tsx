@@ -8,8 +8,10 @@ import PasaporteVisual from '../components/perfil/PasaporteVisual';
 import { FichaReadOnly, getMergedDatosPersona } from '../components/perfil/FichaReadOnly';
 import { getTriadaFromFicha } from '../lib/appService';
 import { calcularKin } from '../lib/kinMaya';
+import { useTranslation } from 'react-i18next';
 
 export function PerfilView() {
+  const { t } = useTranslation('passport');
   const { appUser } = useAuth();
   const { ficha, loading: loadingFicha } = useFicha();
   const { comunidades } = useComunidad();
@@ -21,7 +23,7 @@ export function PerfilView() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-[#8A817C]">
         <Loader2 className="w-8 h-8 animate-spin mb-4" />
-        <p className="text-sm font-medium">Cargando tu perfil...</p>
+        <p className="text-sm font-medium">{t('profile.loading')}</p>
       </div>
     );
   }
@@ -33,7 +35,7 @@ export function PerfilView() {
     : undefined;
 
   const mappedUser = {
-    name: appUser.displayName || 'Miembro',
+    name: appUser.displayName || t('profile.defaultName'),
     avatarUrl: appUser.photoURL || undefined,
     roles: [datos?.headline].filter(Boolean) as string[],
     offerings: triada.ofrendas || [],
@@ -76,7 +78,7 @@ export function PerfilView() {
           )}
           <div className="min-w-0">
             <h1 className="text-xl sm:text-2xl font-serif font-bold text-[#4A4E4D] break-words">
-              {appUser.displayName || 'Miembro Kanarii'}
+              {appUser.displayName || t('profile.defaultName')}
             </h1>
             {datos?.headline && (
               <p className="text-sm font-medium text-[#6B705C] mt-0.5 truncate">
@@ -93,15 +95,15 @@ export function PerfilView() {
             className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#6B705C] hover:bg-[#5A5A40] text-white rounded-xl text-xs font-bold transition-all shadow-xs"
           >
             <Edit2 className="w-3.5 h-3.5" />
-            Editar ficha
+            {t('profile.editFicha')}
           </Link>
           <Link
             to="/ajustes"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F9F7F1] hover:bg-[#EAE2D6]/70 text-[#4A4E4D] border border-[#EAE2D6] rounded-xl text-xs font-semibold transition-all"
-            title="Ajustes y privacidad"
+            title={t('profile.settingsTitle')}
           >
             <Settings className="w-3.5 h-3.5 text-[#6B705C]" />
-            Ajustes
+            {t('profile.settings')}
           </Link>
         </div>
       </header>
@@ -118,7 +120,7 @@ export function PerfilView() {
           }`}
         >
           <Sparkles className="w-4 h-4 shrink-0" />
-          <span>Pasaporte Cósmico</span>
+          <span>{t('profile.cosmicPassport')}</span>
         </button>
 
         <button
@@ -131,7 +133,7 @@ export function PerfilView() {
           }`}
         >
           <FileText className="w-4 h-4 shrink-0" />
-          <span>Ficha Comunitaria</span>
+          <span>{t('profile.communityFicha')}</span>
         </button>
 
         <button
@@ -144,7 +146,7 @@ export function PerfilView() {
           }`}
         >
           <Users className="w-4 h-4 shrink-0" />
-          <span>Mis Comunidades ({userComunidades.length})</span>
+          <span>{t('profile.myCommunities', { count: userComunidades.length })}</span>
         </button>
       </div>
 
@@ -153,7 +155,7 @@ export function PerfilView() {
         <div className="space-y-6 animate-in fade-in duration-200">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
             <span className="text-xs text-stone-500">
-              Vista interactiva de tu identidad cósmica y aportes a la tribu.
+              {t('profile.passportTabDesc')}
             </span>
             {appUser.uid && (
               <Link
@@ -163,7 +165,7 @@ export function PerfilView() {
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-[#6B705C] hover:text-[#4A4E4D] hover:underline"
               >
                 <Globe className="w-3.5 h-3.5" />
-                Ver mi pasaporte público universal
+                {t('profile.viewPublicUniversal')}
                 <ExternalLink className="w-3 h-3" />
               </Link>
             )}
@@ -182,14 +184,14 @@ export function PerfilView() {
         <div className="space-y-4 animate-in fade-in duration-200">
           <div className="flex items-center justify-between px-1">
             <span className="text-xs text-stone-500">
-              Detalle completo de tu ficha de convivencia, ofrendas, saberes y necesidades.
+              {t('profile.fichaTabDesc')}
             </span>
             <Link
               to="/ficha?edit=1"
               className="text-xs font-semibold text-[#6B705C] hover:text-[#4A4E4D] flex items-center gap-1"
             >
               <Edit2 className="w-3.5 h-3.5" />
-              Editar datos
+              {t('profile.editData')}
             </Link>
           </div>
 
@@ -213,19 +215,19 @@ export function PerfilView() {
                 >
                   <div className="space-y-1">
                     <h3 className="font-serif font-bold text-[#4A4E4D] text-base">{com?.nombre}</h3>
-                    <p className="text-xs text-stone-500 line-clamp-2">{com?.descripcion || 'Comunidad en Kanarii'}</p>
+                    <p className="text-xs text-stone-500 line-clamp-2">{com?.descripcion || t('profile.fallbackCommunityDesc')}</p>
                   </div>
                   <div className="flex items-center justify-between pt-2 border-t border-stone-100">
                     <span className="text-[11px] font-medium text-stone-400">
                       {typeof com?.ubicacion === 'string'
                         ? com.ubicacion
-                        : (com?.ubicacion?.municipio || com?.ubicacion?.region || 'Canarias')}
+                        : (com?.ubicacion?.municipio || com?.ubicacion?.region || t('profile.fallbackLocation'))}
                     </span>
                     <Link
                       to={`/c/${com?.slug || com?.id}`}
                       className="inline-flex items-center gap-1 text-xs font-bold text-[#6B705C] hover:text-[#4A4E4D]"
                     >
-                      Entrar
+                      {t('profile.enterCommunity')}
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
@@ -236,16 +238,16 @@ export function PerfilView() {
             <div className="bg-white p-8 rounded-3xl border border-[#EAE2D6] text-center space-y-4">
               <Users className="w-10 h-10 text-stone-300 mx-auto" />
               <div className="space-y-1">
-                <h3 className="font-serif font-bold text-base text-[#4A4E4D]">Aún no perteneces a ninguna comunidad</h3>
+                <h3 className="font-serif font-bold text-base text-[#4A4E4D]">{t('profile.noCommunitiesTitle')}</h3>
                 <p className="text-xs text-stone-500 max-w-sm mx-auto">
-                  Explora las comunidades activas en Kanarii y solicita unirte para colaborar con tus saberes y ofrendas.
+                  {t('profile.noCommunitiesDesc')}
                 </p>
               </div>
               <Link
                 to="/comunidades"
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#6B705C] hover:bg-[#5A5A40] text-white rounded-xl text-xs font-bold transition-all shadow-xs"
               >
-                Explorar Comunidades
+                {t('profile.exploreCommunities')}
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>

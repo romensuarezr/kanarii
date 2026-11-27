@@ -1,5 +1,5 @@
 # Reporte de Paridad de Claves i18n
 
-> Generado automáticamente el 2026-11-27T17:30:53.777Z
+> Generado automáticamente el 2026-11-27T17:53:50.679Z
 
 ✅ **Paridad completa del 100%.** No se encontraron claves faltantes entre ES y EN en ningún namespace.

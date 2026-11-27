@@ -10,14 +10,15 @@ import { useComunidadActions } from '../hooks/useComunidadActions';
 import { useToast } from '../components/Toaster';
 import { LocationAutocomplete } from '../components/LocationAutocomplete';
 import { FieldError } from '../components/ui/FieldError';
+import { useTranslation } from 'react-i18next';
 
 const TIPOS = [
-  { value: 'finca', label: 'Finca', icon: '🌿' },
-  { value: 'ecoaldea', label: 'Ecoaldea', icon: '🏡' },
-  { value: 'cohousing', label: 'Cohousing', icon: '🏘️' },
-  { value: 'urbano', label: 'Espacio Urbano', icon: '🏙️' },
-  { value: 'nomada', label: 'Nómada', icon: '🌍' },
-  { value: 'otro', label: 'Otro', icon: '📂' },
+  { value: 'finca', labelKey: 'types.finca', icon: '🌿' },
+  { value: 'ecoaldea', labelKey: 'types.ecoaldea', icon: '🏡' },
+  { value: 'cohousing', labelKey: 'types.cohousing', icon: '🏘️' },
+  { value: 'urbano', labelKey: 'types.urbano', icon: '🏙️' },
+  { value: 'nomada', labelKey: 'types.nomada', icon: '🌍' },
+  { value: 'otro', labelKey: 'types.otro', icon: '📂' },
 ] as const;
 
 type TipoComunidad = typeof TIPOS[number]['value'];
@@ -70,6 +71,7 @@ function TagChip({ tag, onRemove }: { tag: string; onRemove?: () => void }) {
 }
 
 export function RegistroComunidadView() {
+  const { t } = useTranslation('communities');
   const { appUser } = useAuth();
   const { setCommunityId } = useComunidad();
   const navigate = useNavigate();
@@ -127,27 +129,32 @@ export function RegistroComunidadView() {
         tipo: form.tipo, capacidad: form.capacidad ? parseInt(form.capacidad) : undefined,
         adminUids: [appUser.uid],
       }, {
-        successMessage: '🎉 ¡Tu comunidad ha sido creada!',
+        successMessage: t('register.fields.createSuccess'),
         onSuccess: () => {
           setCommunityId(form.slug);
           navigate(`/admin?tab=comunidad&nueva=true&slug=${form.slug}&nombre=${encodeURIComponent(form.nombre)}`);
         },
         onError: (err: any) => {
-          if (err?.message?.includes('SLUG_ALREADY_EXISTS')) { setStep(0); setError('Ese identificador ya está en uso. Elige otro.'); }
-          else setError('Ocurrió un error al crear la comunidad. Inténtalo de nuevo.');
+          if (err?.message?.includes('SLUG_ALREADY_EXISTS')) { setStep(0); setError(t('register.fields.slugTaken')); }
+          else setError(t('register.fields.createError'));
         },
       });
     } catch { /* handled by onError */ }
   };
 
-  const addTag = (t: string) => {
-    const tag = t.trim().toLowerCase();
+  const addTag = (tg: string) => {
+    const tag = tg.trim().toLowerCase();
     if (tag && !form.tags.includes(tag) && form.tags.length < 10) set({ tags: [...form.tags, tag] });
     setTagInput('');
   };
 
-  const stepTitles = ['Identidad', 'Lugar', 'Cultura y acceso', 'Confirmación'];
-  const tipoInfo = TIPOS.find(t => t.value === form.tipo);
+  const stepTitles = [
+    t('register.steps.identity'),
+    t('register.steps.location'),
+    t('register.steps.culture'),
+    t('register.steps.confirmation')
+  ];
+  const tipoInfo = TIPOS.find(tp => tp.value === form.tipo);
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8 pb-24">
@@ -156,8 +163,8 @@ export function RegistroComunidadView() {
         <div className="flex items-center gap-3 mb-8">
           <button onClick={() => navigate('/comunidades')} className="p-2 rounded-xl hover:bg-[#EAE2D6] transition-colors"><ArrowLeft className="w-5 h-5 text-stone-600" /></button>
           <div>
-            <h1 className="text-2xl md:text-3xl font-serif text-[#4A4E4D]">Crear nueva comunidad</h1>
-            <p className="text-sm text-stone-500 mt-0.5">Paso {step + 1} de 4 — {stepTitles[step]}</p>
+            <h1 className="text-2xl md:text-3xl font-serif text-[#4A4E4D]">{t('register.title')}</h1>
+            <p className="text-sm text-stone-500 mt-0.5">{t('register.stepOf', { current: step + 1, total: 4, title: stepTitles[step] })}</p>
           </div>
         </div>
 
@@ -181,45 +188,45 @@ export function RegistroComunidadView() {
             {/* PASO 1: Identidad */}
             {step === 0 && (
               <div className="space-y-6">
-                <div className="flex items-center gap-3 mb-2"><Leaf className="w-6 h-6 text-[#6B705C]" /><h2 className="text-xl font-serif text-[#4A4E4D]">Identidad de tu comunidad</h2></div>
+                <div className="flex items-center gap-3 mb-2"><Leaf className="w-6 h-6 text-[#6B705C]" /><h2 className="text-xl font-serif text-[#4A4E4D]">{t('register.stepHeadings.identity')}</h2></div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">Nombre <span className="text-red-400">*</span></label>
-                  <input value={form.nombre} onChange={e => set({ nombre: e.target.value })} placeholder="Ej: Arteara, La Finca del Sol..."
+                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('register.fields.name')} <span className="text-red-400">*</span></label>
+                  <input value={form.nombre} onChange={e => set({ nombre: e.target.value })} placeholder={t('register.fields.namePlaceholder')}
                     className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">Identificador (slug) <span className="text-red-400">*</span></label>
+                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('register.fields.slug')} <span className="text-red-400">*</span></label>
                   <div className="relative">
                     <input value={form.slug} onChange={e => { setSlugManual(true); set({ slug: toSlug(e.target.value) }); }}
-                      placeholder="mi-comunidad" className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 pr-10 font-mono text-sm" />
+                      placeholder={t('register.fields.slugPlaceholder')} className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 pr-10 font-mono text-sm" />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
                       {slugStatus === 'checking' && <Loader2 className="w-5 h-5 text-stone-400 animate-spin" />}
                       {slugStatus === 'available' && <CheckCircle2 className="w-5 h-5 text-green-500" />}
                     </div>
                   </div>
                   {slugStatus === 'taken' ? (
-                    <FieldError message="Este identificador ya está en uso" />
+                    <FieldError message={t('register.fields.slugTaken')} />
                   ) : (
                     <p className="text-xs mt-1.5 text-stone-400">
-                      {slugStatus === 'available' ? '✓ Disponible' : `kanarii.app/c/${form.slug || '...'}`}
+                      {slugStatus === 'available' ? `✓ ${t('register.fields.slugAvailable')}` : `kanarii.app/c/${form.slug || '...'}`}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">Descripción corta <span className="text-red-400">*</span></label>
+                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('register.fields.description')} <span className="text-red-400">*</span></label>
                   <textarea value={form.descripcion} onChange={e => { if (e.target.value.length <= 160) set({ descripcion: e.target.value }); }} rows={2}
-                    placeholder="¿De qué va tu comunidad? (máx. 160 caracteres)" className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 resize-none" />
+                    placeholder={t('register.fields.descriptionPlaceholder')} className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 resize-none" />
                   <p className={`text-xs text-right ${form.descripcion.length > 140 ? 'text-amber-500' : 'text-stone-400'}`}>{form.descripcion.length}/160</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">Manifiesto <span className="text-stone-400 font-normal">(opcional, Markdown)</span></label>
+                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('register.fields.manifesto')} <span className="text-stone-400 font-normal">{t('register.fields.manifestoOptional')}</span></label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <textarea value={form.manifiesto} onChange={e => set({ manifiesto: e.target.value })} rows={6}
-                      placeholder="# Nuestro manifiesto&#10;&#10;Escribe aquí los valores..." className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 resize-none font-mono text-sm" />
+                      placeholder={t('register.fields.manifestoPlaceholder')} className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 resize-none font-mono text-sm" />
                     {form.manifiesto && (
                       <div className="rounded-xl border border-[#EAE2D6] bg-[#F9F7F1] p-4 overflow-y-auto max-h-[200px] prose prose-sm prose-stone">
                         <ReactMarkdown>{form.manifiesto}</ReactMarkdown>
@@ -233,10 +240,10 @@ export function RegistroComunidadView() {
             {/* PASO 2: Lugar */}
             {step === 1 && (
               <div className="space-y-6">
-                <div className="flex items-center gap-3 mb-2"><MapPin className="w-6 h-6 text-[#6B705C]" /><h2 className="text-xl font-serif text-[#4A4E4D]">¿Dónde estáis?</h2></div>
+                <div className="flex items-center gap-3 mb-2"><MapPin className="w-6 h-6 text-[#6B705C]" /><h2 className="text-xl font-serif text-[#4A4E4D]">{t('register.stepHeadings.location')}</h2></div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-stone-700">Buscar ubicación</label>
+                  <label className="block text-sm font-semibold text-stone-700">{t('register.fields.locationSearch')}</label>
                   <LocationAutocomplete
                     onSelect={(data) => {
                       const addr = data.address || {};
@@ -252,40 +259,40 @@ export function RegistroComunidadView() {
                       });
                     }}
                   />
-                  <p className="text-xs text-stone-400">Busca la ubicación para autocompletar las coordenadas reales de la comunidad.</p>
+                  <p className="text-xs text-stone-400">{t('register.fields.locationHint')}</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-stone-700 mb-1.5">Municipio <span className="text-red-400">*</span></label>
-                    <input value={form.municipio} onChange={e => set({ municipio: e.target.value })} placeholder="San Bartolomé" className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3" />
+                    <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('register.fields.municipality')} <span className="text-red-400">*</span></label>
+                    <input value={form.municipio} onChange={e => set({ municipio: e.target.value })} placeholder={t('register.fields.municipalityPlaceholder')} className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3" />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-stone-700 mb-1.5">Región / Isla <span className="text-red-400">*</span></label>
-                    <input value={form.region} onChange={e => set({ region: e.target.value })} placeholder="Gran Canaria" className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3" />
+                    <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('register.fields.region')} <span className="text-red-400">*</span></label>
+                    <input value={form.region} onChange={e => set({ region: e.target.value })} placeholder={t('register.fields.regionPlaceholder')} className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3" />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-stone-700 mb-1.5">País <span className="text-red-400">*</span></label>
-                    <input value={form.pais} onChange={e => set({ pais: e.target.value })} placeholder="España" className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3" />
+                    <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('register.fields.country')} <span className="text-red-400">*</span></label>
+                    <input value={form.pais} onChange={e => set({ pais: e.target.value })} placeholder={t('register.fields.countryPlaceholder')} className="w-full rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-3">Tipo de espacio</label>
+                  <label className="block text-sm font-semibold text-stone-700 mb-3">{t('register.fields.spaceType')}</label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {TIPOS.map(t => (
-                      <button key={t.value} type="button" onClick={() => set({ tipo: t.value })}
-                        className={`p-4 rounded-2xl border-2 text-center transition-all hover:scale-[1.02] ${form.tipo === t.value ? 'border-[#6B705C] bg-[#6B705C]/5 shadow-md' : 'border-[#EAE2D6] hover:border-[#CB997E]/40 bg-white'}`}>
-                        <span className="text-2xl block mb-1">{t.icon}</span>
-                        <span className="text-sm font-semibold text-stone-700">{t.label}</span>
+                    {TIPOS.map(tp => (
+                      <button key={tp.value} type="button" onClick={() => set({ tipo: tp.value })}
+                        className={`p-4 rounded-2xl border-2 text-center transition-all hover:scale-[1.02] ${form.tipo === tp.value ? 'border-[#6B705C] bg-[#6B705C]/5 shadow-md' : 'border-[#EAE2D6] hover:border-[#CB997E]/40 bg-white'}`}>
+                        <span className="text-2xl block mb-1">{tp.icon}</span>
+                        <span className="text-sm font-semibold text-stone-700">{t(tp.labelKey)}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">Capacidad estimada <span className="text-stone-400 font-normal">(personas, opcional)</span></label>
-                  <input type="number" min="1" value={form.capacidad} onChange={e => set({ capacidad: e.target.value })} placeholder="Ej: 15"
+                  <label className="block text-sm font-semibold text-stone-700 mb-1.5">{t('register.fields.capacity')} <span className="text-stone-400 font-normal">{t('register.fields.capacityOptional')}</span></label>
+                  <input type="number" min="1" value={form.capacidad} onChange={e => set({ capacidad: e.target.value })} placeholder={t('register.fields.capacityPlaceholder')}
                     className="w-full max-w-[200px] rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3" />
                 </div>
               </div>
@@ -294,34 +301,34 @@ export function RegistroComunidadView() {
             {/* PASO 3: Cultura y acceso */}
             {step === 2 && (
               <div className="space-y-6">
-                <div className="flex items-center gap-3 mb-2"><Users className="w-6 h-6 text-[#6B705C]" /><h2 className="text-xl font-serif text-[#4A4E4D]">Cultura y acceso</h2></div>
+                <div className="flex items-center gap-3 mb-2"><Users className="w-6 h-6 text-[#6B705C]" /><h2 className="text-xl font-serif text-[#4A4E4D]">{t('register.stepHeadings.culture')}</h2></div>
 
                 <Toggle checked={form.esPublica} onChange={v => set({ esPublica: v })}
-                  label="Comunidad pública" desc="Visible en el directorio. Cualquier persona puede verla y solicitar acceso." />
+                  label={t('register.fields.publicCommunity')} desc={form.esPublica ? t('register.fields.publicDesc') : t('register.fields.privateDesc')} />
 
                 {form.esPublica && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
                     <Toggle checked={form.requiereAprobacion} onChange={v => set({ requiereAprobacion: v })}
-                      label="Requiere aprobación" desc="Un admin debe aprobar cada solicitud de acceso. Si desactivas esto, cualquier persona puede unirse libremente." />
+                      label={t('register.fields.requiresApproval')} desc={form.requiereAprobacion ? t('register.fields.approvalDesc') : t('register.fields.instantAccessDesc')} />
                   </motion.div>
                 )}
 
                 {!form.esPublica && (
                   <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-sm text-amber-700">
-                    <p className="font-medium">🔒 Comunidad privada</p>
-                    <p className="mt-1">Solo accesible por invitación. La aprobación es obligatoria.</p>
+                    <p className="font-medium">{t('register.fields.privateBadge')}</p>
+                    <p className="mt-1">{t('register.fields.privateNote')}</p>
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-2">Etiquetas</label>
+                  <label className="block text-sm font-semibold text-stone-700 mb-2">{t('register.fields.tags')}</label>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    {form.tags.map(tag => <TagChip key={tag} tag={tag} onRemove={() => set({ tags: form.tags.filter(t => t !== tag) })} />)}
+                    {form.tags.map(tag => <TagChip key={tag} tag={tag} onRemove={() => set({ tags: form.tags.filter(tg => tg !== tag) })} />)}
                   </div>
                   <div className="flex gap-2">
                     <input value={tagInput} onChange={e => setTagInput(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTag(tagInput); } }}
-                      placeholder="Escribe y pulsa Enter..." className="flex-1 rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-sm" />
+                      placeholder={t('register.fields.tagsPlaceholder')} className="flex-1 rounded-xl border-[#EAE2D6] bg-[#F9F7F1] focus:border-[#CB997E] focus:ring-[#CB997E] p-3 text-sm" />
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">
                     {TAG_SUGGESTIONS.filter(s => !form.tags.includes(s)).map(s => (
@@ -336,7 +343,7 @@ export function RegistroComunidadView() {
             {/* PASO 4: Confirmación — mini preview de ficha pública */}
             {step === 3 && (
               <div className="space-y-6">
-                <div className="flex items-center gap-3 mb-2"><Eye className="w-6 h-6 text-[#6B705C]" /><h2 className="text-xl font-serif text-[#4A4E4D]">Confirma los datos</h2></div>
+                <div className="flex items-center gap-3 mb-2"><Eye className="w-6 h-6 text-[#6B705C]" /><h2 className="text-xl font-serif text-[#4A4E4D]">{t('register.stepHeadings.confirmation')}</h2></div>
 
                 {/* Preview card */}
                 <div className="border-2 border-[#EAE2D6] rounded-3xl overflow-hidden bg-[#F9F7F1]">
@@ -345,7 +352,7 @@ export function RegistroComunidadView() {
                     <div className="flex items-center gap-4">
                       <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-3xl">{tipoInfo?.icon || '📂'}</div>
                       <div>
-                        <h3 className="text-xl font-serif font-bold">{form.nombre || 'Sin nombre'}</h3>
+                        <h3 className="text-xl font-serif font-bold">{form.nombre || t('register.fields.noName')}</h3>
                         <p className="text-white/70 text-sm font-mono">/{form.slug}</p>
                       </div>
                     </div>
@@ -356,13 +363,13 @@ export function RegistroComunidadView() {
 
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="flex items-center gap-2 text-stone-500"><MapPin className="w-4 h-4" /><span>{form.municipio}, {form.region}, {form.pais}</span></div>
-                      <div className="flex items-center gap-2 text-stone-500"><span className="text-lg">{tipoInfo?.icon}</span><span>{tipoInfo?.label}</span></div>
-                      {form.capacidad && <div className="flex items-center gap-2 text-stone-500"><Users className="w-4 h-4" /><span>~{form.capacidad} personas</span></div>}
+                      <div className="flex items-center gap-2 text-stone-500"><span className="text-lg">{tipoInfo?.icon}</span><span>{tipoInfo ? t(tipoInfo.labelKey) : ''}</span></div>
+                      {form.capacidad && <div className="flex items-center gap-2 text-stone-500"><Users className="w-4 h-4" /><span>{t('register.fields.peopleApprox')}{form.capacidad} {t('register.fields.peopleSuffix')}</span></div>}
                       <div className="flex items-center gap-2 text-stone-500">
-                        {form.esPublica ? <span className="text-xs font-bold uppercase tracking-wider bg-green-50 text-green-600 px-2 py-0.5 rounded-full border border-green-100">Pública</span>
-                          : <span className="text-xs font-bold uppercase tracking-wider bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full border border-blue-100">Privada</span>}
-                        {form.esPublica && !form.requiereAprobacion && <span className="text-xs text-stone-400">Entrada libre</span>}
-                        {(form.requiereAprobacion || !form.esPublica) && <span className="text-xs text-stone-400">Aprobación requerida</span>}
+                        {form.esPublica ? <span className="text-xs font-bold uppercase tracking-wider bg-green-50 text-green-600 px-2 py-0.5 rounded-full border border-green-100">{t('register.fields.public')}</span>
+                          : <span className="text-xs font-bold uppercase tracking-wider bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full border border-blue-100">{t('register.fields.private')}</span>}
+                        {form.esPublica && !form.requiereAprobacion && <span className="text-xs text-stone-400">{t('register.fields.openAccess')}</span>}
+                        {(form.requiereAprobacion || !form.esPublica) && <span className="text-xs text-stone-400">{t('register.fields.approvalRequired')}</span>}
                       </div>
                     </div>
 
@@ -374,7 +381,7 @@ export function RegistroComunidadView() {
 
                     {form.manifiesto && (
                       <details className="pt-2 border-t border-[#EAE2D6]">
-                        <summary className="text-sm font-semibold text-stone-600 cursor-pointer hover:text-[#6B705C]">Ver manifiesto</summary>
+                        <summary className="text-sm font-semibold text-stone-600 cursor-pointer hover:text-[#6B705C]">{t('register.fields.viewManifesto')}</summary>
                         <div className="mt-3 prose prose-sm prose-stone max-h-40 overflow-y-auto"><ReactMarkdown>{form.manifiesto}</ReactMarkdown></div>
                       </details>
                     )}
@@ -383,7 +390,7 @@ export function RegistroComunidadView() {
 
                 <button onClick={handleCreate} disabled={isExecuting}
                   className="w-full bg-[#6B705C] hover:bg-[#4A4E4D] text-white py-4 rounded-2xl font-bold text-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 flex items-center justify-center gap-3">
-                  {isExecuting ? <><Loader2 className="w-5 h-5 animate-spin" />Creando comunidad...</> : <><Sparkles className="w-5 h-5" />Crear comunidad</>}
+                  {isExecuting ? <><Loader2 className="w-5 h-5 animate-spin" />{t('register.fields.creating')}</> : <><Sparkles className="w-5 h-5" />{t('register.fields.create')}</>}
                 </button>
               </div>
             )}
@@ -395,11 +402,11 @@ export function RegistroComunidadView() {
           <div className="flex justify-between mt-6">
             <button onClick={() => { setError(''); setStep(s => s - 1); }} disabled={step === 0}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-stone-600 hover:bg-[#EAE2D6] transition-colors disabled:opacity-30 font-medium">
-              <ArrowLeft className="w-4 h-4" />Anterior
+              <ArrowLeft className="w-4 h-4" />{t('register.fields.prev')}
             </button>
             <button onClick={() => { setError(''); setStep(s => s + 1); }} disabled={!canNext()}
               className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#CB997E] hover:bg-[#B58368] text-white font-bold transition-all shadow-md disabled:opacity-40">
-              Siguiente<ArrowRight className="w-4 h-4" />
+              {t('register.fields.next')}<ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
@@ -408,7 +415,7 @@ export function RegistroComunidadView() {
           <div className="flex justify-start mt-6">
             <button onClick={() => { setError(''); setStep(2); }}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-stone-600 hover:bg-[#EAE2D6] transition-colors font-medium">
-              <ArrowLeft className="w-4 h-4" />Volver a editar
+              <ArrowLeft className="w-4 h-4" />{t('register.fields.backToEdit')}
             </button>
           </div>
         )}

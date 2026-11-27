@@ -32,8 +32,10 @@ import { useFichas } from '../hooks/useFichas';
 import { useToast } from '../hooks/useToast';
 import { useComunidad } from '../contexts/ComunidadContext';
 import { useEntityActions } from '../hooks/useEntityActions';
+import { useTranslation } from 'react-i18next';
 
 export function CruceView() {
+  const { t } = useTranslation('communities');
   const { appUser } = useAuth();
   const navigate = useNavigate();
   const { fichas, loading } = useFichas();
@@ -159,15 +161,15 @@ export function CruceView() {
           <div className="w-16 h-16 bg-[#F9F7F1] rounded-full flex items-center justify-center mx-auto mb-6">
             <ShieldAlert className="w-8 h-8 text-[#A5A58D]" />
           </div>
-          <h2 className="text-2xl font-serif text-[#4A4E4D] mb-4">Acceso Reservado</h2>
+          <h2 className="text-2xl font-serif text-[#4A4E4D] mb-4">{t('cruce.reservedTitle')}</h2>
           <p className="text-stone-600 mb-8">
-            El Cruce de Perfiles es una herramienta para miembros de comunidades. Únete a una tribu para empezar a explorar compatibilidades.
+            {t('cruce.reservedDesc')}
           </p>
           <button 
             onClick={() => navigate('/comunidades')}
             className="w-full bg-[#6B705C] hover:bg-[#4A4E4D] text-white px-8 py-3 rounded-xl font-medium transition-colors shadow-sm"
           >
-            Explorar Comunidades
+            {t('cruce.exploreCommunities')}
           </button>
         </div>
       </div>
@@ -183,30 +185,30 @@ export function CruceView() {
           </button>
           <div className="flex items-center gap-3">
             <Layers className="text-[#6B705C] w-8 h-8" />
-            <h1 className="text-3xl font-serif text-text-heading">Cruce de Perfiles</h1>
+            <h1 className="text-3xl font-serif text-text-heading">{t('cruce.title')}</h1>
           </div>
         </div>
 
         <div className="bg-white rounded-3xl shadow-sm border border-[#EAE2D6] overflow-hidden p-6 mb-8">
           <p className="text-stone-600 mb-6">
-            Selecciona dos miembros para analizar sus compatibilidades y tensiones bajo la lente sociocrática y de diseño humano.
+            {t('cruce.subtitle')}
           </p>
 
           {loading ? (
             <div className="flex items-center gap-3 text-stone-400 py-4 animate-pulse">
               <Search className="w-5 h-5" />
-              <span>Cargando biblioteca de fichas...</span>
+              <span>{t('cruce.loadingMembers')}</span>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-2">Miembro A</label>
+                <label className="block text-sm font-medium text-stone-700 mb-2">{t('cruce.memberA')}</label>
                 <select 
                   className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl px-4 py-3 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]"
                   value={perfil1Id} 
                   onChange={e => setPerfil1Id(e.target.value)}
                 >
-                  <option value="">Selecciona un miembro...</option>
+                  <option value="">{t('cruce.selectMember')}</option>
                   {fichasUnicas.filter(f => f.userId !== perfil2Id).map(f => (
                     <option key={f.userId} value={f.userId}>{getNombre(f)}</option>
                   ))}
@@ -214,13 +216,13 @@ export function CruceView() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-2">Miembro B</label>
+                <label className="block text-sm font-medium text-stone-700 mb-2">{t('cruce.memberB')}</label>
                 <select 
                   className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-xl px-4 py-3 text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]"
                   value={perfil2Id} 
                   onChange={e => setPerfil2Id(e.target.value)}
                 >
-                  <option value="">Selecciona un miembro...</option>
+                  <option value="">{t('cruce.selectMember')}</option>
                   {fichasUnicas.filter(f => f.userId !== perfil1Id).map(f => (
                     <option key={f.userId} value={f.userId}>{getNombre(f)}</option>
                   ))}
@@ -238,10 +240,10 @@ export function CruceView() {
               {analyzing ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Tejiendo el análisis...
+                  {t('cruce.weavingAnalysis')}
                 </div>
               ) : (
-                'Analizar Cruce'
+                t('cruce.analyzeBtn')
               )}
             </button>
           </div>
@@ -265,17 +267,17 @@ export function CruceView() {
                       </p>
                     </>
                   ) : (
-                    <h2 className="text-3xl font-serif text-[#4A4E4D]">Resultados del Encuentro</h2>
+                    <h2 className="text-3xl font-serif text-[#4A4E4D]">{t('cruce.resultsTitle')}</h2>
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   <span className="text-2xl px-6 py-2 bg-[#F9F7F1] border border-[#EAE2D6] rounded-full text-[#6B705C] font-serif shadow-inner">
-                    Sinergia: {result.determinista.puntuacion}%
+                    {t('cruce.synergy')} {result.determinista.puntuacion}%
                   </span>
                   {result.fromCache && (
                     <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 border border-blue-200 text-blue-700 rounded-full text-[10px] uppercase font-bold tracking-wider">
                       <CheckCircle className="w-3 h-3" />
-                      Archivo ({result.generadoEn?.toLocaleDateString()})
+                      {t('cruce.archive', { date: result.generadoEn?.toLocaleDateString() })}
                     </span>
                   )}
                 </div>
@@ -287,15 +289,15 @@ export function CruceView() {
               <div className="mb-10 bg-[#FDFBF7] border border-[#EAE2D6] rounded-2xl p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <Users className="w-5 h-5 text-[#6B705C]" />
-                  <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest">Mapa de Rangos Contextuales</h3>
+                  <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest">{t('cruce.contextualRanges')}</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-white p-4 rounded-xl border border-[#F0EBE0]">
-                    <div className="text-[10px] text-stone-400 font-bold uppercase mb-1">Poder de Influencia</div>
+                    <div className="text-[10px] text-stone-400 font-bold uppercase mb-1">{t('cruce.influencePower')}</div>
                     <div className="text-lg font-serif text-[#4A4E4D]">{result.structured.mapa_rangos.quien_tiene_mas_rango}</div>
                   </div>
                   <div className="bg-white p-4 rounded-xl border border-[#F0EBE0]">
-                    <div className="text-[10px] text-stone-400 font-bold uppercase mb-1">Tipo de Asimetría</div>
+                    <div className="text-[10px] text-stone-400 font-bold uppercase mb-1">{t('cruce.asymmetryType')}</div>
                     <div className="text-lg font-serif text-[#4A4E4D] capitalize">{result.structured.mapa_rangos.tipo_rango}</div>
                   </div>
                   <div className="md:col-span-1 bg-[#F9F7F1] p-4 rounded-xl border border-[#EAE2D6] flex items-center gap-3">
@@ -312,7 +314,7 @@ export function CruceView() {
             <div className="mb-10">
               <div className="flex items-center gap-2 mb-4">
                 <Zap className="w-5 h-5 text-[#6B705C]" />
-                <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest">Canales de Conexión</h3>
+                <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest">{t('cruce.connectionChannels')}</h3>
               </div>
               
               {result.structured ? (
@@ -339,7 +341,7 @@ export function CruceView() {
                     </div>
                   ))}
                   {result.structured.canales_enriquecidos.length === 0 && (
-                    <p className="text-sm text-stone-400 italic md:col-span-2">Sin canales definidos entre estos perfiles.</p>
+                    <p className="text-sm text-stone-400 italic md:col-span-2">{t('cruce.noChannels')}</p>
                   )}
                 </div>
               ) : (
@@ -351,13 +353,12 @@ export function CruceView() {
                     result.determinista.canalesConexion.dominancia.length > 0 || 
                     result.determinista.canalesConexion.compromiso.length > 0
                   )) ? (
-                    <p className="text-sm text-stone-400 italic">No se detectaron canales técnicos.</p>
+                    <p className="text-sm text-stone-400 italic">{t('cruce.noTechChannels')}</p>
                   ) : (
                     <div className="flex flex-wrap gap-2">
                       {result.determinista.canalesConexion.electromagneticos.map((txt, i) => (
                         <span key={i} className="px-3 py-1.5 bg-white text-yellow-800 border border-yellow-200 rounded-full text-xs font-medium">✨ {txt}</span>
                       ))}
-                      {/* ... otros canales simplificados ... */}
                     </div>
                   )}
                 </div>
@@ -369,7 +370,7 @@ export function CruceView() {
               <div className="mb-10">
                 <div className="flex items-center gap-2 mb-4">
                   <MessageSquare className="w-5 h-5 text-[#6B705C]" />
-                  <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest">Puentes de Comunicación (CNV)</h3>
+                  <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest">{t('cruce.cnvBridges')}</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {result.structured.cnv.map((item, i) => (
@@ -380,19 +381,19 @@ export function CruceView() {
                       </div>
                       <div className="p-4 space-y-3">
                         <div className="flex gap-2">
-                          <span className="text-[10px] bg-stone-100 text-stone-500 px-1.5 py-0.5 rounded h-fit">Hecho</span>
+                          <span className="text-[10px] bg-stone-100 text-stone-500 px-1.5 py-0.5 rounded h-fit">{t('cruce.fact')}</span>
                           <p className="text-xs text-stone-600">{item.observacion}</p>
                         </div>
                         <div className="flex gap-2">
-                          <span className="text-[10px] bg-blue-50 text-blue-500 px-1.5 py-0.5 rounded h-fit">Siento</span>
+                          <span className="text-[10px] bg-blue-50 text-blue-500 px-1.5 py-0.5 rounded h-fit">{t('cruce.feel')}</span>
                           <p className="text-xs text-stone-600">{item.sentimiento}</p>
                         </div>
                         <div className="flex gap-2">
-                          <span className="text-[10px] bg-green-50 text-green-500 px-1.5 py-0.5 rounded h-fit">Necesito</span>
+                          <span className="text-[10px] bg-green-50 text-green-500 px-1.5 py-0.5 rounded h-fit">{t('cruce.need')}</span>
                           <p className="text-xs text-stone-600">{item.necesidad}</p>
                         </div>
                         <div className="mt-4 pt-3 border-t border-dashed border-stone-200">
-                          <div className="text-[10px] font-bold text-[#6B705C] uppercase mb-1">Petición Concreta</div>
+                          <div className="text-[10px] font-bold text-[#6B705C] uppercase mb-1">{t('cruce.concreteRequest')}</div>
                           <p className="text-sm italic font-serif text-[#4A4E4D]">"{item.peticion}"</p>
                         </div>
                       </div>
@@ -407,7 +408,7 @@ export function CruceView() {
               <div className="mb-10">
                 <div className="flex items-center gap-2 mb-4">
                   <Eye className="w-5 h-5 text-[#6B705C]" />
-                  <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest">Espejos y Sombras Probables</h3>
+                  <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest">{t('cruce.shadowsTitle')}</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {result.structured.sombras.map((s, i) => (
@@ -418,16 +419,16 @@ export function CruceView() {
                       <div className="font-serif text-lg mb-4 border-b border-white/10 pb-2">{s.persona}</div>
                       <div className="space-y-4">
                         <div>
-                          <div className="text-[9px] uppercase tracking-widest text-white/50 mb-1">Lo que conscientemente cree</div>
+                          <div className="text-[9px] uppercase tracking-widest text-white/50 mb-1">{t('cruce.consciouslyBelieves')}</div>
                           <div className="text-sm">{s.proceso_primario}</div>
                         </div>
                         <div>
-                          <div className="text-[9px] uppercase tracking-widest text-white/50 mb-1">Sombra proyectada en el otro</div>
+                          <div className="text-[9px] uppercase tracking-widest text-white/50 mb-1">{t('cruce.shadowProjected')}</div>
                           <div className="text-sm font-medium text-amber-200">{s.sombra_probable}</div>
                         </div>
                         <div className="bg-white/5 p-3 rounded-xl border border-white/10">
-                          <div className="text-[9px] uppercase tracking-widest text-white/50 mb-1">Gancho Proyectivo</div>
-                          <div className="text-sm italic">"Me dispara cuando el otro..." {s.gancho_proyectivo}</div>
+                          <div className="text-[9px] uppercase tracking-widest text-white/50 mb-1">{t('cruce.projectiveHook')}</div>
+                          <div className="text-sm italic">{t('cruce.triggersWhen')} {s.gancho_proyectivo}</div>
                         </div>
                       </div>
                     </div>
@@ -444,22 +445,22 @@ export function CruceView() {
                 </div>
                 <div className="flex items-center gap-2 mb-6">
                   <Repeat className="w-5 h-5" />
-                  <h3 className="text-sm font-bold uppercase tracking-widest">Protocolo de Doble Enlace Sociocrático</h3>
+                  <h3 className="text-sm font-bold uppercase tracking-widest">{t('cruce.doubleLinkTitle')}</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
                   <div className="space-y-2">
-                    <div className="text-[10px] text-white/60 font-bold uppercase">Enlace 1: {result.structured.acuerdo_doble_enlace.dominio_1.persona}</div>
+                    <div className="text-[10px] text-white/60 font-bold uppercase">{t('cruce.link1')} {result.structured.acuerdo_doble_enlace.dominio_1.persona}</div>
                     <div className="text-xl font-serif">{result.structured.acuerdo_doble_enlace.dominio_1.area}</div>
-                    <div className="text-[10px] bg-white/20 w-fit px-2 py-0.5 rounded">Revisión: {result.structured.acuerdo_doble_enlace.dominio_1.fecha_revision}</div>
+                    <div className="text-[10px] bg-white/20 w-fit px-2 py-0.5 rounded">{t('cruce.review')} {result.structured.acuerdo_doble_enlace.dominio_1.fecha_revision}</div>
                   </div>
                   <div className="space-y-2">
-                    <div className="text-[10px] text-white/60 font-bold uppercase">Enlace 2: {result.structured.acuerdo_doble_enlace.dominio_2.persona}</div>
+                    <div className="text-[10px] text-white/60 font-bold uppercase">{t('cruce.link2')} {result.structured.acuerdo_doble_enlace.dominio_2.persona}</div>
                     <div className="text-xl font-serif">{result.structured.acuerdo_doble_enlace.dominio_2.area}</div>
-                    <div className="text-[10px] bg-white/20 w-fit px-2 py-0.5 rounded">Revisión: {result.structured.acuerdo_doble_enlace.dominio_2.fecha_revision}</div>
+                    <div className="text-[10px] bg-white/20 w-fit px-2 py-0.5 rounded">{t('cruce.review')} {result.structured.acuerdo_doble_enlace.dominio_2.fecha_revision}</div>
                   </div>
                 </div>
                 <div className="mt-8 pt-6 border-t border-white/20 text-sm italic text-white/80">
-                  Metodología: {result.structured.acuerdo_doble_enlace.metodologia}
+                  {t('cruce.methodology')} {result.structured.acuerdo_doble_enlace.metodologia}
                 </div>
               </div>
             )}
@@ -468,7 +469,7 @@ export function CruceView() {
             <div className="pt-10 border-t border-[#EAE2D6]">
               <div className="flex items-center gap-2 mb-6">
                 <Leaf className="w-6 h-6 text-[#6B705C]" />
-                <h3 className="text-2xl font-serif text-[#4A4E4D]">Análisis Profundo de Facilitación</h3>
+                <h3 className="text-2xl font-serif text-[#4A4E4D]">{t('cruce.deepAnalysisTitle')}</h3>
               </div>
               <div className="prose prose-stone max-w-none text-stone-700 leading-relaxed prose-headings:font-serif prose-headings:text-[#4A4E4D] prose-blockquote:border-l-[#A5A58D] prose-blockquote:bg-[#F9F7F1] prose-blockquote:py-2 prose-blockquote:rounded-r-xl">
                 <Markdown>{result.gemini}</Markdown>

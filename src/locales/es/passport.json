@@ -21,6 +21,7 @@
     "gender": "Género",
     "kanariiRole": "Participación en Kanarii",
     "antiquity": "Antigüedad",
+    "myProfile": "Mi perfil",
     "membershipDuration_one": "{{count}} año",
     "membershipDuration_other": "{{count}} años",
     "updatedAt": "Ficha actualizada el {{date}}"
@@ -122,5 +123,251 @@
     "activeMember": "Miembro activo",
     "skillsLabel": "Ofrece / Saberes",
     "needsLabel": "Necesita"
+  },
+  "telegramModal": {
+    "close": "Cerrar",
+    "title": "Vincular con Telegram",
+    "subtitle": "Notificaciones y gestión rápida desde tu chat",
+    "preparing": "Preparando vinculación...",
+    "linkedTitle": "Cuenta Vinculada",
+    "linkedDesc": "Tu cuenta de Kanarii está enlazada correctamente con Telegram. Puedes recibir notificaciones y confirmar acciones mediante el bot.",
+    "openBot": "Abrir Telegram Bot",
+    "openBotShort": "Abrir Bot Telegram",
+    "autoApplyHint": "El código de vinculación se aplicará automáticamente al pulsar",
+    "startBtn": "Iniciar",
+    "inTelegram": "en Telegram.",
+    "codeLabel": "Código:",
+    "generateNewCode": "Generar nuevo código",
+    "copied": "¡Copiado!",
+    "copy": "Copiar",
+    "howItWorks": "¿Cómo funciona la vinculación?",
+    "step1": "Pulsa",
+    "step1Action": "Abrir Telegram Bot",
+    "step1Suffix": "para ir directo con tu código asignado.",
+    "step2": "Toca en",
+    "step2Action": "Iniciar",
+    "step2Or": "(o envía",
+    "step3": "¡Listo! Tu cuenta de Kanarii quedará conectada inmediatamente.",
+    "revoking": "Revocando...",
+    "unlink": "Desvincular"
+  },
+  "profile": {
+    "loading": "Cargando tu perfil...",
+    "defaultName": "Miembro Kanarii",
+    "editFicha": "Editar ficha",
+    "settings": "Ajustes",
+    "settingsTitle": "Ajustes y privacidad",
+    "cosmicPassport": "Pasaporte Cósmico",
+    "communityFicha": "Ficha Comunitaria",
+    "myCommunities": "Mis Comunidades ({{count}})",
+    "noBio": "Sin biografía ni resumen registrado.",
+    "bioPresentation": "Bio / Presentación",
+    "participatesIn": "Comunidades en las que participa",
+    "noCommunitiesTitle": "Aún no perteneces a ninguna comunidad",
+    "noCommunitiesDesc": "Explora las comunidades activas en Kanarii y solicita unirte para colaborar con tus saberes y ofrendas.",
+    "exploreCommunities": "Explorar Comunidades",
+    "passportTabDesc": "Vista interactiva de tu identidad cósmica y aportes a la tribu.",
+    "viewPublicUniversal": "Ver mi pasaporte público universal",
+    "fichaTabDesc": "Detalle completo de tu ficha de convivencia, ofrendas, saberes y necesidades.",
+    "editData": "Editar datos",
+    "enterCommunity": "Entrar",
+    "fallbackCommunityDesc": "Comunidad en Kanarii",
+    "fallbackLocation": "Canarias"
+  },
+  "form": {
+    "title": "Previsualización de tu Ficha",
+    "editData": "Editar Datos",
+    "editFichaTitle": "Editar Ficha",
+    "structuredTriad": "Tríada Comunitaria (Estructurada)",
+    "structuredTriadDesc": "Define tags específicos para facilitar la ayuda y colaboración en la comunidad. Presiona enter o introduce una coma para añadir cada elemento.",
+    "socialAndContact": "Redes Sociales y Contacto Rápido",
+    "socialAndContactDesc": "Facilita que otros miembros conecten contigo a través de tus perfiles públicos o canales directos.",
+    "social": {
+      "instagram": "Instagram",
+      "instagramPlaceholder": "@usuario",
+      "linkedin": "LinkedIn",
+      "linkedinPlaceholder": "URL o perfil",
+      "telegram": "Telegram",
+      "telegramPlaceholder": "@usuario o t.me/...",
+      "website": "Sitio Web / Blog",
+      "websitePlaceholder": "https://...",
+      "phone": "Teléfono / WhatsApp",
+      "phonePlaceholder": "+34...",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "correo@ejemplo.com"
+    },
+    "name": "Nombre",
+    "nameRequired": "Requerido",
+    "birthDate": "Fecha de Nacimiento",
+    "birthTime": "Hora de Nacimiento",
+    "birthPlace": "Lugar de Nacimiento",
+    "birthPlacePlaceholder": "Ej: Las Palmas de Gran Canaria, España",
+    "gender": "Género",
+    "genders": {
+      "male": "hombre",
+      "female": "mujer",
+      "nonBinary": "no binario",
+      "preferNotToSay": "prefiero no decirlo"
+    },
+    "antiquity": "Antigüedad (años)",
+    "antiquities": {
+      "recent": "Recién llegado/a (menos de 3 meses)",
+      "under1Year": "Menos de 1 año",
+      "year1": "1 año",
+      "years2": "2 años",
+      "years3": "3 años",
+      "years4": "4 años",
+      "years5Plus": "5 años o más"
+    },
+    "triadTitle": "Tríada Comunitaria (Chips & Topics)",
+    "offers": "Ofrendas (Lo que aportas)",
+    "offersPlaceholder": "Ej: diseño web, carpintería...",
+    "skills": "Saberes y Habilidades",
+    "skillsPlaceholder": "Ej: agroecología, facilitación...",
+    "skillsJourney": "Saberes y recorrido vital",
+    "skillsJourneyPlaceholder": "Tu formación, experiencias, oficios, proyectos... todo cuenta",
+    "needs": "Necesidades (Lo que requieres)",
+    "needsPlaceholder": "Ej: transporte, herramientas...",
+    "bioTitle": "Sobre mí / Biografía o trayectoria libre",
+    "bioPlaceholder": "Cuenta algo sobre tu historia, valores o proyectos...",
+    "tensionTitle": "Estado de tensión",
+    "tensionPlaceholder": "¿Qué estás sintiendo hoy en la convivencia?",
+    "headlineTitle": "Tu rol u oficio en una frase corta",
+    "headlinePlaceholder": "Oficio o rol corto en la comunidad (máx. 45 caracteres)",
+    "kanariiRoleTitle": "Participación en Kanarii",
+    "kanariiRolePlaceholder": "¿Cómo contribuyes o te gustaría contribuir al proyecto?",
+    "roleTitle": "Rol",
+    "roles": {
+      "owner": "Propietario / Núcleo",
+      "member": "Miembro",
+      "volunteer": "Voluntario",
+      "collaborator": "Colaborador",
+      "resident": "Residente",
+      "custodian": "Custodio"
+    },
+    "departureDate": "Fecha de salida (opcional)",
+    "saveChanges": "Guardar Cambios",
+    "cancel": "Cancelar",
+    "verifyLocation": "Verificar ubicación",
+    "verifyingLocation": "Buscando coordenadas...",
+    "locationNotFound": "No se encontró esta ubicación, intenta ser más específico"
+  },
+  "preview": {
+    "noDraft": "No hay un borrador de perfil pendiente.",
+    "backToOrientation": "Volver a Orientación",
+    "weavingManual": "El Facilitador Galáctico está tejiendo tu manual...",
+    "weavingManualDesc": "Consultando a las estrellas y trazando tu diseño humano. Este proceso tomará unos segundos mágicos.",
+    "yourRegistrationData": "Tus datos de registro",
+    "viewManual": "Ver Manual Humano",
+    "generatingManual": "Generando Manual...",
+    "generateManual": "✨ Generar Manual Humano",
+    "saveFicha": "Guardar Ficha Comunitaria",
+    "saving": "Guardando...",
+    "saveWithoutManual": "Guardar ficha sin manual",
+    "saveInTribe": "Guardar mi ficha en la tribu",
+    "savingInNetwork": "Guardando en la red...",
+    "editAndRegenerate": "✏️ Editar datos y regenerar",
+    "willBeYourProfile": "Este será tu perfil en la comunidad",
+    "ikigaiTitle": "Ikigai comunitario",
+    "knowledgesAndJourney": "Saberes y Recorrido Vital",
+    "generateGalacticManual": "✨ Generar mi Manual Galáctico",
+    "authModalGenerateTitle": "Genera tu Manual Galáctico",
+    "authModalGenerateSubtitle": "Introduce tu email para generar tu manual personalizado. También te enviaremos recursos y novedades de la comunidad de vez en cuando.",
+    "savedSuccess": "¡Ficha guardada con éxito!"
+  },
+  "privacy": {
+    "title": "Privacidad del Pasaporte Comunitario",
+    "desc": "El Pasaporte Comunitario es tu carta de presentación social y pública en Kanarii. Elige qué dimensiones de tu perfil deseas compartir públicamente con la comunidad.",
+    "socialChannelsTitle": "Redes Sociales y Canales de Contacto",
+    "socialChannelsDesc": "Elige qué canales de contacto directo son visibles en tu pasaporte para otros miembros de la comunidad.",
+    "dimensions": {
+      "arquetipo": {
+        "label": "Arquetipo y Perfil",
+        "desc": "Muestra tu arquetipo de personalidad, fortalezas, sombras y rol sociocrático sugerido."
+      },
+      "disenoHumano": {
+        "label": "Diseño Humano",
+        "desc": "Muestra tu tipo de diseño humano, autoridad y perfil."
+      },
+      "kinMaya": {
+        "label": "Kin Maya / Firma Galáctica",
+        "desc": "Muestra tu Kin Maya, sello galáctico y rol comunitario maya."
+      },
+      "datosAstrologicos": {
+        "label": "Datos Astrológicos",
+        "desc": "Muestra tu Sol, Luna, Ascendente y elementos dominantes."
+      },
+      "manualCompleto": {
+        "label": "Manual de Usuario Humano",
+        "desc": "Muestra el manual de convivencia autogenerado con tus 5 secciones."
+      }
+    },
+    "channels": {
+      "instagram": {
+        "label": "Instagram",
+        "desc": "Permite que otros miembros vean tu usuario de Instagram y accedan a tu perfil."
+      },
+      "linkedin": {
+        "label": "LinkedIn",
+        "desc": "Muestra tu perfil profesional de LinkedIn en el pasaporte."
+      },
+      "telegram": {
+        "label": "Telegram",
+        "desc": "Muestra tu usuario o enlace de Telegram para mensajería directa."
+      },
+      "website": {
+        "label": "Sitio Web",
+        "desc": "Muestra el enlace directo a tu web personal o proyecto."
+      },
+      "phone": {
+        "label": "Teléfono y WhatsApp",
+        "desc": "Muestra los botones de llamada y apertura de chat en WhatsApp."
+      },
+      "email": {
+        "label": "Correo Electrónico",
+        "desc": "Muestra tu dirección de email de contacto directo."
+      }
+    }
+  },
+  "manual": {
+    "structuring": "Estructurando tu Manual Galáctico",
+    "structuringDesc": "El Facilitador Galáctico está analizando tus tránsitos y diseño para estructurar las 5 secciones de tu manual...",
+    "weavingStructure": "Tejiendo la estructura inicial...",
+    "title": "Manual de Usuario Humano",
+    "regenerate": "Regenerar mi manual",
+    "downloadPdf": "Descargar mi Manual",
+    "generatingPdf": "Generando PDF...",
+    "generatedBy": "Generado por el Facilitador Galáctico",
+    "onDate": "El",
+    "legacyTitle": "Manual de Usuario Humano (Legacy)",
+    "updateFormat": "Actualizar al nuevo formato en capas",
+    "readyTitle": "Tu Manual Galáctico está listo para nacer",
+    "readyDesc": "El Facilitador Galáctico analizará tu carta astral y creará tu Manual de Usuario personalizado.",
+    "weaving": "El Facilitador Galáctico está tejiendo tu manual...",
+    "generateBtn": "✨ Generar mi Manual"
+  },
+  "leave": {
+    "title": "Salir de la Comunidad",
+    "stepOf": "Paso {{current}} de {{total}}",
+    "whichCommunity": "Perteneces a múltiples comunidades. ¿De cuál de ellas deseas salir?",
+    "loadingCommunities": "Cargando tus comunidades...",
+    "motiveExplanation": "Para ayudarnos a cuidar y mejorar la convivencia en Kanarii, por favor comparte el motivo principal de tu baja.",
+    "motiveRequired": "Motivo (Obligatorio)",
+    "motives": [
+      "Me voy a vivir a otro lugar",
+      "No tengo tiempo",
+      "No me siento alineado/a",
+      "Conflicto no resuelto",
+      "Motivo personal",
+      "Otro"
+    ],
+    "commentOptional": "Comentario libre (Opcional)",
+    "commentPlaceholder": "Comparte cualquier detalle, sugerencia de mejora o agradecimiento...",
+    "confirmTitle": "¿Confirmas que quieres salir?",
+    "confirmDesc": "Esta acción eliminará tu acceso a la comunidad. Podrás volver a unirte en el futuro si lo deseas.",
+    "back": "← Atrás",
+    "continue": "Continuar →",
+    "confirmLeave": "Confirmar salida",
+    "leaving": "Saliendo..."
   }
 }

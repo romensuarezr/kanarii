@@ -5,8 +5,9 @@
 - **Título**: Internacionalización de Identidad, Perfil y Fichas (`FichaView`, `PerfilView`, `RegistroComunidadView`)
 - **Sprint**: Sprint 34
 - **Tipo**: Feature / i18n / Core UX
-- **Estado**: ⬜ Pendiente
+- **Estado**: 🟢 Completada
 - **Fecha inicio**: 2026-11-27
+- **Fecha fin**: 2026-11-27
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 34 / 2026-11-27
@@ -35,6 +36,6 @@
 - `i18n-baseline.json`
 
 ## Criterios de Aceptación
-- [ ] `/ficha`, `/perfil`, `/cruce` y `/nueva-comunidad` se muestran 100% en inglés al seleccionar `en`.
-- [ ] El contenido dinámico de miembros conserva su idioma de origen sin romperse.
-- [ ] `npm run test:i18n` pasa con el baseline reducido.
+- [x] `/ficha`, `/perfil`, `/cruce` y `/nueva-comunidad` se muestran 100% en inglés al seleccionar `en`.
+- [x] El contenido dinámico de miembros conserva su idioma de origen sin romperse.
+- [x] `npm run test:i18n` pasa con el baseline reducido.
