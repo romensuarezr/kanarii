@@ -1,7 +1,7 @@
 # Research Sprint 33 — Arquitectura de Roles, Membresía y Clasificación UX
 
 > **Fecha**: 2026-11-26  
-> **Fuente**: Investigación autónoma con **SearXNG Soberano** + Auditoría interna del codebase + Activos internos ([kanarii-design-inspiration-hylo-opencollective.md](file:///home/romen/Proyectos/kanarii/docs/idea-inbox/kanarii-design-inspiration-hylo-opencollective.md))
+> **Fuente**: Investigación autónoma con **SearXNG Soberano** + Auditoría interna del codebase + Activos internos ([kanarii-design-inspiration-hylo-opencollective.md](../../idea-inbox/kanarii-design-inspiration-hylo-opencollective.md))
 
 ---
 
