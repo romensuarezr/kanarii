@@ -1,0 +1,1407 @@
+{
+  "generatedAt": "2026-11-27T17:18:53.620Z",
+  "totalViolations": 1010,
+  "totalFilesWithViolations": 78,
+  "files": {
+    "src/components/ActaDetailOverlay.tsx": {
+      "count": 13,
+      "literals": [
+        "Facilitada por",
+        "Participantes",
+        "No se registraron participantes.",
+        "Contexto",
+        "Decisiones",
+        "No se registraron decisiones.",
+        "Tareas Derivadas",
+        "A:",
+        "Próxima Reunión",
+        "Última edición por",
+        "el",
+        "Editar Acta",
+        "Eliminar Acta"
+      ]
+    },
+    "src/components/AdminPanel/AdminPanelModals.tsx": {
+      "count": 35,
+      "literals": [
+        "Expediente Comunitario",
+        "Tensiones y Necesidades",
+        "Detalles del Perfil",
+        "Rol en Comunidad",
+        "Saberes",
+        "Antigüedad",
+        "años",
+        "Diseño Humano",
+        "Tipo",
+        "Autoridad",
+        "Perfil",
+        "¿Confirmas la expulsión?",
+        "Estás a punto de expulsar a",
+        "de la comunidad. Esta acción eliminará su membresía y desvinculará sus registros.",
+        "Cancelar",
+        "Confirmar Expulsión",
+        "Detalles del Acuerdo",
+        "ID:",
+        "Proveedor",
+        "Solicitante",
+        "Servicio Vinculado",
+        "Términos del Acuerdo",
+        "Tipo de Intercambio",
+        "Estado Actual",
+        "Detalles Adicionales",
+        "Historial de Propuestas",
+        "Acción de:",
+        "Detalle:",
+        "Tipo:",
+        "No hay historial registrado para este acuerdo.",
+        "¿Desactivar Servicio?",
+        "Estás a punto de desactivar el servicio",
+        ". Los miembros ya no podrán solicitar este servicio en el Marketplace.",
+        "Cancelar",
+        "Desactivar"
+      ]
+    },
+    "src/components/AdminPanel/tabs/ComunidadSubTab.tsx": {
+      "count": 12,
+      "literals": [
+        "Buscar por nombre o rol...",
+        "Nombre / Rol en Comunidad",
+        "Permiso / Vínculo",
+        "Antigüedad",
+        "Acciones",
+        "Cargando comunidad...",
+        "No se encontraron miembros",
+        "Cambiar vínculo",
+        "años",
+        "Ver Ficha",
+        "Expulsar Miembro",
+        "Bajas Recientes"
+      ]
+    },
+    "src/components/AdminPanel/tabs/ComunidadTab.tsx": {
+      "count": 6,
+      "literals": [
+        "Tareas Totales",
+        "Progreso Global",
+        "Top Colaborador",
+        "Cerradas (7d)",
+        "Comunidad",
+        "Tareas Globales"
+      ]
+    },
+    "src/components/AdminPanel/tabs/DashboardTab.tsx": {
+      "count": 36,
+      "literals": [
+        "Salud de la Comunidad",
+        "Métricas clave, nivel de actividad y estado de la economía interna de la comunidad.",
+        "Personas y Participación",
+        "Miembros Activos",
+        "Total de personas registradas",
+        "Fichas Completas",
+        "% con perfil de autoconocimiento",
+        "Nuevos este mes",
+        "Registrados en el mes actual",
+        "Actividad y Colaboración",
+        "Tareas Comunales",
+        "abiertas",
+        "completadas (",
+        "Proyectos Activos",
+        "completados en total",
+        "Eventos Próximos",
+        "En los siguientes 30 días",
+        "Economía Interna y Marketplace",
+        "Economía Local",
+        "Activos",
+        "servicios ·",
+        "recursos",
+        "Acuerdos en Curso",
+        "Intercambios activos actualmente",
+        "Intercambios Completados",
+        "Historial acumulado total",
+        "Actividad de Intercambios",
+        "Acuerdos creados por mes (últimos 6 meses)",
+        "Sin actividad registrada",
+        "Sin actividad en el eje",
+        "Acuerdos Recientes",
+        "Últimos 5 intercambios propuestos en la comunidad",
+        "No hay acuerdos propuestos aún",
+        "Servicio eliminado",
+        "De",
+        "a"
+      ]
+    },
+    "src/components/AdminPanel/tabs/GobernanzaTab.tsx": {
+      "count": 2,
+      "literals": [
+        "Gobernanza",
+        "Disponible próximamente"
+      ]
+    },
+    "src/components/AdminPanel/tabs/MarketplaceTab.tsx": {
+      "count": 33,
+      "literals": [
+        "Acuerdos Activos",
+        "Requieren Atención",
+        "Completados este mes",
+        "Cancelados este mes",
+        "Acuerdos del Marketplace",
+        "Historial y estado de los intercambios entre miembros",
+        "Buscar miembro o servicio...",
+        "Todos los estados",
+        "Pendiente",
+        "Contraoferta",
+        "En curso",
+        "Completada",
+        "Cancelada",
+        "No se encontraron acuerdos con los filtros aplicados.",
+        "Servicio",
+        "Proveedor",
+        "Solicitante",
+        "Tipo Intercambio",
+        "Estado",
+        "Fecha Propuesta",
+        "Acciones",
+        "Servicio eliminado",
+        "Ver Detalles",
+        "Catálogo de Servicios Activos",
+        "Servicios publicados actualmente en la comunidad",
+        "No hay servicios activos en este momento.",
+        "Servicio",
+        "Proveedor",
+        "Tipo",
+        "Categoría",
+        "Acuerdos Vinculados",
+        "Acciones",
+        "Desactivar"
+      ]
+    },
+    "src/components/AdminPanel/tabs/TareasGlobalesSubTab.tsx": {
+      "count": 8,
+      "literals": [
+        "Todas las Tareas",
+        "Título",
+        "Responsable",
+        "Estado",
+        "Prioridad",
+        "Cargando...",
+        "No hay tareas registradas",
+        "Proyecto vinculado"
+      ]
+    },
+    "src/components/AdminPanel/tabs/TareasProyectosTab.tsx": {
+      "count": 2,
+      "literals": [
+        "Tareas & Proyectos",
+        "Disponible próximamente"
+      ]
+    },
+    "src/components/BottomNav.tsx": {
+      "count": 1,
+      "literals": [
+        "Navegación móvil"
+      ]
+    },
+    "src/components/ConfiguracionComunidadPanel.tsx": {
+      "count": 64,
+      "literals": [
+        "Cargando datos de la comunidad...",
+        "Configuración de la Comunidad",
+        "Modifica la identidad, ubicación, visibilidad y accesos de /",
+        "Volver",
+        "Identidad",
+        "Cómo se presenta la comunidad ante el público y los miembros.",
+        "Nombre de la comunidad",
+        "Ej: Ecoaldea Granja Verde",
+        "URL del Logo / Avatar",
+        "(opcional)",
+        "https://ejemplo.com/logo.png",
+        "URL de la Portada / Banner",
+        "(opcional)",
+        "https://ejemplo.com/portada.jpg",
+        "Descripción breve",
+        "Una breve explicación de qué es esta comunidad...",
+        "Manifiesto / Principios",
+        "(Markdown soportado)",
+        "Describe los principios, acuerdos fundamentales o visión de la comunidad...",
+        "Ubicación",
+        "Dónde se encuentra geográficamente vuestro espacio.",
+        "Buscar ubicación en el mapa",
+        "Escribe para geocodificar y actualizar las coordenadas de forma automática.",
+        "Municipio",
+        "San Bartolomé",
+        "Región / Isla",
+        "Gran Canaria",
+        "País",
+        "España",
+        "Coordenadas guardadas: Lat",
+        ", Lng",
+        "Cultura y Acceso",
+        "Define cómo se entra y las características fundamentales de la comunidad.",
+        "Comunidad pública",
+        "Requiere aprobación",
+        "Comunidad privada",
+        "Invisible en el directorio. La entrada de miembros requiere obligatoriamente aprobación de un admin.",
+        "Tipo de espacio",
+        "Capacidad estimada",
+        "(personas, opcional)",
+        "Ej: 15",
+        "Etiquetas / Tags",
+        "No hay etiquetas seleccionadas.",
+        "Escribe una etiqueta y pulsa Enter...",
+        "Sugerencias:",
+        "Guardar cambios",
+        "Zona de Peligro",
+        "Las siguientes acciones son irreversibles. Ten cuidado al ejecutarlas.",
+        "Eliminar esta comunidad",
+        "Se eliminará permanentemente el perfil de esta comunidad. Todos los miembros perderán el acceso y sus membresías serán desvinculadas, pero sus perfiles personales no se borrarán.",
+        "Eliminar Comunidad",
+        "¿Estás absolutamente seguro?",
+        "Esta acción es",
+        "irreversible",
+        ". Al eliminar la comunidad",
+        "), se borrará toda la información relacionada:",
+        "El perfil e identidad de la comunidad.",
+        "Todas las vinculaciones de miembros.",
+        "Tareas, proyectos, acuerdos y ofertas del marketplace de este espacio.",
+        "Para confirmar la eliminación, introduce el",
+        "slug",
+        "de la comunidad (",
+        "Cancelar",
+        "Confirmar eliminación"
+      ]
+    },
+    "src/components/ConsentGrid.tsx": {
+      "count": 1,
+      "literals": [
+        "Pulso de la Comunidad"
+      ]
+    },
+    "src/components/ContraofertaModal.tsx": {
+      "count": 11,
+      "literals": [
+        "Enviar Contraoferta",
+        "Propón nuevos términos para el acuerdo",
+        "Tipo de Intercambio",
+        "Intercambio de Tiempo (Horas)",
+        "Intercambio por Especie",
+        "Aportación Económica",
+        "Regalo / Donación",
+        "Términos de tu contraoferta *",
+        "Describe detalladamente los nuevos términos del intercambio...",
+        "Nueva fecha propuesta (opcional)",
+        "Cancelar"
+      ]
+    },
+    "src/components/CreateActaModal.tsx": {
+      "count": 24,
+      "literals": [
+        "Paso",
+        "de 4",
+        "Detalles Básicos",
+        "Título de la reunión *",
+        "Fecha *",
+        "Facilitador *",
+        "Seleccionar...",
+        "Participantes (",
+        "Contexto",
+        "¿Cuál fue el motivo principal de la reunión? Resume brevemente el contexto y los temas tratados.",
+        "La reunión se convocó para discutir...",
+        "Decisiones",
+        "Registra los acuerdos a los que se llegaron.",
+        "Acuerdo...",
+        "Añadir otra decisión",
+        "Tareas y Próximos Pasos (Opcional)",
+        "Tareas Derivadas",
+        "Añadir Tarea",
+        "No hay tareas derivadas de esta reunión.",
+        "Título de la tarea",
+        "A asignar después...",
+        "Próxima Reunión (Opcional)",
+        "Atrás",
+        "Siguiente"
+      ]
+    },
+    "src/components/CreateAcuerdoModal.tsx": {
+      "count": 11,
+      "literals": [
+        "Propuesta de Acuerdo",
+        "Para:",
+        "Tipo de Intercambio",
+        "Intercambio de Tiempo (Horas)",
+        "Intercambio por Especie",
+        "Aportación Económica",
+        "Regalo / Donación",
+        "Términos de la propuesta *",
+        "Ej. Te propongo cambiar 2h de clases de yoga por 1 caja de verduras de mi huerto...",
+        "Fecha propuesta (opcional)",
+        "Cancelar"
+      ]
+    },
+    "src/components/CreateEventoModal.tsx": {
+      "count": 18,
+      "literals": [
+        "✕",
+        "Título *",
+        "Ej. Cosecha colectiva",
+        "Tipo de Evento",
+        "Reunión / Círculo",
+        "Tarea Comunal",
+        "Visita",
+        "Celebración",
+        "Otro",
+        "Inicio *",
+        "Fin *",
+        "Todo el día",
+        "Responsable",
+        "-- Seleccionar --",
+        "Participantes",
+        "Descripción",
+        "Detalles sobre el evento...",
+        "Eliminar"
+      ]
+    },
+    "src/components/CreateNewModal.tsx": {
+      "count": 1,
+      "literals": [
+        "Cerrar modal"
+      ]
+    },
+    "src/components/CreatePostModal.tsx": {
+      "count": 14,
+      "literals": [
+        "Nueva Publicación",
+        "✕",
+        "Necesidad",
+        "Oferta",
+        "Título *",
+        "Categoría",
+        "Habilidad / Conocimiento",
+        "Recurso / Objeto",
+        "Espacio",
+        "Apoyo Emocional",
+        "Otro",
+        "Descripción",
+        "Explica los detalles...",
+        "Cancelar"
+      ]
+    },
+    "src/components/CreateProjectModal.tsx": {
+      "count": 10,
+      "literals": [
+        "Lanzar Iniciativa",
+        "Título del Proyecto",
+        "Ej: Huerto Comunitario",
+        "Descripción",
+        "Describe el propósito y lo que se espera lograr...",
+        "Estado Inicial",
+        "Buscando Ayuda",
+        "En marcha",
+        "Habilidades Buscadas",
+        "Ej: Fontanería"
+      ]
+    },
+    "src/components/CreateProposalWizard.tsx": {
+      "count": 20,
+      "literals": [
+        "Nueva Propuesta",
+        "¿Cuál es el propósito o tensión que motiva esta propuesta?",
+        "Describe la situación actual o necesidad, no la solución. La propuesta viene después. Esto ayuda a la comunidad a entender el \"por qué\".",
+        "Ej: Resolver las dificultades de concentración y facilitar el trabajo remoto mediante la regulación del ruido en el salón común los martes...",
+        "¿Qué propones hacer concretamente?",
+        "Define el título y los detalles de la acción propuesta.",
+        "Título de la propuesta",
+        "Ej: Implementar zona de silencio los martes",
+        "Descripción detallada",
+        "Detalla cómo se implementará, recursos necesarios, horarios...",
+        "Ejecución y Revisión",
+        "¿Quién se encarga y cuándo revisamos si funcionó?",
+        "Responsables de ejecución",
+        "Fecha Límite (Opcional)",
+        "Fecha de Revisión",
+        "días",
+        "Recomendado:",
+        "los acuerdos S3 son experimentos, no leyes permanentes. Pon una fecha de revisión para evaluar si el acuerdo sigue siendo útil.",
+        "Atrás",
+        "Siguiente"
+      ]
+    },
+    "src/components/CreateServicioModal.tsx": {
+      "count": 19,
+      "literals": [
+        "Compartir Talento o Recurso",
+        "Talento",
+        "Recurso",
+        "¿Qué quieres ofrecer? *",
+        "Categoría",
+        "Artesanía / Manualidades",
+        "Agricultura / Huerto",
+        "Herramientas / Maquinaria",
+        "Transporte / Logística",
+        "Cuidados / Bienestar",
+        "Tecnología / Digital",
+        "Otro",
+        "Descripción y detalles",
+        "Cuéntanos más sobre lo que ofreces...",
+        "Ubicación",
+        "Ej. Barrio Norte",
+        "Disponibilidad",
+        "Ej. Fines de semana",
+        "Cancelar"
+      ]
+    },
+    "src/components/CreateTareaModal.tsx": {
+      "count": 12,
+      "literals": [
+        "✕",
+        "Título *",
+        "Ej. Arreglar riego huerta norte",
+        "Descripción",
+        "Detalles sobre la tarea...",
+        "Asignar a",
+        "-- Sin asignar --",
+        "Fecha Límite",
+        "Vincular a Proyecto",
+        "-- Sin vincular --",
+        "Solo aparecen proyectos donde eres líder o colaborador.",
+        "Cancelar"
+      ]
+    },
+    "src/components/LocationAutocomplete.tsx": {
+      "count": 1,
+      "literals": [
+        "Escribe tu ciudad o región..."
+      ]
+    },
+    "src/components/ManualSeccionesViewer.tsx": {
+      "count": 2,
+      "literals": [
+        "Esta sección aún no ha sido generada por el miembro.",
+        "No hay contenido disponible para esta sección."
+      ]
+    },
+    "src/components/ManualViewer.tsx": {
+      "count": 3,
+      "literals": [
+        "Anterior",
+        "de 5",
+        "Siguiente"
+      ]
+    },
+    "src/components/NodeModulesModal.tsx": {
+      "count": 1,
+      "literals": [
+        "Cerrar"
+      ]
+    },
+    "src/components/PostDetailModal.tsx": {
+      "count": 17,
+      "literals": [
+        "Título de la publicación",
+        "Por",
+        "✕",
+        "Describe lo que necesitas u ofreces...",
+        "Guardar",
+        "Cancelar",
+        "Gestionar:",
+        "Marcar como Activo",
+        "Marcar En Proceso",
+        "Marcar como Resuelto",
+        "Editar contenido",
+        "Editar",
+        "Eliminar publicación",
+        "Eliminar",
+        "Respuestas (",
+        "Sin respuestas aún. ¡Sé el primero en participar!",
+        "Escribe una respuesta..."
+      ]
+    },
+    "src/components/ProjectDetailOverlay.tsx": {
+      "count": 15,
+      "literals": [
+        "Detalle del Proyecto",
+        "Liderado por",
+        "Colaboradores",
+        "Manifiesto e Intención",
+        "Salud de la Iniciativa",
+        "Hoja de Ruta",
+        "No hay hitos definidos.",
+        "Comunidad",
+        "Estado del Proyecto",
+        "Solicitudes Pendientes",
+        "Sin colaboradores todavía",
+        "Sumar mi energía al proyecto",
+        "Petición en revisión de la comunidad",
+        "Energía sincronizada con éxito",
+        "Detener esta iniciativa permanentemente"
+      ]
+    },
+    "src/components/PropuestaDetail.tsx": {
+      "count": 33,
+      "literals": [
+        "Cargando deliberación...",
+        "Error de acceso",
+        "Cerrar",
+        "Acuerdo Cálido",
+        "Proceso de Consentimiento",
+        "Propuesto por",
+        "Creado el",
+        "Acuerdo Cálido",
+        "Acuerdo Cálido Activo",
+        "Esta propuesta ha sido adoptada formalmente por consentimiento de la comunidad. Es un Acuerdo Cálido vivo que guía nuestra convivencia y decisiones.",
+        "Próxima revisión:",
+        "Propósito (Purpose)",
+        "La Propuesta v",
+        "Nota de Integración",
+        "Posiciones registradas",
+        "·",
+        "¿Se aclaró tu duda? Recuerda actualizar tu posición para que la propuesta pueda avanzar.",
+        "Actualizar postura",
+        "En sala ahora:",
+        "Dar mi respuesta socrática",
+        "Ya has participado",
+        "Tu posición:",
+        "Cambiar posición",
+        "Integrar objeciones activas",
+        "Propuesta Acordada por Consentimiento",
+        "Integrar Objeciones",
+        "Edita la propuesta para resolver las objeciones planteadas. Al publicar esta versión, se resetearán todas las respuestas anteriores para iniciar un nuevo ciclo de consentimiento.",
+        "Nueva Propuesta",
+        "Describe la versión mejorada...",
+        "Nota de Integración (Opcional)",
+        "Ej: He ajustado el punto 3 según lo hablado...",
+        "Cancelar",
+        "Publicar v-integrada"
+      ]
+    },
+    "src/components/PwaUpdatePrompt.tsx": {
+      "count": 4,
+      "literals": [
+        "🔄 Nueva versión disponible",
+        "Actualizar",
+        "Cerrar aviso",
+        "✕"
+      ]
+    },
+    "src/components/ResponseModal.tsx": {
+      "count": 8,
+      "literals": [
+        "Tu respuesta socrática",
+        "En S3, buscamos propuestas",
+        "suficientemente buenas",
+        "por ahora y",
+        "suficientemente seguras",
+        "para probarlas. Una objeción no es una preferencia personal, es un regalo a la comunidad para evitar un daño real.",
+        "Cancelar",
+        "Enviar Respuesta"
+      ]
+    },
+    "src/components/S3Timeline.tsx": {
+      "count": 4,
+      "literals": [
+        "Recorrido Socrático",
+        "v",
+        "integrada",
+        "Propuesta Descartada"
+      ]
+    },
+    "src/components/ServicioDetailModal.tsx": {
+      "count": 8,
+      "literals": [
+        "Ofrecido por",
+        "Ubicación",
+        "Disponibilidad / Horario",
+        "Editar",
+        "Eliminar servicio",
+        "Proponer Acuerdo / Solicitar",
+        "Este servicio está temporalmente pausado y no admite nuevas solicitudes de acuerdo.",
+        "Cancelar"
+      ]
+    },
+    "src/components/acuerdos/AcuerdoDetailModal.tsx": {
+      "count": 14,
+      "literals": [
+        "Acuerdo de Intercambio",
+        "Términos del Acuerdo",
+        "Tipo de Intercambio",
+        "Fecha Propuesta",
+        "Miembros Involucrados",
+        "Proveedor",
+        "Solicitante",
+        "Historial de Cambios",
+        "Por",
+        "Tipo:",
+        "Fecha:",
+        "No hay historial registrado para este acuerdo.",
+        "Proponer Enmienda",
+        "Cerrar"
+      ]
+    },
+    "src/components/dashboard/ExploreEntityCard.tsx": {
+      "count": 1,
+      "literals": [
+        "Explorar"
+      ]
+    },
+    "src/components/help/ActasUISimulation.tsx": {
+      "count": 1,
+      "literals": [
+        "Registrada"
+      ]
+    },
+    "src/components/help/SectionHelp.tsx": {
+      "count": 2,
+      "literals": [
+        "Ayuda contextual",
+        "Entendido"
+      ]
+    },
+    "src/components/onboarding/CruceAnimation.tsx": {
+      "count": 1,
+      "literals": [
+        "KanariiLab"
+      ]
+    },
+    "src/components/onboarding/FichaRolesAnimation.tsx": {
+      "count": 3,
+      "literals": [
+        "Lia Arana",
+        "Valle de Arán",
+        "\"Busco una vida lenta conectada con el ritmo de la tierra y los cuidados.\""
+      ]
+    },
+    "src/components/onboarding/GovernanceFlowAnimation.tsx": {
+      "count": 2,
+      "literals": [
+        "\"Lo suficientemente bueno por ahora, lo suficientemente seguro para intentarlo.\"",
+        "Autor"
+      ]
+    },
+    "src/components/perfil/ContactActions.tsx": {
+      "count": 1,
+      "literals": [
+        "Llamar"
+      ]
+    },
+    "src/components/perfil/FichaReadOnly.tsx": {
+      "count": 10,
+      "literals": [
+        "Ver Pasaporte Comunitario",
+        "Copiar enlace del Pasaporte",
+        "¡Copiado!",
+        "Redes Sociales y Contacto",
+        "Instagram",
+        "LinkedIn",
+        "Telegram",
+        "Sitio Web",
+        "Teléfono / WhatsApp",
+        "Correo Electrónico"
+      ]
+    },
+    "src/components/perfil/PasaporteShareModal.tsx": {
+      "count": 7,
+      "literals": [
+        "Compartir Pasaporte",
+        "Compartir Pasaporte",
+        "Muestra tu ficha y saberes al mundo",
+        "Cerrar modal",
+        "Compartir con aplicaciones de tu dispositivo",
+        "Copiar enlace",
+        "Descargar tarjeta de presentación (PNG)"
+      ]
+    },
+    "src/components/perfil/PasaporteVisual.tsx": {
+      "count": 4,
+      "literals": [
+        "Tribu Kanarii",
+        "🎯",
+        "📖",
+        "—"
+      ]
+    },
+    "src/components/perfil/TelegramLinkModal.tsx": {
+      "count": 22,
+      "literals": [
+        "Cerrar",
+        "Vincular con Telegram",
+        "Notificaciones y gestión rápida desde tu chat",
+        "Preparando vinculación...",
+        "Cuenta Vinculada",
+        "Tu cuenta de Kanarii está enlazada correctamente con Telegram. Puedes recibir notificaciones y confirmar acciones mediante el bot.",
+        "Abrir Bot Telegram",
+        "Abrir Telegram Bot",
+        "El código de vinculación se aplicará automáticamente al pulsar",
+        "Iniciar",
+        "en Telegram.",
+        "Código:",
+        "Generar nuevo código",
+        "¿Cómo funciona la vinculación?",
+        "Pulsa",
+        "Abrir Telegram Bot",
+        "para ir directo con tu código asignado.",
+        "Toca en",
+        "Iniciar",
+        "(o envía",
+        "/start",
+        "¡Listo! Tu cuenta de Kanarii quedará conectada inmediatamente."
+      ]
+    },
+    "src/components/propuestas/ClarificationThread.tsx": {
+      "count": 3,
+      "literals": [
+        "No hay aclaraciones en este hilo todavía.",
+        "Solo el autor de la propuesta y quien planteó la",
+        "pueden responder en este hilo."
+      ]
+    },
+    "src/components/sinergias/ConnectModal.tsx": {
+      "count": 2,
+      "literals": [
+        "Cerrar modal",
+        "🌴"
+      ]
+    },
+    "src/components/sinergias/SynergyCard.tsx": {
+      "count": 3,
+      "literals": [
+        "🌴",
+        "⚡",
+        "Telegram"
+      ]
+    },
+    "src/components/ui/ContextualEmptyState.tsx": {
+      "count": 1,
+      "literals": [
+        "Comienza algo nuevo en tu comunidad"
+      ]
+    },
+    "src/components/ui/EntityCard.tsx": {
+      "count": 4,
+      "literals": [
+        "Desarchivar",
+        "✓ Completado",
+        "Retroceder",
+        "Archivar"
+      ]
+    },
+    "src/components/ui/KanariiEmptyStates.tsx": {
+      "count": 4,
+      "literals": [
+        "El mercado de la abundancia",
+        "La memoria de nuestra tribu",
+        "De la idea a la realidad",
+        "Pasos concretos, impacto real"
+      ]
+    },
+    "src/components/ui/KanbanColumn.tsx": {
+      "count": 2,
+      "literals": [
+        "Añadir nuevo",
+        "Sin elementos"
+      ]
+    },
+    "src/components/ui/TagArrayEditor.tsx": {
+      "count": 2,
+      "literals": [
+        "Añadir",
+        "Ningún elemento añadido todavía."
+      ]
+    },
+    "src/pages/ActasPanel.tsx": {
+      "count": 9,
+      "literals": [
+        "Nueva Acta",
+        "Nueva Acta",
+        "Nueva",
+        "Biblioteca de Actas",
+        "Biblioteca de Actas",
+        "La Biblioteca de Actas es la memoria viva de nuestra comunidad. Aquí se registran las decisiones colectivas que guían el rumbo del espacio común.",
+        "Cada acta incluye el facilitador, los participantes, los temas abordados y las tareas resultantes, asegurando transparencia y continuidad en la gobernanza.",
+        "Registro Histórico",
+        "Buscar en actas o contexto..."
+      ]
+    },
+    "src/pages/AdminPanel.tsx": {
+      "count": 7,
+      "literals": [
+        "Panel de Control Admin",
+        "Cruce de Perfiles",
+        "¡Comunidad creada con éxito!",
+        "Te damos la bienvenida a",
+        ". Ya eres el/la fundador/a de este espacio. Puedes empezar a invitar a miembros, configurar proyectos, gestionar el tablón y la economía local.",
+        "Ver ficha pública",
+        "Cerrar banner"
+      ]
+    },
+    "src/pages/AdminSolicitudesView.tsx": {
+      "count": 51,
+      "literals": [
+        "solicitado",
+        "Resuelto",
+        "Motivo del Rechazo",
+        "Contexto Galáctico",
+        "Rol",
+        "Saberes",
+        "Tensión",
+        "Este solicitante aún no ha completado su ficha de perfil.",
+        "Aprobar",
+        "Rechazar",
+        "usos",
+        "Caduca",
+        "Creado",
+        "Confirmar desactivación",
+        "Cancelar",
+        "Desactivar código",
+        "Acceso restringido",
+        "No tienes permisos para gestionar las solicitudes de esta comunidad.",
+        "Volver atrás",
+        "Cargando solicitudes...",
+        "Solicitudes de acceso",
+        "Gestiona quién puede unirse a",
+        "Pendientes",
+        "Resueltas",
+        "Invitaciones",
+        "Generar nuevo código",
+        "Crea una invitación personalizada para tu comunidad",
+        "Tipo de invitación",
+        "Fecha de expiración",
+        "Usos máximos (opcional)",
+        "Ilimitados",
+        "Generar código",
+        "Código generado listo para compartir",
+        "Códigos activos e históricos",
+        "No hay códigos generados todavía.",
+        "No hay solicitudes pendientes",
+        "Cuando alguien solicite acceso, aparecerá aquí.",
+        "Aún no se ha resuelto ninguna solicitud.",
+        "Rechazar solicitud",
+        "Esta persona no podrá unirse a",
+        "con esta solicitud. Podrá volver a solicitarlo más adelante.",
+        "Motivo del rechazo",
+        "Selecciona un motivo...",
+        "No cumple el perfil de la comunidad",
+        "Comunidad con cupo completo",
+        "Información insuficiente en la solicitud",
+        "Sin respuesta del solicitante",
+        "Otro",
+        "Detalle adicional (opcional)",
+        "Añade un contexto adicional si lo deseas...",
+        "Cancelar"
+      ]
+    },
+    "src/pages/AjustesView.tsx": {
+      "count": 27,
+      "literals": [
+        "Cargando configuración...",
+        "Ajustes y Configuración",
+        "Gestiona la privacidad de tu pasaporte, visibilidad de contacto y opciones de tu cuenta.",
+        "Privacidad y Pasaporte",
+        "Ficha e Identidad",
+        "Cuenta y Conexiones",
+        "Dimensiones Galácticas y Astrales",
+        "Elige qué facetas de tu diseño humano, astrología y manual son visibles comunitariamente.",
+        "Redes Sociales y Canales de Contacto",
+        "Configura qué datos de contacto directo se muestran en tu pasaporte público.",
+        "Acciones Rápidas de tu Identidad",
+        "Editar mi Ficha",
+        "Modifica tus saberes, ofrendas, rol y datos personales",
+        "Ir →",
+        "Mi Pasaporte Universal",
+        "Visualiza tu carta de presentación tal como la ve la comunidad",
+        "Ver →",
+        "Mi Perfil Completo",
+        "Revisa la vista unificada de perfil y pasaporte",
+        "Ir →",
+        "Datos de Cuenta y Sesión",
+        "Nombre de usuario",
+        "Correo Electrónico",
+        "Rol Global",
+        "ID de Usuario",
+        "Vincular con Telegram",
+        "Cerrar Sesión"
+      ]
+    },
+    "src/pages/AuthCallbackPage.tsx": {
+      "count": 8,
+      "literals": [
+        "Verificando tu identidad...",
+        "Estamos conectando con la red galáctica para validar tu acceso.",
+        "Confirma tu email",
+        "Parece que has abierto el enlace en un dispositivo o pestaña diferente. Por seguridad, reintroduce el email donde recibiste el enlace.",
+        "tu@email.com",
+        "Continuar",
+        "Algo no ha salido bien",
+        "Volver al inicio"
+      ]
+    },
+    "src/pages/CalendarioView.tsx": {
+      "count": 6,
+      "literals": [
+        "Añadir evento",
+        "Añadir evento",
+        "Añadir",
+        "Calendario Comunitario",
+        "Mes",
+        "Agenda"
+      ]
+    },
+    "src/pages/ComunidadesView.tsx": {
+      "count": 4,
+      "literals": [
+        "Crear nodo o comunidad",
+        "Nuevo Nodo",
+        "Nuevo",
+        "Iniciar sesión"
+      ]
+    },
+    "src/pages/ContextConsent.tsx": {
+      "count": 9,
+      "literals": [
+        "Volver al inicio",
+        "Nuestra Puesta e Intención",
+        "Bienvenidas y bienvenidos, linda tribu. Estás a punto de crear tu ficha comunitaria. Lejos de ser un mero trámite, esto es un paso para reconocernos, saber desde dónde nos sostenemos y cuidamos mutuamente.",
+        "Kanarii / Tawăzawazt",
+        "es el reflejo de una intención profunda. Esto no es un evento en concreto, es un canal para congregarnos cada cierto tiempo y unirnos aún más como tribu. Es una forma y experiencia de vida guiada por valores como la soberanía comunitaria, el amor por la vida, por la naturaleza y la búsqueda de equilibrios entre nuestras energías.",
+        "Ser parte de esta comunidad requiere compromiso e implicación en el tiempo. La información que vamos a compartir en los siguientes pasos es esencial para mapear nuestros ciclos vitales, saberes, necesidades y nuestra energía actual. Nos ayudará a trazar la \"tela de araña cósmica\" que lo integra y conecta todo.",
+        "\"Las personas solas pueden llegar a ser poderosas, pero juntas somos invencibles.\"",
+        "Trataremos tu información desde una perspectiva de seguridad comunitaria. Todo lo que se crea aquí se nutre de la tribu y para la tribu.",
+        "Siento la llamada y me resuena"
+      ]
+    },
+    "src/pages/CruceView.tsx": {
+      "count": 37,
+      "literals": [
+        "Acceso Reservado",
+        "El Cruce de Perfiles es una herramienta para miembros de comunidades. Únete a una tribu para empezar a explorar compatibilidades.",
+        "Explorar Comunidades",
+        "Cruce de Perfiles",
+        "Selecciona dos miembros para analizar sus compatibilidades y tensiones bajo la lente sociocrática y de diseño humano.",
+        "Cargando biblioteca de fichas...",
+        "Miembro A",
+        "Selecciona un miembro...",
+        "Miembro B",
+        "Selecciona un miembro...",
+        "Tejiendo el análisis...",
+        "Resultados del Encuentro",
+        "Sinergia:",
+        "Archivo (",
+        "Mapa de Rangos Contextuales",
+        "Poder de Influencia",
+        "Tipo de Asimetría",
+        "Canales de Conexión",
+        "Sin canales definidos entre estos perfiles.",
+        "No se detectaron canales técnicos.",
+        "Puentes de Comunicación (CNV)",
+        "Hecho",
+        "Siento",
+        "Necesito",
+        "Petición Concreta",
+        "Espejos y Sombras Probables",
+        "Lo que conscientemente cree",
+        "Sombra proyectada en el otro",
+        "Gancho Proyectivo",
+        "\"Me dispara cuando el otro...\"",
+        "Protocolo de Doble Enlace Sociocrático",
+        "Enlace 1:",
+        "Revisión:",
+        "Enlace 2:",
+        "Revisión:",
+        "Metodología:",
+        "Análisis Profundo de Facilitación"
+      ]
+    },
+    "src/pages/DashboardView.tsx": {
+      "count": 23,
+      "literals": [
+        "Red de Sinergias Abierta",
+        "Descubre conexiones y afinidades deterministas en Canarias",
+        "Mostrando perfiles de ejemplo. Inicia sesión para cruzar tu fecha natal, isla y dones con la comunidad real.",
+        "Iniciar sesión",
+        "Búsqueda avanzada",
+        "Explorar todo",
+        "Mejorar sinergias",
+        "Describe a quién o qué buscas (ej: permacultura en Gran Canaria, talleres de bioconstrucción, residencia de verano)...",
+        "Limpiar búsqueda",
+        "Buscando",
+        "Todo",
+        "Personas",
+        "Nodos",
+        "Eventos",
+        "Estancias",
+        "Nodo",
+        "Cualquier nodo",
+        "Cerca",
+        "Buscar",
+        "🌴",
+        "⚡",
+        "🤝",
+        "Calculando sinergias de la red..."
+      ]
+    },
+    "src/pages/EventosView.tsx": {
+      "count": 2,
+      "literals": [
+        "Inscrito",
+        "Únete a la Red para Participar"
+      ]
+    },
+    "src/pages/FichaComunidadView.tsx": {
+      "count": 1,
+      "literals": [
+        "ℹ️"
+      ]
+    },
+    "src/pages/FichaPreview.tsx": {
+      "count": 67,
+      "literals": [
+        "No hay un borrador de perfil pendiente.",
+        "Volver a Orientación",
+        "Previsualización de tu Ficha",
+        "El Facilitador Galáctico está tejiendo tu manual...",
+        "Consultando a las estrellas y trazando tu diseño humano. Este proceso tomará unos segundos mágicos.",
+        "Editar Datos",
+        "Nombre",
+        "Fecha de Nacimiento",
+        "Hora de Nacimiento",
+        "Lugar de Nacimiento",
+        "Ej: Las Palmas de Gran Canaria, España",
+        "Género",
+        "hombre",
+        "mujer",
+        "no binario",
+        "prefiero no decirlo",
+        "Antigüedad (años)",
+        "Recién llegado/a (menos de 3 meses)",
+        "Menos de 1 año",
+        "1 año",
+        "2 años",
+        "3 años",
+        "4 años",
+        "5 años o más",
+        "Tríada Comunitaria (Chips & Topics)",
+        "Ofrendas (Lo que aportas)",
+        "Ej: diseño web, carpintería...",
+        "Saberes y Habilidades",
+        "Ej: agroecología, facilitación...",
+        "Necesidades (Lo que requieres)",
+        "Ej: transporte, herramientas...",
+        "Sobre mí / Biografía o trayectoria libre",
+        "Cuenta algo sobre tu historia, valores o proyectos...",
+        "Estado de tensión",
+        "¿Qué estás sintiendo hoy en la convivencia?",
+        "Tu rol u oficio en una frase corta",
+        "Oficio o rol corto en la comunidad (máx. 45 caracteres)",
+        "Participación en Kanarii",
+        "¿Cómo contribuyes o te gustaría contribuir al proyecto?",
+        "Rol",
+        "Propietario / Núcleo",
+        "Miembro",
+        "Voluntario",
+        "Fecha de salida (opcional)",
+        "Guardar Cambios",
+        "Tus datos de registro",
+        "Propietario/a",
+        "Miembro",
+        "Voluntario/a",
+        "Editar datos",
+        "Identidad base",
+        "Nombre",
+        "Nacimiento",
+        "a las",
+        "Lugar",
+        "Género",
+        "Ikigai comunitario",
+        "Saberes y Recorrido Vital",
+        "Rol y convivencia",
+        "Participación en Kanarii",
+        "Antigüedad",
+        "Estado de tensión y cuidado",
+        "✨ Generar mi Manual Galáctico",
+        "Guardando...",
+        "Este será tu perfil en la comunidad",
+        "✏️ Editar datos y regenerar",
+        "Guardando en la red..."
+      ]
+    },
+    "src/pages/FichaView.tsx": {
+      "count": 88,
+      "literals": [
+        "Mi perfil",
+        "Editar Ficha",
+        "Nombre",
+        "Fecha de Nacimiento",
+        "Hora de Nacimiento",
+        "Lugar de Nacimiento",
+        "Ej: Las Palmas de Gran Canaria, España",
+        "Género",
+        "hombre",
+        "mujer",
+        "no binario",
+        "prefiero no decirlo",
+        "Antigüedad (años)",
+        "Recién llegado/a (menos de 3 meses)",
+        "Menos de 1 año",
+        "1 año",
+        "2 años",
+        "3 años",
+        "4 años",
+        "5 años o más",
+        "Saberes y recorrido vital",
+        "Tu formación, experiencias, oficios, proyectos... todo cuenta",
+        "Tríada Comunitaria (Estructurada)",
+        "Define tags específicos para facilitar la ayuda y colaboración en la comunidad. Presiona enter o introduce una coma para añadir cada elemento.",
+        "Ofrendas (Lo que aportas)",
+        "Ej: diseño web, carpintería, cuidado...",
+        "Saberes y Habilidades",
+        "Ej: agroecología, facilitación...",
+        "Necesidades (Lo que requieres)",
+        "Ej: transporte, programar, herramientas...",
+        "Redes Sociales y Contacto Rápido",
+        "Facilita que otros miembros conecten contigo a través de tus perfiles públicos o canales directos.",
+        "Instagram",
+        "@usuario",
+        "LinkedIn",
+        "URL o perfil",
+        "Telegram",
+        "@usuario o t.me/...",
+        "Sitio Web / Blog",
+        "https://...",
+        "Teléfono / WhatsApp",
+        "Correo Electrónico",
+        "correo@ejemplo.com",
+        "Estado de tensión",
+        "¿Qué estás sintiendo hoy en la convivencia?",
+        "Tu rol u oficio en una frase corta",
+        "Oficio o rol corto en la comunidad (máx. 45 caracteres)",
+        "Participación en Kanarii",
+        "¿Cómo contribuyes o te gustaría contribuir al proyecto?",
+        "Rol",
+        "Propietario / Núcleo",
+        "Miembro",
+        "Voluntario",
+        "Fecha de salida (opcional)",
+        "Guardar Cambios",
+        "Privacidad del Pasaporte Comunitario",
+        "El Pasaporte Comunitario es tu carta de presentación social y pública en Kanarii. Elige qué dimensiones de tu perfil deseas compartir públicamente con la comunidad.",
+        "Redes Sociales y Canales de Contacto",
+        "Elige qué canales de contacto directo son visibles en tu pasaporte para otros miembros de la comunidad.",
+        "Estructurando tu Manual Galáctico",
+        "El Facilitador Galáctico está analizando tus tránsitos y diseño para estructurar las 5 secciones de tu manual...",
+        "Tejiendo la estructura inicial...",
+        "Manual de Usuario Humano",
+        "Regenerar mi manual",
+        "Generado por el Facilitador Galáctico",
+        "El",
+        "Manual de Usuario Humano (Legacy)",
+        "Actualizar al nuevo formato en capas",
+        "Generado por el Facilitador Galáctico",
+        "El",
+        "Tu Manual Galáctico está listo para nacer",
+        "El Facilitador Galáctico analizará tu carta astral y creará tu Manual de Usuario personalizado.",
+        "El Facilitador Galáctico está tejiendo tu manual...",
+        "✨ Generar mi Manual",
+        "Salir de la Comunidad",
+        "Paso",
+        "de 3",
+        "Perteneces a múltiples comunidades. ¿De cuál de ellas deseas salir?",
+        "Cargando tus comunidades...",
+        "Para ayudarnos a cuidar y mejorar la convivencia en Kanarii, por favor comparte el motivo principal de tu baja.",
+        "Motivo (Obligatorio)",
+        "Comentario libre (Opcional)",
+        "Comparte cualquier detalle, sugerencia de mejora o agradecimiento...",
+        "¿Confirmas que quieres salir?",
+        "Esta acción eliminará tu acceso a la comunidad. Podrás volver a unirte en el futuro si lo deseas.",
+        "← Atrás",
+        "Continuar →",
+        "Confirmar salida"
+      ]
+    },
+    "src/pages/MarketplaceView.tsx": {
+      "count": 26,
+      "literals": [
+        "Publicar oferta",
+        "Publicar oferta",
+        "Publicar",
+        "Marketplace de Soberanía",
+        "Soberanía de Recursos",
+        "En Kanarii, la soberanía económica no se basa en el dinero, sino en las relaciones de confianza y el intercambio de talentos y recursos.",
+        "Aquí puedes ofrecer tus habilidades o recursos materiales a la comunidad y proponer acuerdos colaborativos con otros miembros. Las propuestas de acuerdos pueden ser aceptadas, declinadas o contraofertadas para encontrar el equilibrio perfecto.",
+        "Catálogo",
+        "Mis Acuerdos",
+        "Todo",
+        "Talentos",
+        "Recursos",
+        "No se encontraron resultados",
+        "Prueba a ajustar los filtros o publica tu primera oferta.",
+        "Aún no tienes acuerdos",
+        "Explora el catálogo y propón tu primer intercambio.",
+        "Con",
+        "Fecha vencida",
+        "Tipo:",
+        "Fecha:",
+        "Aceptar",
+        "Contraofertar",
+        "Declinar",
+        "Esperando respuesta del otro miembro...",
+        "Marcar Completado",
+        "Cancelar"
+      ]
+    },
+    "src/pages/OnboardingChat.tsx": {
+      "count": 4,
+      "literals": [
+        "Volver al inicio",
+        "Conversación de Acogida",
+        "Iniciar sesión",
+        "Volver al paso anterior"
+      ]
+    },
+    "src/pages/PasaporteComunitarioView.tsx": {
+      "count": 2,
+      "literals": [
+        "WhatsApp",
+        "Telegram"
+      ]
+    },
+    "src/pages/PerfilView.tsx": {
+      "count": 15,
+      "literals": [
+        "Cargando tu perfil...",
+        "Editar ficha",
+        "Ajustes y privacidad",
+        "Ajustes",
+        "Pasaporte Cósmico",
+        "Ficha Comunitaria",
+        "Mis Comunidades (",
+        "Vista interactiva de tu identidad cósmica y aportes a la tribu.",
+        "Ver mi pasaporte público universal",
+        "Detalle completo de tu ficha de convivencia, ofrendas, saberes y necesidades.",
+        "Editar datos",
+        "Entrar",
+        "Aún no perteneces a ninguna comunidad",
+        "Explora las comunidades activas en Kanarii y solicita unirte para colaborar con tus saberes y ofrendas.",
+        "Explorar Comunidades"
+      ]
+    },
+    "src/pages/PropuestasView.tsx": {
+      "count": 11,
+      "literals": [
+        "Nueva Propuesta",
+        "Nueva Propuesta",
+        "Nueva",
+        "Gobernanza",
+        "Vista",
+        "Kanban",
+        "Lista",
+        "Atención requerida",
+        "Cambia a vista Lista para filtrar",
+        "Filtrar por estado",
+        "No se encontraron propuestas con los filtros seleccionados."
+      ]
+    },
+    "src/pages/ProyectosView.tsx": {
+      "count": 7,
+      "literals": [
+        "Nuevo Proyecto",
+        "Nuevo Proyecto",
+        "Nuevo",
+        "Proyectos",
+        "Proyectos Comunitarios",
+        "Los Proyectos representan las iniciativas a mediano y largo plazo desarrolladas colectivamente en la comunidad.",
+        "Cualquier miembro puede crear un proyecto o solicitar unirse a uno existente aportando sus talentos. El tablero Kanban permite visualizar el estado del proyecto: desde la búsqueda de ayuda inicial hasta su completa realización."
+      ]
+    },
+    "src/pages/RegistroComunidadView.tsx": {
+      "count": 46,
+      "literals": [
+        "Crear nueva comunidad",
+        "Paso",
+        "de 4 —",
+        "Identidad de tu comunidad",
+        "Nombre",
+        "Ej: Arteara, La Finca del Sol...",
+        "Identificador (slug)",
+        "mi-comunidad",
+        "Descripción corta",
+        "¿De qué va tu comunidad? (máx. 160 caracteres)",
+        "Manifiesto",
+        "(opcional, Markdown)",
+        "# Nuestro manifiesto&#10;&#10;Escribe aquí los valores...",
+        "¿Dónde estáis?",
+        "Buscar ubicación",
+        "Busca la ubicación para autocompletar las coordenadas reales de la comunidad.",
+        "Municipio",
+        "San Bartolomé",
+        "Región / Isla",
+        "Gran Canaria",
+        "País",
+        "España",
+        "Tipo de espacio",
+        "Capacidad estimada",
+        "(personas, opcional)",
+        "Ej: 15",
+        "Cultura y acceso",
+        "Comunidad pública",
+        "Requiere aprobación",
+        "🔒 Comunidad privada",
+        "Solo accesible por invitación. La aprobación es obligatoria.",
+        "Etiquetas",
+        "Escribe y pulsa Enter...",
+        "Confirma los datos",
+        "~",
+        "personas",
+        "Pública",
+        "Privada",
+        "Entrada libre",
+        "Aprobación requerida",
+        "Ver manifiesto",
+        "Creando comunidad...",
+        "Crear comunidad",
+        "Anterior",
+        "Siguiente",
+        "Volver a editar"
+      ]
+    },
+    "src/pages/ResidenciasView.tsx": {
+      "count": 2,
+      "literals": [
+        "Solicitud Enviada",
+        "Inicia Sesión para Solicitar Estancia"
+      ]
+    },
+    "src/pages/Tablon.tsx": {
+      "count": 10,
+      "literals": [
+        "Publicar algo",
+        "Publicar",
+        "Tablón Comunitario",
+        "Necesidades",
+        "Ofertas",
+        "Todas",
+        "No hay",
+        "s que coincidan",
+        "Prueba a cambiar los filtros o sé el primero en publicar.",
+        "Añadir herramientas al nodo"
+      ]
+    },
+    "src/pages/TareasPanel.tsx": {
+      "count": 9,
+      "literals": [
+        "Nueva Tarea",
+        "Nueva Tarea",
+        "Nueva",
+        "Tareas Comunitarias",
+        "Crear tarea",
+        "Tareas de la Comunidad",
+        "El panel de Tareas Comunitarias organiza el trabajo del día a día de nuestro espacio común.",
+        "Aquí gestionamos las labores pendientes, en progreso y completadas. Cualquier miembro puede autoasignarse responsabilidades o proponer nuevas tareas necesarias para el bienestar y mantenimiento del grupo.",
+        "No hay tareas que coincidan con el filtro"
+      ]
+    },
+    "src/pages/Welcome.tsx": {
+      "count": 1,
+      "literals": [
+        "Tawăzawazt"
+      ]
+    }
+  }
+}

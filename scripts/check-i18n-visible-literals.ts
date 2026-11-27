@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import ts from 'typescript';
 
+const BASELINE_PATH = path.resolve(process.cwd(), 'i18n-baseline.json');
+
 const ALLOWED_VISIBLE_LITERALS = new Set([
   'Kanarii',
   'S3',
@@ -56,6 +58,18 @@ interface Finding {
   allowed: boolean;
 }
 
+interface BaselineEntry {
+  count: number;
+  literals: string[];
+}
+
+interface BaselineData {
+  generatedAt: string;
+  totalViolations: number;
+  totalFilesWithViolations: number;
+  files: Record<string, BaselineEntry>;
+}
+
 function isNumericOrSymbolic(text: string): boolean {
   const trimmed = text.trim();
   if (!trimmed) return true;
@@ -99,7 +113,7 @@ function scanFile(filePath: string): Finding[] {
       const propName = node.name.getText();
       if (VISIBLE_PROPS.has(propName) && node.initializer) {
         let valueText = '';
-        let startPos = node.initializer.getStart();
+        const startPos = node.initializer.getStart();
 
         if (ts.isStringLiteral(node.initializer)) {
           valueText = node.initializer.text;
@@ -175,7 +189,8 @@ function getTsxFilesRecursively(dirOrFile: string): string[] {
       file === 'dist' ||
       file === 'build' ||
       file === '.git' ||
-      file === '.tmp'
+      file === '.tmp' ||
+      file === '_archived'
     ) {
       continue;
     }
@@ -186,54 +201,158 @@ function getTsxFilesRecursively(dirOrFile: string): string[] {
 }
 
 function runCLI() {
-  const args = process.argv.slice(2);
-  if (args.length === 0) {
-    console.log('Uso: npx tsx scripts/check-i18n-visible-literals.ts <archivo_o_directorio_1> [archivo_o_directorio_2 ...]');
-    console.log('Ejemplo: npx tsx scripts/check-i18n-visible-literals.ts src/components/onboarding/WelcomeHeroSections.tsx src/pages/Welcome.tsx');
-    process.exit(0);
-  }
+  const rawArgs = process.argv.slice(2);
+  const flags = new Set(rawArgs.filter((a) => a.startsWith('--')));
+  const targetPaths = rawArgs.filter((a) => !a.startsWith('--'));
+
+  const isGenerateBaseline = flags.has('--generate-baseline');
+  const isCheckBaseline = flags.has('--check-baseline') || flags.has('--ratchet');
+  const isQuiet = flags.has('--quiet');
+  const isSummaryOnly = flags.has('--summary');
+
+  // Si no se pasaron rutas, usar por defecto src/pages y src/components
+  const effectivePaths =
+    targetPaths.length > 0 ? targetPaths : ['src/pages', 'src/components'];
 
   let filesToScan: string[] = [];
-  for (const arg of args) {
-    const fullPath = path.resolve(process.cwd(), arg);
+  for (const target of effectivePaths) {
+    const fullPath = path.resolve(process.cwd(), target);
     filesToScan = filesToScan.concat(getTsxFilesRecursively(fullPath));
   }
 
-  // Eliminar duplicados
-  filesToScan = Array.from(new Set(filesToScan));
+  // Eliminar duplicados y ordenar deterministamente
+  filesToScan = Array.from(new Set(filesToScan)).sort();
 
-  let totalInspected = filesToScan.length;
+  const currentViolationsByFile: Record<string, { count: number; literals: string[]; items: Finding[] }> = {};
   let totalCandidates = 0;
   let totalAllowed = 0;
-
-  console.log(`\n🔍 Auditando copy visible hardcodeado en ${totalInspected} archivo(s) TSX/JSX...\n`);
+  let totalViolations = 0;
 
   for (const file of filesToScan) {
     const relativePath = path.relative(process.cwd(), file);
     const findings = scanFile(file);
-    if (findings.length > 0) {
-      for (const f of findings) {
-        totalCandidates++;
-        if (f.allowed) {
-          totalAllowed++;
-          continue;
-        }
-        console.warn(
-          `⚠️ [WARNING] ${relativePath}:${f.line}:${f.column} (${f.type}) → "${f.literal}"`
+    const violations = findings.filter((f) => !f.allowed);
+
+    totalCandidates += findings.length;
+    totalAllowed += findings.length - violations.length;
+
+    if (violations.length > 0) {
+      totalViolations += violations.length;
+      currentViolationsByFile[relativePath] = {
+        count: violations.length,
+        literals: violations.map((v) => v.literal),
+        items: violations,
+      };
+    }
+  }
+
+  const filesWithViolationsCount = Object.keys(currentViolationsByFile).length;
+
+  // CASO 1: Generar Baseline
+  if (isGenerateBaseline) {
+    const baselineData: BaselineData = {
+      generatedAt: new Date().toISOString(),
+      totalViolations,
+      totalFilesWithViolations: filesWithViolationsCount,
+      files: {},
+    };
+
+    for (const [file, data] of Object.entries(currentViolationsByFile)) {
+      baselineData.files[file] = {
+        count: data.count,
+        literals: data.literals,
+      };
+    }
+
+    fs.writeFileSync(BASELINE_PATH, JSON.stringify(baselineData, null, 2) + '\n', 'utf8');
+    console.log(`\n✅ Baseline i18n generado exitosamente en ${BASELINE_PATH}`);
+    console.log(`   - Archivos auditados: ${filesToScan.length}`);
+    console.log(`   - Archivos con violaciones: ${filesWithViolationsCount}`);
+    console.log(`   - Violaciones totales congeladas: ${totalViolations}\n`);
+    process.exit(0);
+  }
+
+  // CASO 2: Verificar contra Baseline (Quality Gate Trinquete / Ratchet)
+  if (isCheckBaseline) {
+    if (!fs.existsSync(BASELINE_PATH)) {
+      console.error(`\n❌ ERROR: No se encontró el archivo de baseline i18n en: ${BASELINE_PATH}`);
+      console.error(`   Ejecuta: npx tsx scripts/check-i18n-visible-literals.ts --generate-baseline\n`);
+      process.exit(1);
+    }
+
+    const baseline: BaselineData = JSON.parse(fs.readFileSync(BASELINE_PATH, 'utf8'));
+    const regressions: string[] = [];
+
+    // 1. Archivos con más violaciones de las permitidas en baseline o archivos nuevos con violaciones
+    for (const [file, current] of Object.entries(currentViolationsByFile)) {
+      const baseEntry = baseline.files[file];
+      if (!baseEntry) {
+        regressions.push(
+          `❌ [ARCHIVO NUEVO CON VIOLACIONES] ${file}: ${current.count} violaciones detectadas (no existía en baseline).`
         );
-        console.warn(`   ↳ Sugerencia: Usar i18n o añadir una excepción en la allowlist si está justificado.\n`);
+      } else if (current.count > baseEntry.count) {
+        const delta = current.count - baseEntry.count;
+        regressions.push(
+          `❌ [REGRESIÓN] ${file}: ${current.count} violaciones (baseline tenía ${baseEntry.count}, +${delta} nuevas).`
+        );
+      }
+    }
+
+    // 2. Comprobación global de total
+    const totalDiff = totalViolations - baseline.totalViolations;
+
+    if (regressions.length > 0 || totalDiff > 0) {
+      console.error(`\n🚨 FALLO DE CONTROL DE CALIDAD i18n (TRINQUETE / RATCHET DETECTÓ REGRESIONES):`);
+      console.error(`----------------------------------------------------------------------`);
+      for (const reg of regressions) {
+        console.error(reg);
+      }
+      if (totalDiff > 0) {
+        console.error(`❌ Total global de violaciones aumentó: ${totalViolations} vs ${baseline.totalViolations} (+${totalDiff}).`);
+      }
+      console.error(`----------------------------------------------------------------------`);
+      console.error(`Regla: Está estrictamente prohibido introducir nuevo copy hardcodeado en JSX.`);
+      console.error(`Por favor extrae los textos a los archivos en src/locales/{es,en} y usa t().\n`);
+      process.exit(1);
+    }
+
+    // Si no hay regresiones
+    console.log(`\n🛡️  VALIDACIÓN DE TRINQUETE i18n: ✅ SUPERADA (Cero regresiones)`);
+    console.log(`   - Violaciones actuales : ${totalViolations}`);
+    console.log(`   - Baseline registrado  : ${baseline.totalViolations}`);
+
+    if (totalViolations < baseline.totalViolations) {
+      const reduced = baseline.totalViolations - totalViolations;
+      console.log(`   🎉 ¡PROGRESO! Se han erradicado ${reduced} violaciones (de ${baseline.totalViolations} a ${totalViolations}).`);
+      console.log(`   💡 Recuerda ejecutar con --generate-baseline al finalizar para sellar la nueva línea base.`);
+    } else if (totalViolations === 0) {
+      console.log(`   🎉 ¡PERFECCIÓN! El proyecto tiene 0 literales hardcodeados pendientes.`);
+    }
+    console.log();
+    process.exit(0);
+  }
+
+  // CASO 3: Modo Auditoría / Reporte Clásico
+  console.log(`\n🔍 Auditando copy visible hardcodeado en ${filesToScan.length} archivo(s) TSX/JSX...\n`);
+
+  if (!isSummaryOnly) {
+    for (const [file, data] of Object.entries(currentViolationsByFile)) {
+      for (const f of data.items) {
+        if (!isQuiet) {
+          console.warn(`⚠️ [WARNING] ${file}:${f.line}:${f.column} (${f.type}) → "${f.literal}"`);
+        }
       }
     }
   }
 
   console.log('--------------------------------------------------');
   console.log(`📊 Totales de Auditoría:`);
-  console.log(`  - Archivos inspeccionados : ${totalInspected}`);
-  console.log(`  - Candidatos detectados  : ${totalCandidates}`);
-  console.log(`  - Excepciones permitidas : ${totalAllowed}`);
-  console.log(`  - Warnings reportados    : ${totalCandidates - totalAllowed}`);
-  console.log('--------------------------------------------------');
-  console.log('ℹ️  Modo WARNING activo. Salida final con código de éxito 0.\n');
+  console.log(`  - Archivos inspeccionados : ${filesToScan.length}`);
+  console.log(`  - Archivos con warnings   : ${filesWithViolationsCount}`);
+  console.log(`  - Candidatos detectados   : ${totalCandidates}`);
+  console.log(`  - Excepciones permitidas  : ${totalAllowed}`);
+  console.log(`  - Warnings reportados     : ${totalViolations}`);
+  console.log('--------------------------------------------------\n');
 
   process.exit(0);
 }
