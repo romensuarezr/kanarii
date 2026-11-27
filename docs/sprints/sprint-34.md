@@ -8,7 +8,7 @@
 |---|---|---|---|---|---|
 | T-167 | Motor determinista de blindaje i18n con baseline y trinquete (`test:i18n`) | M | 🟢 Completada | — | .agents/tasks/task-167.md |
 | T-168 | Internacionalización de Dashboard, Buscador ReTribalize y Navegación Global | M | 🟢 Completada | T-167 | .agents/tasks/task-168.md |
-| T-169 | Internacionalización de Identidad, Perfil y Fichas (`FichaView`, `PerfilView`, `RegistroComunidadView`) | L | ⬜ Pendiente | T-167 | .agents/tasks/task-169.md |
+| T-169 | Internacionalización de Identidad, Perfil y Fichas (`FichaView`, `PerfilView`, `RegistroComunidadView`) | L | 🟢 Completada | T-167 | .agents/tasks/task-169.md |
 | T-170 | Internacionalización de Gobernanza, Actas, Proyectos, Tareas y Soberanía (`governance`, `projects`, `marketplace`) | L | ⬜ Pendiente | T-167 | .agents/tasks/task-170.md |
 | T-171 | Internacionalización de AdminPanel y Ajustes + Sellado de Baseline a 0 | M | ⬜ Pendiente | T-168, T-169, T-170 | .agents/tasks/task-171.md |
 

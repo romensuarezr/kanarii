@@ -4,6 +4,7 @@ import { Send, Copy, Check, X, ShieldCheck, RefreshCw, Unlink, HelpCircle, Chevr
 import { useAuth } from '../../contexts/AuthContext';
 import { generateTelegramBindToken, getTelegramIdentityByUserId, revokeTelegramLink } from '../../lib/services/identities';
 import { UserTelegramIdentity } from '../../lib/services/contracts';
+import { useTranslation } from 'react-i18next';
 
 interface TelegramLinkModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface TelegramLinkModalProps {
 }
 
 export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
+  const { t } = useTranslation('passport');
   const { appUser } = useAuth();
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -131,7 +133,7 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-700 rounded-full hover:bg-stone-100 transition-colors"
-          title="Cerrar"
+          title={t('telegramModal.close')}
         >
           <X className="w-5 h-5" />
         </button>
@@ -142,8 +144,8 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
             <Send className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-xl font-serif font-bold text-[#4A4E4D]">Vincular con Telegram</h3>
-            <p className="text-xs text-stone-500 font-medium">Notificaciones y gestión rápida desde tu chat</p>
+            <h3 className="text-xl font-serif font-bold text-[#4A4E4D]">{t('telegramModal.title')}</h3>
+            <p className="text-xs text-stone-500 font-medium">{t('telegramModal.subtitle')}</p>
           </div>
         </div>
 
@@ -156,7 +158,7 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
         {loading ? (
           <div className="py-12 flex flex-col items-center justify-center space-y-3">
             <RefreshCw className="w-8 h-8 text-[#CB997E] animate-spin" />
-            <p className="text-xs text-stone-500">Preparando vinculación...</p>
+            <p className="text-xs text-stone-500">{t('telegramModal.preparing')}</p>
           </div>
         ) : identity ? (
           /* Estado: Ya vinculado */
@@ -164,14 +166,14 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
             <div className="p-4 bg-[#F9F7F1] border border-[#EAE2D6] rounded-2xl flex items-center gap-3">
               <ShieldCheck className="w-6 h-6 text-[#6B705C] shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-[#4A4E4D]">Cuenta Vinculada</p>
+                <p className="text-xs font-bold text-[#4A4E4D]">{t('telegramModal.linkedTitle')}</p>
                 <p className="text-xs text-stone-500 truncate">
                   {identity.telegramUsername ? `@${identity.telegramUsername}` : `ID: ${identity.telegramUserId}`}
                 </p>
               </div>
             </div>
             <p className="text-xs text-stone-500 leading-relaxed">
-              Tu cuenta de Kanarii está enlazada correctamente con Telegram. Puedes recibir notificaciones y confirmar acciones mediante el bot.
+              {t('telegramModal.linkedDesc')}
             </p>
             <div className="pt-2 flex justify-between gap-3">
               <a
@@ -181,7 +183,7 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
                 className="flex-1 py-2.5 px-4 bg-[#6B705C] hover:bg-[#585c4c] text-white rounded-xl text-xs font-bold text-center transition-colors flex items-center justify-center gap-2"
               >
                 <Send className="w-4 h-4" />
-                <span>Abrir Bot Telegram</span>
+                <span>{t('telegramModal.openBotShort')}</span>
               </a>
               <button
                 onClick={handleRevoke}
@@ -189,7 +191,7 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
                 className="px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
               >
                 <Unlink className="w-4 h-4" />
-                <span>{revoking ? 'Revocando...' : 'Desvincular'}</span>
+                <span>{revoking ? t('telegramModal.revoking') : t('telegramModal.unlink')}</span>
               </button>
             </div>
           </div>
@@ -205,24 +207,24 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
                 className="w-full py-3.5 px-4 bg-[#CB997E] hover:bg-[#B58368] text-white rounded-xl text-sm font-bold transition-all shadow-md flex items-center justify-center gap-2"
               >
                 <Send className="w-5 h-5" />
-                <span>Abrir Telegram Bot</span>
+                <span>{t('telegramModal.openBot')}</span>
               </a>
               <p className="text-[11px] text-stone-500 font-medium leading-snug">
-                El código de vinculación se aplicará automáticamente al pulsar <strong>Iniciar</strong> en Telegram.
+                {t('telegramModal.autoApplyHint')} <strong>{t('telegramModal.startBtn')}</strong> {t('telegramModal.inTelegram')}
               </p>
             </div>
 
             {/* Código visible con fallback manual */}
             <div className="p-3 bg-white border border-[#EAE2D6] rounded-2xl flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
-                <span className="text-[11px] text-stone-400 font-medium">Código:</span>
+                <span className="text-[11px] text-stone-400 font-medium">{t('telegramModal.codeLabel')}</span>
                 <code className="text-base font-mono font-bold text-[#CB997E] tracking-wider">{token}</code>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={handleGenerateNewToken}
                   className="p-1.5 text-stone-400 hover:text-stone-600 rounded-lg hover:bg-stone-100 transition-colors"
-                  title="Generar nuevo código"
+                  title={t('telegramModal.generateNewCode')}
                 >
                   <RefreshCw className="w-4 h-4" />
                 </button>
@@ -231,7 +233,7 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
                   className="flex items-center gap-1 px-2.5 py-1.5 bg-[#EAE2D6] hover:bg-[#D4C3A3] text-[#4A4E4D] rounded-lg text-xs font-bold transition-colors"
                 >
                   {copied ? <Check className="w-3.5 h-3.5 text-[#6B705C]" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
+                  <span>{copied ? t('telegramModal.copied') : t('telegramModal.copy')}</span>
                 </button>
               </div>
             </div>
@@ -244,16 +246,16 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
               >
                 <div className="flex items-center gap-1.5">
                   <HelpCircle className="w-4 h-4 text-[#CB997E]" />
-                  <span>¿Cómo funciona la vinculación?</span>
+                  <span>{t('telegramModal.howItWorks')}</span>
                 </div>
                 {showHelp ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
 
               {showHelp && (
                 <div className="mt-2.5 p-3 bg-stone-50 border border-stone-200 rounded-xl space-y-2 text-xs text-stone-600 leading-relaxed animate-in fade-in duration-150">
-                  <p><strong>1.</strong> Pulsa <strong>Abrir Telegram Bot</strong> para ir directo con tu código asignado.</p>
-                  <p><strong>2.</strong> Toca en <strong>Iniciar</strong> (o envía <code className="bg-stone-200 px-1 py-0.5 rounded font-mono text-[11px]">/start {token}</code>).</p>
-                  <p><strong>3.</strong> ¡Listo! Tu cuenta de Kanarii quedará conectada inmediatamente.</p>
+                  <p><strong>1.</strong> {t('telegramModal.step1')} <strong>{t('telegramModal.step1Action')}</strong> {t('telegramModal.step1Suffix')}</p>
+                  <p><strong>2.</strong> {t('telegramModal.step2')} <strong>{t('telegramModal.step2Action')}</strong> {t('telegramModal.step2Or')} <code className="bg-stone-200 px-1 py-0.5 rounded font-mono text-[11px]">{`/start ${token}`}</code>).</p>
+                  <p><strong>3.</strong> {t('telegramModal.step3')}</p>
                 </div>
               )}
             </div>
@@ -264,3 +266,4 @@ export function TelegramLinkModal({ isOpen, onClose }: TelegramLinkModalProps) {
     document.body
   );
 }
+
