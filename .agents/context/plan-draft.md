@@ -1,43 +1,47 @@
-# Plan de Implementación — T-168
+# Plan de Implementación — T-169
 
 ## Metadatos
-- **Tarea**: T-168 — Internacionalización de Dashboard, Buscador ReTribalize y Navegación Global
+- **Tarea**: T-169 — Internacionalización de Identidad, Perfil y Fichas (`FichaView`, `PerfilView`, `RegistroComunidadView`)
 - **Sprint**: Sprint 34
-- **Playbook**: `scout-then-build`
-- **Rama propuesta**: `feat/SPRINT34-T-168-i18n-dashboard-retribalize`
+- **Playbook**: `plan-big-execute-small`
+- **Rama propuesta**: `feat/SPRINT34-T-169-i18n-identity-fichas-profile`
 
 ## Objetivo Estratégico
-Extraer e internacionalizar (ES y EN) todos los literales visibles en `DashboardView.tsx`, `ExploreEntityCard.tsx`, `KanariiEmptyStates.tsx` y `ContextualEmptyState.tsx`. Garantizar que el buscador ReTribalize, los filtros por entidad, los selectores y las tarjetas multientidad se muestren en inglés al activar `en`, respetando la frontera ADR-027 (contenido de usuario conserva su idioma original). Reducir el baseline inicial de 1.010 violaciones a ~981.
+Extraer y traducir al inglés y español la totalidad de los textos fijos en los módulos de identidad comunitaria: `FichaView.tsx`, `FichaPreview.tsx`, `PerfilView.tsx`, `TelegramLinkModal.tsx`, `RegistroComunidadView.tsx` y `CruceView.tsx`. Respetar de forma innegociable la frontera ADR-027: nombres de usuario, notas de biografía personal y ofrendas reales del miembro conservan su idioma de creación. Reducir el baseline de 978 a ~700 violaciones.
 
 ## Caja de Archivos
-- `src/pages/DashboardView.tsx`
-- `src/components/dashboard/ExploreEntityCard.tsx`
-- `src/components/ui/KanariiEmptyStates.tsx`
-- `src/components/ui/ContextualEmptyState.tsx`
-- `src/locales/es/dashboard.json`
-- `src/locales/en/dashboard.json`
-- `src/locales/es/common.json`
-- `src/locales/en/common.json`
+- `src/pages/FichaView.tsx`
+- `src/pages/FichaPreview.tsx`
+- `src/pages/PerfilView.tsx`
+- `src/pages/RegistroComunidadView.tsx`
+- `src/pages/CruceView.tsx`
+- `src/components/perfil/TelegramLinkModal.tsx`
+- `src/locales/es/passport.json`
+- `src/locales/en/passport.json`
+- `src/locales/es/communities.json`
+- `src/locales/en/communities.json`
 - `i18n-baseline.json`
 
 ## Pasos Secuenciales
-1. **Actualizar Diccionarios `dashboard.json` (ES y EN)**:
-   - Añadir claves para banner público (`publicBanner.tag`, `publicBanner.title`, `publicBanner.description`, `publicBanner.loginCta`).
-   - Añadir claves del buscador ReTribalize: pestañas (`search.tabs.advanced`, `search.tabs.browseAll`, `search.tabs.improveSynergies`), prompt placeholder (`search.promptPlaceholder`), botón limpiar (`search.clear`), selector buscando (`search.lookingFor.label`, `options.all`, `options.people`, `options.nodes`, `options.events`, `options.residencies`), selector nodo (`search.nodeFilter.label`, `options.anyNode`), toggle cerca (`search.nearFilter.label`), botón buscar (`search.submitBtn`), estado de cálculo (`calculatingSynergies`).
-2. **Actualizar Diccionarios `common.json` (ES y EN)**:
-   - Añadir claves para badges y acciones de `ExploreEntityCard` (`entities.node`, `entities.event`, `entities.residency`, `entities.exploreNode`, `entities.viewEvent`, `entities.viewResidency`).
-   - Añadir títulos y descripciones de empty states (`emptyStates.marketplaceTitle`, `emptyStates.historyTitle`, `emptyStates.ideasTitle`, `emptyStates.tasksTitle`, `emptyStates.startSomething`).
-3. **Refactorizar Componentes**:
-   - Consumir las nuevas claves en `src/pages/DashboardView.tsx` con `useTranslation(['dashboard', 'common'])`.
-   - Consumir claves en `src/components/dashboard/ExploreEntityCard.tsx`.
-   - Consumir claves en `src/components/ui/KanariiEmptyStates.tsx` y `ContextualEmptyState.tsx`.
+1. **Enriquecer `passport.json` (ES y EN)**:
+   - Añadir secciones para edición de ficha (`editFicha`: pestañas, campos de rol/vínculo, headline, bio, ofrendas, necesidades, saberes, botones guardar/cancelar).
+   - Añadir claves para `FichaPreview`: estado de revisión, vista previa, consejos y avisos.
+   - Añadir claves para `PerfilView`: cabecera de perfil, vinculación, tabs y acciones.
+   - Añadir claves para `TelegramLinkModal`: pasos de vinculación con el bot de Telegram, códigos y estados.
+2. **Enriquecer `communities.json` (ES y EN)**:
+   - Añadir claves para el wizard de `RegistroComunidadView`: pasos 1 a 4 (datos básicos, ubicación insular, propósito, confirmación).
+   - Añadir claves para `CruceView`: comparador de sinergias, afinidades galácticas y análisis de compatibilidad.
+3. **Refactorizar Vistas de Identidad**:
+   - Sustituir copy hardcodeado por `t(...)` en `FichaView.tsx`, `FichaPreview.tsx` y `PerfilView.tsx`.
+   - Sustituir copy en `TelegramLinkModal.tsx`.
+   - Sustituir copy en `RegistroComunidadView.tsx` y `CruceView.tsx`.
 4. **Actualizar Baseline**:
    - Ejecutar `npx tsx scripts/check-i18n-visible-literals.ts --generate-baseline`.
-   - Verificar que el total de violaciones disminuye y que los archivos tocados quedan en 0 warnings.
+   - Comprobar que los archivos de identidad quedan en 0 warnings.
 5. **Verificación Determinista**:
-   - `npm run lint` (0 errores de tipos).
-   - `npm run test:i18n` (0 discrepancias de claves y 0 regresiones de baseline).
+   - `npm run lint` (0 errores).
+   - `npm run test:i18n` (0 discrepancias de claves y 0 regresiones).
 
 ## Conformidad con Diseño Macro
-- 100% conforme con las decisiones e interfaces selladas en planning (`.agents/tasks/task-168.md`).
-- Claves semánticas completas con paridad exacta en `es` y `en`.
+- 100% conforme con las decisiones e interfaces selladas en planning (`.agents/tasks/task-169.md`).
+- Respeto riguroso de la frontera ADR-027 (datos de usuario intactos).
