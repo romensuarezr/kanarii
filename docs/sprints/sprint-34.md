@@ -6,7 +6,7 @@
 ## Tareas
 | ID | Descripción | Tamaño | Estado | Dependencias | Task file |
 |---|---|---|---|---|---|
-| T-167 | Motor determinista de blindaje i18n con baseline y trinquete (`test:i18n`) | M | ⬜ Pendiente | — | .agents/tasks/task-167.md |
+| T-167 | Motor determinista de blindaje i18n con baseline y trinquete (`test:i18n`) | M | 🟢 Completada | — | .agents/tasks/task-167.md |
 | T-168 | Internacionalización de Dashboard, Buscador ReTribalize y Navegación Global | M | ⬜ Pendiente | T-167 | .agents/tasks/task-168.md |
 | T-169 | Internacionalización de Identidad, Perfil y Fichas (`FichaView`, `PerfilView`, `RegistroComunidadView`) | L | ⬜ Pendiente | T-167 | .agents/tasks/task-169.md |
 | T-170 | Internacionalización de Gobernanza, Actas, Proyectos, Tareas y Soberanía (`governance`, `projects`, `marketplace`) | L | ⬜ Pendiente | T-167 | .agents/tasks/task-170.md |

@@ -5,7 +5,7 @@
 - **Título**: Motor determinista de blindaje i18n con baseline y trinquete (`test:i18n`)
 - **Sprint**: Sprint 34
 - **Tipo**: Tooling / Quality Gate / i18n
-- **Estado**: ⬜ Pendiente
+- **Estado**: 🟢 Completada
 - **Fecha inicio**: 2026-11-27
 
 ## Diseño macro aprobado en planning
@@ -29,6 +29,6 @@
 - `package.json`
 
 ## Criterios de Aceptación
-- [ ] `npm run test:i18n` ejecuta paridad de claves y verificación de literales con baseline.
-- [ ] Cualquier literal hardcodeado nuevo fuera del baseline hace fallar `npm run test:i18n` con código 1.
-- [ ] Al reducir literales de un archivo, `--generate-baseline` actualiza el baseline a la baja.
+- [x] `npm run test:i18n` ejecuta paridad de claves y verificación de literales con baseline.
+- [x] Cualquier literal hardcodeado nuevo fuera del baseline hace fallar `npm run test:i18n` con código 1.
+- [x] Al reducir literales de un archivo, `--generate-baseline` actualiza el baseline a la baja.
