@@ -2,6 +2,70 @@
 
 Todos los cambios notables en este proyecto serán documentados en este archivo. El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] — sprint-34 — 2026-11-27
+
+### ✨ Features
+
+- feat(i18n): admin, ajustes y sellado de baseline a 0 (T-171)
+- feat(i18n): internacionalizacion de gobernanza, proyectos y marketplace (T-170)
+- feat(i18n): internacionalizacion de identidad, perfiles y fichas (T-169)
+- feat(i18n): internacionalizacion de Dashboard, buscador ReTribalize y UI global (T-168)
+- feat(i18n): motor determinista de blindaje con baseline y trinquete (T-167)
+- feat(demo): script reproducible de seed y clean para datos demo con imagenes (T-166)
+- feat(search): buscador avanzado estilo ReTribalize en DashboardView (T-165)
+- feat(T-163): sincronizar adminUids con community_members.rol y gestión de roles/vínculos en ComunidadSubTab
+- feat(ux): T-164 limpieza de clasificación de roles y vínculo en PerfilView, FichaView y MemberCard
+- feat(roles): separa capas rol/membershipType/headline y valida en firestore.rules (T-162)
+- feat(capa2): progressive module disclosure in Sidebar, BottomNav and Tablon empty state (T-158)
+- feat(nodes): add enabledModules progressive model, hook and legacy auto-detection (T-157)
+- feat(dashboard): remove redundant hero/entity bar and add direct search + Kin chip (T-156)
+- feat(nav): move CreateNewModal flat and add Crear nuevo action to Sidebar and BottomNav (T-155)
+- feat(dashboard): implement Retribalize 2-action welcome header and CreateNewModal (T-154)
+- feat(mobile): implement 2-layer adaptive navigation in BottomNav (T-153)
+- feat(branding): replace palmera icon with kanarii logo and enforce Canary Network territorial copy (T-152)
+- feat(synergies): implement ConnectModal and connection flow for members (#T-149)
+- feat(events-residencies): connect firestore reactivity for events and residencies (#T-148)
+- feat(navigation): 2-layer sidebar navigation, events and residencies views (T-146)
+- feat(nodos): enhance node directory, node presentation tabs and i18n (T-145)
+- feat(dashboard): implement deterministic synergy matching feed and dashboard view (T-144)
+- feat(members): tarjetas de miembros estilo retribalize con pasaporte modal y conexion rapida (T-143)
+
+### 🐛 Bug Fixes
+
+- fix(mobile): tableros Kanban responsivos en vertical para < md (T-161)
+- fix(mobile): elimina scroll lateral en filtros y tabs con flex-wrap (T-160)
+- fix(mobile): erradica desbordamiento global en /perfil, /ficha y Toaster (T-159)
+- fix(sinergias): deduplicate user matches and enforce unique React keys (T-151)
+- fix(security): sanitize and normalize membership roles in community_members (T-147)
+
+### 📚 Documentación
+
+- docs(plan): borrador de plan T-169
+- docs(plan): borrador de plan T-168
+- docs(plan): borrador de plan T-167
+- docs(sprint-33): marca Sprint 33 completado (T-162, T-163, T-164)
+- docs(sprint-33): seal sprint 33 planning, research and task contracts
+- docs(sprint-32): seal sprint 32 mobile responsive planning, research and task contracts
+- docs(sprint-31): seal sprint 31 planning, research and task contracts
+- docs(sprint-30): mark all sprint 30 tasks completed (T-151, T-152, T-153, T-154)
+- docs(sprint-30): align T-154 with Retribalize Find Connections and Create New core actions
+- docs(sprint-30): formalize sprint 30 planning, research and task files
+- docs(sprint-29): formalize sprint 29 planning, sealed regime and task contracts
+- docs(sprint-28): update operating regime to use staging branch for UI/UX consolidation
+- docs(research): document 2-layer architecture, node network and deterministic synergy engine for sprint 28
+- docs: archive sprint 27 design decisions and ux research
+
+### 🔧 Mantenimiento
+
+- chore(sprint-34): formalizar plan y contratos de tareas para blindaje i18n
+- chore: archive sprint-33 [v0.14.0]
+- chore: archive sprint-32 [v0.13.0]
+- chore: archive sprint-31 [v0.12.0]
+- chore: archive sprint-30 [v0.11.0]
+- chore: archive sprint-29 [v0.10.0]
+- chore(tooling): sync core Agent OS assets and upgrade hermes to v0.23.4 (#T-150)
+- chore: archive sprint-28 [v0.9.0]
+
 ## [0.14.0] — sprint-33 — 2026-11-27
 
 ### ✨ Features
