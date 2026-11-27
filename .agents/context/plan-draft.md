@@ -1,42 +1,43 @@
-# Plan de Implementación — T-167
+# Plan de Implementación — T-168
 
 ## Metadatos
-- **Tarea**: T-167 — Motor determinista de blindaje i18n con baseline y trinquete (`test:i18n`)
+- **Tarea**: T-168 — Internacionalización de Dashboard, Buscador ReTribalize y Navegación Global
 - **Sprint**: Sprint 34
-- **Playbook**: `direct` (Caja de 3 archivos <= 3)
-- **Rama propuesta**: `feat/SPRINT34-T-167-i18n-ratchet-baseline`
+- **Playbook**: `scout-then-build`
+- **Rama propuesta**: `feat/SPRINT34-T-168-i18n-dashboard-retribalize`
 
 ## Objetivo Estratégico
-Transformar la auditoría pasiva de literales i18n en una compuerta determinista estricta (Quality Gate) mediante un mecanismo de trinquete (*ratchet*) y archivo *baseline* (`i18n-baseline.json`). Si cualquier desarrollador o agente introduce nuevos literales visibles en español dentro de JSX o props visibles, `npm run test:i18n` aborta con código de salida 1 (fail-closed). A medida que las tareas T-168 a T-171 traduzcan vistas, el baseline se reduce hasta alcanzar exactamente 0.
+Extraer e internacionalizar (ES y EN) todos los literales visibles en `DashboardView.tsx`, `ExploreEntityCard.tsx`, `KanariiEmptyStates.tsx` y `ContextualEmptyState.tsx`. Garantizar que el buscador ReTribalize, los filtros por entidad, los selectores y las tarjetas multientidad se muestren en inglés al activar `en`, respetando la frontera ADR-027 (contenido de usuario conserva su idioma original). Reducir el baseline inicial de 1.010 violaciones a ~981.
 
 ## Caja de Archivos
-- `scripts/check-i18n-visible-literals.ts` (modificación)
-- `i18n-baseline.json` (nuevo)
-- `package.json` (modificación)
+- `src/pages/DashboardView.tsx`
+- `src/components/dashboard/ExploreEntityCard.tsx`
+- `src/components/ui/KanariiEmptyStates.tsx`
+- `src/components/ui/ContextualEmptyState.tsx`
+- `src/locales/es/dashboard.json`
+- `src/locales/en/dashboard.json`
+- `src/locales/es/common.json`
+- `src/locales/en/common.json`
+- `i18n-baseline.json`
 
 ## Pasos Secuenciales
-1. **Extender `scripts/check-i18n-visible-literals.ts`**:
-   - Soporte por defecto de directorios objetivo: si no se pasan rutas, escanea automáticamente `src/pages` y `src/components`.
-   - Soporte de flags `--generate-baseline`, `--check-baseline`, `--ratchet`.
-   - Lógica de comparación de baseline:
-     - En `--generate-baseline`: escribe `i18n-baseline.json` con metadatos, total de violaciones y desglose detallado por archivo.
-     - En `--check-baseline` o `--ratchet`: lee `i18n-baseline.json`. Compara los warnings detectados:
-       - Si un archivo tiene más violaciones que en el baseline $\rightarrow$ FAIL (código 1).
-       - Si aparece un archivo nuevo no registrado en el baseline con violaciones $\rightarrow$ FAIL (código 1).
-       - Si el total de violaciones supera el baseline $\rightarrow$ FAIL (código 1).
-       - Si las violaciones son menores o iguales y no hay archivos nuevos con infracciones $\rightarrow$ PASS (código 0).
-       - Si se reducen violaciones en modo `--ratchet`, informa del descenso y sugiere regenerar baseline.
-2. **Generar el baseline inicial**:
+1. **Actualizar Diccionarios `dashboard.json` (ES y EN)**:
+   - Añadir claves para banner público (`publicBanner.tag`, `publicBanner.title`, `publicBanner.description`, `publicBanner.loginCta`).
+   - Añadir claves del buscador ReTribalize: pestañas (`search.tabs.advanced`, `search.tabs.browseAll`, `search.tabs.improveSynergies`), prompt placeholder (`search.promptPlaceholder`), botón limpiar (`search.clear`), selector buscando (`search.lookingFor.label`, `options.all`, `options.people`, `options.nodes`, `options.events`, `options.residencies`), selector nodo (`search.nodeFilter.label`, `options.anyNode`), toggle cerca (`search.nearFilter.label`), botón buscar (`search.submitBtn`), estado de cálculo (`calculatingSynergies`).
+2. **Actualizar Diccionarios `common.json` (ES y EN)**:
+   - Añadir claves para badges y acciones de `ExploreEntityCard` (`entities.node`, `entities.event`, `entities.residency`, `entities.exploreNode`, `entities.viewEvent`, `entities.viewResidency`).
+   - Añadir títulos y descripciones de empty states (`emptyStates.marketplaceTitle`, `emptyStates.historyTitle`, `emptyStates.ideasTitle`, `emptyStates.tasksTitle`, `emptyStates.startSomething`).
+3. **Refactorizar Componentes**:
+   - Consumir las nuevas claves en `src/pages/DashboardView.tsx` con `useTranslation(['dashboard', 'common'])`.
+   - Consumir claves en `src/components/dashboard/ExploreEntityCard.tsx`.
+   - Consumir claves en `src/components/ui/KanariiEmptyStates.tsx` y `ContextualEmptyState.tsx`.
+4. **Actualizar Baseline**:
    - Ejecutar `npx tsx scripts/check-i18n-visible-literals.ts --generate-baseline`.
-   - Crear `i18n-baseline.json` congelando el snapshot inicial (~1.010 literales en 82 archivos).
-3. **Actualizar `package.json`**:
-   - Configurar `"check:i18n-literals": "tsx scripts/check-i18n-visible-literals.ts --check-baseline"`.
-   - Añadir `"test:i18n": "tsx scripts/check-i18n-keys.ts && tsx scripts/check-i18n-visible-literals.ts --check-baseline"`.
-4. **Verificación y Pruebas Deterministas**:
-   - Probar que `npm run test:i18n` pasa con código 0 sobre el baseline generado.
-   - Test de regresión negativa: simular un literal nuevo y confirmar que el test falla con código 1.
-   - Ejecutar `npm run lint` y verificar que la suite no tiene errores de TypeScript.
+   - Verificar que el total de violaciones disminuye y que los archivos tocados quedan en 0 warnings.
+5. **Verificación Determinista**:
+   - `npm run lint` (0 errores de tipos).
+   - `npm run test:i18n` (0 discrepancias de claves y 0 regresiones de baseline).
 
 ## Conformidad con Diseño Macro
-- 100% conforme con las decisiones e interfaces selladas en planning (`.agents/tasks/task-167.md`).
-- Sin dependencias externas pesadas adicionales (usa el AST de `typescript` ya instalado).
+- 100% conforme con las decisiones e interfaces selladas en planning (`.agents/tasks/task-168.md`).
+- Claves semánticas completas con paridad exacta en `es` y `en`.
