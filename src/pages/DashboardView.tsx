@@ -355,13 +355,13 @@ export function DashboardView() {
           <div className="bg-forest-deep text-white rounded-3xl p-6 sm:p-7 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="space-y-1 text-center sm:text-left">
               <span className="text-xs font-bold uppercase tracking-wider text-sand-light/80">
-                Red de Sinergias Abierta
+                {t('banner.badge')}
               </span>
               <h2 className="text-lg sm:text-xl font-bold font-serif">
-                Descubre conexiones y afinidades deterministas en Canarias
+                {t('banner.title')}
               </h2>
               <p className="text-xs text-sand-light/90 max-w-xl">
-                Mostrando perfiles de ejemplo. Inicia sesión para cruzar tu fecha natal, isla y dones con la comunidad real.
+                {t('banner.subtitle')}
               </p>
             </div>
 
@@ -371,7 +371,7 @@ export function DashboardView() {
               className="px-5 py-2.5 bg-sand-light text-forest-deep font-bold rounded-2xl text-xs hover:bg-white transition-all shadow-sm flex items-center gap-2 shrink-0 cursor-pointer"
             >
               <LogIn size={14} />
-              <span>Iniciar sesión</span>
+              <span>{t('banner.login')}</span>
             </button>
           </div>
         )}
@@ -437,7 +437,7 @@ export function DashboardView() {
               }`}
             >
               <SlidersHorizontal size={14} />
-              <span>Búsqueda avanzada</span>
+              <span>{t('search.tabs.advanced')}</span>
             </button>
             <button
               type="button"
@@ -455,7 +455,7 @@ export function DashboardView() {
               }`}
             >
               <LayoutGrid size={14} />
-              <span>Explorar todo</span>
+              <span>{t('search.tabs.browseAll')}</span>
             </button>
             <button
               type="button"
@@ -463,7 +463,7 @@ export function DashboardView() {
               className="inline-flex items-center gap-1.5 pb-1.5 -mb-[11px] border-b-2 border-transparent text-stone-500 hover:text-forest-deep transition-colors cursor-pointer"
             >
               <Sparkles size={14} />
-              <span>Mejorar sinergias</span>
+              <span>{t('search.tabs.improveSynergies')}</span>
             </button>
           </div>
 
@@ -474,7 +474,7 @@ export function DashboardView() {
                   rows={2}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Describe a quién o qué buscas (ej: permacultura en Gran Canaria, talleres de bioconstrucción, residencia de verano)..."
+                  placeholder={t('search.placeholder')}
                   className="w-full resize-none rounded-2xl bg-bg-page border border-border px-4 py-3 pr-10 text-sm text-text-strong placeholder:text-stone-400 focus:outline-none focus:border-forest-deep transition-colors"
                 />
                 {searchQuery && (
@@ -482,7 +482,7 @@ export function DashboardView() {
                     type="button"
                     onClick={() => setSearchQuery('')}
                     className="absolute right-3 top-3 p-1 text-stone-400 hover:text-stone-700 cursor-pointer"
-                    aria-label="Limpiar búsqueda"
+                    aria-label={t('search.clear')}
                   >
                     <X size={15} />
                   </button>
@@ -493,28 +493,28 @@ export function DashboardView() {
               <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
                 <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-stone-600">
                   <label className="inline-flex items-center gap-1.5">
-                    <span className="text-stone-400">Buscando</span>
+                    <span className="text-stone-400">{t('search.lookingForLabel')}</span>
                     <select
                       value={lookingFor}
                       onChange={(e) => setLookingFor(e.target.value as LookingForType)}
                       className="font-semibold text-text-strong bg-transparent border-b border-dashed border-stone-400 pb-0.5 focus:outline-none focus:border-forest-deep cursor-pointer"
                     >
-                      <option value="all">Todo</option>
-                      <option value="people">Personas</option>
-                      <option value="nodes">Nodos</option>
-                      <option value="events">Eventos</option>
-                      <option value="residencies">Estancias</option>
+                      <option value="all">{t('search.options.all')}</option>
+                      <option value="people">{t('search.options.people')}</option>
+                      <option value="nodes">{t('search.options.nodes')}</option>
+                      <option value="events">{t('search.options.events')}</option>
+                      <option value="residencies">{t('search.options.residencies')}</option>
                     </select>
                   </label>
 
                   <label className="inline-flex items-center gap-1.5">
-                    <span className="text-stone-400">Nodo</span>
+                    <span className="text-stone-400">{t('search.nodeLabel')}</span>
                     <select
                       value={memberOf}
                       onChange={(e) => setMemberOf(e.target.value)}
                       className="font-semibold text-text-strong bg-transparent border-b border-dashed border-stone-400 pb-0.5 max-w-[160px] focus:outline-none focus:border-forest-deep cursor-pointer"
                     >
-                      <option value="all">Cualquier nodo</option>
+                      <option value="all">{t('search.anyNode')}</option>
                       {comunidades.map((c) => (
                         <option key={c.id || c.slug} value={c.slug || c.id}>
                           {c.nombre}
@@ -530,7 +530,7 @@ export function DashboardView() {
                     onClick={() => setNearOnly((prev) => !prev)}
                     className="inline-flex items-center gap-2 cursor-pointer"
                   >
-                    <span className="text-stone-400">Cerca</span>
+                    <span className="text-stone-400">{t('search.nearLabel')}</span>
                     <span
                       className={`w-8 h-4.5 rounded-full transition-colors p-0.5 flex items-center ${
                         nearOnly ? 'bg-forest-deep justify-end' : 'bg-stone-300 justify-start'
@@ -546,7 +546,7 @@ export function DashboardView() {
                   onClick={() => document.getElementById('sinergias-section')?.scrollIntoView({ behavior: 'smooth' })}
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-forest-deep hover:bg-forest-deep/90 text-white font-semibold transition-all shadow-xs cursor-pointer"
                 >
-                  <span>Buscar</span>
+                  <span>{t('search.submitBtn')}</span>
                   <Search size={13} />
                 </button>
               </div>
@@ -621,7 +621,7 @@ export function DashboardView() {
           </div>
 
           <div className="text-xs text-stone-500 font-medium shrink-0">
-            {totalResultsCount} {totalResultsCount === 1 ? 'resultado' : 'resultados'}
+            {t('search.resultsCount', { count: totalResultsCount })}
           </div>
         </div>
 
@@ -629,7 +629,7 @@ export function DashboardView() {
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-stone-400">
             <Loader2 className="w-8 h-8 animate-spin text-forest-deep" />
-            <p className="text-sm font-medium">Calculando sinergias de la red...</p>
+            <p className="text-sm font-medium">{t('search.calculating')}</p>
           </div>
         ) : totalResultsCount === 0 ? (
           <div className="bg-bg-surface border border-border rounded-3xl p-12 text-center space-y-4 max-w-lg mx-auto shadow-xs">

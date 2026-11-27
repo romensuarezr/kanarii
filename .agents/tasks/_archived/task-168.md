@@ -5,7 +5,7 @@
 - **Título**: Internacionalización de Dashboard, Buscador ReTribalize y Navegación Global
 - **Sprint**: Sprint 34
 - **Tipo**: Feature / i18n / UI
-- **Estado**: ⬜ Pendiente
+- **Estado**: 🟢 Completada
 - **Fecha inicio**: 2026-11-27
 
 ## Diseño macro aprobado en planning
@@ -37,6 +37,6 @@
 - `i18n-baseline.json`
 
 ## Criterios de Aceptación
-- [ ] `/dashboard` y la navegación global se muestran 100% en inglés al seleccionar `en`.
-- [ ] Cero literales hardcodeados en los archivos de la caja.
-- [ ] `npm run test:i18n` pasa con el baseline reducido.
+- [x] `/dashboard` y la navegación global se muestran 100% en inglés al seleccionar `en`.
+- [x] Cero literales hardcodeados en los archivos de la caja.
+- [x] `npm run test:i18n` pasa con el baseline reducido.

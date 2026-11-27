@@ -81,6 +81,30 @@
     "syncing_other": "Sincronizando ({{count}} cambios)",
     "online": "Conectado y al día"
   },
+  "entities": {
+    "node": "NODO",
+    "event": "EVENTO",
+    "residency": "ESTANCIA",
+    "exploreNode": "Explorar nodo",
+    "viewEvent": "Ver evento",
+    "viewResidency": "Ver estancia"
+  },
+  "emptyStates": {
+    "marketplaceTitle": "El mercado de la abundancia",
+    "marketplaceDesc": "Más allá de nuestro algoritmo de 'Cruce de Perfiles', este es tu espacio libre para ofrecer lo que amas hacer o pedir apoyo en lo que necesitas hoy. Desde un trueque de herramientas hasta compartir una cosecha. La economía comunitaria se construye intercambiando valor real.",
+    "marketplaceCta": "Publicar mi primer anuncio",
+    "historyTitle": "La memoria de nuestra tribu",
+    "historyDesc": "En Kanarii no hay secretos. Aquí el Secretario de tu círculo guarda los registros y las decisiones que hemos tomado por consentimiento. Mantener esta información accesible para todos garantiza que seamos una comunidad transparente, equitativa y responsable.",
+    "historyCtaCreate": "Redactar nueva acta",
+    "historyCtaView": "Ver archivo histórico",
+    "ideasTitle": "De la idea a la realidad",
+    "ideasDesc": "Aquí agrupamos nuestras iniciativas a largo plazo. Un proyecto es el contenedor donde organizamos nuestras energías para lograr un objetivo común.",
+    "ideasCta": "Proponer un nuevo proyecto",
+    "tasksTitle": "Pasos concretos, impacto real",
+    "tasksDesc": "Las ideas necesitan manos que las ejecuten. Aquí desglosamos los proyectos en acciones pequeñas y manejables. Si tienes tiempo y energía, elige una tarea y ayuda a tu círculo a avanzar. Cada pequeño paso cuenta.",
+    "tasksCta": "Crear una tarea",
+    "startSomething": "Comienza algo nuevo en tu comunidad"
+  },
   "userMenu": {
     "title": "Menú de usuario",
     "myProfile": "Mi Perfil",

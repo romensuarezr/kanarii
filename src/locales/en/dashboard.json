@@ -21,6 +21,36 @@
     "count_one": "{{count}} suggested connection",
     "count_other": "{{count}} suggested connections"
   },
+  "banner": {
+    "badge": "Open Synergy Network",
+    "title": "Discover deterministic connections and affinities across the Canaries",
+    "subtitle": "Showing preview profiles. Sign in to match your birth date, island, and gifts with the real community.",
+    "login": "Sign In"
+  },
+  "search": {
+    "tabs": {
+      "advanced": "Advanced Find",
+      "browseAll": "Browse All",
+      "improveSynergies": "Improve Matches"
+    },
+    "placeholder": "Describe who or what you are looking for (e.g. permaculture in Gran Canaria, bio-construction workshops, summer residency)...",
+    "clear": "Clear search",
+    "lookingForLabel": "Looking for",
+    "options": {
+      "all": "All",
+      "people": "People",
+      "nodes": "Nodes",
+      "events": "Events",
+      "residencies": "Residencies"
+    },
+    "nodeLabel": "Node",
+    "anyNode": "Any node",
+    "nearLabel": "Near",
+    "submitBtn": "Search",
+    "resultsCount_one": "{{count}} result",
+    "resultsCount_other": "{{count}} results",
+    "calculating": "Computing network synergies..."
+  },
   "card": {
     "synergyScore": "{{score}}% Synergy",
     "viewPassport": "View Passport",

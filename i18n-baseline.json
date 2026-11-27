@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-27T17:18:53.620Z",
-  "totalViolations": 1010,
-  "totalFilesWithViolations": 78,
+  "generatedAt": "2026-11-27T17:30:18.346Z",
+  "totalViolations": 978,
+  "totalFilesWithViolations": 74,
   "files": {
     "src/components/ActaDetailOverlay.tsx": {
       "count": 13,
@@ -636,12 +636,6 @@
         "Cerrar"
       ]
     },
-    "src/components/dashboard/ExploreEntityCard.tsx": {
-      "count": 1,
-      "literals": [
-        "Explorar"
-      ]
-    },
     "src/components/help/ActasUISimulation.tsx": {
       "count": 1,
       "literals": [
@@ -754,24 +748,15 @@
       ]
     },
     "src/components/sinergias/ConnectModal.tsx": {
-      "count": 2,
+      "count": 1,
       "literals": [
-        "Cerrar modal",
-        "🌴"
+        "Cerrar modal"
       ]
     },
     "src/components/sinergias/SynergyCard.tsx": {
-      "count": 3,
-      "literals": [
-        "🌴",
-        "⚡",
-        "Telegram"
-      ]
-    },
-    "src/components/ui/ContextualEmptyState.tsx": {
       "count": 1,
       "literals": [
-        "Comienza algo nuevo en tu comunidad"
+        "Telegram"
       ]
     },
     "src/components/ui/EntityCard.tsx": {
@@ -781,15 +766,6 @@
         "✓ Completado",
         "Retroceder",
         "Archivar"
-      ]
-    },
-    "src/components/ui/KanariiEmptyStates.tsx": {
-      "count": 4,
-      "literals": [
-        "El mercado de la abundancia",
-        "La memoria de nuestra tribu",
-        "De la idea a la realidad",
-        "Pasos concretos, impacto real"
       ]
     },
     "src/components/ui/KanbanColumn.tsx": {
@@ -1007,34 +983,6 @@
         "Revisión:",
         "Metodología:",
         "Análisis Profundo de Facilitación"
-      ]
-    },
-    "src/pages/DashboardView.tsx": {
-      "count": 23,
-      "literals": [
-        "Red de Sinergias Abierta",
-        "Descubre conexiones y afinidades deterministas en Canarias",
-        "Mostrando perfiles de ejemplo. Inicia sesión para cruzar tu fecha natal, isla y dones con la comunidad real.",
-        "Iniciar sesión",
-        "Búsqueda avanzada",
-        "Explorar todo",
-        "Mejorar sinergias",
-        "Describe a quién o qué buscas (ej: permacultura en Gran Canaria, talleres de bioconstrucción, residencia de verano)...",
-        "Limpiar búsqueda",
-        "Buscando",
-        "Todo",
-        "Personas",
-        "Nodos",
-        "Eventos",
-        "Estancias",
-        "Nodo",
-        "Cualquier nodo",
-        "Cerca",
-        "Buscar",
-        "🌴",
-        "⚡",
-        "🤝",
-        "Calculando sinergias de la red..."
       ]
     },
     "src/pages/EventosView.tsx": {
