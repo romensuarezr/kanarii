@@ -299,5 +299,26 @@
   "publicFooter": {
     "quote": "Las personas solas pueden llegar a ser poderosas, pero juntas somos invencibles.",
     "rights": "Kanarii • Software Libre para la Autonomía Comunitaria"
+  },
+  "contextConsent": {
+    "backHome": "Volver al inicio",
+    "title": "Nuestra Puesta e Intención",
+    "p1": "Bienvenidas y bienvenidos, linda tribu. Estás a punto de crear tu ficha comunitaria. Lejos de ser un mero trámite, esto es un paso para reconocernos, saber desde dónde nos sostenemos y cuidamos mutuamente.",
+    "p2": "es el reflejo de una intención profunda. Esto no es un evento en concreto, es un canal para congregarnos cada cierto tiempo y unirnos aún más como tribu. Es una forma y experiencia de vida guiada por valores como la soberanía comunitaria, el amor por la vida, por la naturaleza y la búsqueda de equilibrios entre nuestras energías.",
+    "p3": "Ser parte de esta comunidad requiere compromiso e implicación en el tiempo. La información que vamos a compartir en los siguientes pasos es esencial para mapear nuestros ciclos vitales, saberes, necesidades y nuestra energía actual. Nos ayudará a trazar la \"tela de araña cósmica\" que lo integra y conecta todo.",
+    "p4": "\"Las personas solas pueden llegar a ser poderosas, pero juntas somos invencibles.\"",
+    "p5": "Trataremos tu información desde una perspectiva de seguridad comunitaria. Todo lo que se crea aquí se nutre de la tribu y para la tribu.",
+    "acceptBtn": "Siento la llamada y me resuena"
+  },
+  "onboardingChat": {
+    "welcomeTitle": "Conversación de Acogida",
+    "backPrevious": "Volver al paso anterior"
+  },
+  "tourAnimations": {
+    "liaName": "Lia Arana",
+    "liaLocation": "Valle de Arán",
+    "liaQuote": "\"Busco una vida lenta conectada con el ritmo de la tierra y los cuidados.\"",
+    "goodEnoughTagline": "\"Lo suficientemente bueno por ahora, lo suficientemente seguro para intentarlo.\"",
+    "recordedBadge": "Registrada"
   }
 }

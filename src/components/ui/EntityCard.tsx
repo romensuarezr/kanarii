@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ArrowRight, Archive, CheckCircle2 } from 'lucide-react';
 
 export type EntityVariant = 'success' | 'warning' | 'info' | 'danger' | 'neutral' | 'primary';
@@ -69,6 +70,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
   onClick,
   className = ''
 }) => {
+  const { t } = useTranslation('common');
 
   const getVariantClasses = (variant: EntityVariant) => {
     const classes = {
@@ -146,17 +148,17 @@ export const EntityCard: React.FC<EntityCardProps> = ({
                 onClick={(e) => { e.stopPropagation(); onUnarchive(); }}
                 className="text-xs font-medium text-stone-400 hover:text-stone-600 transition-colors p-3 -ml-3"
               >
-                Desarchivar
+                {t('actions.unarchive', { defaultValue: 'Desarchivar' })}
               </button>
             ) : onStateChange?.isCompleted ? (
-              <span className="text-xs text-stone-400 px-3">✓ Completado</span>
+              <span className="text-xs text-stone-400 px-3">{t('status.completed', { defaultValue: '✓ Completado' })}</span>
             ) : (
               <>
                 {onStateChange?.prev && (
                   <button 
                     onClick={(e) => { e.stopPropagation(); onStateChange.prev!(); }}
                     className="flex items-center justify-center text-stone-400 hover:text-stone-600 transition-colors p-3 -ml-3"
-                    title="Retroceder"
+                    title={t('actions.goBack', { defaultValue: 'Retroceder' })}
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
@@ -197,7 +199,7 @@ export const EntityCard: React.FC<EntityCardProps> = ({
               <button
                 onClick={(e) => { e.stopPropagation(); onArchive(); }}
                 className={`flex items-center justify-center text-forest-deep hover:text-text-ink transition-colors p-3 ${quickActions.filter(a => !a.showLabel).length === 0 ? '-mr-3' : ''}`}
-                title="Archivar"
+                title={t('actions.archive', { defaultValue: 'Archivar' })}
               >
                 <Archive className="w-4 h-4" />
               </button>

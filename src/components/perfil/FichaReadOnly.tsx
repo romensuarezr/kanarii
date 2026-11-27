@@ -121,7 +121,7 @@ export function FichaReadOnly({
                     type="button"
                     onClick={() => navigate(`/c/${comunidadSlug}/miembro/${appUserUid}`)}
                     className="p-1 rounded-full hover:bg-stone-100 text-[#5A5A40] transition-colors"
-                    title="Ver Pasaporte Comunitario"
+                    title={t('fichaReadOnly.viewPassport', { defaultValue: 'Ver Pasaporte Comunitario' })}
                   >
                     <Eye size={18} />
                   </button>
@@ -129,12 +129,12 @@ export function FichaReadOnly({
                     type="button"
                     onClick={handleCopyPasaporteUrl}
                     className="p-1 rounded-full hover:bg-stone-100 text-[#5A5A40] transition-colors flex items-center gap-1.5"
-                    title="Copiar enlace del Pasaporte"
+                    title={t('fichaReadOnly.copyPassportLink', { defaultValue: 'Copiar enlace del Pasaporte' })}
                   >
                     <Copy size={18} />
                     {copied && (
                       <span className="text-xs font-serif text-[#CB997E] animate-fadeIn">
-                        ¡Copiado!
+                        {t('fichaReadOnly.copied', { defaultValue: '¡Copiado!' })}
                       </span>
                     )}
                   </button>
@@ -239,12 +239,16 @@ export function FichaReadOnly({
             <div className="space-y-4 md:col-span-2">
               <div className="flex items-center gap-2 text-[#CB997E] border-b border-[#EAE2D6] pb-2">
                 <Globe className="w-5 h-5" />
-                <h3 className="text-lg font-serif">Redes Sociales y Contacto</h3>
+                <h3 className="text-lg font-serif">
+                  {t('fichaReadOnly.socialAndContact', { defaultValue: 'Redes Sociales y Contacto' })}
+                </h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {datos.instagram && isContactVisible('instagram') && (
                   <div>
-                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Instagram</h4>
+                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">
+                      {t('fichaReadOnly.instagram', { defaultValue: 'Instagram' })}
+                    </h4>
                     <a
                       href={`https://instagram.com/${datos.instagram.replace('@', '')}`}
                       target="_blank"
@@ -257,7 +261,9 @@ export function FichaReadOnly({
                 )}
                 {datos.linkedin && isContactVisible('linkedin') && (
                   <div>
-                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">LinkedIn</h4>
+                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">
+                      {t('fichaReadOnly.linkedin', { defaultValue: 'LinkedIn' })}
+                    </h4>
                     <a
                       href={datos.linkedin.startsWith('http') ? datos.linkedin : `https://linkedin.com/in/${datos.linkedin}`}
                       target="_blank"
@@ -286,7 +292,9 @@ export function FichaReadOnly({
                 )}
                 {datos.website && isContactVisible('website') && (
                   <div>
-                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Sitio Web</h4>
+                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">
+                      {t('fichaReadOnly.website', { defaultValue: 'Sitio Web' })}
+                    </h4>
                     <a
                       href={datos.website.startsWith('http') ? datos.website : `https://${datos.website}`}
                       target="_blank"
@@ -299,13 +307,17 @@ export function FichaReadOnly({
                 )}
                 {datos.phone && isContactVisible('phone') && (
                   <div>
-                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Teléfono / WhatsApp</h4>
+                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">
+                      {t('fichaReadOnly.phoneWa', { defaultValue: 'Teléfono / WhatsApp' })}
+                    </h4>
                     <ContactActions phone={datos.phone} showPhoneText={true} />
                   </div>
                 )}
                 {datos.email && isContactVisible('email') && (
                   <div>
-                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Correo Electrónico</h4>
+                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">
+                      {t('fichaReadOnly.email', { defaultValue: 'Correo Electrónico' })}
+                    </h4>
                     <a
                       href={`mailto:${datos.email}`}
                       className="text-stone-700 hover:text-[#CB997E] hover:underline break-all"

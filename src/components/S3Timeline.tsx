@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { CheckCircle2, Circle, Clock, Gavel, AlertCircle, RefreshCw } from 'lucide-react';
 import { Propuesta } from '../lib/appService';
 
@@ -29,6 +30,7 @@ export const S3Timeline: React.FC<S3TimelineProps> = ({
   objeciones,
   dudas
 }) => {
+  const { t } = useTranslation('governance');
   const currentStepIndex = S3_STEPS.findIndex(s => s.id === propuesta.status);
 
   const isDiscarded = propuesta.status === 'descartada';
@@ -36,10 +38,12 @@ export const S3Timeline: React.FC<S3TimelineProps> = ({
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between px-2">
-        <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Recorrido Socrático</h4>
+        <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">
+          {t('socraticJourney', { defaultValue: 'Recorrido Socrático' })}
+        </h4>
         {propuesta.version > 1 && (
           <div className="flex items-center gap-1.5 text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-full border border-teal-100 uppercase tracking-widest">
-            <RefreshCw className="w-3 h-3" /> v{propuesta.version} integrada
+            <RefreshCw className="w-3 h-3" /> {`v${propuesta.version}`} {t('integrated', { defaultValue: 'integrada' })}
           </div>
         )}
       </div>
@@ -104,7 +108,9 @@ export const S3Timeline: React.FC<S3TimelineProps> = ({
           {isDiscarded && (
             <div className="flex gap-6 items-center bg-stone-100 p-4 rounded-3xl border border-stone-200 ml-2">
               <div className="w-8 h-8 rounded-full bg-stone-300 flex items-center justify-center text-white font-black">!</div>
-              <p className="text-xs font-bold text-stone-500 uppercase tracking-widest">Propuesta Descartada</p>
+              <p className="text-xs font-bold text-stone-500 uppercase tracking-widest">
+                {t('discardedProposal', { defaultValue: 'Propuesta Descartada' })}
+              </p>
             </div>
           )}
         </div>

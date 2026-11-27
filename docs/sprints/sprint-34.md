@@ -10,7 +10,7 @@
 | T-168 | Internacionalización de Dashboard, Buscador ReTribalize y Navegación Global | M | 🟢 Completada | T-167 | .agents/tasks/task-168.md |
 | T-169 | Internacionalización de Identidad, Perfil y Fichas (`FichaView`, `PerfilView`, `RegistroComunidadView`) | L | 🟢 Completada | T-167 | .agents/tasks/task-169.md |
 | T-170 | Internacionalización de Gobernanza, Actas, Proyectos, Tareas y Soberanía (`governance`, `projects`, `marketplace`) | L | 🟢 Completada | T-167 | .agents/tasks/task-170.md |
-| T-171 | Internacionalización de AdminPanel y Ajustes + Sellado de Baseline a 0 | M | ⬜ Pendiente | T-168, T-169, T-170 | .agents/tasks/task-171.md |
+| T-171 | Internacionalización de AdminPanel y Ajustes + Sellado de Baseline a 0 | M | 🟢 Completada | T-168, T-169, T-170 | .agents/tasks/task-171.md |
 
 ## Régimen Operativo del Sprint
 - **Régimen**: Desatendida

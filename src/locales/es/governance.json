@@ -37,6 +37,10 @@
     "accessError": "Error de acceso",
     "proposalNotFound": "La propuesta no existe o no pertenece a tu comunidad activa.",
     "close": "Cerrar",
+    "pulseOfCommunity": "Pulso de la Comunidad",
+    "socraticJourney": "Recorrido Socrático",
+    "integrated": "integrada",
+    "discardedProposal": "Propuesta Descartada",
     "proposalEvolvedSuccess": "Propuesta evolucionada con éxito",
     "responseTypes": {
       "objecion": "Objeción",
@@ -148,5 +152,43 @@
       "updateActa": "Actualizar Acta",
       "createActa": "Crear Acta"
     }
+  },
+  "socraticResponse": {
+    "title": "Tu respuesta socrática",
+    "modifying": "Modificando respuesta anterior",
+    "participating": "Participación comunitaria",
+    "s3Note": "En S3, buscamos propuestas suficientemente buenas por ahora y suficientemente seguras para probarlas. Una objeción no es una preferencia personal, es un regalo a la comunidad para evitar un daño real.",
+    "options": {
+      "consentimiento": {
+        "label": "Consentimiento",
+        "desc": "No veo razones por las que esto sea perjudicial."
+      },
+      "preocupacion": {
+        "label": "Preocupación",
+        "desc": "Consiento, pero me gustaría registrar este posible riesgo."
+      },
+      "duda": {
+        "label": "Duda / Aclaración",
+        "desc": "Necesito más información para poder decidir."
+      },
+      "objecion": {
+        "label": "Objeción",
+        "desc": "Tengo un argumento de por qué esto causará un daño."
+      }
+    },
+    "damageLabel": "Argumento del daño (Obligatorio)",
+    "damagePlaceholder": "Explica por qué esta propuesta causará un daño a la comunidad...",
+    "questionLabel": "Pregunta / Aclaración (Obligatorio)",
+    "questionPlaceholder": "¿Qué necesitas entender mejor?",
+    "contextLabel": "Contexto adicional",
+    "contextPlaceholder": "Escribe aquí tus preocupaciones...",
+    "cancel": "Cancelar",
+    "send": "Enviar Respuesta",
+    "closeAria": "Cerrar modal"
+  },
+  "authorRole": "Autor",
+  "clarificationThread": {
+    "noMessagesYet": "No hay aclaraciones en este hilo todavía.",
+    "onlyAuthorCanReply": "Solo el autor de la propuesta y quien planteó la {{type}} pueden responder en este hilo."
   }
 }

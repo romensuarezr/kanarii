@@ -245,7 +245,7 @@ export function BottomNav() {
 
       {/* Barra Principal Inferior */}
       <nav
-        aria-label="Navegación móvil"
+        aria-label={t('nav.mobileNavigation', { defaultValue: 'Navegación móvil' })}
         className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-bg-surface border-t border-border flex items-center justify-around shadow-xs"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)', minHeight: '56px' }}
       >

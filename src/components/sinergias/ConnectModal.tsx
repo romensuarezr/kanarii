@@ -127,7 +127,7 @@ export function ConnectModal({
             type="button"
             onClick={onClose}
             className="absolute top-5 right-5 p-2 rounded-full text-stone-400 hover:text-stone-700 hover:bg-sand-light transition-colors"
-            aria-label="Cerrar modal"
+            aria-label={t('common:actions.closeModal', { defaultValue: 'Cerrar modal' })}
           >
             <X size={20} />
           </button>

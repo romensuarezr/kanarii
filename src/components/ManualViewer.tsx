@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import Markdown from 'react-markdown';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -15,6 +16,7 @@ const TABS = [
 ];
 
 export function ManualViewer({ content }: ManualViewerProps) {
+  const { t } = useTranslation(['passport', 'common']);
   const [activeTab, setActiveTab] = useState(0);
 
   const parsedSections = useMemo(() => {
@@ -104,11 +106,11 @@ export function ManualViewer({ content }: ManualViewerProps) {
           className="flex items-center gap-2 text-stone-500 hover:text-stone-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
-          Anterior
+          {t('common:actions.previous', { defaultValue: 'Anterior' })}
         </button>
         
         <span className="text-stone-400">
-          {activeTab + 1} de 5
+          {t('manual.pageOf', { current: activeTab + 1, total: 5, defaultValue: `${activeTab + 1} de 5` })}
         </span>
 
         <button
@@ -116,7 +118,7 @@ export function ManualViewer({ content }: ManualViewerProps) {
           disabled={activeTab === 4}
           className="flex items-center gap-2 text-stone-500 hover:text-stone-800 disabled:opacity-30 disabled:pointer-events-none transition-colors"
         >
-          Siguiente
+          {t('common:actions.next', { defaultValue: 'Siguiente' })}
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import tzlookup from 'tz-lookup';
 
 interface NominatimResult {
@@ -9,7 +10,8 @@ interface NominatimResult {
   address: any;
 }
 
-export function LocationAutocomplete({ onSelect, onEnter, disabled }: { onSelect: (data: { ciudad: string, latitud: number, longitud: number, timezone: string, lugarNormalizado?: string, address?: any }) => void, onEnter?: (query: string) => void, disabled?: boolean }) {
+export function LocationAutocomplete({ onSelect, onEnter, disabled, placeholder }: { onSelect: (data: { ciudad: string, latitud: number, longitud: number, timezone: string, lugarNormalizado?: string, address?: any }) => void, onEnter?: (query: string) => void, disabled?: boolean, placeholder?: string }) {
+  const { t } = useTranslation('common');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<NominatimResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -66,7 +68,7 @@ export function LocationAutocomplete({ onSelect, onEnter, disabled }: { onSelect
             onEnter?.(query);
           }
         }}
-        placeholder="Escribe tu ciudad o región..."
+        placeholder={placeholder || t('placeholders.cityOrRegion', { defaultValue: 'Escribe tu ciudad o región...' })}
         className="w-full bg-[#F9F7F1] border border-[#EAE2D6] rounded-full py-4 pl-6 pr-6 text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#A5A58D]"
       />
       {results.length > 0 && (

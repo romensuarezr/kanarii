@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { CommunityMember } from '../hooks/useCommunityMembers';
 import { PropuestaRespuesta } from '../lib/appService';
 import { getInitials } from '../lib/utils';
@@ -14,6 +15,7 @@ export const ConsentGrid: React.FC<ConsentGridProps> = ({
   respuestas,
   currentUserId
 }) => {
+  const { t } = useTranslation('governance');
   const getResponseIcon = (type: PropuestaRespuesta['type']) => {
     switch (type) {
       case 'consentimiento': return { Icon: Check, color: 'bg-emerald-500' };
@@ -26,7 +28,9 @@ export const ConsentGrid: React.FC<ConsentGridProps> = ({
 
   return (
     <div className="space-y-4">
-      <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] px-2">Pulso de la Comunidad</h4>
+      <h4 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] px-2">
+        {t('pulseOfCommunity', { defaultValue: 'Pulso de la Comunidad' })}
+      </h4>
       
       <div className="flex flex-wrap gap-4 p-6 bg-white rounded-[2.5rem] border border-[#EAE2D6] shadow-sm">
         {members.map(member => {

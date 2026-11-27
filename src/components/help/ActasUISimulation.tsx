@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { MousePointer2, FileText, ShieldCheck } from 'lucide-react';
 
 export default function ActasUISimulation() {
+  const { t } = useTranslation('welcome');
   return (
     <div className="relative w-full aspect-video bg-[#FAF9F6] rounded-2xl border border-[#D2B48C]/20 overflow-hidden shadow-inner font-sans">
       {/* Search & Header Mockup */}
@@ -70,7 +72,9 @@ export default function ActasUISimulation() {
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 p-6 rounded-full border-4 border-emerald-500 bg-white/90 text-emerald-500 backdrop-blur-sm z-30"
              >
                 <ShieldCheck size={48} strokeWidth={2.5} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Registrada</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">
+                  {t('tourAnimations.recordedBadge', { defaultValue: 'Registrada' })}
+                </span>
              </motion.div>
         </motion.div>
 

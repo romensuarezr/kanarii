@@ -15,7 +15,44 @@
     "spots": "plazas",
     "noEvents": "No hay eventos próximos en esta categoría",
     "createEvent": "Proponer evento",
-    "networkEvent": "Encuentro de Red"
+    "networkEvent": "Encuentro de Red",
+    "calendarTitle": "Calendario Comunitario",
+    "addEvent": "Añadir evento",
+    "addShort": "Añadir",
+    "month": "Mes",
+    "agenda": "Agenda",
+    "registered": "Inscrito",
+    "joinNetworkToParticipate": "Únete a la Red para Participar",
+    "modal": {
+      "editTitle": "Editar Evento",
+      "detailsTitle": "Detalles del Evento",
+      "newTitle": "Nuevo Evento",
+      "titleLabel": "Título *",
+      "titlePlaceholder": "Ej. Cosecha colectiva",
+      "typeLabel": "Tipo de Evento",
+      "types": {
+        "reunion": "Reunión / Círculo",
+        "tarea_comunal": "Tarea Comunal",
+        "visita": "Visita",
+        "celebracion": "Celebración",
+        "otro": "Otro"
+      },
+      "startLabel": "Inicio *",
+      "endLabel": "Fin *",
+      "allDay": "Todo el día",
+      "responsible": "Responsable",
+      "selectPlaceholder": "-- Seleccionar --",
+      "participants": "Participantes",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Detalles sobre el evento...",
+      "delete": "Eliminar",
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "saving": "Guardando...",
+      "saveChanges": "Guardar Cambios",
+      "create": "Crear Evento",
+      "closeAria": "Cerrar modal"
+    }
   },
   "residencies": {
     "headerTitle": "Residencias & Estancias en Nodos",
@@ -33,6 +70,8 @@
     "flexibleDates": "Fechas flexibles",
     "exchange": "Intercambio de dones y reciprocidad",
     "applySuccess": "¡Solicitud de estancia enviada con éxito!",
-    "applyNote": "Tu pasaporte comunitario será compartido con los guardianes del nodo para valorar la sinergia."
+    "applyNote": "Tu pasaporte comunitario será compartido con los guardianes del nodo para valorar la sinergia.",
+    "requestSent": "Solicitud Enviada",
+    "loginToApply": "Inicia Sesión para Solicitar Estancia"
   }
 }

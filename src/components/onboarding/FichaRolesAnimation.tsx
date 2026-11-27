@@ -158,6 +158,7 @@ function CVCard() {
 }
 
 function FichaCard({ offeringsText, skillsText, needsText, purposeText }: { offeringsText: string, skillsText: string, needsText: string, purposeText: string }) {
+  const { t } = useTranslation('welcome');
   return (
     <motion.div
       initial={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
@@ -175,10 +176,12 @@ function FichaCard({ offeringsText, skillsText, needsText, purposeText }: { offe
           <User size={40} />
         </motion.div>
         <div className="space-y-1">
-          <h3 className="font-serif font-bold text-xl text-[#3E2723]">Lia Arana</h3>
+          <h3 className="font-serif font-bold text-xl text-[#3E2723]">
+            {t('tourAnimations.liaName', { defaultValue: 'Lia Arana' })}
+          </h3>
           <div className="flex items-center gap-1 text-[#8B4513] text-sm font-medium">
             <MapPin size={14} />
-            <span>Valle de Arán</span>
+            <span>{t('tourAnimations.liaLocation', { defaultValue: 'Valle de Arán' })}</span>
           </div>
         </div>
       </div>
@@ -215,7 +218,7 @@ function FichaCard({ offeringsText, skillsText, needsText, purposeText }: { offe
         animate={{ opacity: 1, y: 0 }}
         className="mt-auto p-4 bg-[#FAF9F6] rounded-2xl border border-[#D2B48C]/30 italic text-sm text-[#5D4037]/70"
       >
-        "Busco una vida lenta conectada con el ritmo de la tierra y los cuidados."
+        {t('tourAnimations.liaQuote', { defaultValue: '"Busco una vida lenta conectada con el ritmo de la tierra y los cuidados."' })}
       </motion.div>
     </motion.div>
   );

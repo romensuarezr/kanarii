@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, X, Check } from 'lucide-react';
 import { Proyecto } from '../lib/appService';
 import { FieldError } from './ui/FieldError';
@@ -10,6 +11,7 @@ interface CreateProjectModalProps {
 }
 
 export function CreateProjectModal({ initialEstado, onClose, onCreate }: CreateProjectModalProps) {
+  const { t } = useTranslation(['projects', 'common']);
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [estado, setEstado] = useState<Proyecto['estado']>(initialEstado || 'buscando_colaboradores');
@@ -24,10 +26,10 @@ export function CreateProjectModal({ initialEstado, onClose, onCreate }: CreateP
 
     const newErrors: { titulo?: string; descripcion?: string } = {};
     if (!titulo.trim()) {
-      newErrors.titulo = 'El título de la iniciativa es obligatorio';
+      newErrors.titulo = t('common:validations.required', { defaultValue: 'El título de la iniciativa es obligatorio' });
     }
     if (!descripcion.trim()) {
-      newErrors.descripcion = 'La descripción es obligatoria';
+      newErrors.descripcion = t('common:validations.required', { defaultValue: 'La descripción es obligatoria' });
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -75,9 +77,15 @@ export function CreateProjectModal({ initialEstado, onClose, onCreate }: CreateP
         <div className="bg-[#4A4E4D] p-8 text-white flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Plus className="w-6 h-6 text-[#D4C3A3]" />
-            <h3 className="font-serif text-2xl">Lanzar Iniciativa</h3>
+            <h3 className="font-serif text-2xl">
+              {t('modal.launchInitiative', { defaultValue: 'Lanzar Iniciativa' })}
+            </h3>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+          <button 
+            onClick={onClose} 
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            aria-label={t('common:actions.closeModal', { defaultValue: 'Cerrar modal' })}
+          >
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -85,7 +93,9 @@ export function CreateProjectModal({ initialEstado, onClose, onCreate }: CreateP
         <form onSubmit={handleSubmit} className="p-8 space-y-6 max-h-[80vh] overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
-              <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2 ml-1">Título del Proyecto</label>
+              <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2 ml-1">
+                {t('modal.titleLabel', { defaultValue: 'Título del Proyecto' })}
+              </label>
               <input 
                 type="text" 
                 className="w-full p-4 rounded-2xl border border-stone-200 bg-stone-50 focus:bg-white focus:ring-4 focus:ring-[#EAE2D6]/30 outline-none transition-all"
@@ -96,13 +106,15 @@ export function CreateProjectModal({ initialEstado, onClose, onCreate }: CreateP
                     setErrors((prev) => ({ ...prev, titulo: undefined }));
                   }
                 }}
-                placeholder="Ej: Huerto Comunitario"
+                placeholder={t('modal.titlePlaceholder', { defaultValue: 'Ej: Huerto Comunitario' })}
                 disabled={isSubmitting}
               />
               <FieldError message={errors.titulo} />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2 ml-1">Descripción</label>
+              <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2 ml-1">
+                {t('modal.descLabel', { defaultValue: 'Descripción' })}
+              </label>
               <textarea 
                 className="w-full p-4 rounded-2xl border border-stone-200 bg-stone-50 focus:bg-white focus:ring-4 focus:ring-[#EAE2D6]/30 outline-none min-h-[120px] transition-all"
                 value={descripcion}
@@ -112,25 +124,29 @@ export function CreateProjectModal({ initialEstado, onClose, onCreate }: CreateP
                     setErrors((prev) => ({ ...prev, descripcion: undefined }));
                   }
                 }}
-                placeholder="Describe el propósito y lo que se espera lograr..."
+                placeholder={t('modal.descPlaceholder', { defaultValue: 'Describe el propósito y lo que se espera lograr...' })}
                 disabled={isSubmitting}
               />
               <FieldError message={errors.descripcion} />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2 ml-1">Estado Inicial</label>
+              <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2 ml-1">
+                {t('modal.initialState', { defaultValue: 'Estado Inicial' })}
+              </label>
               <select 
                 className="w-full p-4 rounded-2xl border border-stone-200 bg-stone-50 focus:bg-white focus:ring-4 focus:ring-[#EAE2D6]/30 outline-none transition-all"
                 value={estado}
                 onChange={(e) => setEstado(e.target.value as any)}
                 disabled={isSubmitting}
               >
-                <option value="buscando_colaboradores">Buscando Ayuda</option>
-                <option value="en_marcha">En marcha</option>
+                <option value="buscando_colaboradores">{t('modal.stateSeeking', { defaultValue: 'Buscando Ayuda' })}</option>
+                <option value="en_marcha">{t('modal.stateInProgress', { defaultValue: 'En marcha' })}</option>
               </select>
             </div>
             <div>
-              <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2 ml-1">Habilidades Buscadas</label>
+              <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-2 ml-1">
+                {t('modal.skillsLabel', { defaultValue: 'Habilidades Buscadas' })}
+              </label>
               <div className="relative group">
                 <input 
                   type="text" 
@@ -138,7 +154,7 @@ export function CreateProjectModal({ initialEstado, onClose, onCreate }: CreateP
                   value={newHabilidad}
                   onChange={(e) => setNewHabilidad(e.target.value)}
                   onKeyDown={(e) => { if(e.key==='Enter'){ e.preventDefault(); handleAddHabilidad(); } }}
-                  placeholder="Ej: Fontanería"
+                  placeholder={t('modal.skillsPlaceholder', { defaultValue: 'Ej: Fontanería' })}
                   disabled={isSubmitting}
                 />
                 <button 
@@ -173,7 +189,7 @@ export function CreateProjectModal({ initialEstado, onClose, onCreate }: CreateP
               className="w-full py-5 bg-[#6B705C] text-white font-black uppercase tracking-widest rounded-2xl hover:bg-[#4A4E4D] shadow-lg transition-all active:scale-[0.98] disabled:opacity-50"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Lanzando...' : 'Lanzar Iniciativa'}
+              {isSubmitting ? t('modal.launching', { defaultValue: 'Lanzando...' }) : t('modal.launchInitiative', { defaultValue: 'Lanzar Iniciativa' })}
             </button>
           </div>
         </form>

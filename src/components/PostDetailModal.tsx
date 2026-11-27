@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Post, Respuesta, getRespuestas } from '../lib/appService';
 import { usePostActions } from '../hooks/usePostActions';
 import { useAuth } from '../contexts/AuthContext';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { MessageSquare, Trash2, CheckCircle, Clock, Send, ShieldAlert, Pencil, Save, XCircle } from 'lucide-react';
+import { MessageSquare, Trash2, CheckCircle, Clock, Send, ShieldAlert, Pencil, Save, XCircle, X } from 'lucide-react';
 import { useEntityActions } from '../hooks/useEntityActions';
 import { useUndoableDelete } from '../hooks/useUndoableDelete';
 
@@ -23,6 +24,7 @@ const CATEGORIAS = [
 ];
 
 export function PostDetailModal({ post, members, onClose }: PostDetailModalProps) {
+  const { t } = useTranslation(['marketplace', 'common']);
   const { appUser } = useAuth();
   const { editPost, removePost, addRespuesta, isExecuting: isActionSubmitting } = usePostActions();
   const { startDelete } = useUndoableDelete();
@@ -118,7 +120,7 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
   };
 
   const getMemberName = (uid: string) => {
-    return members.find(m => m.userId === uid)?.nombre || 'Miembro';
+    return members.find(m => m.userId === uid)?.nombre || t('tablonModal.member', { defaultValue: 'Miembro' });
   };
 
   const isOwner = appUser?.uid === post.autor_uid;
@@ -154,7 +156,7 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
                   value={editData.titulo}
                   onChange={e => setEditData({ ...editData, titulo: e.target.value })}
                   className="w-full text-xl font-serif border-[#EAE2D6] rounded-xl focus:ring-[#CB997E] focus:border-[#CB997E]"
-                  placeholder="Título de la publicación"
+                  placeholder={t('tablonModal.titlePlaceholder', { defaultValue: 'Título de la publicación' })}
                 />
                 <select
                   value={editData.categoria}
@@ -162,7 +164,9 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
                   className="w-full text-xs font-bold border-[#EAE2D6] rounded-xl focus:ring-[#CB997E] focus:border-[#CB997E]"
                 >
                   {CATEGORIAS.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.label}</option>
+                    <option key={cat.id} value={cat.id}>
+                      {t(`tablonModal.categories.${cat.id}` as any, { defaultValue: cat.label })}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -173,7 +177,7 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
                   <div className="w-5 h-5 rounded-full bg-[#EAE2D6] flex items-center justify-center text-[10px] font-bold text-stone-600">
                     {getMemberName(post.autor_uid).charAt(0)}
                   </div>
-                  <span>Por {getMemberName(post.autor_uid)}</span>
+                  <span>{t('tablonModal.by', { defaultValue: 'Por' })} {getMemberName(post.autor_uid)}</span>
                   <span>•</span>
                   <span>{formatDistanceToNow(post.creadoEn?.toDate ? post.creadoEn.toDate() : new Date(post.creadoEn), { addSuffix: true, locale: es })}</span>
                 </div>
@@ -183,8 +187,9 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
           <button 
             onClick={onClose}
             className="text-stone-400 hover:text-stone-600 transition-colors p-1"
+            aria-label={t('common:actions.closeModal', { defaultValue: 'Cerrar modal' })}
           >
-            ✕
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -196,7 +201,7 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
               onChange={e => setEditData({ ...editData, descripcion: e.target.value })}
               rows={6}
               className="w-full text-sm text-stone-700 border-[#EAE2D6] rounded-2xl focus:ring-[#CB997E] focus:border-[#CB997E] bg-stone-50"
-              placeholder="Describe lo que necesitas u ofreces..."
+              placeholder={t('tablonModal.descPlaceholder', { defaultValue: 'Describe lo que necesitas u ofreces...' })}
             />
           ) : (
             <div className="text-stone-700 leading-relaxed whitespace-pre-wrap">
@@ -216,39 +221,41 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
                       className="flex items-center gap-2 bg-[#A5A58D] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#6B705C] transition-all"
                     >
                       <Save size={16} />
-                      Guardar
+                      {t('tablonModal.save', { defaultValue: 'Guardar' })}
                     </button>
                     <button
                       onClick={() => setIsEditing(false)}
                       className="flex items-center gap-2 bg-white border border-[#EAE2D6] text-stone-500 px-4 py-2 rounded-xl text-xs font-bold hover:bg-stone-50 transition-all"
                     >
                       <XCircle size={16} />
-                      Cancelar
+                      {t('tablonModal.cancel', { defaultValue: 'Cancelar' })}
                     </button>
                   </div>
                 ) : (
                   <>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-stone-500 uppercase tracking-wide">Gestionar:</span>
+                      <span className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+                        {t('tablonModal.manage', { defaultValue: 'Gestionar:' })}
+                      </span>
                       <div className="flex gap-1">
                         <button
                           onClick={() => handleUpdateEstado('activo')}
                           className={`p-2 rounded-lg transition-all ${post.estado === 'activo' ? 'bg-[#A5A58D] text-white shadow-sm' : 'hover:bg-white text-stone-400'}`}
-                          title="Marcar como Activo"
+                          title={t('tablonModal.markActive', { defaultValue: 'Marcar como Activo' })}
                         >
                           <Clock size={18} />
                         </button>
                         <button
                           onClick={() => handleUpdateEstado('en_proceso')}
                           className={`p-2 rounded-lg transition-all ${post.estado === 'en_proceso' ? 'bg-amber-500 text-white shadow-sm' : 'hover:bg-white text-stone-400'}`}
-                          title="Marcar En Proceso"
+                          title={t('tablonModal.markInProgress', { defaultValue: 'Marcar En Proceso' })}
                         >
                           <ShieldAlert size={18} />
                         </button>
                         <button
                           onClick={() => handleUpdateEstado('resuelto')}
                           className={`p-2 rounded-lg transition-all ${post.estado === 'resuelto' ? 'bg-stone-500 text-white shadow-sm' : 'hover:bg-white text-stone-400'}`}
-                          title="Marcar como Resuelto"
+                          title={t('tablonModal.markResolved', { defaultValue: 'Marcar como Resuelto' })}
                         >
                           <CheckCircle size={18} />
                         </button>
@@ -257,23 +264,21 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
                     <button
                       onClick={() => setIsEditing(true)}
                       className="flex items-center gap-2 p-2 px-3 rounded-lg text-[#A5A58D] hover:bg-white transition-all border border-transparent hover:border-[#EAE2D6]"
-                      title="Editar contenido"
+                      title={t('tablonModal.edit', { defaultValue: 'Editar contenido' })}
                     >
                       <Pencil size={18} />
-                      <span className="text-xs font-bold">Editar</span>
+                      <span className="text-xs font-bold">{t('tablonModal.edit', { defaultValue: 'Editar' })}</span>
                     </button>
 
                     <button
                       onClick={() => {
-                        if (window.confirm('¿Estás seguro de que quieres eliminar esta publicación?')) {
-                          removePost(post.id!, {
-                            successMessage: "Publicación eliminada",
-                            onSuccess: onClose
-                          });
-                        }
+                        removePost(post.id!, {
+                          successMessage: "Publicación eliminada",
+                          onSuccess: onClose
+                        });
                       }}
                       className="p-2 rounded-lg text-rose-400 hover:bg-rose-50 transition-all"
-                      title="Eliminar publicación"
+                      title={t('tablonModal.delete', { defaultValue: 'Eliminar publicación' })}
                     >
                       <Trash2 size={18} />
                     </button>
@@ -288,7 +293,7 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
                   className="flex items-center gap-2 text-xs font-bold text-red-400 hover:text-red-600 transition-colors px-3 py-2 rounded-xl hover:bg-red-50"
                 >
                   <Trash2 size={16} />
-                  Eliminar
+                  {t('tablonModal.delete', { defaultValue: 'Eliminar' })}
                 </button>
               )}
             </div>
@@ -298,7 +303,7 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
           <div className="space-y-4">
             <h3 className="text-lg font-serif text-[#4A4E4D] flex items-center gap-2">
               <MessageSquare size={20} className="text-[#A5A58D]" />
-              Respuestas ({post.respuestas_count || 0})
+              {t('tablonModal.responses', { defaultValue: 'Respuestas' })} ({post.respuestas_count || 0})
             </h3>
             
             <div className="space-y-4">
@@ -307,7 +312,9 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#A5A58D]"></div>
                 </div>
               ) : respuestas.length === 0 ? (
-                <p className="text-stone-400 text-sm italic text-center py-4">Sin respuestas aún. ¡Sé el primero en participar!</p>
+                <p className="text-stone-400 text-sm italic text-center py-4">
+                  {t('tablonModal.noResponses', { defaultValue: 'Sin respuestas aún. ¡Sé el primero en participar!' })}
+                </p>
               ) : (
                 respuestas.map(res => (
                   <div key={res.id} className="flex gap-3 bg-[#FDFBF7]/50 p-4 rounded-2xl border border-transparent hover:border-[#EAE2D6] transition-all">
@@ -338,7 +345,7 @@ export function PostDetailModal({ post, members, onClose }: PostDetailModalProps
                 type="text"
                 value={nuevaRespuesta}
                 onChange={e => setNuevaRespuesta(e.target.value)}
-                placeholder="Escribe una respuesta..."
+                placeholder={t('tablonModal.writeResponsePlaceholder', { defaultValue: 'Escribe una respuesta...' })}
                 className="flex-1 rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] text-sm"
                 disabled={isSubmittingRes}
               />

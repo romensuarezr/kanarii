@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RefreshCw, Search, Filter, Eye, Ban, Activity, Clock, Handshake, AlertCircle } from 'lucide-react';
 import { Acuerdo, Servicio } from '../../../lib/appService';
 import { getStatusBadgeClass, getExchangeBadgeClass, getExchangeLabel, getStatusLabel } from '../../../utils/badgeClasses';
@@ -22,6 +23,7 @@ export default function MarketplaceTab({
   onSelectAcuerdo,
   onDeactivateServicio,
 }: MarketplaceTabProps) {
+  const { t } = useTranslation(['admin', 'common']);
   const [acuerdoSearchTerm, setAcuerdoSearchTerm] = useState('');
   const [acuerdoStatusFilter, setAcuerdoStatusFilter] = useState<'todos' | 'pendiente' | 'en_curso' | 'completada' | 'cancelada' | 'contraoferta'>('todos');
 
@@ -72,7 +74,7 @@ export default function MarketplaceTab({
             <Activity className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-stone-400 text-[10px] font-bold uppercase tracking-wider">Acuerdos Activos</p>
+            <p className="text-stone-400 text-[10px] font-bold uppercase tracking-wider">{t('admin:marketplace.activeAgreements')}</p>
             <h4 className="text-2xl font-bold text-stone-800 mt-0.5">{agreementsStats.enCurso}</h4>
           </div>
         </div>
@@ -82,7 +84,7 @@ export default function MarketplaceTab({
             <Clock className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-stone-400 text-[10px] font-bold uppercase tracking-wider">Requieren Atención</p>
+            <p className="text-stone-400 text-[10px] font-bold uppercase tracking-wider">{t('admin:marketplace.needAttention')}</p>
             <h4 className="text-2xl font-bold text-stone-800 mt-0.5">{agreementsStats.requierenAtencion}</h4>
           </div>
         </div>
@@ -92,7 +94,7 @@ export default function MarketplaceTab({
             <Handshake className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-stone-400 text-[10px] font-bold uppercase tracking-wider">Completados este mes</p>
+            <p className="text-stone-400 text-[10px] font-bold uppercase tracking-wider">{t('admin:marketplace.completedThisMonth')}</p>
             <h4 className="text-2xl font-bold text-stone-800 mt-0.5">{agreementsStats.completadosEsteMes}</h4>
           </div>
         </div>
@@ -102,7 +104,7 @@ export default function MarketplaceTab({
             <AlertCircle className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-stone-400 text-[10px] font-bold uppercase tracking-wider">Cancelados este mes</p>
+            <p className="text-stone-400 text-[10px] font-bold uppercase tracking-wider">{t('admin:marketplace.cancelledThisMonth')}</p>
             <h4 className="text-2xl font-bold text-stone-800 mt-0.5">{agreementsStats.canceladosEsteMes}</h4>
           </div>
         </div>
@@ -112,8 +114,8 @@ export default function MarketplaceTab({
       <div className="bg-white rounded-3xl border border-stone-100 shadow-sm p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
-            <h3 className="text-lg font-semibold text-stone-800">Acuerdos del Marketplace</h3>
-            <p className="text-xs text-stone-400 mt-0.5">Historial y estado de los intercambios entre miembros</p>
+            <h3 className="text-lg font-semibold text-stone-800">{t('admin:marketplace.tableTitle')}</h3>
+            <p className="text-xs text-stone-400 mt-0.5">{t('admin:marketplace.tableSubtitle')}</p>
           </div>
           
           <div className="flex flex-wrap gap-2">
@@ -122,7 +124,7 @@ export default function MarketplaceTab({
               <Search className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Buscar miembro o servicio..."
+                placeholder={t('admin:marketplace.searchPlaceholder')}
                 value={acuerdoSearchTerm}
                 onChange={(e) => setAcuerdoSearchTerm(e.target.value)}
                 className="pl-9 pr-4 py-2 border border-stone-200 rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-stone-50 w-full sm:w-64"
@@ -137,12 +139,12 @@ export default function MarketplaceTab({
                 onChange={(e: any) => setAcuerdoStatusFilter(e.target.value)}
                 className="pl-9 pr-8 py-2 border border-stone-200 rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-stone-50 appearance-none cursor-pointer"
               >
-                <option value="todos">Todos los estados</option>
-                <option value="pendiente">Pendiente</option>
-                <option value="contraoferta">Contraoferta</option>
-                <option value="en_curso">En curso</option>
-                <option value="completada">Completada</option>
-                <option value="cancelada">Cancelada</option>
+                <option value="todos">{t('admin:marketplace.filterAll')}</option>
+                <option value="pendiente">{t('admin:marketplace.filterPending')}</option>
+                <option value="contraoferta">{t('admin:marketplace.filterCounter')}</option>
+                <option value="en_curso">{t('admin:marketplace.filterOngoing')}</option>
+                <option value="completada">{t('admin:marketplace.filterCompleted')}</option>
+                <option value="cancelada">{t('admin:marketplace.filterCancelled')}</option>
               </select>
             </div>
           </div>
@@ -154,20 +156,20 @@ export default function MarketplaceTab({
           </div>
         ) : filteredAcuerdos.length === 0 ? (
           <div className="text-center py-12 text-stone-400 border border-dashed border-stone-100 rounded-2xl">
-            No se encontraron acuerdos con los filtros aplicados.
+            {t('admin:marketplace.emptyAgreements')}
           </div>
         ) : (
           <div className="overflow-x-auto -mx-6">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-stone-100 bg-stone-50/50 text-[10px] font-bold text-stone-400 uppercase tracking-wider">
-                  <th className="px-6 py-3.5">Servicio</th>
-                  <th className="px-6 py-3.5">Proveedor</th>
-                  <th className="px-6 py-3.5">Solicitante</th>
-                  <th className="px-6 py-3.5">Tipo Intercambio</th>
-                  <th className="px-6 py-3.5">Estado</th>
-                  <th className="px-6 py-3.5">Fecha Propuesta</th>
-                  <th className="px-6 py-3.5 text-right">Acciones</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colService')}</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colProvider')}</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colRequester')}</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colExchangeType')}</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colStatus')}</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colDate')}</th>
+                  <th className="px-6 py-3.5 text-right">{t('admin:marketplace.colActions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-50 text-xs">
@@ -189,7 +191,7 @@ export default function MarketplaceTab({
                         {servicio?.title ? (
                           servicio.title
                         ) : (
-                          <span className="text-stone-400 font-normal italic">Servicio eliminado</span>
+                          <span className="text-stone-400 font-normal italic">{t('admin:marketplace.deletedService')}</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-stone-600">
@@ -215,7 +217,7 @@ export default function MarketplaceTab({
                         <button
                           onClick={(e) => { e.stopPropagation(); onSelectAcuerdo(acuerdo); }}
                           className="p-1.5 hover:bg-stone-100 rounded-xl text-stone-400 hover:text-amber-600 transition-colors"
-                          title="Ver Detalles"
+                          title={t('admin:marketplace.viewDetails')}
                         >
                           <Eye className="w-4 h-4" />
                         </button>
@@ -232,8 +234,8 @@ export default function MarketplaceTab({
       {/* Listado de Servicios Activos */}
       <div className="bg-white rounded-3xl border border-stone-100 shadow-sm p-6">
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-stone-800">Catálogo de Servicios Activos</h3>
-          <p className="text-xs text-stone-400 mt-0.5">Servicios publicados actualmente en la comunidad</p>
+          <h3 className="text-lg font-semibold text-stone-800">{t('admin:marketplace.catalogTitle')}</h3>
+          <p className="text-xs text-stone-400 mt-0.5">{t('admin:marketplace.catalogSubtitle')}</p>
         </div>
 
         {loadingServicios ? (
@@ -242,19 +244,19 @@ export default function MarketplaceTab({
           </div>
         ) : activeServiciosList.length === 0 ? (
           <div className="text-center py-12 text-stone-400 border border-dashed border-stone-100 rounded-2xl">
-            No hay servicios activos en este momento.
+            {t('admin:marketplace.emptyServices')}
           </div>
         ) : (
           <div className="overflow-x-auto -mx-6">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-stone-100 bg-stone-50/50 text-[10px] font-bold text-stone-400 uppercase tracking-wider">
-                  <th className="px-6 py-3.5">Servicio</th>
-                  <th className="px-6 py-3.5">Proveedor</th>
-                  <th className="px-6 py-3.5">Tipo</th>
-                  <th className="px-6 py-3.5">Categoría</th>
-                  <th className="px-6 py-3.5">Acuerdos Vinculados</th>
-                  <th className="px-6 py-3.5 text-right">Acciones</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colService')}</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colProvider')}</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colExchangeType')}</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colCategory')}</th>
+                  <th className="px-6 py-3.5">{t('admin:marketplace.colLinkedAgreements')}</th>
+                  <th className="px-6 py-3.5 text-right">{t('admin:marketplace.colActions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-50 text-xs">
@@ -275,7 +277,7 @@ export default function MarketplaceTab({
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold capitalize ${typeBadge}`}>
-                          {servicio.type === 'talento' ? 'Talento' : 'Recurso'}
+                          {servicio.type === 'talento' ? t('admin:marketplace.talent') : t('admin:marketplace.resource')}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-stone-450">
@@ -292,7 +294,7 @@ export default function MarketplaceTab({
                           className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-[10px] font-bold uppercase transition-colors"
                         >
                           <Ban className="w-3.5 h-3.5" />
-                          Desactivar
+                          {t('admin:marketplace.deactivate')}
                         </button>
                       </td>
                     </tr>

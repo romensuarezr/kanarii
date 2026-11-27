@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ShieldCheck,
@@ -42,6 +43,7 @@ const SolicitudCard: React.FC<{
   isExecuting: boolean;
   isResolved?: boolean;
 }> = ({ solicitud, onApprove, onReject, isExecuting, isResolved = false }) => {
+  const { t } = useTranslation(['admin', 'common']);
   const [profile, setProfile] = useState<SolicitanteProfile | null>(null);
   const [ficha, setFicha] = useState<Ficha | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -84,7 +86,7 @@ const SolicitudCard: React.FC<{
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h4 className="font-bold text-stone-800 flex items-center gap-2">
-                {profile?.displayName || profile?.email || 'Cargando...'}
+                {profile?.displayName || profile?.email || t('admin:solicitudes.loading')}
                 {isResolved && (
                   <span className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${
                     solicitud.estado === 'aprobada' 
@@ -97,12 +99,12 @@ const SolicitudCard: React.FC<{
               </h4>
               <p className="text-xs text-stone-400 flex items-center gap-1 mt-1">
                 <Clock className="w-3 h-3" />
-                solicitado {solicitud.creadoEn ? formatDistanceToNow(solicitud.creadoEn.toDate(), { addSuffix: true, locale: es }) : 'hace poco'}
+                {t('admin:solicitudes.cards.requestedAgo', { time: solicitud.creadoEn ? formatDistanceToNow(solicitud.creadoEn.toDate(), { addSuffix: true, locale: es }) : t('admin:solicitudes.cards.justNow') })}
               </p>
             </div>
             {isResolved && solicitud.resueltoEn && (
                <p className="text-[10px] text-stone-400">
-                Resuelto {formatDistanceToNow(solicitud.resueltoEn.toDate(), { addSuffix: true, locale: es })}
+                {t('admin:solicitudes.cards.resolvedAgo', { time: formatDistanceToNow(solicitud.resueltoEn.toDate(), { addSuffix: true, locale: es }) })}
               </p>
             )}
           </div>
@@ -116,7 +118,7 @@ const SolicitudCard: React.FC<{
           {solicitud.estado === 'rechazada' && (solicitud.motivoRechazo || solicitud.detalleRechazo) && (
             <div className="bg-red-50/50 border border-red-100/50 rounded-2xl p-4">
               <div className="text-[10px] font-bold text-red-500 uppercase tracking-widest mb-1">
-                Motivo del Rechazo
+                {t('admin:solicitudes.cards.rejectReason')}
               </div>
               <p className="text-sm font-semibold text-stone-700">
                 {solicitud.motivoRechazo}
@@ -134,27 +136,27 @@ const SolicitudCard: React.FC<{
             <div className="bg-[#F9F7F1]/50 border border-[#EAE2D6]/40 rounded-2xl p-4 space-y-3">
               <div className="flex items-center gap-2 text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">
                 <ShieldCheck className="w-3 h-3" />
-                Contexto Galáctico
+                {t('admin:solicitudes.cards.galacticContext')}
               </div>
               
               {ficha ? (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <div className="text-[9px] text-stone-400 uppercase font-bold">Rol</div>
-                    <div className="text-sm font-serif text-[#4A4E4D]">{ficha.datosPersona?.rol || 'No definido'}</div>
+                    <div className="text-[9px] text-stone-400 uppercase font-bold">{t('admin:solicitudes.cards.role')}</div>
+                    <div className="text-sm font-serif text-[#4A4E4D]">{ficha.datosPersona?.rol || t('admin:solicitudes.cards.undefined')}</div>
                   </div>
                   <div>
-                    <div className="text-[9px] text-stone-400 uppercase font-bold">Saberes</div>
-                    <div className="text-sm text-stone-600 truncate">{ficha.datosPersona?.saberes || 'No definidos'}</div>
+                    <div className="text-[9px] text-stone-400 uppercase font-bold">{t('admin:solicitudes.cards.knowledges')}</div>
+                    <div className="text-sm text-stone-600 truncate">{ficha.datosPersona?.saberes || t('admin:solicitudes.cards.notDefined')}</div>
                   </div>
                   <div>
-                    <div className="text-[9px] text-stone-400 uppercase font-bold">Tensión</div>
+                    <div className="text-[9px] text-stone-400 uppercase font-bold">{t('admin:solicitudes.cards.tension')}</div>
                     <div className="text-sm text-stone-600">{ficha.datosPersona?.tension_creativa || 'N/A'}</div>
                   </div>
                 </div>
               ) : (
                 <p className="text-xs text-stone-400 italic">
-                  Este solicitante aún no ha completado su ficha de perfil.
+                  {t('admin:solicitudes.cards.profileIncomplete')}
                 </p>
               )}
             </div>
@@ -168,7 +170,7 @@ const SolicitudCard: React.FC<{
                 className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isExecuting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                Aprobar
+                {t('admin:solicitudes.cards.approve')}
               </button>
               <button
                 onClick={onReject}
@@ -176,7 +178,7 @@ const SolicitudCard: React.FC<{
                 className="flex-1 border-2 border-red-100 text-red-500 hover:bg-red-50 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isExecuting ? <Loader2 className="w-4 h-4 animate-spin" /> : <X className="w-4 h-4" />}
-                Rechazar
+                {t('admin:solicitudes.cards.reject')}
               </button>
             </div>
           )}
@@ -191,6 +193,7 @@ const InvitacionCard: React.FC<{
   onDesactivar: () => void;
   isExecuting: boolean;
 }> = ({ invitacion, onDesactivar, isExecuting }) => {
+  const { t } = useTranslation(['admin', 'common']);
   const [confirm, setConfirm] = useState(false);
   const isExpired = invitacion.expiraEn && invitacion.expiraEn.toDate() < new Date();
   const isExhausted = invitacion.usosMaximos && invitacion.usosActuales >= invitacion.usosMaximos;
@@ -215,13 +218,13 @@ const InvitacionCard: React.FC<{
                 invitacion.tipo === 'unico_uso' ? 'bg-amber-50 text-amber-600 border-amber-100' :
                 'bg-rose-50 text-rose-600 border-rose-100'
               }`}>
-                {invitacion.tipo === 'permanente' ? 'Permanente' : 
-                 invitacion.tipo === 'unico_uso' ? 'Un solo uso' : 'Temporal'}
+                {invitacion.tipo === 'permanente' ? t('admin:solicitudes.invitations.permanent') : 
+                 invitacion.tipo === 'unico_uso' ? t('admin:solicitudes.invitations.singleUse') : t('admin:solicitudes.invitations.temporary')}
               </span>
               <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border ${
                 !isInactive ? 'bg-green-50 text-green-600 border-green-100' : 'bg-stone-100 text-stone-400 border-stone-200'
               }`}>
-                {!isInactive ? 'Activo' : 'Inactivo'}
+                {!isInactive ? t('admin:solicitudes.invitations.active') : t('admin:solicitudes.invitations.inactive')}
               </span>
             </div>
           </div>
@@ -229,17 +232,17 @@ const InvitacionCard: React.FC<{
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-stone-400">
             <div className="flex items-center gap-1">
               <Zap className="w-3.5 h-3.5" />
-              <span>{invitacion.usosActuales} {invitacion.usosMaximos ? `/ ${invitacion.usosMaximos}` : ''} usos</span>
+              <span>{invitacion.usosActuales} {invitacion.usosMaximos ? `/ ${invitacion.usosMaximos}` : ''} {t('admin:solicitudes.invitations.uses')}</span>
             </div>
             {invitacion.expiraEn && (
               <div className="flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5" />
-                <span>Caduca {formatDistanceToNow(invitacion.expiraEn.toDate(), { addSuffix: true, locale: es })}</span>
+                <span>{t('admin:solicitudes.invitations.expires', { time: formatDistanceToNow(invitacion.expiraEn.toDate(), { addSuffix: true, locale: es }) })}</span>
               </div>
             )}
             <div className="flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
-              <span>Creado {invitacion.creadoEn ? formatDistanceToNow(invitacion.creadoEn.toDate(), { addSuffix: true, locale: es }) : 'hace poco'}</span>
+              <span>{t('admin:solicitudes.invitations.created', { time: invitacion.creadoEn ? formatDistanceToNow(invitacion.creadoEn.toDate(), { addSuffix: true, locale: es }) : t('admin:solicitudes.cards.justNow') })}</span>
             </div>
           </div>
         </div>
@@ -252,7 +255,7 @@ const InvitacionCard: React.FC<{
                   onClick={() => { setConfirm(false); onDesactivar(); }}
                   disabled={isExecuting}
                   className="bg-red-500 hover:bg-red-600 text-white p-2.5 rounded-2xl transition-all shadow-md"
-                  title="Confirmar desactivación"
+                  title={t('admin:solicitudes.invitations.confirmDeactivation')}
                 >
                   {isExecuting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
                 </button>
@@ -260,7 +263,7 @@ const InvitacionCard: React.FC<{
                   onClick={() => setConfirm(false)}
                   disabled={isExecuting}
                   className="bg-stone-100 hover:bg-stone-200 text-stone-500 p-2.5 rounded-2xl transition-all"
-                  title="Cancelar"
+                  title={t('admin:solicitudes.invitations.cancel')}
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -269,7 +272,7 @@ const InvitacionCard: React.FC<{
               <button
                 onClick={() => setConfirm(true)}
                 className="text-stone-400 hover:text-red-500 hover:bg-red-50 p-2.5 rounded-2xl transition-all"
-                title="Desactivar código"
+                title={t('admin:solicitudes.invitations.deactivateCode')}
               >
                 <Ban className="w-5 h-5" />
               </button>
@@ -284,6 +287,7 @@ const InvitacionCard: React.FC<{
 // --- VISTA PRINCIPAL ---
 
 export function AdminSolicitudesView() {
+  const { t } = useTranslation(['admin', 'common']);
   const { comunidad } = useComunidad();
   const hook = useAdminSolicitudesLogic();
   
@@ -329,10 +333,10 @@ export function AdminSolicitudesView() {
       <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7] p-6">
         <div className="max-w-md w-full bg-white border border-[#EAE2D6] rounded-3xl p-8 text-center shadow-lg">
           <ShieldCheck className="w-16 h-16 text-red-300 mx-auto mb-6" />
-          <h2 className="text-2xl font-serif text-[#4A4E4D] mb-2">Acceso restringido</h2>
-          <p className="text-[#8A817C] mb-6">No tienes permisos para gestionar las solicitudes de esta comunidad.</p>
+          <h2 className="text-2xl font-serif text-[#4A4E4D] mb-2">{t('admin:solicitudes.accessRestrictedTitle')}</h2>
+          <p className="text-[#8A817C] mb-6">{t('admin:solicitudes.accessRestrictedDesc')}</p>
           <button onClick={() => window.history.back()} className="text-[#CB997E] font-bold flex items-center justify-center gap-2 mx-auto">
-             Volver atrás
+             {t('admin:solicitudes.goBack')}
           </button>
         </div>
       </div>
@@ -343,7 +347,7 @@ export function AdminSolicitudesView() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#FDFBF7] text-[#8A817C]">
         <Loader2 className="w-10 h-10 animate-spin mb-4" />
-        <p className="font-medium">Cargando solicitudes...</p>
+        <p className="font-medium">{t('admin:solicitudes.loading')}</p>
       </div>
     );
   }
@@ -356,9 +360,13 @@ export function AdminSolicitudesView() {
         
         {/* Cabecera */}
         <div className="space-y-1">
-          <h1 className="text-3xl font-serif text-text-heading">Solicitudes de acceso</h1>
+          <h1 className="text-3xl font-serif text-text-heading">{t('admin:solicitudes.title')}</h1>
           <p className="text-[#8A817C]">
-            Gestiona quién puede unirse a <span className="font-bold text-[#4A4E4D]">{comunidad?.nombre}</span>
+            <Trans
+              i18nKey="admin:solicitudes.subtitle"
+              values={{ name: comunidad?.nombre }}
+              components={{ 1: <span className="font-bold text-[#4A4E4D]" /> }}
+            />
           </p>
         </div>
 
@@ -372,7 +380,7 @@ export function AdminSolicitudesView() {
                 : 'text-[#8A817C] hover:text-[#4A4E4D]'
             }`}
           >
-            Pendientes
+            {t('admin:solicitudes.tabs.pending')}
             {pendientes.length > 0 && (
               <span className="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
                 {pendientes.length}
@@ -387,7 +395,7 @@ export function AdminSolicitudesView() {
                 : 'text-[#8A817C] hover:text-[#4A4E4D]'
             }`}
           >
-            Resueltas
+            {t('admin:solicitudes.tabs.resolved')}
           </button>
           <button
             onClick={() => setActiveTab('codigos')}
@@ -397,7 +405,7 @@ export function AdminSolicitudesView() {
                 : 'text-[#8A817C] hover:text-[#4A4E4D]'
             }`}
           >
-            Invitaciones
+            {t('admin:solicitudes.tabs.invitations')}
           </button>
         </div>
 
@@ -419,19 +427,19 @@ export function AdminSolicitudesView() {
                       <Key className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-stone-800">Generar nuevo código</h3>
-                      <p className="text-xs text-stone-400">Crea una invitación personalizada para tu comunidad</p>
+                      <h3 className="font-bold text-stone-800">{t('admin:solicitudes.invitations.generateTitle')}</h3>
+                      <p className="text-xs text-stone-400">{t('admin:solicitudes.invitations.generateDesc')}</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <label className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">Tipo de invitación</label>
+                      <label className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">{t('admin:solicitudes.invitations.invitationType')}</label>
                       <div className="grid grid-cols-1 gap-2">
                         {[
-                          { id: 'permanente', label: 'Permanente', icon: Infinity },
-                          { id: 'unico_uso', label: 'Un solo uso', icon: Zap },
-                          { id: 'caduca', label: 'Con caducidad', icon: Calendar },
+                          { id: 'permanente', label: t('admin:solicitudes.invitations.permanent'), icon: Infinity },
+                          { id: 'unico_uso', label: t('admin:solicitudes.invitations.singleUse'), icon: Zap },
+                          { id: 'caduca', label: t('admin:solicitudes.invitations.withExpiration'), icon: Calendar },
                         ].map((type) => (
                           <button
                             key={type.id}
@@ -452,7 +460,7 @@ export function AdminSolicitudesView() {
                     <div className="space-y-6">
                       {newCodeType === 'caduca' && (
                         <div className="space-y-3">
-                          <label className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">Fecha de expiración</label>
+                          <label className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">{t('admin:solicitudes.invitations.expirationDate')}</label>
                           <input 
                             type="date"
                             value={newCodeExpiration}
@@ -464,10 +472,10 @@ export function AdminSolicitudesView() {
 
                       {newCodeType !== 'unico_uso' && (
                         <div className="space-y-3">
-                          <label className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">Usos máximos (opcional)</label>
+                          <label className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">{t('admin:solicitudes.invitations.maxUses')}</label>
                           <input 
                             type="number"
-                            placeholder="Ilimitados"
+                            placeholder={t('admin:solicitudes.invitations.unlimited')}
                             value={newCodeMaxUses}
                             onChange={(e) => setNewCodeMaxUses(e.target.value)}
                             className="w-full bg-[#F9F7F1] border-2 border-stone-100 rounded-2xl px-4 py-3 text-stone-700 focus:border-[#CB997E] focus:ring-0 transition-all outline-none"
@@ -481,7 +489,7 @@ export function AdminSolicitudesView() {
                         className="w-full bg-[#4A4E4D] hover:bg-[#3A3E3D] text-white py-4 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
                       >
                         {isExecutingAction === 'generating' ? <Loader2 className="w-5 h-5 animate-spin" /> : <Key className="w-5 h-5" />}
-                        Generar código
+                        {t('admin:solicitudes.invitations.generateCodeBtn')}
                       </button>
                     </div>
                   </div>
@@ -492,7 +500,7 @@ export function AdminSolicitudesView() {
                       animate={{ opacity: 1, y: 0 }}
                       className="mt-6 p-6 bg-green-50 border-2 border-green-100 rounded-3xl flex flex-col items-center justify-center space-y-4"
                     >
-                      <p className="text-xs font-bold text-green-600 uppercase tracking-widest">Código generado listo para compartir</p>
+                      <p className="text-xs font-bold text-green-600 uppercase tracking-widest">{t('admin:solicitudes.invitations.readyToShare')}</p>
                       <div className="flex items-center gap-4">
                         <span className="text-3xl font-mono font-bold text-stone-800 tracking-wider">
                           {generatedCode}
@@ -504,7 +512,7 @@ export function AdminSolicitudesView() {
                           }`}
                         >
                           {isCopying ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                          {isCopying ? '¡Copiado!' : 'Copiar'}
+                          {isCopying ? t('admin:solicitudes.invitations.copied') : t('admin:solicitudes.invitations.copy')}
                         </button>
                       </div>
                     </motion.div>
@@ -513,10 +521,10 @@ export function AdminSolicitudesView() {
 
                 {/* Listado */}
                 <div className="space-y-4">
-                  <h4 className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">Códigos activos e históricos</h4>
+                  <h4 className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">{t('admin:solicitudes.invitations.activeAndHistoric')}</h4>
                   {invitaciones.length === 0 ? (
                     <div className="text-center py-10 bg-white border border-[#EAE2D6] rounded-3xl text-[#8A817C] text-sm italic">
-                      No hay códigos generados todavía.
+                      {t('admin:solicitudes.invitations.noCodes')}
                     </div>
                   ) : (
                     invitaciones.map(inv => (
@@ -538,8 +546,8 @@ export function AdminSolicitudesView() {
                   className="text-center py-20 bg-white border-2 border-dashed border-[#EAE2D6] rounded-3xl"
                 >
                   <CheckCircle2 className="w-12 h-12 text-[#EAE2D6] mx-auto mb-4" />
-                  <p className="text-[#4A4E4D] font-bold text-lg">No hay solicitudes pendientes</p>
-                  <p className="text-[#8A817C] text-sm mt-1">Cuando alguien solicite acceso, aparecerá aquí.</p>
+                  <p className="text-[#4A4E4D] font-bold text-lg">{t('admin:solicitudes.emptyPendingTitle')}</p>
+                  <p className="text-[#8A817C] text-sm mt-1">{t('admin:solicitudes.emptyPendingDesc')}</p>
                 </motion.div>
               ) : (
                 pendientes.map(sol => (
@@ -555,7 +563,7 @@ export function AdminSolicitudesView() {
             ) : (
               resueltas.length === 0 ? (
                 <div className="text-center py-10 text-[#8A817C] text-sm italic">
-                  Aún no se ha resuelto ninguna solicitud.
+                  {t('admin:solicitudes.emptyResolved')}
                 </div>
               ) : (
                 resueltas.map(sol => (
@@ -595,40 +603,44 @@ export function AdminSolicitudesView() {
                 <AlertTriangle className="w-8 h-8" />
               </div>
               <div className="space-y-2 text-center">
-                <h3 className="text-xl font-bold text-stone-800">Rechazar solicitud</h3>
+                <h3 className="text-xl font-bold text-stone-800">{t('admin:solicitudes.rejectModal.title')}</h3>
                 <p className="text-sm text-stone-500 leading-relaxed">
-                  Esta persona no podrá unirse a <span className="font-bold">{comunidad?.nombre}</span> con esta solicitud. Podrá volver a solicitarlo más adelante.
+                  <Trans
+                    i18nKey="admin:solicitudes.rejectModal.body"
+                    values={{ name: comunidad?.nombre }}
+                    components={{ 1: <span className="font-bold" /> }}
+                  />
                 </p>
               </div>
 
               {/* Dropdown de motivo */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">
-                  Motivo del rechazo <span className="text-red-500">*</span>
+                  {t('admin:solicitudes.rejectModal.reasonLabel')} <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={motivoRechazo}
                   onChange={(e) => setMotivoRechazo(e.target.value)}
                   className="w-full bg-[#F9F7F1] border-2 border-stone-100 rounded-2xl px-4 py-3 text-sm text-stone-700 focus:border-[#CB997E] focus:ring-0 transition-all outline-none"
                 >
-                  <option value="" disabled>Selecciona un motivo...</option>
-                  <option value="No cumple el perfil de la comunidad">No cumple el perfil de la comunidad</option>
-                  <option value="Comunidad con cupo completo">Comunidad con cupo completo</option>
-                  <option value="Información insuficiente en la solicitud">Información insuficiente en la solicitud</option>
-                  <option value="Sin respuesta del solicitante">Sin respuesta del solicitante</option>
-                  <option value="Otro">Otro</option>
+                  <option value="" disabled>{t('admin:solicitudes.rejectModal.reasonPlaceholder')}</option>
+                  <option value="No cumple el perfil de la comunidad">{t('admin:solicitudes.rejectModal.reason1')}</option>
+                  <option value="Comunidad con cupo completo">{t('admin:solicitudes.rejectModal.reason2')}</option>
+                  <option value="Información insuficiente en la solicitud">{t('admin:solicitudes.rejectModal.reason3')}</option>
+                  <option value="Sin respuesta del solicitante">{t('admin:solicitudes.rejectModal.reason4')}</option>
+                  <option value="Otro">{t('admin:solicitudes.rejectModal.reasonOther')}</option>
                 </select>
               </div>
 
               {/* Textarea de detalles */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-stone-400 uppercase tracking-widest px-1">
-                  Detalle adicional (opcional)
+                  {t('admin:solicitudes.rejectModal.detailsLabel')}
                 </label>
                 <textarea
                   value={detalleRechazo}
                   onChange={(e) => setDetalleRechazo(e.target.value)}
-                  placeholder="Añade un contexto adicional si lo deseas..."
+                  placeholder={t('admin:solicitudes.rejectModal.detailsPlaceholder')}
                   rows={3}
                   className="w-full bg-[#F9F7F1] border-2 border-stone-100 rounded-2xl px-4 py-3 text-sm text-stone-700 focus:border-[#CB997E] focus:ring-0 transition-all outline-none resize-none"
                 />
@@ -643,7 +655,7 @@ export function AdminSolicitudesView() {
                   {isExecutingAction === confirmReject.id ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
-                    'Confirmar rechazo'
+                    t('admin:solicitudes.rejectModal.confirmRejectBtn')
                   )}
                 </button>
                 <button
@@ -651,7 +663,7 @@ export function AdminSolicitudesView() {
                   disabled={isExecutingAction === confirmReject.id}
                   className="w-full py-2 text-[#8A817C] font-bold hover:bg-[#F9F7F1] rounded-xl transition-colors text-center"
                 >
-                  Cancelar
+                  {t('admin:solicitudes.rejectModal.cancelBtn')}
                 </button>
               </div>
             </motion.div>

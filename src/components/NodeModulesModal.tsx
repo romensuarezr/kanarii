@@ -72,7 +72,7 @@ export function NodeModulesModal({ isOpen, onClose, comunidad }: NodeModulesModa
             type="button"
             onClick={onClose}
             className="p-2 rounded-2xl text-stone-400 hover:text-stone-700 hover:bg-sand-light transition-colors cursor-pointer shrink-0"
-            aria-label="Cerrar"
+            aria-label={t('actions.closeModal', { defaultValue: 'Cerrar modal' })}
           >
             <X size={18} />
           </button>

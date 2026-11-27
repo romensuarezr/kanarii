@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Calendar, dateFnsLocalizer, View, Views } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -44,6 +45,7 @@ const sanitize = <T extends Record<string, any>>(obj: T): T =>
   ) as unknown as T;
 
 export default function CalendarioView() {
+  const { t } = useTranslation(['events', 'common']);
   const { appUser } = useAuth();
   const { currentCommunityId, comunidad } = useComunidad();
   const { eventos, loading } = useEventos(currentCommunityId || appUser?.communityId || 'arteara');
@@ -73,13 +75,13 @@ export default function CalendarioView() {
     <button
       onClick={openAddEvento}
       className="bg-[#2C4C3B] hover:bg-[#1E3529] text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-      title="Añadir evento"
+      title={t('events:addEvent', { defaultValue: 'Añadir evento' })}
     >
       <Plus className="w-4 h-4 text-emerald-300" />
-      <span className="hidden sm:inline">Añadir evento</span>
-      <span className="sm:hidden">Añadir</span>
+      <span className="hidden sm:inline">{t('events:addEvent', { defaultValue: 'Añadir evento' })}</span>
+      <span className="sm:hidden">{t('events:addShort', { defaultValue: 'Añadir' })}</span>
     </button>
-  ), [openAddEvento]);
+  ), [openAddEvento, t]);
 
   useTopBarActions(topBarActionBtn, [topBarActionBtn]);
 
@@ -154,7 +156,7 @@ export default function CalendarioView() {
   return (
     <PageContainer>
       <PageHeader
-        title="Calendario Comunitario"
+        title={t('events:calendarTitle', { defaultValue: 'Calendario Comunitario' })}
         subtitle={`Sincroniza el latido de la comunidad · ${kinDeHoy().emoji} Kin ${kinDeHoy().kin} — ${kinDeHoy().sello} ${kinDeHoy().nombreTono}`}
         icon={CalendarIcon}
         hideRightActions={true}
@@ -167,13 +169,13 @@ export default function CalendarioView() {
               onClick={() => setView(Views.MONTH)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${view === Views.MONTH ? 'bg-[#FDFBF7] text-[#A5A58D] border border-[#A5A58D]' : 'text-stone-500 hover:bg-stone-50'}`}
             >
-              Mes
+              {t('events:month', { defaultValue: 'Mes' })}
             </button>
             <button
               onClick={() => setView(Views.AGENDA)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${view === Views.AGENDA ? 'bg-[#FDFBF7] text-[#A5A58D] border border-[#A5A58D]' : 'text-stone-500 hover:bg-stone-50'}`}
             >
-              Agenda
+              {t('events:agenda', { defaultValue: 'Agenda' })}
             </button>
           </div>
 

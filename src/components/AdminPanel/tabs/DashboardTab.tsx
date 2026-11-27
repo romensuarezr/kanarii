@@ -1,3 +1,4 @@
+import { useTranslation, Trans } from 'react-i18next';
 import { Users, RefreshCw, Activity, Leaf, Clock, LayoutList, FolderKanban, Handshake } from 'lucide-react';
 import { DashboardStats } from '../hooks/useDashboardStats';
 import { Servicio } from '../../../lib/appService';
@@ -16,6 +17,7 @@ export default function DashboardTab({
   allServicios,
   getMemberName,
 }: DashboardTabProps) {
+  const { t } = useTranslation(['admin', 'common']);
   if (loading) {
     return (
       <div className="flex justify-center items-center py-24">
@@ -28,9 +30,9 @@ export default function DashboardTab({
     <div>
       {/* Title section */}
       <div className="mb-8">
-        <h2 className="text-2xl font-serif text-[#4A4E4D]">Salud de la Comunidad</h2>
+        <h2 className="text-2xl font-serif text-[#4A4E4D]">{t('admin:dashboard.title')}</h2>
         <p className="text-stone-500 text-sm mt-1">
-          Métricas clave, nivel de actividad y estado de la economía interna de la comunidad.
+          {t('admin:dashboard.subtitle')}
         </p>
       </div>
 
@@ -39,7 +41,7 @@ export default function DashboardTab({
         <div className="mb-8">
           <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-4 flex items-center gap-2">
             <Users className="w-3.5 h-3.5 text-stone-400" />
-            Personas y Participación
+            {t('admin:dashboard.sectionPeople')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Card 1: Miembros Activos */}
@@ -47,9 +49,9 @@ export default function DashboardTab({
               <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">Miembros Activos</span>
+                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">{t('admin:dashboard.activeMembers')}</span>
                   <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">{dashboardStats.totalMiembros}</h4>
-                  <p className="text-stone-500 text-xs">Total de personas registradas</p>
+                  <p className="text-stone-500 text-xs">{t('admin:dashboard.totalRegistered')}</p>
                 </div>
                 <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
                   <Users className="w-5 h-5" />
@@ -62,7 +64,7 @@ export default function DashboardTab({
               <div className="absolute top-0 left-0 w-1.5 h-full bg-teal-500" />
               <div className="flex justify-between items-start">
                 <div className="w-full mr-4">
-                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">Fichas Completas</span>
+                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">{t('admin:dashboard.completeProfiles')}</span>
                   <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">
                     {dashboardStats.fichasCompletas} <span className="text-xs font-sans text-stone-400 font-normal">/ {dashboardStats.totalMiembros}</span>
                   </h4>
@@ -73,7 +75,7 @@ export default function DashboardTab({
                     />
                   </div>
                   <p className="text-stone-500 text-xs">
-                    {dashboardStats.totalMiembros > 0 ? Math.round((dashboardStats.fichasCompletas / dashboardStats.totalMiembros) * 100) : 0}% con perfil de autoconocimiento
+                    {t('admin:dashboard.profileRatioDesc', { percent: dashboardStats.totalMiembros > 0 ? Math.round((dashboardStats.fichasCompletas / dashboardStats.totalMiembros) * 100) : 0 })}
                   </p>
                 </div>
                 <div className="p-3 bg-teal-50 text-teal-600 rounded-xl shrink-0">
@@ -87,9 +89,9 @@ export default function DashboardTab({
               <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-500" />
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">Nuevos este mes</span>
+                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">{t('admin:dashboard.newThisMonth')}</span>
                   <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">{dashboardStats.nuevosMiembros}</h4>
-                  <p className="text-stone-500 text-xs">Registrados en el mes actual</p>
+                  <p className="text-stone-500 text-xs">{t('admin:dashboard.registeredThisMonth')}</p>
                 </div>
                 <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
                   <Clock className="w-5 h-5" />
@@ -103,7 +105,7 @@ export default function DashboardTab({
         <div className="mb-8">
           <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-4 flex items-center gap-2">
             <Activity className="w-3.5 h-3.5 text-stone-400" />
-            Actividad y Colaboración
+            {t('admin:dashboard.sectionActivity')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Card 1: Tareas en marcha */}
@@ -111,9 +113,9 @@ export default function DashboardTab({
               <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500" />
               <div className="flex justify-between items-start">
                 <div className="w-full mr-4">
-                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">Tareas Comunales</span>
+                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">{t('admin:dashboard.communalTasks')}</span>
                   <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">
-                    {dashboardStats.tareasAbiertas} <span className="text-xs font-sans text-stone-400 font-normal">abiertas</span>
+                    {dashboardStats.tareasAbiertas} <span className="text-xs font-sans text-stone-400 font-normal">{t('admin:dashboard.open')}</span>
                   </h4>
                   <div className="w-full bg-stone-100 rounded-full h-1.5 mt-3 mb-1">
                     <div 
@@ -122,7 +124,7 @@ export default function DashboardTab({
                     />
                   </div>
                   <p className="text-stone-500 text-xs">
-                    {dashboardStats.tareasCompletadas} completadas ({dashboardStats.tareasRatio}%)
+                    {t('admin:dashboard.completedRatio', { count: dashboardStats.tareasCompletadas, ratio: dashboardStats.tareasRatio })}
                   </p>
                 </div>
                 <div className="p-3 bg-amber-50 text-amber-600 rounded-xl shrink-0">
@@ -136,9 +138,9 @@ export default function DashboardTab({
               <div className="absolute top-0 left-0 w-1.5 h-full bg-sky-500" />
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">Proyectos Activos</span>
+                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">{t('admin:dashboard.activeProjects')}</span>
                   <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">{dashboardStats.proyectosActivos}</h4>
-                  <p className="text-stone-500 text-xs">{dashboardStats.proyectosCompletados} completados en total</p>
+                  <p className="text-stone-500 text-xs">{t('admin:dashboard.totalProjectsCompleted', { count: dashboardStats.proyectosCompletados })}</p>
                 </div>
                 <div className="p-3 bg-sky-50 text-sky-600 rounded-xl">
                   <FolderKanban className="w-5 h-5" />
@@ -151,9 +153,9 @@ export default function DashboardTab({
               <div className="absolute top-0 left-0 w-1.5 h-full bg-pink-500" />
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">Eventos Próximos</span>
+                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">{t('admin:dashboard.upcomingEvents')}</span>
                   <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">{dashboardStats.eventosProximos}</h4>
-                  <p className="text-stone-500 text-xs">En los siguientes 30 días</p>
+                  <p className="text-stone-500 text-xs">{t('admin:dashboard.next30Days')}</p>
                 </div>
                 <div className="p-3 bg-pink-50 text-pink-600 rounded-xl">
                   <Activity className="w-5 h-5" />
@@ -167,7 +169,7 @@ export default function DashboardTab({
         <div className="mb-8">
           <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-4 flex items-center gap-2">
             <Handshake className="w-3.5 h-3.5 text-stone-400" />
-            Economía Interna y Marketplace
+            {t('admin:dashboard.sectionEconomy')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Card 1: Economía Local */}
@@ -175,10 +177,10 @@ export default function DashboardTab({
               <div className="absolute top-0 left-0 w-1.5 h-full bg-rose-500" />
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">Economía Local</span>
-                  <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">{dashboardStats.serviciosActivos} Activos</h4>
+                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">{t('admin:dashboard.localEconomy')}</span>
+                  <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">{dashboardStats.serviciosActivos} {t('admin:dashboard.active')}</h4>
                   <p className="text-stone-500 text-xs">
-                    {dashboardStats.activeTalentos} servicios · {dashboardStats.activeRecursos} recursos
+                    {t('admin:dashboard.activeTalentsAndResources', { services: dashboardStats.activeTalentos, resources: dashboardStats.activeRecursos })}
                   </p>
                 </div>
                 <div className="p-3 bg-rose-50 text-rose-600 rounded-xl">
@@ -192,9 +194,9 @@ export default function DashboardTab({
               <div className="absolute top-0 left-0 w-1.5 h-full bg-purple-500" />
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">Acuerdos en Curso</span>
+                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">{t('admin:dashboard.ongoingAgreements')}</span>
                   <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">{dashboardStats.acuerdosEnCurso}</h4>
-                  <p className="text-stone-500 text-xs">Intercambios activos actualmente</p>
+                  <p className="text-stone-500 text-xs">{t('admin:dashboard.activeExchangesNow')}</p>
                 </div>
                 <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
                   <Clock className="w-5 h-5" />
@@ -207,9 +209,9 @@ export default function DashboardTab({
               <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">Intercambios Completados</span>
+                  <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">{t('admin:dashboard.completedExchanges')}</span>
                   <h4 className="text-3xl font-serif text-[#4A4E4D] mt-2 mb-1">{dashboardStats.acuerdosCompletados}</h4>
-                  <p className="text-stone-500 text-xs">Historial acumulado total</p>
+                  <p className="text-stone-500 text-xs">{t('admin:dashboard.totalHistorical')}</p>
                 </div>
                 <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
                   <Handshake className="w-5 h-5" />
@@ -224,17 +226,17 @@ export default function DashboardTab({
           {/* Gráfico de Actividad */}
           <div className="bg-white p-6 rounded-2xl border border-[#EAE2D6] shadow-sm flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-serif text-[#4A4E4D] mb-1">Actividad de Intercambios</h3>
-              <p className="text-stone-500 text-xs mb-8">Acuerdos creados por mes (últimos 6 meses)</p>
+              <h3 className="text-lg font-serif text-[#4A4E4D] mb-1">{t('admin:dashboard.exchangeActivity')}</h3>
+              <p className="text-stone-500 text-xs mb-8">{t('admin:dashboard.agreementsPerMonth')}</p>
             </div>
             
             <div className="flex-1 flex flex-col justify-end">
               {dashboardStats.maxAcuerdosPeriodo === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-stone-400 w-full h-full">
                   <Activity className="w-8 h-8 opacity-20 mb-2" />
-                  <p className="text-sm italic mb-2">Sin actividad registrada</p>
+                  <p className="text-sm italic mb-2">{t('admin:dashboard.noActivity')}</p>
                   <span className="text-[10px] text-stone-400 border border-stone-200 bg-stone-50 px-2 py-0.5 rounded">
-                    Sin actividad en el eje
+                    {t('admin:dashboard.noActivityAxis')}
                   </span>
                 </div>
               ) : (
@@ -247,7 +249,7 @@ export default function DashboardTab({
                       <div key={index} className="flex-1 flex flex-col items-center group relative">
                         {/* Tooltip */}
                         <div className="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-200 bg-stone-800 text-white text-xs px-2.5 py-1 rounded shadow-lg z-10 whitespace-nowrap pointer-events-none">
-                          {item.count} {item.count === 1 ? 'acuerdo' : 'acuerdos'}
+                          {t('admin:dashboard.agreementTooltip', { count: item.count })}
                         </div>
                         
                         {/* Barra */}
@@ -271,15 +273,15 @@ export default function DashboardTab({
           {/* Acuerdos Recientes */}
           <div className="bg-white p-6 rounded-2xl border border-[#EAE2D6] shadow-sm flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-serif text-[#4A4E4D] mb-1">Acuerdos Recientes</h3>
-              <p className="text-stone-500 text-xs mb-4">Últimos 5 intercambios propuestos en la comunidad</p>
+              <h3 className="text-lg font-serif text-[#4A4E4D] mb-1">{t('admin:dashboard.recentAgreements')}</h3>
+              <p className="text-stone-500 text-xs mb-4">{t('admin:dashboard.recentAgreementsDesc')}</p>
             </div>
             
             <div className="flex-1 overflow-y-auto max-h-[220px]">
               {dashboardStats.recientes.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-stone-400 h-full">
                   <Handshake className="w-8 h-8 opacity-20 mb-2" />
-                  <p className="text-sm italic">No hay acuerdos propuestos aún</p>
+                  <p className="text-sm italic">{t('admin:dashboard.noAgreementsYet')}</p>
                 </div>
               ) : (
                 <div className="divide-y divide-stone-100">
@@ -305,7 +307,7 @@ export default function DashboardTab({
                               </span>
                             ) : (
                               <span className="text-sm font-semibold italic text-stone-400">
-                                Servicio eliminado
+                                {t('admin:dashboard.deletedService')}
                               </span>
                             )}
                             <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium border shrink-0 ${exchangeBadge}`}>
@@ -313,7 +315,11 @@ export default function DashboardTab({
                             </span>
                           </div>
                           <p className="text-xs text-stone-500 truncate">
-                            De <span className="font-medium text-stone-700">{getMemberName(acuerdo.providerId)}</span> a <span className="font-medium text-stone-700">{getMemberName(acuerdo.solicitanteId)}</span>
+                            <Trans
+                              i18nKey="admin:dashboard.fromTo"
+                              values={{ from: getMemberName(acuerdo.providerId), to: getMemberName(acuerdo.solicitanteId) }}
+                              components={{ 1: <span className="font-medium text-stone-700" />, 3: <span className="font-medium text-stone-700" /> }}
+                            />
                           </p>
                         </div>
                         

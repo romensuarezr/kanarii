@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, User, MapPin, Heart, Package, Calendar, Archive, Play, Edit, Trash2 } from 'lucide-react';
 import { Servicio } from '../lib/appService';
@@ -26,6 +27,7 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
   onToggleStatus,
   onDelete
 }) => {
+  const { t } = useTranslation(['marketplace', 'common']);
   return (
     <AnimatePresence>
       {isOpen && servicio && (
@@ -50,6 +52,7 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
           <button 
             onClick={onClose}
             className="absolute top-6 right-6 p-2 rounded-full text-stone-400 hover:bg-stone-100 hover:text-stone-600 transition-colors"
+            aria-label={t('common:actions.closeModal', { defaultValue: 'Cerrar modal' })}
           >
             <X className="w-5 h-5" />
           </button>
@@ -64,10 +67,10 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
                   : 'bg-blue-50 text-blue-700 border-blue-200'
             }`}>
               {!servicio.isActive 
-                ? 'Pausado' 
+                ? t('serviceDetail.paused', { defaultValue: 'Pausado' }) 
                 : servicio.type === 'talento' 
-                  ? 'Talento' 
-                  : 'Recurso'}
+                  ? t('serviceDetail.talent', { defaultValue: 'Talento' }) 
+                  : t('serviceDetail.resource', { defaultValue: 'Recurso' })}
             </span>
             <span className="text-xs text-[#8A817C] uppercase tracking-widest font-bold">
               {servicio.category}
@@ -94,7 +97,7 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
                   </div>
                   <div>
                     <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest leading-none mb-1">
-                      Ofrecido por
+                      {t('serviceDetail.offeredBy', { defaultValue: 'Ofrecido por' })}
                     </div>
                     <div className="text-sm font-semibold text-stone-700 leading-none">
                       {nombreAutor}
@@ -110,7 +113,7 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
                   </div>
                   <div>
                     <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest leading-none mb-1">
-                      Ubicación
+                      {t('serviceDetail.location', { defaultValue: 'Ubicación' })}
                     </div>
                     <div className="text-sm text-stone-700 leading-none">
                       {servicio.location}
@@ -126,7 +129,7 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
                   </div>
                   <div>
                     <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest leading-none mb-1">
-                      Disponibilidad / Horario
+                      {t('serviceDetail.availability', { defaultValue: 'Disponibilidad / Horario' })}
                     </div>
                     <div className="text-sm text-stone-700 leading-none">
                       {servicio.availability}
@@ -147,7 +150,7 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
                     className="flex-1 bg-[#A5A58D] hover:bg-[#6B705C] text-white py-3 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center gap-2"
                   >
                     {servicio.isActive ? <Archive className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    {servicio.isActive ? 'Pausar' : 'Reactivar'}
+                    {servicio.isActive ? t('serviceDetail.pause', { defaultValue: 'Pausar' }) : t('serviceDetail.resume', { defaultValue: 'Reactivar' })}
                   </button>
                   
                   <button
@@ -155,7 +158,7 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
                     className="flex-1 border border-[#A5A58D] text-[#A5A58D] hover:bg-[#F9F7F1] py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2"
                   >
                     <Edit className="w-4 h-4" />
-                    Editar
+                    {t('serviceDetail.edit', { defaultValue: 'Editar' })}
                   </button>
                 </div>
                 
@@ -164,7 +167,7 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
                   className="w-full border border-red-200 text-red-500 hover:bg-red-50 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2"
                 >
                   <Trash2 className="w-4 h-4" />
-                  Eliminar servicio
+                  {t('serviceDetail.delete', { defaultValue: 'Eliminar servicio' })}
                 </button>
               </div>
             ) : (
@@ -173,11 +176,11 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
                   onClick={onSolicitar}
                   className="w-full bg-[#A5A58D] hover:bg-[#6B705C] text-white py-3.5 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center gap-2"
                 >
-                  Proponer Acuerdo / Solicitar
+                  {t('serviceDetail.proposeAgreement', { defaultValue: 'Proponer Acuerdo / Solicitar' })}
                 </button>
               ) : (
                 <div className="bg-stone-50 border border-stone-200 rounded-2xl p-4 text-center text-sm text-[#8A817C] italic">
-                  Este servicio está temporalmente pausado y no admite nuevas solicitudes de acuerdo.
+                  {t('serviceDetail.pausedNotice', { defaultValue: 'Este servicio está temporalmente pausado y no admite nuevas solicitudes de acuerdo.' })}
                 </div>
               )
             )}
@@ -186,7 +189,7 @@ export const ServicioDetailModal: React.FC<ServicioDetailModalProps> = ({
               onClick={onClose}
               className="w-full py-2 text-[#8A817C] font-bold hover:bg-[#F9F7F1] rounded-xl transition-colors text-center text-sm"
             >
-              Cancelar
+              {t('serviceDetail.cancel', { defaultValue: 'Cancelar' })}
             </button>
           </div>
         </motion.div>

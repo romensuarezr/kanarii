@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Send, User as UserIcon, Leaf, ArrowLeft, LogIn, Undo2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../contexts/AuthContext';
@@ -47,6 +48,7 @@ const INITIAL_STEPS = [
 ];
 
 export function OnboardingChat() {
+  const { t } = useTranslation(['welcome', 'common']);
   const navigate = useNavigate();
   const { user, login } = useAuth();
   const [steps, setSteps] = useState(INITIAL_STEPS);
@@ -159,19 +161,19 @@ export function OnboardingChat() {
         <div className="flex-1">
           <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-stone-500 hover:text-stone-800 transition-colors">
              <ArrowLeft className="w-4 h-4" />
-             <span className="hidden sm:inline">Volver al inicio</span>
+             <span className="hidden sm:inline">{t('welcome:contextConsent.backHome', { defaultValue: 'Volver al inicio' })}</span>
           </Link>
         </div>
         
         <div className="flex items-center gap-2 justify-center absolute left-1/2 -translate-x-1/2">
           <Leaf className="w-6 h-6 text-[#6B705C]" />
-          <h1 className="text-xl font-serif text-[#4A4E4D]">Conversación de Acogida</h1>
+          <h1 className="text-xl font-serif text-[#4A4E4D]">{t('welcome:onboardingChat.welcomeTitle', { defaultValue: 'Conversación de Acogida' })}</h1>
         </div>
 
         <div className="flex-1 flex justify-end">
           {user === null && (
             <button onClick={login} className="inline-flex items-center gap-2 text-sm font-medium text-stone-500 hover:text-[#CB997E] transition-colors">
-              <span className="hidden sm:inline">Iniciar sesión</span>
+              <span className="hidden sm:inline">{t('common:actions.login', { defaultValue: 'Iniciar sesión' })}</span>
               <LogIn className="w-4 h-4" />
             </button>
           )}
@@ -277,7 +279,7 @@ export function OnboardingChat() {
                 <button
                   onClick={handleBack}
                   disabled={saving}
-                  title="Volver al paso anterior"
+                  title={t('welcome:onboardingChat.backPrevious', { defaultValue: 'Volver al paso anterior' })}
                   className="flex-shrink-0 p-3 bg-white border border-[#EAE2D6] text-stone-500 rounded-full hover:bg-[#F9F7F1] hover:text-stone-800 transition-colors disabled:opacity-50"
                 >
                   <Undo2 className="w-5 h-5" />

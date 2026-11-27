@@ -174,13 +174,14 @@ export default function GovernanceFlowAnimation({ onNext, onBack, progressTracke
         animate={{ opacity: 0.6 }}
         className="mt-16 text-sm italic font-serif text-[#5D4037]"
       >
-        "Lo suficientemente bueno por ahora, lo suficientemente seguro para intentarlo."
+        {t('tourAnimations.goodEnoughTagline', { defaultValue: '"Lo suficientemente bueno por ahora, lo suficientemente seguro para intentarlo."' })}
       </motion.p>
     </div>
   );
 }
 
 function Visualization({ step }: { step: number }) {
+  const { t } = useTranslation(['governance', 'welcome']);
   // Define positions for 6 avatars in a circle
   const avatars = Array.from({ length: 6 }).map((_, i) => {
     const angle = (i * 360) / 6;
@@ -215,7 +216,11 @@ function Visualization({ step }: { step: number }) {
           }}
           style={{ x: pos.x, y: pos.y }}
         >
-          {pos.id === 0 && <span className="text-white text-[10px] font-bold">Autor</span>}
+          {pos.id === 0 && (
+            <span className="text-white text-[10px] font-bold">
+              {t('governance:authorRole', { defaultValue: 'Autor' })}
+            </span>
+          )}
           
           {/* Reactions */}
           <AnimatePresence>

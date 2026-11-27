@@ -113,7 +113,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
 // --- COMPONENTE PRINCIPAL ---
 
 export function ComunidadesView() {
-  const { t } = useTranslation('communities');
+  const { t } = useTranslation(['communities', 'common']);
   const navigate = useNavigate();
   const location = useLocation();
   const { appUser } = useAuth();
@@ -259,14 +259,14 @@ export function ComunidadesView() {
       <button
         onClick={goToNuevaComunidad}
         className="bg-forest-deep hover:bg-forest-deep/90 text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-        title="Crear nodo o comunidad"
+        title={t('communities:createNodeAria', { defaultValue: 'Crear nodo o comunidad' })}
       >
         <Plus className="w-4 h-4 text-emerald-300" />
-        <span className="hidden sm:inline">Nuevo Nodo</span>
-        <span className="sm:hidden">Nuevo</span>
+        <span className="hidden sm:inline">{t('communities:newNode', { defaultValue: 'Nuevo Nodo' })}</span>
+        <span className="sm:hidden">{t('communities:newShort', { defaultValue: 'Nuevo' })}</span>
       </button>
     ) : null
-  ), [appUser, goToNuevaComunidad]);
+  ), [appUser, goToNuevaComunidad, t]);
 
   useTopBarActions(topBarActionBtn, [topBarActionBtn]);
 
@@ -312,7 +312,7 @@ export function ComunidadesView() {
               className="flex items-center gap-1.5 bg-forest-deep hover:bg-forest-deep/90 text-white px-3 py-1.5 rounded-xl font-medium transition-colors shadow-2xs cursor-pointer"
             >
               <LogIn className="w-3.5 h-3.5" />
-              <span>Iniciar sesión</span>
+              <span>{t('common:actions.login', { defaultValue: 'Iniciar sesión' })}</span>
             </button>
           </div>
         </div>

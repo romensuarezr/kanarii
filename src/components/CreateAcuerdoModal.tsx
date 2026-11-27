@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Servicio, Acuerdo } from '../lib/appService';
 import { Handshake, X, Calendar } from 'lucide-react';
 
@@ -10,6 +11,7 @@ interface CreateAcuerdoModalProps {
 }
 
 export function CreateAcuerdoModal({ servicio, isSubmitting, onClose, onSubmit }: CreateAcuerdoModalProps) {
+  const { t } = useTranslation(['marketplace', 'common']);
   const [formData, setFormData] = useState({
     terms: '',
     exchangeType: 'tiempo' as Acuerdo['exchangeType'],
@@ -36,13 +38,18 @@ export function CreateAcuerdoModal({ servicio, isSubmitting, onClose, onSubmit }
               <Handshake className="w-5 h-5 text-[#4A4E4D]" />
             </div>
             <div>
-              <h2 className="text-lg font-serif text-[#4A4E4D]">Propuesta de Acuerdo</h2>
-              <p className="text-xs text-stone-500">Para: {servicio.title}</p>
+              <h2 className="text-lg font-serif text-[#4A4E4D]">
+                {t('agreementModal.title', { defaultValue: 'Propuesta de Acuerdo' })}
+              </h2>
+              <p className="text-xs text-stone-500">
+                {t('agreementModal.for', { defaultValue: 'Para:' })} {servicio.title}
+              </p>
             </div>
           </div>
           <button 
             onClick={onClose}
             className="text-stone-400 hover:text-stone-600 transition-colors"
+            aria-label={t('common:actions.closeModal', { defaultValue: 'Cerrar modal' })}
           >
             <X className="w-5 h-5" />
           </button>
@@ -50,29 +57,33 @@ export function CreateAcuerdoModal({ servicio, isSubmitting, onClose, onSubmit }
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Tipo de Intercambio</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              {t('agreementModal.exchangeType', { defaultValue: 'Tipo de Intercambio' })}
+            </label>
             <select
               value={formData.exchangeType}
               onChange={e => setFormData({ ...formData, exchangeType: e.target.value as Acuerdo['exchangeType'] })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors bg-white text-sm"
               disabled={isSubmitting}
             >
-              <option value="tiempo">Intercambio de Tiempo (Horas)</option>
-              <option value="especie">Intercambio por Especie</option>
-              <option value="economico">Aportación Económica</option>
-              <option value="regalo">Regalo / Donación</option>
+              <option value="tiempo">{t('agreementModal.types.tiempo', { defaultValue: 'Intercambio de Tiempo (Horas)' })}</option>
+              <option value="especie">{t('agreementModal.types.especie', { defaultValue: 'Intercambio por Especie' })}</option>
+              <option value="economico">{t('agreementModal.types.economico', { defaultValue: 'Aportación Económica' })}</option>
+              <option value="regalo">{t('agreementModal.types.regalo', { defaultValue: 'Regalo / Donación' })}</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Términos de la propuesta *</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              {t('agreementModal.terms', { defaultValue: 'Términos de la propuesta *' })}
+            </label>
             <textarea
               required
               rows={4}
               value={formData.terms}
               onChange={e => setFormData({ ...formData, terms: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors resize-none"
-              placeholder="Ej. Te propongo cambiar 2h de clases de yoga por 1 caja de verduras de mi huerto..."
+              placeholder={t('agreementModal.termsPlaceholder', { defaultValue: 'Ej. Te propongo cambiar 2h de clases de yoga por 1 caja de verduras de mi huerto...' })}
               disabled={isSubmitting}
             />
           </div>
@@ -80,7 +91,7 @@ export function CreateAcuerdoModal({ servicio, isSubmitting, onClose, onSubmit }
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1 flex items-center gap-2">
               <Calendar className="w-4 h-4 text-stone-400" />
-              Fecha propuesta (opcional)
+              {t('agreementModal.proposedDate', { defaultValue: 'Fecha propuesta (opcional)' })}
             </label>
             <input
               type="date"
@@ -98,14 +109,16 @@ export function CreateAcuerdoModal({ servicio, isSubmitting, onClose, onSubmit }
               className="px-4 py-2 text-stone-500 hover:bg-[#FDFBF7] rounded-xl font-medium transition-colors"
               disabled={isSubmitting}
             >
-              Cancelar
+              {t('agreementModal.cancel', { defaultValue: 'Cancelar' })}
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !formData.terms.trim()}
               className="bg-[#6B705C] hover:bg-[#4A4E4D] text-white px-6 py-2 rounded-xl font-medium transition-all shadow-sm disabled:opacity-50"
             >
-              {isSubmitting ? 'Enviando...' : 'Enviar Propuesta'}
+              {isSubmitting
+                ? t('agreementModal.sending', { defaultValue: 'Enviando...' })
+                : t('agreementModal.sendProposal', { defaultValue: 'Enviar Propuesta' })}
             </button>
           </div>
         </form>

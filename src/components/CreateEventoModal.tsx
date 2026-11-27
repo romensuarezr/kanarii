@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Evento } from '../lib/appService';
+import { X } from 'lucide-react';
 
 interface CreateEventoModalProps {
   eventoToEdit?: Omit<Evento, 'creadoPor'> | null;
@@ -22,6 +24,7 @@ export function CreateEventoModal({
   canEdit,
   initialDates
 }: CreateEventoModalProps) {
+  const { t } = useTranslation(['events', 'common']);
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
@@ -97,49 +100,58 @@ export function CreateEventoModal({
       <div className="bg-white rounded-3xl w-full max-w-md shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
         <div className="p-6 border-b border-[#EAE2D6] flex justify-between items-center bg-[#FDFBF7]">
           <h2 className="text-xl font-serif text-[#4A4E4D]">
-            {eventoToEdit ? (canEdit ? 'Editar Evento' : 'Detalles del Evento') : 'Nuevo Evento'}
+            {eventoToEdit
+              ? (canEdit ? t('events:modal.editTitle', { defaultValue: 'Editar Evento' }) : t('events:modal.detailsTitle', { defaultValue: 'Detalles del Evento' }))
+              : t('events:modal.newTitle', { defaultValue: 'Nuevo Evento' })}
           </h2>
           <button 
             onClick={onClose}
-            className="text-stone-400 hover:text-stone-600 transition-colors"
+            className="text-stone-400 hover:text-stone-600 transition-colors p-1"
+            aria-label={t('common:actions.closeModal', { defaultValue: 'Cerrar modal' })}
           >
-            ✕
+            <X className="w-5 h-5" />
           </button>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Título *</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              {t('events:modal.titleLabel', { defaultValue: 'Título *' })}
+            </label>
             <input
               required
               type="text"
               value={formData.titulo}
               onChange={e => setFormData({ ...formData, titulo: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors"
-              placeholder="Ej. Cosecha colectiva"
+              placeholder={t('events:modal.titlePlaceholder', { defaultValue: 'Ej. Cosecha colectiva' })}
               disabled={isSubmitting || !canEdit}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Tipo de Evento</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              {t('events:modal.typeLabel', { defaultValue: 'Tipo de Evento' })}
+            </label>
             <select
               value={formData.tipo}
               onChange={e => setFormData({ ...formData, tipo: e.target.value as Evento['tipo'] })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors bg-white"
               disabled={isSubmitting || !canEdit}
             >
-              <option value="reunion">Reunión / Círculo</option>
-              <option value="tarea_comunal">Tarea Comunal</option>
-              <option value="visita">Visita</option>
-              <option value="celebracion">Celebración</option>
-              <option value="otro">Otro</option>
+              <option value="reunion">{t('events:modal.types.reunion', { defaultValue: 'Reunión / Círculo' })}</option>
+              <option value="tarea_comunal">{t('events:modal.types.tarea_comunal', { defaultValue: 'Tarea Comunal' })}</option>
+              <option value="visita">{t('events:modal.types.visita', { defaultValue: 'Visita' })}</option>
+              <option value="celebracion">{t('events:modal.types.celebracion', { defaultValue: 'Celebración' })}</option>
+              <option value="otro">{t('events:modal.types.otro', { defaultValue: 'Otro' })}</option>
             </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Inicio *</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">
+                {t('events:modal.startLabel', { defaultValue: 'Inicio *' })}
+              </label>
               <input
                 required
                 type="datetime-local"
@@ -150,7 +162,9 @@ export function CreateEventoModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Fin *</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">
+                {t('events:modal.endLabel', { defaultValue: 'Fin *' })}
+              </label>
               <input
                 required
                 type="datetime-local"
@@ -171,18 +185,22 @@ export function CreateEventoModal({
               className="rounded text-[#CB997E] focus:ring-[#CB997E]"
               disabled={isSubmitting || !canEdit}
             />
-            <label htmlFor="todoElDia" className="text-sm text-stone-700">Todo el día</label>
+            <label htmlFor="todoElDia" className="text-sm text-stone-700">
+              {t('events:modal.allDay', { defaultValue: 'Todo el día' })}
+            </label>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Responsable</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              {t('events:modal.responsible', { defaultValue: 'Responsable' })}
+            </label>
             <select
               value={formData.responsable_uid}
               onChange={e => setFormData({ ...formData, responsable_uid: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors bg-white"
               disabled={isSubmitting || !canEdit}
             >
-              <option value="">-- Seleccionar --</option>
+              <option value="">{t('events:modal.selectPlaceholder', { defaultValue: '-- Seleccionar --' })}</option>
               {members.map(m => (
                 <option key={m.userId} value={m.userId}>{m.nombre}</option>
               ))}
@@ -190,7 +208,9 @@ export function CreateEventoModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Participantes</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              {t('events:modal.participants', { defaultValue: 'Participantes' })}
+            </label>
             <div className="flex flex-wrap gap-2 p-2 border border-[#EAE2D6] rounded-xl min-h-[42px] bg-white">
               {members.map(m => (
                 <button
@@ -211,13 +231,15 @@ export function CreateEventoModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Descripción</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              {t('events:modal.description', { defaultValue: 'Descripción' })}
+            </label>
             <textarea
               rows={3}
               value={formData.descripcion}
               onChange={e => setFormData({ ...formData, descripcion: e.target.value })}
               className="w-full rounded-xl border-[#EAE2D6] focus:border-[#CB997E] focus:ring-[#CB997E] transition-colors resize-none"
-              placeholder="Detalles sobre el evento..."
+              placeholder={t('events:modal.descriptionPlaceholder', { defaultValue: 'Detalles sobre el evento...' })}
               disabled={isSubmitting || !canEdit}
             />
           </div>
@@ -230,7 +252,7 @@ export function CreateEventoModal({
                 disabled={isSubmitting}
                 className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl font-medium transition-colors disabled:opacity-50"
               >
-                Eliminar
+                {t('events:modal.delete', { defaultValue: 'Eliminar' })}
               </button>
             )}
             <div className="flex justify-end gap-3 ml-auto">
@@ -240,7 +262,7 @@ export function CreateEventoModal({
                 className="px-4 py-2 text-stone-500 hover:bg-[#FDFBF7] rounded-xl font-medium transition-colors"
                 disabled={isSubmitting}
               >
-                {canEdit ? 'Cancelar' : 'Cerrar'}
+                {canEdit ? t('events:modal.cancel', { defaultValue: 'Cancelar' }) : t('events:modal.close', { defaultValue: 'Cerrar' })}
               </button>
               {canEdit && (
                 <button
@@ -248,7 +270,9 @@ export function CreateEventoModal({
                   disabled={isSubmitting || !formData.titulo.trim()}
                   className="bg-[#A5A58D] hover:bg-[#6B705C] text-white px-6 py-2 rounded-xl font-medium transition-colors disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Guardando...' : (eventoToEdit ? 'Guardar Cambios' : 'Crear Evento')}
+                  {isSubmitting
+                    ? t('events:modal.saving', { defaultValue: 'Guardando...' })
+                    : (eventoToEdit ? t('events:modal.saveChanges', { defaultValue: 'Guardar Cambios' }) : t('events:modal.create', { defaultValue: 'Crear Evento' }))}
                 </button>
               )}
             </div>

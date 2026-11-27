@@ -15,7 +15,44 @@
     "spots": "spots",
     "noEvents": "No upcoming events in this category",
     "createEvent": "Propose event",
-    "networkEvent": "Network Gathering"
+    "networkEvent": "Network Gathering",
+    "calendarTitle": "Community Calendar",
+    "addEvent": "Add event",
+    "addShort": "Add",
+    "month": "Month",
+    "agenda": "Agenda",
+    "registered": "Registered",
+    "joinNetworkToParticipate": "Join the Network to Participate",
+    "modal": {
+      "editTitle": "Edit Event",
+      "detailsTitle": "Event Details",
+      "newTitle": "New Event",
+      "titleLabel": "Title *",
+      "titlePlaceholder": "E.g. Collective harvest",
+      "typeLabel": "Event Type",
+      "types": {
+        "reunion": "Meeting / Circle",
+        "tarea_comunal": "Communal Task",
+        "visita": "Visit",
+        "celebracion": "Celebration",
+        "otro": "Other"
+      },
+      "startLabel": "Start *",
+      "endLabel": "End *",
+      "allDay": "All day",
+      "responsible": "Responsible",
+      "selectPlaceholder": "-- Select --",
+      "participants": "Participants",
+      "description": "Description",
+      "descriptionPlaceholder": "Details about the event...",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "close": "Close",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes",
+      "create": "Create Event",
+      "closeAria": "Close modal"
+    }
   },
   "residencies": {
     "headerTitle": "Node Residencies & Stays",
@@ -33,6 +70,8 @@
     "flexibleDates": "Flexible dates",
     "exchange": "Gift exchange and reciprocity",
     "applySuccess": "Stay application sent successfully!",
-    "applyNote": "Your community passport will be shared with the node caretakers to evaluate synergy."
+    "applyNote": "Your community passport will be shared with the node caretakers to evaluate synergy.",
+    "requestSent": "Request Sent",
+    "loginToApply": "Log in to Apply for Stay"
   }
 }

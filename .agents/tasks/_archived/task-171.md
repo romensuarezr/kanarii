@@ -5,8 +5,9 @@
 - **Título**: Internacionalización de AdminPanel y Ajustes + Sellado de Baseline a 0
 - **Sprint**: Sprint 34
 - **Tipo**: Quality Gate / i18n / Final Polish
-- **Estado**: ⬜ Pendiente
+- **Estado**: 🟢 Completada
 - **Fecha inicio**: 2026-11-27
+- **Fecha fin**: 2026-11-27
 
 ## Diseño macro aprobado en planning
 - **Sprint / Fecha**: Sprint 34 / 2026-11-27
@@ -39,6 +40,6 @@
 - `i18n-baseline.json`
 
 ## Criterios de Aceptación
-- [ ] `/admin`, `/admin/solicitudes`, `/ajustes` y `/tour` se muestran 100% en inglés al seleccionar `en`.
-- [ ] `i18n-baseline.json` contiene exactamente 0 literales pendientes.
-- [ ] `npm run test:i18n` pasa con código de salida 0 garantizando 0 copy hardcodeado en toda la aplicación.
+- [x] `/admin`, `/admin/solicitudes`, `/ajustes` y `/tour` se muestran 100% en inglés al seleccionar `en`.
+- [x] `i18n-baseline.json` contiene exactamente 0 literales pendientes.
+- [x] `npm run test:i18n` pasa con código de salida 0 garantizando 0 copy hardcodeado en toda la aplicación.
